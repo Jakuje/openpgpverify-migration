@@ -1,0 +1,16 @@
+vali
+mooltipass-udev
+basez
+hiera
+kio-fuse
+i3status
+conflict
+ssh-audit
+logrotate
+vim-latex
+libmnl
+time
+dbus-glib
+gnulib-l10n
+radvd
+dbus

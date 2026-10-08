@@ -35,7 +35,45 @@ Phase 1 pilot regressions. Tested with sequoia-sqv 1.5.0 and sequoia-openpgp
      expired, yet the signature still verifies.
 
    So builds do **not** start failing just because a key expired after the
-   release was signed. fapolicyd will be the first real case, on 2026-11-04.
+   release was signed.
+
+   **Confirmed with keys that have already expired** (2026-10-08).
+   `scripts/find_expired.py` scanned all 558 macro packages (dist-git clones
+   plus only the signature files from the lookaside cache) and compared each
+   signature's time with its key's expiry: 59 signatures in 49 packages were
+   made by keys that have expired since (`data/expiry-scan.jsonl`). Phase 1
+   (gpgverify vs openpgpverify in mock, real clock) on 16 of them:
+
+   | Package | Signed | Key expired | Phase 1 |
+   |---|---|---|---|
+   | vali | 2026-01-23 | 2026-04-12 | both pass |
+   | mooltipass-udev | 2023-01-12 | 2023-12-30 | both pass |
+   | basez | 2019-10-05 | 2024-10-18 | both pass |
+   | hiera | 2023-02-08 | 2025-04-06 | both pass |
+   | kio-fuse | 2025-10-13 | 2026-06-14 | both pass |
+   | i3status | 2024-08-19 | 2025-05-20 | both pass |
+   | conflict | 2023-12-10, 2025-09-30 | 2026-01-18 | both pass |
+   | ssh-audit | 2020-03-20, 2024-10-15 | 2025-03-19 | both pass |
+   | logrotate | 2024-06-01 | 2025-02-14 | both pass |
+   | vim-latex | 2018-01-12 | 2023-01-01 | both pass |
+   | libmnl | 2022-04-05 | 2024-10-13 | both pass |
+   | dbus-glib | 2021-03-26 | 2021-07-01 | both pass |
+   | gnulib-l10n | 2024-12-31 | 2025-02-10 | both pass |
+   | dbus | 2025-02-27 | 2026-04-17 | both pass |
+   | radvd | 2026-05-25 | 2026-07-11 | already uses openpgpverify in rawhide; sqv passes |
+   | time | 2018-03-12 | 2021-02-23 | **fails, but not because of expiry** (see below) |
+
+   time: the dist-git keyring has only the 2020-02-24 self-signatures and
+   subkey bindings (re-made when upstream extended the expiry). The 2018
+   signature predates every binding: *"No binding signature at time
+   2018-03-12"*. gpgv ignores binding times. The keyserver copy still has the
+   2014 bindings, and the refreshed keyring verifies
+   (`refresh_keys.py` → `proposed`). New Phase 1 reason:
+   `binding-after-signature`.
+
+   The same scan found 71 signatures in 67 packages made *after* the expiry
+   in our keyring copy (stale keyrings). These are the real expiry
+   regressions, and they go through the keyring refresh.
 2. **The failures are signatures made after the expiry date in our copy of the key.**
    - yubikey-manager-qt: key expired 2020-09-16, signed 2023-02-03
    - cairomm1.16: key expired 2022-09-08, signed 2023-09-27

@@ -129,8 +129,8 @@ rpm stops depending on gpg.
       - `regression`: diagnosed with the keyring format (keybox magic), armor
         block count, `sq inspect` of the keyring and the hash algorithm from
         `sq packet dump` of the signature. Reasons: `sha1-cert`, `sha1-sig`,
-        `v3-sig`, `expired`, `keybox`, `concatenated-armor`, `policy`,
-        `unknown`.
+        `v3-sig`, `expired`, `binding-after-signature`, `keybox`,
+        `concatenated-armor`, `policy`, `unknown`.
       - `both-fail`: the package was already broken; reported separately
       - `guard-failed`: verify call counts don't match
       - `not-buildable`: the unchanged spec can't install its deps in that
@@ -154,6 +154,10 @@ rpm stops depending on gpg.
      `proposed` can be approved, and the reviewer and time are recorded.
    - `phase1.py PKG` then uses approved keyrings in the new variant only
      (`keyring_refresh_applied`). The PR will include the refreshed keyring.
+
+   `scripts/find_expired.py` finds stale keyrings (and keys that expired
+   after signing) for all packages in minutes, without downloading sources:
+   dist-git clones plus signature files from the lookaside cache only.
 
    Background, and what can and can't be fixed in openpgpverify itself:
    [docs/expired-keys-and-sha1.md](docs/expired-keys-and-sha1.md).
@@ -280,6 +284,6 @@ Verification only actually runs when the package is built, so `merged` and
 - [x] Semi-automatic keyring refresh with per-package review (`scripts/refresh_keys.py`)
 - [x] openpgpverify prototype: SHA-1 key bindings accepted + failure hints (local branch `sha1-bindings-and-hints` in `~/devel/openpgpverify`, tests pass in mock)
 - [x] Decided: no SHA-1 binding relaxation in openpgpverify
-- [x] Confirmed with real keys: signatures made while the key was valid keep verifying after it expires
+- [x] Confirmed with real keys: signatures made while the key was valid keep verifying after it expires (`scripts/find_expired.py` scan of 558 packages + Phase 1 on 16 with already-expired keys: 14 pass, radvd already converted, time fails for a binding-history reason)
 - [ ] Expired-before-signing keys: discuss the library/sqv option with Sequoia upstream (docs/expired-keys-and-sha1.md)
 - [ ] Review the proposed keyring refreshes (yubikey-manager-qt, openresolv)

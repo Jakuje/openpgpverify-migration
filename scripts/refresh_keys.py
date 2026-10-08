@@ -37,7 +37,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import phase1  # noqa: E402
 import state  # noqa: E402
 
-REFRESHABLE = {'expired', 'sha1-cert', 'policy', 'unknown'}
+REFRESHABLE = {'expired', 'sha1-cert', 'binding-after-signature', 'policy', 'unknown'}
 FLOOD_LIMIT = 256 * 1024     # bytes; larger certificates need a closer look
 
 

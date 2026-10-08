@@ -187,6 +187,8 @@ def failure_reason(diag, text):
         return 'sha1-cert'         # key bindings use SHA-1; a refreshed key may fix it
     if 'expired' in t:
         return 'expired'
+    if 'no binding signature at time' in t:
+        return 'binding-after-signature'   # keyring lacks older self-signatures; refresh
     if 'not considered secure' in t or 'policy' in t:
         return 'policy'
     return 'unknown'
