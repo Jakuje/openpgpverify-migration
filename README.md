@@ -23,13 +23,15 @@ signature verification (`%gpgverify`, raw `gpg`/`gpgv2`) to Sequoia-based
 
 The command-line interface is the same (long options, `-k/-s/-d` short
 options, `--keyrings`, `--data=-` from stdin). Same behaviour for armored,
-binary and concatenated-armor keyrings, and expiry is checked at signature
-time in both. Differences:
+binary and concatenated-armor keyrings. Differences:
 
 | Case | gpgverify | openpgpverify |
 |---|---|---|
 | GnuPG keybox (`.kbx`, usually named `*.gpg`) keyring | pass | **fail** |
-| SHA-1 signature/certificate (DEFAULT crypto policy) | pass | **fail** |
+| SHA-1 in the key's own self-signatures / subkey bindings (`sha1-cert`) | pass | **fail** |
+| SHA-1 data signature (`sha1-sig`) | pass | **fail** |
+| OpenPGP v3 signature packet (`v3-sig`, rejected since 2021) | pass | **fail** |
+| Key expired before the signature was made (`expired`, often a stale keyring copy) | **pass** | fail |
 | Several armored blocks in one signature file | pass | **fail** |
 | Exit code for "no matching key" | 2 | 1 |
 | stdout | quiet | prints fingerprint |
@@ -37,6 +39,18 @@ time in both. Differences:
 
 The result depends on the Sequoia crypto policy, so the harness runs with the
 system DEFAULT policy and records it (no `SEQUOIA_CRYPTO_POLICY` override).
+
+gpgv accepts a signature made by a key that had already expired according to
+the keyring (yubikey-manager-qt: key expired 2020-09, tarball signed 2023-02).
+Sequoia rejects it. Usually upstream extended the expiry and the dist-git
+copy is stale.
+
+**Buildroot:** `gnupg2` is in every rawhide buildroot (`rpm-build` →
+`rpm-sign-libs` requires `/usr/bin/gpg2`), and `redhat-rpm-config` adds
+`gpgverify` through `(gpgverify if gnupg2)`. That is why specs without any gpg
+BR work today. `openpgpverify` is *not* in the default buildroot, so a
+missing BR shows up in testing. Dropping `BR: gnupg2` changes nothing until
+rpm stops depending on gpg.
 
 ## Conversion rules (Phase 2)
 
@@ -86,27 +100,45 @@ system DEFAULT policy and records it (no `SEQUOIA_CRYPTO_POLICY` override).
 0. **Inventory** (`scripts/classify.py`): scan the daily all-specs tarball
    (`https://src.fedoraproject.org/lookaside/rpm-specs-latest.tar.xz`) as
    text, cross-checked against the rawhide source repo.
-1. **Side-by-side test**: for each in-scope package, at rawhide HEAD:
-   1. dist-git clone and `fedpkg sources`.
-   2. Run **`rpmbuild -bp --nodeps`** twice in a network-less rawhide/ELN
-      container or mock root: once unchanged and once with the Phase 2
-      rewrite. Define `fedora 45` / `dist .fc45`; run ELN (`rhel 11`) for
-      `rhel_conditional` packages. Running the whole `%prep` (rather than
-      extracted commands) covers the cases where the verify call depends on
-      earlier `%prep` steps: stdin pipes, verification after `%setup`,
-      per-arch Lua source selection, and `%{_sourcedir}` paths. Specs are
-      untrusted code (`%(…)`, `%{lua:}`), so the sandbox is required.
-   3. **Guard against verification that silently disappears**: the expanded
-      spec (`rpmspec -P`, in a buildroot that has only the spec's BRs, not
-      this host) must contain as many verify calls as the inventory found,
-      and at least one. `%{?openpgpverify:…}` with a missing BR, or a call in
-      a branch that evaluates false, would otherwise pass without verifying.
-   4. Outcomes:
-      - `both-pass`
-      - `regression`: diagnose with `file` on each keyring (keybox), count the
-        armor blocks, and `sq inspect` / `sq packet dump` for SHA-1, DSA and
-        expiry
+1. **Side-by-side test** (`scripts/phase1.py`): for each in-scope package,
+   at rawhide HEAD:
+   1. Anonymous dist-git clone into `work/PKG/dist-git`, then
+      `fedpkg sources`. Re-classify the current spec and convert it
+      (`scripts/convert.py`).
+   2. In one fresh mock chroot without network (`fedora-rawhide-x86_64`, plus
+      `fedora-eln-x86_64` with `--eln` for specs mentioning RHEL):
+      - `--installdeps` the new spec, then `rpmbuild -bp --nodeps`;
+      - `--installdeps` the unchanged spec, then `rpmbuild -bp --nodeps`.
+
+      Specs that verify outside `%prep` use `-bc`. Running the whole stage
+      covers stdin pipes, verification after `%setup`, per-arch Lua source
+      selection and `%{_sourcedir}` paths. Specs are untrusted code (`%(…)`,
+      `%{lua:}`), so they are only parsed and run inside mock.
+   3. **Call log**: inside the chroot, `/usr/libexec/{gpgverify,openpgpverify}`
+      (and `gpg`/`gpgv` for raw-verify packages) are replaced by wrappers
+      that log the arguments and exit code of every call, then run the real
+      tool. This gives an exact per-call record.
+   4. **Guard against verification that silently disappears**: the unchanged
+      spec must make at least one gpgverify call, and the new one the same
+      number of openpgpverify calls and no gpgverify calls. Tested for real:
+      getdns with the added BR removed → `guard-failed (old ran 1 verify
+      calls, new ran 0)`.
+   5. Outcomes:
+      - `both-pass` (status `tested`)
+      - `regression`: diagnosed with the keyring format (keybox magic), armor
+        block count, `sq inspect` of the keyring and the hash algorithm from
+        `sq packet dump` of the signature. Reasons: `sha1-cert`, `sha1-sig`,
+        `v3-sig`, `expired`, `keybox`, `concatenated-armor`, `policy`,
+        `unknown`.
       - `both-fail`: the package was already broken; reported separately
+      - `guard-failed`: verify call counts don't match
+      - `not-buildable`: the unchanged spec can't install its deps in that
+        chroot (only rawhide counts toward the status)
+      - `manual`: raw gpg verification or an unconvertible spec; only the
+        baseline is run
+      - `error`: a harness, clone or sources problem
+   6. `scripts/report.py` renders the state file to Markdown
+      (`reports/phase1-*.md`).
 2. **Rewrite the spec**: apply the conversion rules, then re-run Phase 1 on
    the result.
 3. **Rollout**:
@@ -224,6 +256,8 @@ Verification only actually runs when the package is built, so `merged` and
 - [x] Install helpers (fedpkg, mock, rpm-build, rpmdevtools, sequoia-sqv, sequoia-sq, openpgpverify, gpgverify, python3-bugzilla)
 - [x] Phase 0 inventory (`scripts/classify.py`)
 - [ ] Pagure (dist-git) API token, Bugzilla API key
-- [ ] Seed `data/state/packages.jsonl` from the inventory (+ maintainers from `pagure_owner_alias.json`)
-- [ ] Phase 1 harness: pilot on a sample covering every pattern (simple, short form, optional, stdin, after `%setup`, outside `%prep`, `%ifarch` Lua, rhel conditional)
-- [ ] Decide whether to fix the wrapper (keybox / concatenated armor) based on Phase 1 numbers
+- [x] Seed `data/state/packages.jsonl` from the inventory (`scripts/seed_state.py`, maintainers from `pagure_owner_alias.json`)
+- [x] Phase 1 harness and pilot (19 packages, `reports/phase1-pilot.md`)
+- [ ] Phase 1 on all in-scope packages
+- [ ] Regression triage: check whether a refreshed key (keyserver/WKD/upstream) fixes `sha1-cert` and `expired`
+- [ ] Decide on the wrapper / policy (keybox, concatenated armor, SHA-1 self-signatures) based on Phase 1 numbers
