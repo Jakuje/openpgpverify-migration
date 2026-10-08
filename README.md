@@ -139,6 +139,23 @@ rpm stops depending on gpg.
       - `error`: a harness, clone or sources problem
    6. `scripts/report.py` renders the state file to Markdown
       (`reports/phase1-*.md`).
+1b. **Keyring refresh for regressions** (`scripts/refresh_keys.py`),
+   semi-automatic, with a manual review for each package:
+   - `propose [PKG...]` (default: regressions with reason `expired`,
+     `sha1-cert`, `policy` or `unknown`): looks up only the fingerprints
+     already in the keyring (keyservers + WKD via `sq network search`) and
+     keeps only exact matches. It merges them into the existing certificates,
+     checks the set of certificates is unchanged, keeps the armored/binary
+     format and re-runs sqv on the host. Writes `work/PKG/refresh/FILE` and
+     `REVIEW.md` (a before/after `sq inspect` diff). Results: `proposed`,
+     `no-update`, `not-found`, `still-fails`.
+   - `show PKG`, then `approve PKG [--note]` or `reject PKG --note`. Only
+     `proposed` can be approved, and the reviewer and time are recorded.
+   - `phase1.py PKG` then uses approved keyrings in the new variant only
+     (`keyring_refresh_applied`). The PR will include the refreshed keyring.
+
+   Background, and what can and can't be fixed in openpgpverify itself:
+   [docs/expired-keys-and-sha1.md](docs/expired-keys-and-sha1.md).
 2. **Rewrite the spec**: apply the conversion rules, then re-run Phase 1 on
    the result.
 3. **Rollout**:
@@ -259,5 +276,8 @@ Verification only actually runs when the package is built, so `merged` and
 - [x] Seed `data/state/packages.jsonl` from the inventory (`scripts/seed_state.py`, maintainers from `pagure_owner_alias.json`)
 - [x] Phase 1 harness and pilot (19 packages, `reports/phase1-pilot.md`)
 - [ ] Phase 1 on all in-scope packages
-- [ ] Regression triage: check whether a refreshed key (keyserver/WKD/upstream) fixes `sha1-cert` and `expired`
-- [ ] Decide on the wrapper / policy (keybox, concatenated armor, SHA-1 self-signatures) based on Phase 1 numbers
+- [x] Semi-automatic keyring refresh with per-package review (`scripts/refresh_keys.py`)
+- [x] openpgpverify prototype: SHA-1 key bindings accepted + failure hints (local branch `sha1-bindings-and-hints` in `~/devel/openpgpverify`, tests pass in mock)
+- [ ] Decide: SHA-1 binding relaxation on by default or opt-in; "always" or a cutoff
+- [ ] Expired-before-signing keys: discuss the library/sqv option with Sequoia upstream (docs/expired-keys-and-sha1.md)
+- [ ] Review the proposed keyring refreshes (yubikey-manager-qt, openresolv)

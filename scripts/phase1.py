@@ -36,7 +36,7 @@ import classify  # noqa: E402
 import convert  # noqa: E402
 import state  # noqa: E402
 
-HARNESS_VERSION = '1'
+HARNESS_VERSION = '2'
 WORK = os.path.join(state.ROOT, 'work')
 DISTGIT = 'https://src.fedoraproject.org/rpms/%s.git'
 LOCK = threading.Lock()
@@ -66,8 +66,10 @@ EOF
 done
 '''
 
-PREP = ('cd /builddir/pkg && rpmbuild %(stage)s --nodeps '
-        '--define "_sourcedir /builddir/pkg" --define "_topdir /builddir/top-%(v)s" '
+# Each variant gets its own copy of the dist-git tree (/builddir/old, /builddir/new)
+# so that e.g. a refreshed keyring only affects the new run.
+PREP = ('cd /builddir/%(v)s && rpmbuild %(stage)s --nodeps '
+        '--define "_sourcedir /builddir/%(v)s" --define "_topdir /builddir/top-%(v)s" '
         '%(spec)s > /builddir/%(v)s.log 2>&1; echo "rpmbuild-rc: $?" >> /builddir/%(v)s.log; '
         'cp /tmp/opv-calls.log /builddir/%(v)s.calls; : > /tmp/opv-calls.log')
 
@@ -135,15 +137,24 @@ def tail(path, n=25):
     return ''.join(open(path, errors='replace').readlines()[-n:])[-3000:]
 
 
-def diagnose(call, g):
+def host_path(path, g, overlay=None):
+    """Map a /builddir/{old,new}/FILE path from the chroot to the host file."""
+    m = re.match(r'^/builddir/(old|new)/(.+)$', path.strip('\'"'))
+    if not m:
+        return None
+    if m.group(1) == 'new' and overlay and m.group(2) in overlay:
+        return overlay[m.group(2)]
+    return os.path.join(g, m.group(2))
+
+
+def diagnose(call, g, overlay=None):
     """Look at keyring and signature files of a failed call (on the host, as data)."""
     d = {}
     opts = dict(re.findall(r'--(keyring|signature|data)=(\S+)', call['args']))
     for kind in ('keyring', 'signature'):
-        p = opts.get(kind, '').strip('\'"')
-        if not p.startswith('/builddir/pkg/'):
+        host = host_path(opts.get(kind, ''), g, overlay)
+        if not host:
             continue
-        host = os.path.join(g, p[len('/builddir/pkg/'):])
         if not os.path.isfile(host):
             continue
         data = open(host, 'rb').read()
@@ -181,7 +192,7 @@ def failure_reason(diag, text):
     return 'unknown'
 
 
-def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp'):
+def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp', overlay=None):
     """Run old and new %prep in one fresh chroot. Returns a result dict."""
     log = os.path.join(d, 'mock-%s.log' % cfg)
     open(log, 'w').close()
@@ -195,9 +206,14 @@ def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp'):
         if m('--clean') or m('--init', timeout=3600):
             res['error'] = 'mock init failed'
             return res
-        if m('--copyin', g, '/builddir/pkg') or \
-                (new_spec and m('--copyin', new_spec, '/builddir/pkg/%s.opv.spec' % pkg)) or \
-                m.chroot('chown -R mockbuild:mock /builddir/pkg'):
+        copies = [m('--copyin', g, '/builddir/old')]
+        if new_spec:
+            copies.append(m('--copyin', g, '/builddir/new'))
+            copies.append(m('--copyin', new_spec, '/builddir/new/%s.spec' % pkg))
+            for rel, src in (overlay or {}).items():
+                copies.append(m('--copyin', src, '/builddir/new/' + rel))
+        if any(copies) or m.chroot('chown -R mockbuild:mock /builddir/old /builddir/new'
+                                   if new_spec else 'chown -R mockbuild:mock /builddir/old'):
             res['error'] = 'copyin failed'
             return res
         variants = ([('new', new_spec)] if new_spec else []) + [('old', old_spec)]
@@ -209,8 +225,7 @@ def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp'):
             if v == variants[0][0]:
                 m.chroot('{ %s; } > /builddir/env.txt 2>&1' % ENV_INFO)
                 m('--copyout', '/builddir/env.txt', out)
-            inspec = '%s.opv.spec' % pkg if v == 'new' else '%s.spec' % pkg
-            m.chroot(PREP % dict(v=v, spec=inspec, stage=stage), unpriv=True)
+            m.chroot(PREP % dict(v=v, spec='%s.spec' % pkg, stage=stage), unpriv=True)
             for f in ('%s.log' % v, '%s.calls' % v):
                 m('--copyout', '/builddir/' + f, out)
             res['%s_calls' % v] = read_calls(os.path.join(out, '%s.calls' % v))
@@ -261,7 +276,7 @@ def evaluate(res, raw, g):
     return 'both-pass', None
 
 
-def test_package(pkg, inv_rec, cfgs):
+def test_package(pkg, inv_rec, cfgs, prev=None):
     d = os.path.join(WORK, pkg)
     os.makedirs(d, exist_ok=True)
     log = os.path.join(d, 'checkout.log')
@@ -298,19 +313,34 @@ def test_package(pkg, inv_rec, cfgs):
             raw = True   # run the baseline only
     # Verification outside %prep (e.g. at the start of %build) needs a later stage;
     # failures after the verify call do not matter, the wrapper has logged it.
+    # Approved keyring refreshes (scripts/refresh_keys.py) replace keyring files
+    # in the new variant only.
+    overlay = None
+    upd['keyring_refresh_applied'] = []
+    kr = (prev or {}).get('keyring_refresh') or {}
+    if new_spec and kr.get('status') == 'approved':
+        overlay = {f['file']: os.path.join(d, 'refresh', f['file'])
+                   for f in kr['files'] if f.get('changed')}
+        for f in kr['files']:
+            if f.get('changed') and hashlib.sha256(open(overlay[f['file']], 'rb').read()) \
+                    .hexdigest() != f.get('sha256_new'):
+                upd.update(status='error', outcome_detail='approved keyring %s changed after '
+                           'review; propose and review again' % f['file'])
+                return upd
+        upd['keyring_refresh_applied'] = sorted(overlay)
     sections = {c['section'] for c in rec['calls'] + rec['raw_verify']}
     stage = '-bp' if sections <= {'prep'} else '-bc' if sections <= {'prep', 'conf', 'build'} else '-bi'
     upd['stage'] = stage
     statuses = []
     for cfg in cfgs:
-        res = test_in_chroot(cfg, pkg, d, g, spec_path, new_spec, raw, stage)
+        res = test_in_chroot(cfg, pkg, d, g, spec_path, new_spec, raw, stage, overlay)
         outcome, detail = evaluate(res, raw, g)
         res['outcome'] = outcome
         res['detail'] = detail
         if outcome == 'regression':
             bad = [c for c in res['new_calls'] if c['rc'] != 0][0]
             text_tail = tail(os.path.join(d, 'out-' + cfg, 'new.log'))
-            diag = diagnose(bad, g)
+            diag = diagnose(bad, g, overlay)
             res['diag'] = diag
             res['failure_reason'] = failure_reason(diag, text_tail)
             res['log_tail'] = text_tail
@@ -358,7 +388,9 @@ def main():
         if a.eln and inv.get(pkg, {}).get('mentions_rhel'):
             cfgs.append('fedora-eln-x86_64')
         try:
-            upd = test_package(pkg, inv.get(pkg), cfgs)
+            with LOCK:
+                prev = state.load().get(pkg)
+            upd = test_package(pkg, inv.get(pkg), cfgs, prev)
         except Exception as e:  # keep going with other packages
             upd = dict(status='error', outcome_detail='harness: %r' % e, results=[])
         upd['updated'] = state.now()

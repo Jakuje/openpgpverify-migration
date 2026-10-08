@@ -48,7 +48,9 @@ def main():
         notes = '; '.join([r['detail'] for r in s.get('results', []) if r.get('detail')] +
                           (s.get('convert_notes') or []) +
                           ['reason: %s' % r['failure_reason'] for r in s.get('results', [])
-                           if r.get('failure_reason')])
+                           if r.get('failure_reason')] +
+                          (['keyring refresh: %s' % s['keyring_refresh']['status']]
+                           if s.get('keyring_refresh') else []))
         lines.append('| %s | `%s` | %s→%s | %s | %s |' % (
             s['package'], s.get('status'), s.get('expanded_calls_old', '-'),
             s.get('expanded_calls_new', '-'), chroots, cell(notes)))
