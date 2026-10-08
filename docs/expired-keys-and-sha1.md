@@ -18,7 +18,24 @@ Phase 1 pilot regressions. Tested with sequoia-sqv 1.5.0 and sequoia-openpgp
 
 1. **sqv already checks expiry at the signature's creation time.** The package's
    own `expired` test (key expired 2 days after signing) passes with no options.
-   The expectation in bug comment #1 already holds.
+   The expectation in bug comment #1 already holds. Checked with real packages
+   by moving sqv's reference time (`--time`) past their keys' expiry:
+
+   | Package | Signed | Signing key expires | sqv now / 2026-12-01 / 2027-06-01 / 2031-01-01 |
+   |---|---|---|---|
+   | fapolicyd (subkey 7200EB2C…) | 2026-05-20, 2026-08-19 | 2026-11-04 | pass / pass / pass / pass |
+   | python-oslo-metrics | 2026-08-24 | 2026-11-16 | pass / pass / pass / pass |
+   | pinentry, gnupg2, libgpg-error, libksba | 2025-12 … 2026-08 | 2027-03-15 | pass / pass / pass / pass |
+   | libstrophe | 2025-03-13 | 2030-03-17 | pass / pass / pass / pass |
+
+   Controls:
+   - `--time 2026-08-01` (before the fapolicyd signature) is rejected with
+     "Not live until 2026-08-19", so `--time` really is the evaluation time.
+   - `sq --time 2026-12-01 inspect` shows the fapolicyd signing subkey as
+     expired, yet the signature still verifies.
+
+   So builds do **not** start failing just because a key expired after the
+   release was signed. fapolicyd will be the first real case, on 2026-11-04.
 2. **The failures are signatures made after the expiry date in our copy of the key.**
    - yubikey-manager-qt: key expired 2020-09-16, signed 2023-02-03
    - cairomm1.16: key expired 2022-09-08, signed 2023-09-27
@@ -70,7 +87,13 @@ Test suite in mock (rawhide). With the current 2.2-2 package, everything
 passes except sha1-binding and stale-keyring (no hint). With the branch, all
 20 pass.
 
-Open questions for this part:
+**Decision (2026-10-08): not adopted.** The change owner does not want
+openpgpverify to accept SHA-1 bindings. Packages with `sha1-cert` go through a
+keyring refresh, or else a bug asking upstream to update the key's
+self-signatures. The failure hints in the same prototype could still be
+split out on their own.
+
+Questions that were open for this part:
 - Should the relaxation be on by default (as prototyped), or opt-in per spec
   (a new macro option, visible in the spec)?
 - Is "always" right, or a cutoff date (e.g. reject SHA-1 bindings made after

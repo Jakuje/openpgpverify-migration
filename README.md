@@ -17,6 +17,7 @@ signature verification (`%gpgverify`, raw `gpg`/`gpgv2`) to Sequoia-based
 | Wrapper fixes (concatenated armor, keybox keyrings) | Decide **after Phase 1** results. |
 | Unverified `.asc`/`.sig` sources, leftover `BR: gnupg2` | **Later**, as a follow-up hardening campaign. |
 | Policy | FESCo *Mass package changes* policy: announce on devel-announce and Discourse ≥ 1 week ahead, publish this repository. |
+| SHA-1 key bindings | **Not accepted** by openpgpverify. Fix with a keyring refresh, or a bug for upstream. |
 | AI disclosure | `Assisted-by:` commit trailer (Fedora AI contributions policy). |
 
 ## Known differences between gpgverify and openpgpverify
@@ -278,6 +279,7 @@ Verification only actually runs when the package is built, so `merged` and
 - [ ] Phase 1 on all in-scope packages
 - [x] Semi-automatic keyring refresh with per-package review (`scripts/refresh_keys.py`)
 - [x] openpgpverify prototype: SHA-1 key bindings accepted + failure hints (local branch `sha1-bindings-and-hints` in `~/devel/openpgpverify`, tests pass in mock)
-- [ ] Decide: SHA-1 binding relaxation on by default or opt-in; "always" or a cutoff
+- [x] Decided: no SHA-1 binding relaxation in openpgpverify
+- [x] Confirmed with real keys: signatures made while the key was valid keep verifying after it expires
 - [ ] Expired-before-signing keys: discuss the library/sqv option with Sequoia upstream (docs/expired-keys-and-sha1.md)
 - [ ] Review the proposed keyring refreshes (yubikey-manager-qt, openresolv)
