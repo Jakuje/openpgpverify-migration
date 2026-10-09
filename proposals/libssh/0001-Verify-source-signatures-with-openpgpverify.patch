@@ -1,0 +1,38 @@
+From cdd91425a294115006cc14c60ff01248bb9749e5 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 9 Oct 2026 15:20:17 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ libssh.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/libssh.spec b/libssh.spec
+index fbccdbd..82d39fe 100644
+--- a/libssh.spec
++++ b/libssh.spec
+@@ -38,6 +38,7 @@ BuildRequires:  opensc
+ BuildRequires:  softhsm
+ BuildRequires:  gnutls-utils
+ BuildRequires:  hostname
++BuildRequires:  openpgpverify
+ 
+ Requires:       %{name}-config = %{version}-%{release}
+ 
+@@ -75,7 +76,7 @@ Obsoletes:      %{name} < 0.9.0-3
+ The %{name}-config package provides the default configuration files for %{name}.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+-- 
+2.55.0
+

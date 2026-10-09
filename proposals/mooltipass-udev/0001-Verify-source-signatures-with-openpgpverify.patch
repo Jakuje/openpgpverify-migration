@@ -1,0 +1,39 @@
+From e2297bb7897ba39d0f78048132fa8ab1c85d530e Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 9 Oct 2026 15:20:18 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ mooltipass-udev.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mooltipass-udev.spec b/mooltipass-udev.spec
+index 0d7c920..21c765e 100644
+--- a/mooltipass-udev.spec
++++ b/mooltipass-udev.spec
+@@ -12,7 +12,7 @@ BuildArch:      noarch
+ 
+ Requires:       udev
+ 
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ # for _udevrulesdir macro
+ BuildRequires:  systemd-rpm-macros
+ 
+@@ -22,7 +22,7 @@ Conflicts:      moolticute <= 1.00.1-4
+ Udev rules to allow user access to Mooltipass devices for use with Moolticute.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+-- 
+2.55.0
+

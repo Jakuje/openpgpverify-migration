@@ -51,11 +51,29 @@ def fingerprints(path):
 
 
 def summary(path):
-    """The lines of `sq inspect` that matter for review."""
+    """The lines of `sq inspect` that matter for review, plus the dates of the
+    self-signatures (a refresh can add newer ones, or older ones our copy lacks)."""
     p = sh(['sq', 'inspect', path])
     keep = re.compile(r'Fingerprint:|Subkey:|UserID:|Expiration time:|Invalid:|because:|'
                       r'Revoked|Key flags:')
-    return [l.rstrip() for l in (p.stdout + p.stderr).splitlines() if keep.search(l)]
+    lines = [l.rstrip() for l in (p.stdout + p.stderr).splitlines() if keep.search(l)]
+    dump = sh(['sq', 'packet', 'dump', path]).stdout
+    primaries = set(re.findall(r'^\s*Fingerprint: ([0-9A-F]{40,64})$', p.stdout, re.M))
+    selfsig, third = {}, {}
+    for chunk in re.split(r'(?m)^(?=\S.*Packet)', dump):
+        if not chunk.startswith('Signature Packet'):
+            continue
+        t = re.search(r'^\s*Type: (\w+)', chunk, re.M)
+        d = re.search(r'Signature creation time: (\S+)', chunk)
+        iss = re.findall(r'Issuer(?: Fingerprint)?: ([0-9A-F]+)', chunk)
+        if not (t and d):
+            continue
+        own = any(i == f or f.endswith(i) for i in iss for f in primaries)
+        (selfsig if own else third).setdefault(t.group(1), set()).add(d.group(1))
+    lines += ['self-signatures %s: %s' % (t, ', '.join(sorted(d)))
+              for t, d in sorted(selfsig.items())]
+    lines += ['third-party %s: %d' % (t, len(d)) for t, d in sorted(third.items())]
+    return lines
 
 
 def call_files(call):

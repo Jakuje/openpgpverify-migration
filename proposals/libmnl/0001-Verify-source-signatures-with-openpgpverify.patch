@@ -1,0 +1,49 @@
+From 56cc936e97795ef75b5d41234305e72d9ccdbd35 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 9 Oct 2026 15:20:18 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ libmnl.spec | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/libmnl.spec b/libmnl.spec
+index 2455ee9..4a8dced 100644
+--- a/libmnl.spec
++++ b/libmnl.spec
+@@ -10,7 +10,7 @@ Source1:       https://netfilter.org/projects/libmnl/files/%{name}-%{version}.ta
+ Source2:       https://netfilter.org/files/coreteam-gpg-key-0xD55D978A8A1420E4.txt
+ 
+ BuildRequires: gcc
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ BuildRequires: make
+ 
+ %description
+@@ -40,7 +40,7 @@ applications that use %{name}.
+ 
+ %prep
+ %setup -q
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ 
+ %build
+@@ -74,6 +74,9 @@ mv examples examples-%{_arch}
+ %{_libdir}/%{name}.a
+ 
+ %changelog
++* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 1.0.5-10
++- Verify source signatures with openpgpverify (Sequoia)
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.0.5-10
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.55.0
+

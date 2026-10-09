@@ -1,0 +1,38 @@
+From 4ce68a55cf1657b6d44767d0cfa15a3c520a8a1b Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 9 Oct 2026 15:20:17 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ libgpg-error.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/libgpg-error.spec b/libgpg-error.spec
+index 26b693a..d30e1bb 100644
+--- a/libgpg-error.spec
++++ b/libgpg-error.spec
+@@ -16,6 +16,7 @@ BuildRequires: gawk, gettext, autoconf, automake, gettext-devel, libtool
+ BuildRequires: texinfo
+ BuildRequires: gettext-autopoint
+ BuildRequires: make
++BuildRequires: openpgpverify
+ 
+ %description
+ This is a library that defines common error values for all GnuPG
+@@ -34,7 +35,7 @@ pinentry, SmartCard Daemon and possibly more in the future. This package
+ contains files necessary to develop applications using libgpg-error.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ autoreconf -f
+-- 
+2.55.0
+

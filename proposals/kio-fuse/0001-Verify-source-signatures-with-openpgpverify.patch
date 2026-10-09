@@ -1,0 +1,48 @@
+From bba957d7eefb7ed20754610801d0444387345ddc Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 9 Oct 2026 15:20:18 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ kio-fuse.spec | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/kio-fuse.spec b/kio-fuse.spec
+index 76d7873..6d9f856 100644
+--- a/kio-fuse.spec
++++ b/kio-fuse.spec
+@@ -35,6 +35,7 @@ BuildRequires:  cmake(Qt6Test)       >= %{min_qt_version}
+ 
+ BuildRequires:  cmake(KF6KIO)        >= %{min_kf_version}
+ BuildRequires:  cmake(KF6CoreAddons) >= %{min_kf_version}
++BuildRequires:  openpgpverify
+ 
+ %if 0%{?tests}
+ BuildRequires:  dbus-x11
+@@ -51,7 +52,7 @@ FUSE.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ 
+@@ -84,6 +85,9 @@ dbus-launch --exit-with-session \
+ 
+ 
+ %changelog
++* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 5.1.1-4
++- Verify source signatures with openpgpverify (Sequoia)
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 5.1.1-4
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.55.0
+

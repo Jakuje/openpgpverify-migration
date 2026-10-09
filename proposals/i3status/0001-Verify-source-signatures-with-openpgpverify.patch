@@ -1,0 +1,38 @@
+From 3f2c8d1794445a80dd8fdc91071025a234c87e4d Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 9 Oct 2026 15:20:18 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ i3status.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/i3status.spec b/i3status.spec
+index 9d7c6db..26866d4 100644
+--- a/i3status.spec
++++ b/i3status.spec
+@@ -25,6 +25,7 @@ BuildRequires:  gnupg2
+ BuildRequires:  perl
+ BuildRequires:  make
+ BuildRequires:  meson
++BuildRequires:  openpgpverify
+ 
+ Recommends:     i3status-config
+ Requires:       (i3status-config or i3status-config-fedora)
+@@ -56,7 +57,7 @@ Conflicts:      %{name}-config
+ This is the configuration file of %{name} used for the Fedora i3 Spin.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+-- 
+2.55.0
+

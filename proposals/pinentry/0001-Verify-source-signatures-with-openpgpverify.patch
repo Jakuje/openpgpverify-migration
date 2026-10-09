@@ -1,0 +1,39 @@
+From afab3f965394b4dcb04850425d31e114143699c6 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 9 Oct 2026 15:20:17 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ pinentry.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/pinentry.spec b/pinentry.spec
+index d611d02..f0e6e97 100644
+--- a/pinentry.spec
++++ b/pinentry.spec
+@@ -40,7 +40,7 @@ BuildRequires: pkgconfig(Qt6Core) pkgconfig(Qt6Gui) pkgconfig(Qt6Widgets)
+ BuildRequires: pkgconfig(KF6WindowSystem) pkgconfig(KF6GuiAddons)
+ %endif
+ BuildRequires: desktop-file-utils
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ 
+ Provides: %{name}-curses = %{version}-%{release}
+ 
+@@ -109,7 +109,7 @@ http://www.gnupg.org/aegypten/ for details.
+ This package contains the tty version of the PIN entry dialog.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ 
+-- 
+2.55.0
+

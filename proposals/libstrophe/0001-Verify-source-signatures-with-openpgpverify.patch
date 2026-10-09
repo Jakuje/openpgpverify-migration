@@ -1,0 +1,49 @@
+From bc73abf7f1dbb722ada4c76af4343966e4d3448f Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 9 Oct 2026 15:20:18 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ libstrophe.spec | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/libstrophe.spec b/libstrophe.spec
+index 0e64b13..718a0fb 100644
+--- a/libstrophe.spec
++++ b/libstrophe.spec
+@@ -25,7 +25,7 @@ BuildRequires:  openssl-devel
+ BuildRequires:  doxygen
+ BuildRequires:  texinfo
+ # For signature verification
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ 
+ %description
+ libstrophe is a minimal XMPP library written in C. It has almost no
+@@ -61,7 +61,7 @@ sed -i "s/GENERATE_DOCBOOK       = NO/GENERATE_DOCBOOK       = YES/g" Doxyfile
+ sed -i "s/GENERATE_HTML          = YES/GENERATE_HTML          = NO/g" Doxyfile
+ 
+ %build
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ autoreconf -i -W all
+ # expat is the default; use --with-libxml2 to switch
+ %configure --disable-static
+@@ -120,6 +120,9 @@ make check
+ 
+ 
+ %changelog
++* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 0.14.0-5
++- Verify source signatures with openpgpverify (Sequoia)
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.14.0-5
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.55.0
+

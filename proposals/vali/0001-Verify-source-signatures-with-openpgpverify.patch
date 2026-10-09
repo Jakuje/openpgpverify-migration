@@ -1,0 +1,39 @@
+From 87053fe8e8cd9d70147da9dd158eb1292c4c3d47 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 9 Oct 2026 15:20:18 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ vali.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/vali.spec b/vali.spec
+index c8f5646..273e7c9 100644
+--- a/vali.spec
++++ b/vali.spec
+@@ -13,7 +13,7 @@ Source1:        %{url}/-/releases/v%{version}/downloads/%{name}-%{version}.tar.g
+ Source2:        https://emersion.fr/.well-known/openpgpkey/hu/dj3498u4hyyarh35rkjfnghbjxug6b19#/gpgkey-0FDE7BE0E88F5E48.gpg
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ BuildRequires:  meson >= 1
+ BuildRequires:  pkgconfig(aml)
+ BuildRequires:  pkgconfig(json-c)
+@@ -31,7 +31,7 @@ developing applications that use %{name}.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ 
+-- 
+2.55.0
+

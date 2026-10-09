@@ -78,9 +78,13 @@ rpm stops depending on gpg.
 5. **Raw gpg/gpgv calls** (`raw-verify`) are rewritten by hand into a macro
    call, piped through `--data=-` where the data is decompressed on the fly.
 6. **RHEL conditionals**: rawhide and ELN both get openpgpverify, so the
-   plain conversion is the default. Only where the verification or its BR is
-   already in an `%if 0%{?rhel} …` block (spec shared with EPEL / CentOS /
-   RDO) keep the old branch for older RHEL:
+   plain conversion is the default. openpgpverify is in Fedora 43 and later
+   but **not in EPEL 9/10** (checked 2026-10-09). Where the verification or
+   its BR is already in an `%if 0%{?rhel} …` block (spec shared with EPEL /
+   CentOS / RDO), `convert.py` keeps the old variant for older RHEL:
+   - an unconditional gpg BR is wrapped; a gpg BR already inside a branch for
+     Fedora / newer RHEL (fapolicyd, rust) is replaced in place;
+   - verify calls are wrapped, and consecutive calls share one block.
 
    ```
    %if 0%{?fedora} || 0%{?rhel} >= 11
@@ -95,6 +99,9 @@ rpm stops depending on gpg.
    %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
    %endif
    ```
+
+   The added `BuildRequires` copies the alignment of the spec's first
+   `BuildRequires:` line.
 
 ## Phases
 
@@ -161,8 +168,30 @@ rpm stops depending on gpg.
 
    Background, and what can and can't be fixed in openpgpverify itself:
    [docs/expired-keys-and-sha1.md](docs/expired-keys-and-sha1.md).
-2. **Rewrite the spec**: apply the conversion rules, then re-run Phase 1 on
-   the result.
+2. **Proposals** (`scripts/render_proposals.py [PKG...]`, default: the pilot
+   list): renders what each maintainer would get into `proposals/PKG/`. It
+   doesn't re-convert anything: it uses the spec that Phase 1 tested, at the
+   tested dist-git commit, and refuses if dist-git changed since.
+   - **PR**: `0001-*.patch` (the `git format-patch` of the commit, made in a
+     scratch clone, including any approved keyring refresh and the changelog
+     entry for specs without `%autochangelog`) and `PR.md` (title +
+     description from `templates/pr-description.md`).
+   - **draft PR**: the same, with a keyring refresh that isn't approved yet.
+   - **bug**: `BUG.md` (Bugzilla fields + text from `templates/bug.md`, with
+     the reason explained and the fix options).
+   - `proposals/README.md`: an index.
+
+   Commit message: `templates/commit-message.txt`, with an `Assisted-by:`
+   trailer.
+
+   **Open questions for review:**
+   - No Release bump: the changelog entry for non-`%autochangelog` specs
+     repeats the latest EVR (e.g. logrotate `3.22.0-6` twice). The
+     alternative is to bump Release, which conflicts with maintainers'
+     pending updates more often.
+   - The PR text ends with a "Generated with Claude Code" line, on top of
+     the `Assisted-by:` trailer. Keep both?
+   - Wording of the PR and bug templates.
 3. **Rollout**:
    1. Pilot with about 15 of our own packages.
    2. Announce.
@@ -185,7 +214,10 @@ data/snapshots/<date>/   raw inputs (spec tarball + extracted specs, repoquery d
 data/snapshots/latest    symlink to the newest snapshot
 data/inventory/          classifier output per snapshot (regenerable)
 data/state/              per-package state records (JSONL); the single mutable source of truth for Phases 1–3
-reports/                 generated summaries
+reports/                 generated summaries; reports/keyring-refresh/ holds the refresh reviews
+templates/               commit message, PR description and bug templates
+proposals/               rendered patches, PR and bug texts (scripts/render_proposals.py)
+docs/                    background write-ups
 ```
 
 ## Inventory as of 2026-10-06

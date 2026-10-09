@@ -1,0 +1,38 @@
+From 9857585b6a6d01341a0a6eb765cdb70396fe9aa1 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 9 Oct 2026 15:20:18 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ conflict.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/conflict.spec b/conflict.spec
+index 89cd4eb..0164643 100644
+--- a/conflict.spec
++++ b/conflict.spec
+@@ -13,6 +13,7 @@ BuildRequires:  gcc
+ BuildRequires:  gnupg2
+ BuildRequires:  groff
+ BuildRequires:  make
++BuildRequires:  openpgpverify
+ 
+ %description
+ CONFLICT examines the user-specifiable list of programs, looking for instances
+@@ -21,7 +22,7 @@ point in the path).
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -n %{name}-%{version}
+ 
+ 
+-- 
+2.55.0
+

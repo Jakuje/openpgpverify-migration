@@ -1,0 +1,47 @@
+From b0cca7192876629b8a2097583d6278314133e1b6 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 9 Oct 2026 15:20:18 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ ssh-audit.spec | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/ssh-audit.spec b/ssh-audit.spec
+index 94273cb..e05ea4c 100644
+--- a/ssh-audit.spec
++++ b/ssh-audit.spec
+@@ -14,13 +14,14 @@ BuildArch:      noarch
+ BuildRequires:  python3-devel
+ BuildRequires:  gnupg2
+ BuildRequires:  python3dist(pytest)
++BuildRequires:  openpgpverify
+ 
+ %description
+ ssh-audit is an SSH server & client security auditing (banner, key exchange,
+ encryption, mac, compression, compatibility, security, etc)
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ %autosetup
+ 
+@@ -50,6 +51,9 @@ install -t %{buildroot}%{_mandir}/man1 -Dpm 0644 ssh-audit.1
+ %{_bindir}/ssh-audit
+ 
+ %changelog
++* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 3.3.0-9
++- Verify source signatures with openpgpverify (Sequoia)
++
+ * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 3.3.0-9
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.55.0
+

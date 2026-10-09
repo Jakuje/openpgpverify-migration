@@ -1,0 +1,47 @@
+From bdb9221a4b368f15da37c3517bf7c4aeeda91f7b Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 9 Oct 2026 15:20:18 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ gnulib-l10n.spec | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/gnulib-l10n.spec b/gnulib-l10n.spec
+index 9a3e3a9..71db0d8 100644
+--- a/gnulib-l10n.spec
++++ b/gnulib-l10n.spec
+@@ -19,13 +19,13 @@ BuildRequires: gettext-devel
+ BuildRequires: make
+ 
+ # For gpg verification of source tarball
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ 
+ %description
+ The localizations for the GNU portability library.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+@@ -41,6 +41,9 @@ The localizations for the GNU portability library.
+ %license COPYING
+ 
+ %changelog
++* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 20241231-4
++- Verify source signatures with openpgpverify (Sequoia)
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 20241231-4
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.55.0
+
