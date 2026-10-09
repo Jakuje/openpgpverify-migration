@@ -159,8 +159,8 @@ Possible designs, from most to least preferred:
    re-readable data file. That rules out `--data=-` (15 specs pipe
    decompressed data in) unless sqv buffers stdin to a temporary file.
    Easy to get subtly wrong; it reimplements part of the verifier.
-3. **Fallback to gpgv** inside openpgpverify: rejected, since it defeats
-   removing GnuPG from RHEL.
+3. **Fallback to gpgv** inside openpgpverify: rejected, since it would bring
+   GnuPG and its weaker checks back into source verification.
 
 Bug comment #0 suggests a middle ground: refuse only keys that expired before
 the archive's mtime. That doesn't work, because mtimes are as unprotected as

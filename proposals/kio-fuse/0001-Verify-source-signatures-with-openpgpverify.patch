@@ -1,21 +1,32 @@
-From bba957d7eefb7ed20754610801d0444387345ddc Mon Sep 17 00:00:00 2001
+From 641d1d8029411cda9a49a0155def2bd4e6208afb Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 9 Oct 2026 15:20:18 +0200
+Date: Fri, 9 Oct 2026 15:52:19 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
 Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
+Release bumped with a changelog entry.
+
 Assisted-by: Claude Opus 5.5
 ---
- kio-fuse.spec | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ kio-fuse.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/kio-fuse.spec b/kio-fuse.spec
-index 76d7873..6d9f856 100644
+index 76d7873..e21df36 100644
 --- a/kio-fuse.spec
 +++ b/kio-fuse.spec
+@@ -10,7 +10,7 @@
+ 
+ Name:           kio-fuse
+ Version:        5.1.1
+-Release:        4%{?dist}
++Release:        5%{?dist}
+ Summary:        KIO FUSE
+ 
+ License:        GPL-3.0-or-later
 @@ -35,6 +35,7 @@ BuildRequires:  cmake(Qt6Test)       >= %{min_qt_version}
  
  BuildRequires:  cmake(KF6KIO)        >= %{min_kf_version}
@@ -37,8 +48,8 @@ index 76d7873..6d9f856 100644
  
  
  %changelog
-+* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 5.1.1-4
-+- Verify source signatures with openpgpverify (Sequoia)
++* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 5.1.1-5
++- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 5.1.1-4
  - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild

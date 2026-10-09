@@ -1,21 +1,32 @@
-From 3b805738ad1826e3de4f9579d65ee4edb688adf8 Mon Sep 17 00:00:00 2001
+From 616336c89656c4dcfec50edb07acf19b3b831c33 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 9 Oct 2026 15:20:18 +0200
+Date: Fri, 9 Oct 2026 15:52:19 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
 Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
+Release bumped with a changelog entry.
+
 Assisted-by: Claude Opus 5.5
 ---
- dbus-glib.spec | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ dbus-glib.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/dbus-glib.spec b/dbus-glib.spec
-index 9a4e479..ecbaf06 100644
+index 9a4e479..49cc00c 100644
 --- a/dbus-glib.spec
 +++ b/dbus-glib.spec
+@@ -4,7 +4,7 @@
+ 
+ Name:    dbus-glib
+ Version: 0.112
+-Release: 14%{?dist}
++Release: 15%{?dist}
+ Summary: GLib bindings for D-Bus
+ 
+ # dbus/dbus-bash-completion-helper.c is GPL-2.0-or-later
 @@ -27,6 +27,7 @@ BuildRequires: gcc
  BuildRequires: gettext
  BuildRequires: gnupg2
@@ -37,8 +48,8 @@ index 9a4e479..ecbaf06 100644
  
  
  %changelog
-+* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 0.112-14
-+- Verify source signatures with openpgpverify (Sequoia)
++* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 0.112-15
++- Verify upstream source signatures with openpgpverify
 +
  * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.112-14
  - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild

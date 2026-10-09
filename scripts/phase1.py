@@ -36,7 +36,12 @@ import classify  # noqa: E402
 import convert  # noqa: E402
 import state  # noqa: E402
 
-HARNESS_VERSION = '2'
+HARNESS_VERSION = '3'
+# Specs without %autochangelog get a Release bump and a changelog entry, done by
+# rpmdev-bumpspec inside the chroot (it evaluates the spec), before %prep runs,
+# so the tested spec is exactly the proposed one.
+AUTHOR = 'Jakub Jelen <jjelen@redhat.com>'
+CHANGELOG_LINE = 'Verify upstream source signatures with openpgpverify'
 WORK = os.path.join(state.ROOT, 'work')
 DISTGIT = 'https://src.fedoraproject.org/rpms/%s.git'
 LOCK = threading.Lock()
@@ -194,7 +199,8 @@ def failure_reason(diag, text):
     return 'unknown'
 
 
-def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp', overlay=None):
+def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp', overlay=None,
+                   bump=False):
     """Run old and new %prep in one fresh chroot. Returns a result dict."""
     log = os.path.join(d, 'mock-%s.log' % cfg)
     open(log, 'w').close()
@@ -223,6 +229,14 @@ def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp', overlay
             if m('--installdeps', spec, timeout=7200):
                 res['%s_error' % v] = 'installdeps failed'
                 continue
+            if v == 'new' and bump:
+                if m('--install', 'rpmdevtools') or m.chroot(
+                        'rpmdev-bumpspec -u %s -c %s /builddir/new/%s.spec'
+                        % (shlex.quote(AUTHOR), shlex.quote(CHANGELOG_LINE), pkg),
+                        unpriv=True):
+                    res['new_error'] = 'rpmdev-bumpspec failed'
+                    continue
+                m('--copyout', '/builddir/new/%s.spec' % pkg, os.path.join(out, 'bumped.spec'))
             m.chroot(wrap)
             if v == variants[0][0]:
                 m.chroot('{ %s; } > /builddir/env.txt 2>&1' % ENV_INFO)
@@ -283,7 +297,8 @@ def test_package(pkg, inv_rec, cfgs, prev=None):
     os.makedirs(d, exist_ok=True)
     log = os.path.join(d, 'checkout.log')
     open(log, 'w').close()
-    upd = dict(harness_version=HARNESS_VERSION, results=[], outcome_detail=None)
+    upd = dict(harness_version=HARNESS_VERSION, results=[], outcome_detail=None,
+               release_bumped=False)
     g, err = checkout(pkg, d, log)
     if not g:
         upd.update(status='skipped' if 'retired' in err else 'error', outcome_detail=err)
@@ -335,7 +350,14 @@ def test_package(pkg, inv_rec, cfgs, prev=None):
     upd['stage'] = stage
     statuses = []
     for cfg in cfgs:
-        res = test_in_chroot(cfg, pkg, d, g, spec_path, new_spec, raw, stage, overlay)
+        res = test_in_chroot(cfg, pkg, d, g, spec_path, new_spec, raw, stage, overlay,
+                             bump=bool(new_spec) and not rec['autochangelog'])
+        bumped = os.path.join(d, 'out-' + cfg, 'bumped.spec')
+        if cfg == cfgs[0] and os.path.exists(bumped):
+            shutil.copy(bumped, new_spec)
+            upd['release_bumped'] = True
+            subprocess.run(['diff', '-u', spec_path, new_spec], stdout=open(
+                os.path.join(d, 'conversion.diff'), 'w'))
         outcome, detail = evaluate(res, raw, g)
         res['outcome'] = outcome
         res['detail'] = detail

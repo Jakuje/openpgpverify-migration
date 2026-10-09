@@ -12,13 +12,15 @@ signature verification (`%gpgverify`, raw `gpg`/`gpgv2`) to Sequoia-based
 | Topic | Decision |
 |---|---|
 | Branches | **rawhide only**. Maintainers decide whether to merge down. |
-| ELN / RHEL | Rawhide changes **must work in ELN**. The goal is RHEL 11 without GnuPG. `openpgpverify` is available in ELN. No RHEL 10 / EPEL 10 backports for now (they may come later for compatibility). |
+| ELN | Rawhide changes **must work in ELN**; `openpgpverify` is available there. |
+| EPEL | `openpgpverify` is not in EPEL. Specs with `%{?rhel}` conditionals (likely shared with EPEL) keep `%gpgverify` for EPEL branches. |
+| Release | Specs without `%autochangelog` get a **Release bump** and a changelog entry, so the spec stays consistent outside the rpmautospec tooling. |
 | Delivery | **PRs first**. If maintainers don't respond, find a provenpackager. |
 | Wrapper fixes (concatenated armor, keybox keyrings) | Decide **after Phase 1** results. |
 | Unverified `.asc`/`.sig` sources, leftover `BR: gnupg2` | **Later**, as a follow-up hardening campaign. |
 | Policy | FESCo *Mass package changes* policy: announce on devel-announce and Discourse ≥ 1 week ahead, publish this repository. |
 | SHA-1 key bindings | **Not accepted** by openpgpverify. Fix with a keyring refresh, or a bug for upstream. |
-| AI disclosure | `Assisted-by:` commit trailer (Fedora AI contributions policy). |
+| PR / commit texts | Technical and focused on Fedora's benefits (sane defaults, current OpenPGP standard). No emoji. AI disclosure only via the `Assisted-by:` commit trailer (Fedora AI contributions policy). |
 
 ## Known differences between gpgverify and openpgpverify
 
@@ -72,9 +74,11 @@ rpm stops depending on gpg.
    the spec has no other gpg use and no `%check`. With `review` (has
    `%check`; tests often skip gpg silently when it's missing) or `keep`
    (other gpg use), leave it for the later hardening campaign.
-4. **Release / changelog**: never bump `Release`. Specs with `%autochangelog`
-   get nothing extra, and the commit subject becomes the changelog line. The
-   others get a changelog entry with no Release bump.
+4. **Release / changelog**: specs with `%autochangelog` get nothing extra
+   (the commit subject becomes the changelog line). The others get a Release
+   bump and a changelog entry from `rpmdev-bumpspec`. Because bumpspec
+   evaluates the spec, it runs inside the Phase 1 mock chroot before `%prep`,
+   so the tested spec is exactly the proposed one.
 5. **Raw gpg/gpgv calls** (`raw-verify`) are rewritten by hand into a macro
    call, piped through `--data=-` where the data is decompressed on the fly.
 6. **RHEL conditionals**: rawhide and ELN both get openpgpverify, so the
@@ -184,14 +188,11 @@ rpm stops depending on gpg.
    Commit message: `templates/commit-message.txt`, with an `Assisted-by:`
    trailer.
 
-   **Open questions for review:**
-   - No Release bump: the changelog entry for non-`%autochangelog` specs
-     repeats the latest EVR (e.g. logrotate `3.22.0-6` twice). The
-     alternative is to bump Release, which conflicts with maintainers'
-     pending updates more often.
-   - The PR text ends with a "Generated with Claude Code" line, on top of
-     the `Assisted-by:` trailer. Keep both?
-   - Wording of the PR and bug templates.
+   **Open question for review:** the wording of the PR and bug templates.
+
+   The claims in the PR text were checked on Fedora 44 (sequoia-sqv 1.5.0):
+   sqv verifies a v6 (RFC 9580) signature made with an ML-DSA-65+Ed25519
+   key, and rpm links `librpm_sequoia`.
 3. **Rollout**:
    1. Pilot with about 15 of our own packages.
    2. Announce.

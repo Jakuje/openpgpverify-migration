@@ -212,7 +212,7 @@ def convert_rhel_calls(out, first_section, insert_at, last_uncond_br, have_br, n
         i += 1
     if not groups:
         raise Unconvertible('no macro call rewritten')
-    notes.append('rhel conditional: gpgverify kept for RHEL < 11 / EPEL')
+    notes.append('rhel conditional: gpgverify kept for EPEL branches')
     if rec['gnupg2_action'] in ('review', 'keep'):
         notes.append('BR gnupg2 kept (%s)' % rec['gnupg2_action'])
     return '\n'.join(res) + changelog, notes

@@ -1,21 +1,31 @@
-From fc43d63ed2872a2820525363bce090c57d4cb3b0 Mon Sep 17 00:00:00 2001
+From 55a730c2ddd880202261edd4ee983a774a543207 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 9 Oct 2026 15:20:18 +0200
+Date: Fri, 9 Oct 2026 15:52:19 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
 Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
+Release bumped with a changelog entry.
+
 Assisted-by: Claude Opus 5.5
 ---
- vim-latex.spec | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ vim-latex.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/vim-latex.spec b/vim-latex.spec
-index 47a634c..fc662e7 100644
+index 47a634c..ba46367 100644
 --- a/vim-latex.spec
 +++ b/vim-latex.spec
+@@ -1,6 +1,6 @@
+ Name:		vim-latex
+ Version:	1.10.0
+-Release:	19%{?dist}
++Release:	20%{?dist}
+ Summary:	Tools to view, edit and compile LaTeX documents in Vim
+ # According to doc/latex-suite license is Vim charityware license
+ License:	Vim
 @@ -29,7 +29,7 @@ BuildRequires:	docbook-style-xsl
  BuildRequires:	docbook-dtds
  
@@ -38,8 +48,8 @@ index 47a634c..fc662e7 100644
  
  
  %changelog
-+* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 1.10.0-19
-+- Verify source signatures with openpgpverify (Sequoia)
++* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 1.10.0-20
++- Verify upstream source signatures with openpgpverify
 +
  * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.10.0-19
  - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild

@@ -1,21 +1,31 @@
-From 5f955dfcfec9a5f7b2920f2b3a7a20d40c2e0876 Mon Sep 17 00:00:00 2001
+From 386cb7baddacd02daf51d13e40f733420de036bb Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 9 Oct 2026 15:20:18 +0200
+Date: Fri, 9 Oct 2026 15:52:19 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
 Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
+Release bumped with a changelog entry.
+
 Assisted-by: Claude Opus 5.5
 ---
- basez.spec | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ basez.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/basez.spec b/basez.spec
-index 06e096c..d65d200 100644
+index 06e096c..4825f3d 100644
 --- a/basez.spec
 +++ b/basez.spec
+@@ -1,6 +1,6 @@
+ Name:           basez
+ Version:        1.6.2
+-Release:        11%{?dist}
++Release:        12%{?dist}
+ Summary:        Base 16/32/64 encode/decode data to standard output
+ 
+ License:        GPL-3.0-or-later AND CC-BY-3.0-US AND BSD-2-Clause AND FSFAP
 @@ -20,6 +20,7 @@ Patch0:         add_disable_hex_opt.patch
  BuildRequires:  gcc
  BuildRequires:  gnupg2
@@ -37,8 +47,8 @@ index 06e096c..d65d200 100644
  
  
  %changelog
-+* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 1.6.2-11
-+- Verify source signatures with openpgpverify (Sequoia)
++* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 1.6.2-12
++- Verify upstream source signatures with openpgpverify
 +
  * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.6.2-11
  - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild

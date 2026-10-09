@@ -1,6 +1,6 @@
 # Phase 1 results
 
-Generated 2026-10-09T13:20Z from `data/state/packages.jsonl`: 35 of 594 packages tested.
+Generated 2026-10-09T13:52Z from `data/state/packages.jsonl`: 35 of 594 packages tested.
 
 | Status | Packages |
 |---|---|

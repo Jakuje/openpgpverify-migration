@@ -1,4 +1,11 @@
-This switches the upstream source signature check from `%gpgverify` (GnuPG) to `%openpgpverify` (Sequoia `sqv`), as part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify). The goal is that building packages no longer needs GnuPG to verify sources; RHEL 11 plans to ship without GnuPG. The new macro takes the same options, so the call itself only changes its name.
+This switches the upstream source signature check from `%gpgverify` (GnuPG `gpgv`) to `%openpgpverify` (Sequoia `sqv`), as part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify). The macro takes the same options, so the call itself only changes its name.
+
+Why `sqv`:
+
+- It is a verifier made for exactly this job: no home directory, trust database or default keyring, so only the keyring in the spec counts.
+- It follows the system crypto policy and checks that the signing key was valid and correctly bound when the signature was made.
+- It supports the current OpenPGP standard (RFC 9580, including v6 keys and signatures) and post-quantum (ML-DSA) signatures.
+- It is the same OpenPGP implementation that rpm uses for package signatures in Fedora.
 
 ### Changes
 
@@ -17,5 +24,3 @@ $refresh_section$notes_section
 ### Questions
 
 This is one of the PRs for the Change, tracked in [rhbz#2523619](https://bugzilla.redhat.com/show_bug.cgi?id=2523619). If something doesn't fit this package, please comment here; I'll update the PR or close it. The scripts that prepared it are at https://github.com/Jakuje/openpgpverify-migration.
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)

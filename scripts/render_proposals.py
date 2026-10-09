@@ -13,7 +13,6 @@ Writes proposals/PKG/ from the Phase 1 state and templates/:
 and proposals/README.md, an index. Nothing is pushed or filed.
 """
 import argparse
-import datetime
 import hashlib
 import os
 import re
@@ -29,7 +28,6 @@ import state  # noqa: E402
 TEMPLATES = os.path.join(state.ROOT, 'templates')
 OUT = os.path.join(state.ROOT, 'proposals')
 AUTHOR = ('Jakub Jelen', 'jjelen@redhat.com')
-CHANGELOG_LINE = 'Verify source signatures with openpgpverify (Sequoia)'
 PATCH_NAME = '0001-Verify-source-signatures-with-openpgpverify.patch'
 
 REASONS = {
@@ -122,21 +120,6 @@ def sqv_excerpt(log_tail, n=12):
     return '\n'.join(out[:n]) or log_tail[-1500:]
 
 
-def add_changelog(text):
-    """Entry for specs without %autochangelog, with the EVR of the latest entry
-    (no Release bump, see README)."""
-    m = re.search(r'(?m)^%changelog[ \t]*\n', text)
-    if not m:
-        return text, None
-    head = re.search(r'(?m)^\*[^\n]*?(?:-\s*|\s)((?:\d+:)?[\w.+~^]+-[\w.+~^]+)\s*$',
-                     text[m.end():])
-    evr = head.group(1) if head else None
-    date = datetime.date.today().strftime('%a %b %d %Y')
-    entry = '* %s %s <%s>%s\n- %s\n\n' % (date, AUTHOR[0], AUTHOR[1],
-                                         ' - ' + evr if evr else '', CHANGELOG_LINE)
-    return text[:m.end()] + entry + text[m.end():], evr
-
-
 def removed_brs(diff):
     return [l[1:].strip() for l in diff.splitlines()
             if l.startswith('-BuildRequires') and re.search(r'gpg|gnupg', l)]
@@ -151,15 +134,15 @@ def make_commit(pkg, s, refresh_files):
             sh(['git', '-C', pr, 'checkout', '-q', '-b', 'openpgpverify',
                 s['spec_commit']]).returncode:
         raise RuntimeError('cannot prepare a clone at %s' % s['spec_commit'])
-    spec = open(os.path.join(d, pkg + '.opv.spec')).read()
-    extra, evr = [], None
-    if not s.get('autochangelog'):
-        spec, evr = add_changelog(spec)
-    open(os.path.join(pr, pkg + '.spec'), 'w').write(spec)
+    # Exactly the spec Phase 1 tested (incl. the Release bump done in the chroot).
+    shutil.copy(os.path.join(d, pkg + '.opv.spec'), os.path.join(pr, pkg + '.spec'))
+    extra = []
     for f in refresh_files:
         shutil.copy(os.path.join(d, 'refresh', f['file']), os.path.join(pr, f['file']))
         extra.append('Refresh %s from keyservers/WKD: same certificate(s), with '
                      'self-signatures our copy was missing.' % f['file'])
+    if not s.get('autochangelog'):
+        extra.append('Release bumped with a changelog entry.')
     body = tmpl('commit-message.txt',
                 extra_body=('\n' + '\n'.join(extra) + '\n') if extra else '')
     sh(['git', '-C', pr, 'add', '-A'])
@@ -169,14 +152,16 @@ def make_commit(pkg, s, refresh_files):
         raise RuntimeError('commit failed')
     patch = sh(['git', '-C', pr, 'format-patch', '-1', '--stdout', '--binary']).stdout
     diff = sh(['git', '-C', pr, 'show', '--format=', pkg + '.spec']).stdout
-    return patch, diff, evr
+    return patch, diff
 
 
 def render_pr(pkg, s, draft):
     kr = s.get('keyring_refresh') or {}
     files = [f for f in kr.get('files', []) if f.get('changed')] if draft or \
         s.get('keyring_refresh_applied') else []
-    patch, diff, evr = make_commit(pkg, s, files)
+    if not s.get('autochangelog') and not s.get('release_bumped'):
+        raise RuntimeError('spec needs a Release bump; re-run phase1.py')
+    patch, diff = make_commit(pkg, s, files)
     res = s['results'][0]
     n_old = len(res.get('old_calls', []))
     changes = ['- `%%gpgverify` → `%%openpgpverify` (%d call%s; the macro keeps the same form '
@@ -189,15 +174,16 @@ def render_pr(pkg, s, draft):
             continue
         changes.append('- dropped `%s`, only needed for `%%gpgverify`' % br)
     if s.get('rhel_conditional'):
-        changes.append('- the spec has RHEL conditionals, so it is likely shared with EPEL, '
-                       'where openpgpverify is not available: `%if 0%{?fedora} || '
-                       '0%{?rhel} >= 11` uses openpgpverify, otherwise everything stays '
-                       'as it was')
+        changes.append('- the spec has `%{?rhel}` conditionals, so it is likely shared with '
+                       'EPEL, where openpgpverify is not available: `%if 0%{?fedora} || '
+                       '0%{?rhel} >= 11` (Fedora and ELN) uses openpgpverify, otherwise '
+                       'everything stays as it was')
     for f in files:
         changes.append('- refreshed keyring `%s` (see below)' % f['file'])
-    if evr is not None or not s.get('autochangelog'):
-        changes.append('- changelog entry%s, without a Release bump' %
-                       (' (%s)' % evr if evr else ''))
+    rel = re.findall(r'(?m)^([-+])Release:\s*(.*)$', diff)
+    if rel:
+        changes.append('- Release bumped (`%s` → `%s`) with a changelog entry' %
+                       (dict(rel).get('-', '?').strip(), dict(rel).get('+', '?').strip()))
     chroots = []
     for r in s['results']:
         c = r['chroot']
@@ -235,8 +221,8 @@ def render_pr(pkg, s, draft):
         notes.append('- `BuildRequires: gnupg2` is kept: the spec has a `%check` section '
                      'or uses gpg elsewhere, and tests may need it. If it was only there '
                      'for the signature check, it can go too.')
-    notes.append('- No Release bump: nothing changes in the built packages, so no rebuild '
-                 'is needed now. The new check runs with your next build.')
+    notes.append('- Nothing changes in the built packages, so this doesn\'t need a build '
+                 'right away; the new check runs with your next build.')
     if s.get('stage') and s['stage'] != '-bp':
         notes.append('- The verification runs outside `%prep`. Moving it to the start of '
                      '`%prep` would check the sources before anything else uses them.')

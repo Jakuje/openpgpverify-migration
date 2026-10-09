@@ -1,21 +1,32 @@
-From 20788ab5583d6173db8e40ef4a2211c1b9a6447b Mon Sep 17 00:00:00 2001
+From 2a5d448ad9cf459cae04dd0ff07c42aa523b5042 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 9 Oct 2026 15:20:18 +0200
+Date: Fri, 9 Oct 2026 15:52:19 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
 Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
+Release bumped with a changelog entry.
+
 Assisted-by: Claude Opus 5.5
 ---
- wob.spec | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ wob.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/wob.spec b/wob.spec
-index 8d3ede1..d539ff2 100644
+index 8d3ede1..db92f82 100644
 --- a/wob.spec
 +++ b/wob.spec
+@@ -2,7 +2,7 @@
+ 
+ Name:     wob
+ Version:  0.15.1
+-Release:  10%{?dist}
++Release:  11%{?dist}
+ Summary:  A lightweight overlay volume/backlight/progress/anything bar for Wayland
+ License:  ISC
+ URL:      https://github.com/francma/wob
 @@ -16,7 +16,7 @@ Source1: %{url}/releases/download/%{version}/%{name}-%{version}.tar.gz.sig
  Source2: 5C6DA024DDE27178073EA103F4B432D5D67990E3.gpg
  
@@ -38,8 +49,8 @@ index 8d3ede1..d539ff2 100644
  %license LICENSE
  
  %changelog
-+* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 0.15.1-10
-+- Verify source signatures with openpgpverify (Sequoia)
++* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 0.15.1-11
++- Verify upstream source signatures with openpgpverify
 +
  * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.15.1-10
  - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild

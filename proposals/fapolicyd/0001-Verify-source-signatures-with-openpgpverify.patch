@@ -1,21 +1,32 @@
-From 56bde0bd3d3207677651f85110ae11befa0e4e3a Mon Sep 17 00:00:00 2001
+From efe8b10a41c4d1d30a8873abec43338b525833ca Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 9 Oct 2026 15:20:18 +0200
+Date: Fri, 9 Oct 2026 15:52:19 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
 Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
+Release bumped with a changelog entry.
+
 Assisted-by: Claude Opus 5.5
 ---
- fapolicyd.spec | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ fapolicyd.spec | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/fapolicyd.spec b/fapolicyd.spec
-index ce0f7cf..354fdaf 100644
+index ce0f7cf..8bb4dc1 100644
 --- a/fapolicyd.spec
 +++ b/fapolicyd.spec
+@@ -5,7 +5,7 @@
+ Summary: Application Whitelisting Daemon
+ Name: fapolicyd
+ Version: 2.0.1
+-Release: 1%{?dist}
++Release: 2%{?dist}
+ License: GPL-3.0-or-later
+ URL: https://github.com/linux-application-whitelisting/fapolicyd
+ Source0: https://github.com/linux-application-whitelisting/fapolicyd/releases/download/v%{version}/fapolicyd-%{version}.tar.gz
 @@ -32,7 +32,7 @@ BuildRequires: systemd systemd-devel openssl-devel rpm-devel file-devel file
  BuildRequires: libcap-ng-devel libseccomp-devel lmdb-devel
  BuildRequires: python3-devel
@@ -43,8 +54,8 @@ index ce0f7cf..354fdaf 100644
  %selinux_relabel_post -s %{selinuxtype}
  
  %changelog
-+* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 2.0.1-1
-+- Verify source signatures with openpgpverify (Sequoia)
++* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 2.0.1-2
++- Verify upstream source signatures with openpgpverify
 +
  * Wed Aug 19 2026 Petr Lautrbach <lautrbach@redhat.com> - 2.0.1-1
  - fapolicyd-2.0.1

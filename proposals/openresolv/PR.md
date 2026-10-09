@@ -2,13 +2,20 @@
 
 > **DRAFT, not to be opened yet:** the keyring refresh below still needs a human review (`scripts/refresh_keys.py show openresolv`).
 
-This switches the upstream source signature check from `%gpgverify` (GnuPG) to `%openpgpverify` (Sequoia `sqv`), as part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify). The goal is that building packages no longer needs GnuPG to verify sources; RHEL 11 plans to ship without GnuPG. The new macro takes the same options, so the call itself only changes its name.
+This switches the upstream source signature check from `%gpgverify` (GnuPG `gpgv`) to `%openpgpverify` (Sequoia `sqv`), as part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify). The macro takes the same options, so the call itself only changes its name.
+
+Why `sqv`:
+
+- It is a verifier made for exactly this job: no home directory, trust database or default keyring, so only the keyring in the spec counts.
+- It follows the system crypto policy and checks that the signing key was valid and correctly bound when the signature was made.
+- It supports the current OpenPGP standard (RFC 9580, including v6 keys and signatures) and post-quantum (ML-DSA) signatures.
+- It is the same OpenPGP implementation that rpm uses for package signatures in Fedora.
 
 ### Changes
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- the spec has RHEL conditionals, so it is likely shared with EPEL, where openpgpverify is not available: `%if 0%{?fedora} || 0%{?rhel} >= 11` uses openpgpverify, otherwise everything stays as it was
+- the spec has `%{?rhel}` conditionals, so it is likely shared with EPEL, where openpgpverify is not available: `%if 0%{?fedora} || 0%{?rhel} >= 11` (Fedora and ELN) uses openpgpverify, otherwise everything stays as it was
 - refreshed keyring `roy.marples.asc` (see below)
 
 ### Testing
@@ -59,10 +66,8 @@ What changed in the certificate (`sq inspect`):
 ### Notes
 
 - Rawhide only. Whether to merge it into other branches is up to you; openpgpverify is in Fedora 43 and later.
-- No Release bump: nothing changes in the built packages, so no rebuild is needed now. The new check runs with your next build.
+- Nothing changes in the built packages, so this doesn't need a build right away; the new check runs with your next build.
 
 ### Questions
 
 This is one of the PRs for the Change, tracked in [rhbz#2523619](https://bugzilla.redhat.com/show_bug.cgi?id=2523619). If something doesn't fit this package, please comment here; I'll update the PR or close it. The scripts that prepared it are at https://github.com/Jakuje/openpgpverify-migration.
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
