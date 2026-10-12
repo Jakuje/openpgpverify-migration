@@ -1,0 +1,39 @@
+From a394999d502146a71e94f70106992ac780be7080 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 12 Oct 2026 14:12:59 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ ldns.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/ldns.spec b/ldns.spec
+index 63d67df..b620c57 100644
+--- a/ldns.spec
++++ b/ldns.spec
+@@ -58,7 +58,7 @@ BuildRequires: libpcap-devel
+ BuildRequires: openssl-devel >= 1.1.0
+ BuildRequires: gcc-c++
+ BuildRequires: doxygen
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ 
+ %if %{with python3}
+ BuildRequires: python3-devel, swig
+@@ -125,7 +125,7 @@ This package contains documentation for the ldns library
+ %prep
+ %{?extra_version:%global pkgname %{name}-%{version}%{extra_version}}%{!?extra_version:%global pkgname %{name}-%{version}}
+ %if 0%{?fedora}
+-%gpgverify -d 0 -s 1 -k 2
++%openpgpverify -d 0 -s 1 -k 2
+ %endif
+ 
+ %autosetup -n %{pkgname} -p1
+-- 
+2.55.0
+

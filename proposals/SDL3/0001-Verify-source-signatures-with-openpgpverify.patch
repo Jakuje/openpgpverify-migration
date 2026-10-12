@@ -1,0 +1,59 @@
+From dd4439ea36365d4b5a995a9fa0944b3abe07d1de Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 12 Oct 2026 14:12:58 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ SDL3.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/SDL3.spec b/SDL3.spec
+index 8edbb58..303ba5f 100644
+--- a/SDL3.spec
++++ b/SDL3.spec
+@@ -21,7 +21,7 @@
+ 
+ Name:           SDL3
+ Version:        3.4.18
+-Release:        1%{?dist}
++Release:        2%{?dist}
+ Summary:        Cross-platform multimedia library
+ License:        Zlib AND MIT AND Apache-2.0 AND (Apache-2.0 OR MIT)
+ URL:            http://www.libsdl.org/
+@@ -91,6 +91,7 @@ BuildRequires:  vulkan-devel
+ BuildRequires:  mesa-libgbm-devel
+ BuildRequires:  libdrm-devel
+ BuildRequires:	libXtst-devel
++BuildRequires:  openpgpverify
+ 
+ # Ensure libdecor is pulled in when libwayland-client is (rhbz#1992804)
+ Requires:       (libdecor-%{libdecor_majver}.so.%{libdecor_majver}%{libsymbolsuffix} if libwayland-client)
+@@ -143,7 +144,7 @@ Testing libraries for SDL3.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ %autosetup -S git_am
+ sed -e 's/\r//g' -i README.md WhatsNew.txt BUGS.txt LICENSE.txt CREDITS.md
+@@ -213,6 +214,9 @@ install -p -m 644 %{SOURCE10} %{buildroot}%{_includedir}/SDL3/SDL_revision.h
+ 
+ 
+ %changelog
++* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 3.4.18-2
++- Verify upstream source signatures with openpgpverify
++
+ * Sat Oct 03 2026 Artur Frenszek-Iwicki <fedora@svgames.pl> - 3.4.18-1
+ - Update to v3.4.18
+ 
+-- 
+2.55.0
+

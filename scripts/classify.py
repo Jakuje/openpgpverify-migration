@@ -84,12 +84,12 @@ def classify(name, text):
                      macro=False, openpgpverify=False),
              sig_sources=[], has_check=False,
              mentions_rhel=bool(RHEL_COND.search(body) and re.search(r'%\{\?(rhel|el\d+)\}', body)),
-             autochangelog=bool(re.search(r'(?m)^%autochangelog\b', text)),
+             autochangelog=bool(re.search(r'(?m)^%\{?\??autochangelog\b', text)),
              autorelease=bool(re.search(r'(?m)^Release:\s*%\{?\??autorelease', text)))
     br_conds = []
     for n, raw in logical_lines(body):
         line = raw.strip()
-        if not line or line.startswith('#'):
+        if not line or line.startswith('#') or re.match(r'%dnl\b', line):
             continue
         if COND_OPEN.match(line):
             conds.append(line)

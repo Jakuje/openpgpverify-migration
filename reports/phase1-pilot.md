@@ -1,21 +1,26 @@
 # Phase 1 results
 
-Generated 2026-10-09T13:52Z from `data/state/packages.jsonl`: 35 of 594 packages tested.
+Generated 2026-10-12T12:13Z from `data/state/packages.jsonl`: 178 of 594 packages tested.
 
 | Status | Packages |
 |---|---|
-| `tested` | 24 |
-| `regression` | 8 |
-| `manual` | 2 |
-| `superseded` | 1 |
+| `tested` | 77 |
+| `regression` | 74 |
+| `manual` | 15 |
+| `superseded` | 10 |
+| `not-buildable` | 1 |
+| `guard-failed` | 1 |
 
 | Regression reason | Calls |
 |---|---|
-| `sha1-cert` | 5 |
-| `sha1-sig` | 1 |
+| `sha1-cert` | 43 |
+| `sha1-sig` | 19 |
+| `expired` | 14 |
+| `unparseable-cert` | 6 |
+| `weak-key` | 2 |
+| `keybox` | 1 |
 | `v3-sig` | 1 |
 | `binding-after-signature` | 1 |
-| `expired` | 1 |
 
 | Package | Status | Calls old→new | Chroots | Notes |
 |---|---|---|---|---|
@@ -29,7 +34,7 @@ Generated 2026-10-09T13:52Z from `data/state/packages.jsonl`: 35 of 594 packages
 | openssh | `manual` | 1→0 | rawhide: manual | raw verification baseline passes |
 | pcsc-lite-ccid | `manual` | 1→0 | rawhide: manual | raw verification baseline passes |
 | wob | `tested` | 1→1 | rawhide: both-pass |  |
-| getdns | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: sha1-cert; keyring refresh: no-update |
+| getdns | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: sha1-cert; keyring refresh: still-fails |
 | python-ezgb | `tested` | 1→1 | rawhide: both-pass |  |
 | dns-root-data | `regression` | 1→1 | rawhide: regression | reason: sha1-sig |
 | libstrophe | `tested` | 1→1 | rawhide: both-pass |  |

@@ -1,0 +1,59 @@
+From df2bc5bc118649dbfd0ca6712df1b5d4792a84fe Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 12 Oct 2026 14:13:01 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ parted.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/parted.spec b/parted.spec
+index 7249d4a..edcd085 100644
+--- a/parted.spec
++++ b/parted.spec
+@@ -1,7 +1,7 @@
+ Summary: The GNU disk partition manipulation program
+ Name:    parted
+ Version: 3.8
+-Release: 1%{?dist}
++Release: 2%{?dist}
+ License: GPL-3.0-or-later
+ URL:     http://www.gnu.org/software/parted
+ 
+@@ -33,6 +33,7 @@ BuildRequires: python3
+ BuildRequires: gperf
+ BuildRequires: make
+ BuildRequires: check-devel
++BuildRequires: openpgpverify
+ 
+ # bundled gnulib library exception, as per packaging guidelines
+ # https://fedoraproject.org/wiki/Packaging:No_Bundled_Libraries
+@@ -58,7 +59,7 @@ Parted library, you need to install this package.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE3}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE3}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -S git_am
+ # Needed when .am files are modified by a patch
+ autoreconf -v
+@@ -114,6 +115,9 @@ make check
+ 
+ 
+ %changelog
++* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 3.8-2
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Sep 23 2026 Brian C. Lane <bcl@redhat.com> - 3.8-1
+ - New upstream release with updated gnulib
+ 
+-- 
+2.55.0
+

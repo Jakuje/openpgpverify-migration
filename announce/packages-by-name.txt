@@ -1,0 +1,584 @@
+0install                               jjames
+AusweisApp2                            belegdol
+BibTool                                mjg
+ImageMagick                            kalev luya remi
+NetworkManager-strongswan              pemensik
+SDL3                                   dchen ngompa spot suve
+SDL3_net                               suve
+Xaw3d                                  jwrdegoede limb orion
+abcde                                  rathann
+acl                                    jamartis kdudka lzaoral pcahyna steved
+aesfix                                 rebus
+aeskeyfind                             rebus
+aide                                   alakatos rsroka zfridric
+anet                                   rombobeorn
+ansible-collection-dellemc-openmanage  thebeanogamer
+ansifilter                             cicku filiperosset
+ant-antunit                            didiksupriadi41 mizdebsk mkoncek orion
+anymeal                                fed500
+apache-commons-net                     jonny mizdebsk mkoncek spike
+apache-commons-text                    didiksupriadi41
+apache-commons-vfs                     limb
+apachetop                              robert
+asahi-installer                        dcavalca
+asterisk                               peter
+attr                                   jamartis kdudka lzaoral pcahyna
+autoconf-archive                       amigadave cicku
+b43-fwcutter                           peter
+babeltrace                             gwenthekween keiths kstewart ktdreyer mjeanson mkolar
+babeltrace2                            kstewart mjeanson
+basez                                  jonathanspw
+bash                                   kdudka svashisht
+batctl                                 heffer linville
+bc                                     dcavalca mikelo2 ovasik pcahyna smooge
+bcachefs-tools                         ngompa
+bemenu                                 jstanek
+bind                                   mruprich pemensik pspacek zdohnal
+bind9-next                             pemensik pspacek
+bino                                   dcavalca jskarvad
+bison                                  pfrankli submachine
+blktrace                               andyp preichl sandeen
+bmake                                  pemensik
+borgbackup                             fschwarz
+botan3                                 carlosrodrifernandez
+bpfmon                                 bbonev1
+browserpass                            wojnilowicz
+btrfs-progs                            dcavalca ignatenkobrain ngompa salimma sandeen
+budgie-backgrounds                     joshstrobl
+budgie-desktop                         joshstrobl
+budgie-desktop-defaults                joshstrobl
+bzip2                                  jamartis jchaloup
+cage                                   fedepell
+cairomm                                kalev music
+cgit                                   praiskup rcallicotte
+chewing-editor                         kanru
+chrony                                 mlichvar
+cksfv                                  rathann
+clang15                                frantisekz tuliom
+clang18                                petersen
+cmocka                                 asn
+compat-gpgme124                        mhlavink
+conflict                               fed500
+conntrack-tools                        orion pwouters stingray
+conserver                              jirka lzaoral
+coreutils                              jamartis kdudka kzak lzaoral ovasik pbrady svashisht twaugh vmihalko
+courier-unicode                        bcl bruno moceap
+cpio                                   kdudka ljavorsk ovasik pcahyna pkubat praiskup
+cproto                                 jnovy
+crun                                   gscrivano haircommander jkaluza lsm5 luap99 nsella rruzicka vmiticka2
+cryptlib                               senderek
+cryptobone                             senderek
+cryptopp                               ellert kwizart vascom
+cscppc                                 kdudka lzaoral svashisht
+csdiff                                 kdudka lzaoral svashisht
+csmock                                 kdudka lzaoral svashisht
+cswrap                                 kdudka lzaoral svashisht
+ctstream                               ppisar
+curl                                   jamacku jmigacz kdudka lzaoral msekleta pghmcfc svashisht vmihalko
+cvs                                    ppisar
+cyrus-imapd                            jorton landgraf mosvald tibbs zdohnal
+davfs2                                 fschwarz jonathanspw
+dbus                                   alexl amigadave lennart rhughes rstrode walters
+dbus-glib                              alexl rhughes rstrode walters
+dd_rescue                              jussilehtola ndim rebus steve
+debugedit                              mcermak mjw
+dehydrated                             pwouters robert
+dhcp                                   jorton jpopelka mosvald pemensik thozza
+dhcpcd                                 mosvald pemensik pzacik
+dhcpdump                               bbonev1 jonathanspw
+dialog                                 mlichvar
+dino                                   bowlofeggs jcline
+diskimage-builder                      amoralej
+disorderfs                             fepitre
+dnf                                    jmracek jrohel mblaha pkratoch
+dns-root-data                          pemensik pspacek
+dnssec-trigger                         pemensik pwouters thozza
+dos2unix                               twaugh
+dotnet10.0                             omajid
+drm_info                               alebastr
+dropbear                               cicku fedepell
+e2fsprogs                              kzak preichl sandeen
+ed                                     mikelo2
+eggdrop                                robert
+electron-cash                          jonny peter
+electrum                               js
+emacs                                  cheeselee defolos elmarco fed500 mavit msekleta swt2c ueno
+ethtool                                robert
+exim                                   dwmw2 jskarvad
+expat                                  jorton tkorbar
+facter                                 brandfbb ekohl
+fail2ban                               hobbes1069 orion
+fapolicyd                              plautrba rsroka sgrubb
+fcft                                   alebastr
+fcitx5                                 yanqiyu
+fcitx5-anthy                           yanqiyu
+fcitx5-chewing                         yanqiyu
+fcitx5-chinese-addons                  yanqiyu
+fcitx5-configtool                      yanqiyu
+fcitx5-gtk                             yanqiyu
+fcitx5-hangul                          yanqiyu
+fcitx5-kkc                             yanqiyu
+fcitx5-libthai                         yanqiyu
+fcitx5-lua                             yanqiyu
+fcitx5-m17n                            yanqiyu
+fcitx5-qt                              yanqiyu
+fcitx5-rime                            yanqiyu
+fcitx5-sayura                          yanqiyu
+fcitx5-skk                             yanqiyu
+fcitx5-table-extra                     yanqiyu
+fcitx5-table-other                     yanqiyu
+fcitx5-unikey                          yanqiyu
+fcitx5-zhuyin                          pwu yanqiyu
+feather                                js
+fedrq                                  gotmax23
+ffmpeg                                 asn ngompa rathann
+file                                   kdudka lzaoral svashisht vmihalko
+findutils                              kdudka lzaoral svashisht
+fio                                    preichl sandeen
+fips-provider                          simo
+fish                                   defolos ngompa salimma svashisht
+flashrom                               mrnuke peter rhughes robert
+foot                                   alebastr
+fop                                    mizdebsk mkoncek peter
+forgejo                                nphilipp nphilipp-rh
+freeipa                                abbra dhanina rcritten simo twoerner
+freetalk                               fed500
+fuse-encfs                             jcpunk orphan vascom
+fuse-sshfs                             peter rjones vascom
+gcl                                    jjames
+gcompris-qt                            musuruan
+geeqie                                 mattdm zbyszek
+gencolormap                            dcavalca
+getdns                                 pemensik pwouters
+git                                    besser82 jonathanspw opohorel pstodulk
+git-lfs                                carlwgeorge qulogic
+glinf                                  dcavalca
+glpk                                   jjames konradm orion
+gnuastro                               sergiopr
+gnucobol                               limb
+gnulib-l10n                            lzaoral
+gnupg2                                 bcl jjelen tmraz
+gnutls                                 ansasaki fkrenzel pemensik zfridric
+gp2c                                   jjames music
+gpgme                                  jkucera mhlavink mrc0mmand
+gpgmepp                                mhlavink
+gplugin                                qulogic
+grep                                   jskarvad
+grim                                   mjg
+grout                                  mruprich rjarry
+growlight                              nickblack
+gscan2pdf                              ppisar slankes
+gsi-openssh                            ellert
+gsl                                    jussilehtola tdawson
+guestfs-tools                          rjones
+guile-gnutls                           zfridric
+haruna                                 zawertun
+haunt                                  fed500
+hcxtools                               atim
+hello                                  petersen
+hiera                                  brandfbb ekohl ignatenkobrain stevetraylen
+hivex                                  rjones
+httpd                                  jorton luhliarik
+hxtools                                cicku till
+i3                                     cicku defolos fale runcom
+i3lock                                 cicku defolos fale
+i3status                               cicku defolos fale
+ibus-chewing                           fujiwara kanru
+iec16022                               robert
+indent                                 ppisar
+inkscape                               duffy limb
+inn                                    ovasik rathann
+iotop-c                                bbonev1 mhlavink
+ipcalc                                 nmav pemensik
+iptables                               kevin psutter twoerner
+irssi                                  huzaifas jskarvad kalev
+isync                                  fab
+jalv                                   tartina
+jigdo                                  salimma
+john                                   rebus
+kanshi                                 alebastr
+kdsoap                                 farchord tdawson
+keepass                                belegdol bubeck tpokorra
+keepassxc                              germano mikelo2 nonamedotc
+kio-fuse                               zawertun
+kitty                                  atim jonathanspw solopasha zawertun
+knot                                   jruzicka pwouters
+knot-resolver                          jruzicka
+kronometer                             andreamtp
+kuserfeedback                          tdawson zawertun
+kvantum                                eclipseo principis
+ldns                                   pemensik pwouters rominf rommell
+libHX                                  till
+libXpm                                 ajax alexl bentiss jexposit rhughes rstrode
+libbsd                                 dcavalca salimma
+libburn                                pcahyna robert
+libcap                                 carlosrodrifernandez rathann zuul
+libchewing                             cheeselee kanru
+libchipcard                            limb
+libclc22                               kkleine
+libdisplay-info                        alebastr
+libdnf                                 jmracek jrohel mblaha pkratoch
+libdvdnav                              rathann
+libdvdread                             hhorak rathann
+libeatmydata                           trawets
+libextractor                           limb
+libgnt                                 jskarvad
+libgpg-error                           jjelen tmraz
+libgsasl                               maha peter wart
+libguestfs                             rjones
+libidn2                                robert
+libime                                 yanqiyu
+libisds                                ppisar
+libisoburn                             hhorak robert
+libisofs                               hhorak robert
+libksba                                jjelen tmraz
+liblxi                                 robert
+libmd                                  robert
+libmnl                                 hushan
+libmodsecurity                         mikelo2
+libmodulemd                            asamalik nphilipp ppisar sgallagh
+libmpc                                 jamesturner246 jjames mpolacek
+libnbd                                 rjones
+libnetfilter_conntrack                 stingray
+libnftnl                               kevin psutter twoerner
+libnice                                kdudka msekleta stefanb svashisht
+libnids                                robert
+libpri                                 music
+libptytty                              dcantrell
+libredwg                               fed500
+libreoffice                            dtardon limb
+libreswan                              pwouters saprasad ueno
+librhsm                                jmracek sgallagh
+libsepol                               dwalsh plautrba vmojzis
+libss7                                 jsmith music
+libssh                                 ansasaki asn jjelen robert saprasad slaanesh
+libssh2                                kdudka pghmcfc
+libstrophe                             fed500
+libtalloc                              abbra asn gd lslebodn pfilipen sgallagh simo
+libtasn1                               simo zfridric
+libtdb                                 abbra asn gd lslebodn pfilipen sgallagh simo
+libtevent                              abbra asn gd lslebodn pfilipen sgallagh simo
+libtpms                                elmarco stefanberger
+libusb1                                benzea jwrdegoede smallorange
+libuv                                  ignatenkobrain sgallagh
+libvoikko                              mfabian vpv
+libxcrypt                              besser82 fweimer saprasad simo
+lilv                                   nphilipp tartina
+lld15                                  frantisekz tuliom
+lld18                                  petersen
+llvm                                   dmalcolm ignatenkobrain jakub jistone kkleine nikic scottt sergesanspaille siddharths tbaeder tstellar tuliom
+llvm14                                 kalev nikic petersen tstellar
+llvm15                                 frantisekz tuliom
+llvm18                                 petersen
+llvm19                                 carlwgeorge mikedep333 nikic rcallicotte
+llvm20                                 tstellar
+llvm21                                 tuliom
+llvm22                                 tbaeder
+log4cplus                              mosvald zdohnal
+logrotate                              jamacku kdudka lzaoral svashisht vmihalko
+loudmouth                              fale limb maha otaylor
+lttng-ust                              kstewart ktdreyer mjeanson
+lua-unbound                            robert
+lxi-tools                              robert
+lynx                                   jrybar kdudka lzaoral svashisht
+maildrop                               bcl bruno
+mako                                   fnux
+man-db                                 jchaloup nforro
+mat2                                   infraw
+maven-doxia                            filiperosset mizdebsk mkoncek
+maven-doxia-sitetools                  filiperosset mizdebsk mkoncek
+maven-reporting-api                    filiperosset mizdebsk mkoncek
+maven-reporting-impl                   filiperosset mizdebsk mkoncek
+mdadm                                  agk jonathanspw mbroz xiao
+mimedefang                             robert
+mingw-SDL3                             kalev ngompa smani spot suve
+mingw-cmocka                           asn
+mingw-libidn2                          robert
+mingw-libssh2                          elmarco etrunko mooninite rjones
+mingw-nettle                           mooninite
+mingw-objfw                            js
+mingw-pcre                             sailer
+mingw-usbredir                         elmarco jwrdegoede teuf
+mkfontscale                            whot
+mkvtoolnix                             rathann
+mod_perl                               jorton jplesnik kni ppisar
+mooltipass-udev                        principis
+mpd                                    ankursinha fed500 leigh123linux
+mpdscribble                            rharwood
+mpop                                   peter
+msmtp                                  devos gbcox peter romaingeissler1a wart
+mucalc                                 dcavalca
+munge                                  ankursinha
+munin                                  gap ingvar ixs jvanek kimheino
+musl                                   ngompa salimma
+nano                                   dwmw2 kdudka lzaoral svashisht
+nbdkit                                 rjones
+ncmpc                                  ferdnyc
+ncurses                                mlichvar
+ndisc6                                 mbaldessari rathann
+nettle                                 dwmw2 ueno
+nettle3.10                             ueno
+newsboat                               jstanek
+nftables                               kevin psutter
+nghttp2                                jamacku kdudka msekleta svashisht
+nghttp3                                alebastr jamacku
+nginx                                  heffer jorton luhliarik tadej
+nginx-mod-fancyindex                   heffer luk1337
+ngtcp2                                 asn pemensik
+nilfs-utils                            sandeen
+nmap                                   landgraf mosvald
+nmstate                                cathay4t ffmancera ihuguet josie jvaclav rrajesh till
+normalize                              dtimms rathann
+notcurses                              nickblack
+notmuch                                mjg
+npth                                   cicku mjg
+nss-pem                                kdudka lzaoral svashisht ueno
+nss_wrapper                            asn
+ntpsec                                 ignatenkobrain mlichvar
+oath-toolkit                           jskarvad
+objfw                                  js
+ocaml-augeas                           rjones
+ocaml-mysql                            rjones
+oclock                                 aarem
+ocserv                                 dwmw2 nmav tdawson
+oidentd                                maha ppisar
+opam                                   jjames
+openbgpd                               robert
+openconnect                            dwmw2 nmav slaanesh tdawson
+opendoas                               eclipseo
+openresolv                             pemensik
+openssh                                dbelyavs dwalsh jjelen lvrabec
+openssl-pkcs11                         ansasaki jjelen
+openvpn                                dsommers flichtenheld huzaifas kalev
+p11-kit                                stefw ueno
+pam_mount                              aflyhorse steve
+pam_wrapper                            asn
+paperkey                               fale jonathanspw
+par2cmdline                            tadej
+parallel                               filiperosset golfu mikelo2
+pari                                   jjames pghmcfc
+pari-elldata                           jjames pghmcfc
+pari-galdata                           jjames pghmcfc
+pari-galpol                            jjames pghmcfc
+pari-nflistdata                        jjames
+pari-nftables                          jjames
+pari-seadata                           jjames pghmcfc
+parted                                 bcl
+pass-audit                             xdbob
+passwordsafe                           carllibpst
+pcre2                                  dhandzus ppisar
+pcsc-lite                              kalev rrelyea
+pcsc-lite-ccid                         jjelen kalev rrelyea
+pdfgrep                                robert
+pdfio                                  zdohnal
+pdns-recursor                          filiperosset tjikkun
+perl-Net-DNS                           alexl jplesnik mspacek ppisar pwouters rhughes rstrode
+perl-WWW-OrangeHRM-Client              jplesnik ppisar
+php                                    jorton remi
+phpMyAdmin                             remi robert
+pianobar                               dcavalca hobbes1069
+pinentry                               jjelen ngompa
+pkcs11-provider                        saprasad
+poke                                   defolos mikelo2
+poppler                                alexl feborges jnovy mkasik rhughes rstrode
+postfix-mta-sts-resolver               thebeanogamer
+priv_wrapper                           asn pfilipen
+prosody                                robert
+psad                                   maxamillion rathann
+pspp                                   peter
+puppet                                 brandfbb ekohl ignatenkobrain terjeros
+pv                                     cheeselee ferdnyc
+pylibacl                               frankcrawford kevin szpak
+pyparted                               bcl clumens dcantrell
+python-aodhclient                      jcapitao
+python-authres                         salimma sdgathman
+python-automaton                       apevec jpena jruzicka
+python-b4                              mripard salimma
+python-barbicanclient                  apevec stevetraylen
+python-cinderclient                    jcapitao
+python-debtcollector                   apevec limb
+python-dijitso                         limb
+python-ezgb                            mripard
+python-futurist                        apevec jpena
+python-glanceclient                    jcapitao
+python-gnocchiclient                   amoralej mrunge
+python-gnupg                           fale pwouters rominf rommell
+python-hacking                         hiwkby
+python-heatclient                      jcapitao
+python-ironicclient                    apevec jonathanspw
+python-keystoneauth1                   apevec limb
+python-keystoneclient                  jcapitao
+python-liblore                         mripard
+python-libusb1                         jonny peter
+python-magnumclient                    apevec stevetraylen
+python-manilaclient                    limb
+python-mistralclient                   amoralej
+python-neutronclient                   jcapitao
+python-novaclient                      jcapitao
+python-octaviaclient                   limb
+python-openstackclient                 jcapitao
+python-os-service-types                ykarel
+python-osc-lib                         amoralej apevec jpena jruzicka
+python-osc-placement                   stevetraylen
+python-oslo-concurrency                apevec jcapitao
+python-oslo-config                     limb
+python-oslo-context                    apevec limb
+python-oslo-i18n                       apevec limb
+python-oslo-log                        apevec limb
+python-oslo-metrics                    hiwkby
+python-oslo-serialization              jcapitao
+python-oslo-utils                      jcapitao
+python-oslotest                        jcapitao
+python-pass-import                     wojnilowicz
+python-patatt                          salimma
+python-pskc                            gbcox orion
+python-reno                            apevec limb
+python-stevedore                       apevec dcavalca stevetraylen
+python-sushy                           amoralej stevetraylen
+python-swiftclient                     jcapitao
+python-tackerclient                    amoralej
+python-troveclient                     jcapitao jruzicka mrunge
+python-zaqarclient                     jruzicka limb
+python-zstarfile                       gotmax23
+python3.10                             churchyard cstratak thrnciar torsava vstinner
+python3.11                             churchyard cstratak thrnciar torsava vstinner
+python3.12                             churchyard cstratak thrnciar vstinner
+python3.13                             churchyard ksurma
+python3.6                              churchyard cstratak torsava vstinner
+python3.9                              churchyard cstratak thrnciar torsava vstinner
+pyxattr                                defolos frankcrawford kevin szpak
+qbittorrent                            cstratak fale jonathanspw
+qemu                                   berrange bonzini crobinso mcascella rjones
+qemu-sanity-check                      rjones
+qgpgme                                 mhlavink
+quodlibet                              hannes luk1337
+qvr                                    dcavalca
+rabbitmq-server                        jeckersb peter rjones
+radsecproxy                            robert
+recutils                               ueno
+redwax-tool                            minfrin
+remind                                 meeuw neil
+reprotest                              fepitre
+resolv_wrapper                         asn
+rhythmbox-alternative-toolbar          mochaa
+river                                  alebastr sentry
+river-classic                          alebastr
+rkward                                 kkofler
+rnp                                    remi
+roundcubemail                          kevin remi
+rpki-client                            robert
+rpminspect                             dcantrell
+rpminspect-data-centos                 dcantrell
+rsakeyfind                             rebus
+rush                                   sthiell
+rust                                   jcheca jistone pmurphy
+rxvt-unicode                           dcantrell
+s-nail                                 nforro tkorbar
+samba                                  abbra anoopcs asn gd jstephen pfilipen simo
+screenkey                              rajeeshknambiar
+secilc                                 plautrba
+serd                                   nphilipp tartina
+setxkbmap                              whot
+shigofumi                              ppisar
+signify                                marcusmueller pjgeorg robert
+skribilo                               fed500
+slrn                                   ppisar
+slurp                                  ngompa
+sngrep                                 peter
+socket_wrapper                         asn
+sord                                   nphilipp tartina
+spamassassin                           jskarvad kevin nb
+spread-sheet-widget                    peter
+squid                                  jsteffan luhliarik thozza tkorbar
+sratom                                 nphilipp tartina
+ssh-audit                              neil
+sssd                                   abbra asn atikhonov pbrezina sbose simo
+strongswan                             dcavalca pemensik pwouters
+stunnel                                ngompa saprasad tmraz
+suil                                   nphilipp tartina xavierb
+supermin                               rjones
+swappy                                 ngompa wef
+sway                                   alebastr fale
+swaybg                                 jstanek
+swayidle                               onemorebyte
+swaylock                               jstanek
+sysconftool                            rathann
+teckit                                 ppisar
+terminator                             dmaphy mattrose
+time                                   opohorel ppisar
+tinygo                                 qulogic
+tio                                    robert
+tlf                                    jskarvad
+tmispell-voikko                        vpv
+tnftp                                  dcantrell egoode
+tomcat                                 csutherl dsoumis szappis van
+tomcli                                 gotmax23
+tor                                    maha pgreco pwouters
+tpm2-openssl                           afreof dbelyavs
+trader                                 zaitseff
+trafficserver                          jered
+trojan                                 yanqiyu
+tth                                    jjames
+uid_wrapper                            asn
+unbound                                pemensik pwouters thozza tkorbar
+unrealircd                             robert
+unrtf                                  ktdreyer
+usbredir                               jwrdegoede
+vali                                   alebastr
+vim-latex                              principis
+virt-p2v                               rjones
+virt-top                               rjones
+virt-v2v                               rjones
+virt-what                              rjones
+voikko-fi                              mfabian vpv
+volk                                   jskarvad
+wayland                                ajax jexposit ofourdan
+wcd                                    music
+webkitgtk                              decathorpe ngompa
+weechat                                luk1337 salimma stingray
+weldr-client                           bcl obudai ochosi
+wget2                                  jonathanspw mruprich ngompa
+wl-mirror                              alebastr
+wlr-randr                              alebastr
+wlroots                                alebastr
+wlroots0.18                            alebastr
+wlroots0.19                            alebastr
+wob                                    ngompa wef
+xalan-c                                fed500
+xcb-imdkit                             yanqiyu
+xcb-util-errors                        alebastr
+xclipboard                             aekoroglu ajax limb ofourdan
+xdg-desktop-portal-wlr                 alebastr
+xdriinfo                               ernunes
+xerces-c                               kalev tdawson
+xev                                    ajax
+xfontsel                               music
+xforms                                 robert
+xfsdump                                preichl sandeen
+xfsprogs                               preichl sandeen
+xgamma                                 ajax ofourdan ppisar
+xkeyboard-config                       ajax alexl jwrdegoede rhughes rstrode slaanesh whot
+xkill                                  ajax ofourdan suve
+xload                                  aekoroglu jdekloe
+xlogo                                  dcantrell
+xlsclients                             ajax
+xmag                                   ppisar
+xmessage                               ajax music ofourdan tdawson
+xmodmap                                ajax ofourdan whot
+xorg-x11-drv-amdgpu                    rathann slaanesh
+xpdf                                   spot
+xstdcmap                               dcavalca
+xterm                                  tkorbar
+xvinfo                                 ajax
+xwd                                    ajax filiperosset ofourdan
+xwininfo                               ajax humaton
+xwud                                   aekoroglu ajax ofourdan
+xz                                     jamartis jnovy pkubat praiskup rjones
+yambar                                 alebastr
+yascreen                               bbonev1
+yubico-piv-tool                        jjelen orion
+yubihsm-connector                      jjelen
+yubihsm-shell                          jjelen
+yubikey-manager-qt                     jjelen
+zix                                    tartina
+znc                                    dcavalca nb neil pgreco turboben

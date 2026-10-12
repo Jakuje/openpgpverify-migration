@@ -1,0 +1,59 @@
+From bf1e2f40837802291161768c6843c008d986ca6d Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 12 Oct 2026 14:13:00 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ man-db.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/man-db.spec b/man-db.spec
+index 8fb974b..135ae86 100644
+--- a/man-db.spec
++++ b/man-db.spec
+@@ -3,7 +3,7 @@
+ Summary: Tools for searching and reading man pages
+ Name: man-db
+ Version: 2.13.1
+-Release: 4%{?dist}
++Release: 5%{?dist}
+ # GPLv2+ .. man-db
+ # GPLv3+ .. gnulib
+ License: GPL-2.0-or-later AND GPL-3.0-or-later
+@@ -33,6 +33,7 @@ BuildRequires: systemd
+ BuildRequires: gdbm-devel, gettext, groff, less, libpipeline-devel, zlib-devel
+ BuildRequires: po4a, perl-interpreter, perl-version
+ BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ Recommends: glibc-gconv-extra
+ 
+ Requires(post): %{_sbindir}/update-alternatives
+@@ -59,7 +60,7 @@ BuildArch: noarch
+ This package provides periodic update of man-db cache.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+@@ -235,6 +236,9 @@ fi
+ %config(noreplace) %{_sysconfdir}/cron.daily/man-db.cron
+ 
+ %changelog
++* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 2.13.1-5
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 2.13.1-4
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.55.0
+

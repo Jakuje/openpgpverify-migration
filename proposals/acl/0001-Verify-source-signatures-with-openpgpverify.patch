@@ -1,0 +1,59 @@
+From 5fbafba4b98fbb775e2c09146d7d6ad8b73744fc Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 12 Oct 2026 14:12:58 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ acl.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/acl.spec b/acl.spec
+index 8a176e9..b6449be 100644
+--- a/acl.spec
++++ b/acl.spec
+@@ -1,7 +1,7 @@
+ Summary: Access control list utilities
+ Name: acl
+ Version: 2.4.0
+-Release: 2%{?dist}
++Release: 3%{?dist}
+ 
+ BuildRequires: gawk
+ BuildRequires: gcc
+@@ -10,6 +10,7 @@ BuildRequires: gnupg2
+ BuildRequires: libattr-devel
+ BuildRequires: make
+ BuildRequires: perl(FileHandle)
++BuildRequires: openpgpverify
+ 
+ Requires: libacl%{?_isa} = %{version}-%{release}
+ Source0: https://download-mirror.savannah.gnu.org/releases/acl/acl-%{version}.tar.gz
+@@ -47,7 +48,7 @@ programs which make use of the access control list programming interface
+ defined in POSIX 1003.1e draft standard 17.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+@@ -124,6 +125,9 @@ rm -rf $RPM_BUILD_ROOT%{_docdir}/%{name}*
+ %{_libdir}/libacl.so.*
+ 
+ %changelog
++* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 2.4.0-3
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 2.4.0-2
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.55.0
+

@@ -1,0 +1,39 @@
+From 0b251a27bd2de63bf7d220190fef36d6d5de148a Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 12 Oct 2026 14:13:00 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ libnetfilter_conntrack.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/libnetfilter_conntrack.spec b/libnetfilter_conntrack.spec
+index 94b7599..6956405 100644
+--- a/libnetfilter_conntrack.spec
++++ b/libnetfilter_conntrack.spec
+@@ -9,7 +9,7 @@ Source1:        http://netfilter.org/projects/libnetfilter_conntrack/files/%{nam
+ Source2:        coreteam-gpg-key-0xD70D1A666ACF2B21.txt
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  kernel-headers
+ BuildRequires:  libmnl-devel >= 1.0.3
+ BuildRequires:  libnfnetlink-devel >= 1.0.1
+@@ -30,7 +30,7 @@ libnetfilter_conntrack is a userspace library providing a programming
+ interface (API) to the in-kernel connection tracking state table.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+-- 
+2.55.0
+

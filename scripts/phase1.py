@@ -24,6 +24,7 @@ import concurrent.futures
 import hashlib
 import json
 import os
+import queue
 import re
 import shlex
 import shutil
@@ -93,8 +94,10 @@ def run(cmd, log, timeout=3600, **kw):
 
 
 class Mock:
-    def __init__(self, cfg, pkg, log):
-        self.base = ['mock', '-r', cfg, '--uniqueext', 'opv-' + pkg, '--quiet']
+    # One mock root per parallel job ("slot"), reused across packages: the
+    # bootstrap and caches stay, the build chroot is scrubbed after each package.
+    def __init__(self, cfg, slot, log):
+        self.base = ['mock', '-r', cfg, '--uniqueext', slot, '--quiet']
         self.log = log
 
     def __call__(self, *args, timeout=3600):
@@ -180,12 +183,16 @@ def diagnose(call, g, overlay=None):
 
 def failure_reason(diag, text):
     t = text.lower()
+    if 'malformed certificate in keyring' in t or 'unknown version' in t:
+        return 'unparseable-cert'  # e.g. old v3 keys in an Apache KEYS file
     if diag.get('keyring_format') == 'keybox':
         return 'keybox'
     if diag.get('armor_blocks', 0) > 1:
         return 'concatenated-armor'
     if 'packet v3' in t:
         return 'v3-sig'            # ancient signature format; upstream must re-sign
+    if re.search(r'(dsa\d+|rsa1024|elgamal\d+) is not considered secure', t):
+        return 'weak-key'          # key algorithm rejected; upstream needs a new key
     if 'SHA1' in diag.get('sig_hash_algos', []):
         return 'sha1-sig'          # upstream must re-sign the release
     if 'sha1' in t:
@@ -199,36 +206,58 @@ def failure_reason(diag, text):
     return 'unknown'
 
 
+def installdeps_srpm(m, spec, g, out, v):
+    """Fallback: some specs need their sources to be parsed (e.g. "%load
+    %{SOURCE10}"), which --installdeps on a spec can't provide. Build an SRPM
+    with the sources and install its BuildRequires instead."""
+    rd = os.path.join(out, 'srpm-' + v)
+    os.makedirs(rd, exist_ok=True)
+    if m('--buildsrpm', '--spec', spec, '--sources', g, '--no-clean', '--no-cleanup-after',
+         '--resultdir', rd, timeout=3600):
+        return False
+    srpms = [f for f in os.listdir(rd) if f.endswith('.src.rpm')]
+    ok = bool(srpms) and m('--installdeps', os.path.join(rd, srpms[0]), timeout=7200) == 0
+    shutil.rmtree(rd, ignore_errors=True)   # an SRPM holds all sources again
+    return ok
+
+
 def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp', overlay=None,
-                   bump=False):
+                   bump=False, slot='opv-0'):
     """Run old and new %prep in one fresh chroot. Returns a result dict."""
     log = os.path.join(d, 'mock-%s.log' % cfg)
     open(log, 'w').close()
     out = os.path.join(d, 'out-' + cfg)
     shutil.rmtree(out, ignore_errors=True)
     os.makedirs(out)
-    m = Mock(cfg, pkg, log)
+    m = Mock(cfg, slot, log)
     res = dict(chroot=cfg)
     wrap = WRAP_SCRIPT % ' '.join(MACRO_TOOLS + (RAW_TOOLS if raw else []))
     try:
         if m('--clean') or m('--init', timeout=3600):
             res['error'] = 'mock init failed'
             return res
-        copies = [m('--copyin', g, '/builddir/old')]
-        if new_spec:
-            copies.append(m('--copyin', g, '/builddir/new'))
-            copies.append(m('--copyin', new_spec, '/builddir/new/%s.spec' % pkg))
-            for rel, src in (overlay or {}).items():
-                copies.append(m('--copyin', src, '/builddir/new/' + rel))
-        if any(copies) or m.chroot('chown -R mockbuild:mock /builddir/old /builddir/new'
-                                   if new_spec else 'chown -R mockbuild:mock /builddir/old'):
+        def populate():
+            """(Re)create /builddir/old and /builddir/new; mock --buildsrpm wipes them."""
+            m.chroot('rm -rf /builddir/old /builddir/new')
+            copies = [m('--copyin', g, '/builddir/old')]
+            if new_spec:
+                copies.append(m('--copyin', g, '/builddir/new'))
+                copies.append(m('--copyin', new_spec, '/builddir/new/%s.spec' % pkg))
+                for rel, src in (overlay or {}).items():
+                    copies.append(m('--copyin', src, '/builddir/new/' + rel))
+            return not any(copies) and not m.chroot(
+                'chown -R mockbuild:mock /builddir/old' + (' /builddir/new' if new_spec else ''))
+
+        if not populate():
             res['error'] = 'copyin failed'
             return res
         variants = ([('new', new_spec)] if new_spec else []) + [('old', old_spec)]
         for v, spec in variants:
             if m('--installdeps', spec, timeout=7200):
-                res['%s_error' % v] = 'installdeps failed'
-                continue
+                if not installdeps_srpm(m, spec, g, out, v) or not populate():
+                    res['%s_error' % v] = 'installdeps failed'
+                    continue
+                res.setdefault('notes', []).append('%s: build deps installed from SRPM' % v)
             if v == 'new' and bump:
                 if m('--install', 'rpmdevtools') or m.chroot(
                         'rpmdev-bumpspec -u %s -c %s /builddir/new/%s.spec'
@@ -258,7 +287,7 @@ def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp', overlay
     return res
 
 
-def evaluate(res, raw, g):
+def evaluate(res, raw, g, primary=True):
     """Turn the call logs of one chroot run into an outcome."""
     if 'error' in res:
         return 'error', res['error']
@@ -275,6 +304,9 @@ def evaluate(res, raw, g):
     if res.get('new_error'):
         return 'error', res.get('new_error') or res.get('old_error')
     if not old:
+        if not primary:
+            # e.g. verification inside "%if 0%{?fedora}": nothing to compare in ELN
+            return 'not-verified', 'the unchanged spec does not verify sources in this chroot'
         return 'guard-failed', 'old spec executed no gpgverify call (prep rc %s)' % res.get('old_prep_rc')
     if any(c['tool'] != 'gpgverify' for c in old):
         return 'guard-failed', 'unexpected tools in old run: %s' % sorted({c['tool'] for c in old})
@@ -292,7 +324,7 @@ def evaluate(res, raw, g):
     return 'both-pass', None
 
 
-def test_package(pkg, inv_rec, cfgs, prev=None):
+def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
     d = os.path.join(WORK, pkg)
     os.makedirs(d, exist_ok=True)
     log = os.path.join(d, 'checkout.log')
@@ -315,6 +347,9 @@ def test_package(pkg, inv_rec, cfgs, prev=None):
     if not rec['in_scope']:
         upd.update(status='skipped', outcome_detail='now %s' % rec['category'])
         return upd
+    # What the current spec does, not what the inventory snapshot said.
+    upd.update(autochangelog=rec['autochangelog'], autorelease=rec['autorelease'],
+               rhel_conditional=rec['rhel_conditional'], gnupg2_action=rec['gnupg2_action'])
     raw = bool(rec['raw_verify'])
     new_spec = None
     if not raw:
@@ -351,14 +386,15 @@ def test_package(pkg, inv_rec, cfgs, prev=None):
     statuses = []
     for cfg in cfgs:
         res = test_in_chroot(cfg, pkg, d, g, spec_path, new_spec, raw, stage, overlay,
-                             bump=bool(new_spec) and not rec['autochangelog'])
+                             bump=bool(new_spec) and not rec['autochangelog']
+                             and not rec['autorelease'], slot=slot)
         bumped = os.path.join(d, 'out-' + cfg, 'bumped.spec')
         if cfg == cfgs[0] and os.path.exists(bumped):
             shutil.copy(bumped, new_spec)
             upd['release_bumped'] = True
             subprocess.run(['diff', '-u', spec_path, new_spec], stdout=open(
                 os.path.join(d, 'conversion.diff'), 'w'))
-        outcome, detail = evaluate(res, raw, g)
+        outcome, detail = evaluate(res, raw, g, primary=(cfg == cfgs[0]))
         res['outcome'] = outcome
         res['detail'] = detail
         if outcome == 'regression':
@@ -376,8 +412,9 @@ def test_package(pkg, inv_rec, cfgs, prev=None):
     # The first chroot (rawhide) decides; extra chroots (ELN) count only if they
     # could test the unchanged spec at all.
     order = ['error', 'guard-failed', 'regression', 'both-fail', 'not-buildable', 'manual',
-             'both-pass']
-    statuses = statuses[:1] + [x for x in statuses[1:] if x != 'not-buildable']
+             'not-verified', 'both-pass']
+    statuses = statuses[:1] + [x for x in statuses[1:]
+                               if x not in ('not-buildable', 'not-verified')]
     worst = min(statuses, key=order.index)
     upd['status'] = {'both-pass': 'tested'}.get(worst, worst)
     upd['outcome_detail'] = '; '.join('%s: %s%s' % (r['chroot'], r['outcome'],
@@ -399,6 +436,9 @@ def main():
                     help='also test in fedora-eln-x86_64 when the spec has rhel conditionals')
     ap.add_argument('--jobs', type=int, default=1)
     ap.add_argument('--keep', action='store_true', help='keep mock chroots for debugging')
+    ap.add_argument('--prune-sources', action='store_true',
+                    help='delete downloaded sources of packages that passed (saves disk); '
+                         'failing ones keep them for refresh_keys.py')
     ap.add_argument('--inventory', default=os.path.join(
         state.ROOT, 'data/inventory/inventory-2026-10-06.jsonl'))
     ap.add_argument('packages', nargs='+')
@@ -407,6 +447,10 @@ def main():
     inv = state.load_inventory(a.inventory)
     os.makedirs(WORK, exist_ok=True)
 
+    slots = queue.Queue()
+    for i in range(a.jobs):
+        slots.put('opv-%d' % i)
+
     def one(pkg):
         cfgs = [a.chroot]
         if a.eln and inv.get(pkg, {}).get('mentions_rhel'):
@@ -414,9 +458,17 @@ def main():
         try:
             with LOCK:
                 prev = state.load().get(pkg)
-            upd = test_package(pkg, inv.get(pkg), cfgs, prev)
+            slot = slots.get()
+            try:
+                upd = test_package(pkg, inv.get(pkg), cfgs, prev, slot)
+            finally:
+                slots.put(slot)
         except Exception as e:  # keep going with other packages
             upd = dict(status='error', outcome_detail='harness: %r' % e, results=[])
+        g = os.path.join(WORK, pkg, 'dist-git')
+        if a.prune_sources and upd.get('status') in ('tested', 'superseded', 'skipped') \
+                and os.path.isdir(os.path.join(g, '.git')):
+            subprocess.run(['git', '-C', g, 'clean', '-fdxq'])
         upd['updated'] = state.now()
         with LOCK:
             st = state.load()

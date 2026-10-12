@@ -27,7 +27,7 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 | current (`%gpgverify`) | 1 | pass |
 | this PR (`%openpgpverify`) | 1 | fails with the keyring in dist-git; **passes with the refreshed keyring** (sqv run directly) |
 
-Tested on 2026-10-09 at dist-git commit `c59b262763d1` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
+Tested on 2026-10-12 at dist-git commit `c59b262763d1` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
 ### Keyring refresh
 
@@ -44,7 +44,7 @@ What changed in the certificate (`sq inspect`):
          Key flags: transport encryption, data-at-rest encryption
             UserID: Assaf Gordon <agordon@wi.mit.edu>
                     Revoked:
--                   Invalid: No binding signature at time 2026-10-09T13:01:20Z
+-                   Invalid: No binding signature at time 2026-10-12T11:57:03Z
             UserID: Assaf Gordon <assafgordon@gmail.com>
  self-signatures CertificationRevocation: 2015-08-13
 -self-signatures PositiveCertification: 2020-02-24

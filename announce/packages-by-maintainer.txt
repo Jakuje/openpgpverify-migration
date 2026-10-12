@@ -1,0 +1,374 @@
+aarem                 oclock
+abbra                 freeipa libtalloc libtdb libtevent samba sssd
+aekoroglu             xclipboard xload xwud
+aflyhorse             pam_mount
+afreof                tpm2-openssl
+agk                   mdadm
+ajax                  libXpm wayland xclipboard xev xgamma xkeyboard-config xkill xlsclients xmessage xmodmap xvinfo xwd xwininfo xwud
+alakatos              aide
+alebastr              drm_info fcft foot kanshi libdisplay-info nghttp3 river river-classic sway vali wl-mirror wlr-randr wlroots wlroots0.18 wlroots0.19 xcb-util-errors xdg-desktop-portal-wlr yambar
+alexl                 dbus dbus-glib libXpm perl-Net-DNS poppler xkeyboard-config
+amigadave             autoconf-archive dbus
+amoralej              diskimage-builder python-gnocchiclient python-mistralclient python-osc-lib python-sushy python-tackerclient
+andreamtp             kronometer
+andyp                 blktrace
+ankursinha            mpd munge
+anoopcs               samba
+ansasaki              gnutls libssh openssl-pkcs11
+apevec                python-automaton python-barbicanclient python-debtcollector python-futurist python-ironicclient python-keystoneauth1 python-magnumclient python-osc-lib python-oslo-concurrency python-oslo-context python-oslo-i18n python-oslo-log python-reno python-stevedore
+asamalik              libmodulemd
+asn                   cmocka ffmpeg libssh libtalloc libtdb libtevent mingw-cmocka ngtcp2 nss_wrapper pam_wrapper priv_wrapper resolv_wrapper samba socket_wrapper sssd uid_wrapper
+atikhonov             sssd
+atim                  hcxtools kitty
+bbonev1               bpfmon dhcpdump iotop-c yascreen
+bcl                   courier-unicode gnupg2 maildrop parted pyparted weldr-client
+belegdol              AusweisApp2 keepass
+bentiss               libXpm
+benzea                libusb1
+berrange              qemu
+besser82              git libxcrypt
+bonzini               qemu
+bowlofeggs            dino
+brandfbb              facter hiera puppet
+bruno                 courier-unicode maildrop
+bubeck                keepass
+carllibpst            passwordsafe
+carlosrodrifernandez  botan3 libcap
+carlwgeorge           git-lfs llvm19
+cathay4t              nmstate
+cheeselee             emacs libchewing pv
+churchyard            python3.10 python3.11 python3.12 python3.13 python3.6 python3.9
+cicku                 ansifilter autoconf-archive dropbear hxtools i3 i3lock i3status npth
+clumens               pyparted
+crobinso              qemu
+cstratak              python3.10 python3.11 python3.12 python3.6 python3.9 qbittorrent
+csutherl              tomcat
+dbelyavs              openssh tpm2-openssl
+dcantrell             libptytty pyparted rpminspect rpminspect-data-centos rxvt-unicode tnftp xlogo
+dcavalca              asahi-installer bc bino btrfs-progs gencolormap glinf libbsd mucalc pianobar python-stevedore qvr strongswan xstdcmap znc
+dchen                 SDL3
+decathorpe            webkitgtk
+defolos               emacs fish i3 i3lock i3status poke pyxattr
+devos                 msmtp
+dhandzus              pcre2
+dhanina               freeipa
+didiksupriadi41       ant-antunit apache-commons-text
+dmalcolm              llvm
+dmaphy                terminator
+dsommers              openvpn
+dsoumis               tomcat
+dtardon               libreoffice
+dtimms                normalize
+duffy                 inkscape
+dwalsh                libsepol openssh
+dwmw2                 exim nano nettle ocserv openconnect
+eclipseo              kvantum opendoas
+egoode                tnftp
+ekohl                 facter hiera puppet
+ellert                cryptopp gsi-openssh
+elmarco               emacs libtpms mingw-libssh2 mingw-usbredir
+ernunes               xdriinfo
+etrunko               mingw-libssh2
+fab                   isync
+fale                  i3 i3lock i3status loudmouth paperkey python-gnupg qbittorrent sway
+farchord              kdsoap
+feborges              poppler
+fed500                anymeal conflict emacs freetalk haunt libredwg libstrophe mpd skribilo xalan-c
+fedepell              cage dropbear
+fepitre               disorderfs reprotest
+ferdnyc               ncmpc pv
+ffmancera             nmstate
+filiperosset          ansifilter maven-doxia maven-doxia-sitetools maven-reporting-api maven-reporting-impl parallel pdns-recursor xwd
+fkrenzel              gnutls
+flichtenheld          openvpn
+fnux                  mako
+frankcrawford         pylibacl pyxattr
+frantisekz            clang15 lld15 llvm15
+fschwarz              borgbackup davfs2
+fujiwara              ibus-chewing
+fweimer               libxcrypt
+gap                   munin
+gbcox                 msmtp python-pskc
+gd                    libtalloc libtdb libtevent samba
+germano               keepassxc
+golfu                 parallel
+gotmax23              fedrq python-zstarfile tomcli
+gscrivano             crun
+gwenthekween          babeltrace
+haircommander         crun
+hannes                quodlibet
+heffer                batctl nginx nginx-mod-fancyindex
+hhorak                libdvdread libisoburn libisofs
+hiwkby                python-hacking python-oslo-metrics
+hobbes1069            fail2ban pianobar
+humaton               xwininfo
+hushan                libmnl
+huzaifas              irssi openvpn
+ignatenkobrain        btrfs-progs hiera libuv llvm ntpsec puppet
+ihuguet               nmstate
+infraw                mat2
+ingvar                munin
+ixs                   munin
+jakub                 llvm
+jamacku               curl logrotate nghttp2 nghttp3
+jamartis              acl attr bzip2 coreutils xz
+jamesturner246        libmpc
+jcapitao              python-aodhclient python-cinderclient python-glanceclient python-heatclient python-keystoneclient python-neutronclient python-novaclient python-openstackclient python-oslo-concurrency python-oslo-serialization python-oslo-utils python-oslotest python-swiftclient python-troveclient
+jchaloup              bzip2 man-db
+jcheca                rust
+jcline                dino
+jcpunk                fuse-encfs
+jdekloe               xload
+jeckersb              rabbitmq-server
+jered                 trafficserver
+jexposit              libXpm wayland
+jirka                 conserver
+jistone               llvm rust
+jjames                0install gcl glpk gp2c libmpc opam pari pari-elldata pari-galdata pari-galpol pari-nflistdata pari-nftables pari-seadata tth
+jjelen                gnupg2 libgpg-error libksba libssh openssh openssl-pkcs11 pcsc-lite-ccid pinentry yubico-piv-tool yubihsm-connector yubihsm-shell yubikey-manager-qt
+jkaluza               crun
+jkucera               gpgme
+jmigacz               curl
+jmracek               dnf libdnf librhsm
+jnovy                 cproto poppler xz
+jonathanspw           basez davfs2 dhcpdump git kitty mdadm paperkey python-ironicclient qbittorrent wget2
+jonny                 apache-commons-net electron-cash python-libusb1
+jorton                cyrus-imapd dhcp expat httpd mod_perl nginx php
+joshstrobl            budgie-backgrounds budgie-desktop budgie-desktop-defaults
+josie                 nmstate
+jpena                 python-automaton python-futurist python-osc-lib
+jplesnik              mod_perl perl-Net-DNS perl-WWW-OrangeHRM-Client
+jpopelka              dhcp
+jrohel                dnf libdnf
+jruzicka              knot knot-resolver python-automaton python-osc-lib python-troveclient python-zaqarclient
+jrybar                lynx
+js                    electrum feather mingw-objfw objfw
+jskarvad              bino exim grep irssi libgnt oath-toolkit spamassassin tlf volk
+jsmith                libss7
+jstanek               bemenu newsboat swaybg swaylock
+jsteffan              squid
+jstephen              samba
+jussilehtola          dd_rescue gsl
+jvaclav               nmstate
+jvanek                munin
+jwrdegoede            Xaw3d libusb1 mingw-usbredir usbredir xkeyboard-config
+kalev                 ImageMagick cairomm irssi llvm14 mingw-SDL3 openvpn pcsc-lite pcsc-lite-ccid xerces-c
+kanru                 chewing-editor ibus-chewing libchewing
+kdudka                acl attr bash coreutils cpio cscppc csdiff csmock cswrap curl file findutils libnice libssh2 logrotate lynx nano nghttp2 nss-pem
+keiths                babeltrace
+kevin                 iptables libnftnl nftables pylibacl pyxattr roundcubemail spamassassin
+kimheino              munin
+kkleine               libclc22 llvm
+kkofler               rkward
+kni                   mod_perl
+konradm               glpk
+kstewart              babeltrace babeltrace2 lttng-ust
+ksurma                python3.13
+ktdreyer              babeltrace lttng-ust unrtf
+kwizart               cryptopp
+kzak                  coreutils e2fsprogs
+landgraf              cyrus-imapd nmap
+leigh123linux         mpd
+lennart               dbus
+limb                  Xaw3d apache-commons-vfs gnucobol inkscape libchipcard libextractor libreoffice loudmouth python-debtcollector python-dijitso python-keystoneauth1 python-manilaclient python-octaviaclient python-oslo-config python-oslo-context python-oslo-i18n python-oslo-log python-reno python-zaqarclient xclipboard
+linville              batctl
+ljavorsk              cpio
+lslebodn              libtalloc libtdb libtevent
+lsm5                  crun
+luap99                crun
+luhliarik             httpd nginx squid
+luk1337               nginx-mod-fancyindex quodlibet weechat
+luya                  ImageMagick
+lvrabec               openssh
+lzaoral               acl attr conserver coreutils cscppc csdiff csmock cswrap curl file findutils gnulib-l10n logrotate lynx nano nss-pem
+maha                  libgsasl loudmouth oidentd tor
+marcusmueller         signify
+mattdm                geeqie
+mattrose              terminator
+mavit                 emacs
+maxamillion           psad
+mbaldessari           ndisc6
+mblaha                dnf libdnf
+mbroz                 mdadm
+mcascella             qemu
+mcermak               debugedit
+meeuw                 remind
+mfabian               libvoikko voikko-fi
+mhlavink              compat-gpgme124 gpgme gpgmepp iotop-c qgpgme
+mikedep333            llvm19
+mikelo2               bc ed keepassxc libmodsecurity parallel poke
+minfrin               redwax-tool
+mizdebsk              ant-antunit apache-commons-net fop maven-doxia maven-doxia-sitetools maven-reporting-api maven-reporting-impl
+mjeanson              babeltrace babeltrace2 lttng-ust
+mjg                   BibTool grim notmuch npth
+mjw                   debugedit
+mkasik                poppler
+mkolar                babeltrace
+mkoncek               ant-antunit apache-commons-net fop maven-doxia maven-doxia-sitetools maven-reporting-api maven-reporting-impl
+mlichvar              chrony dialog ncurses ntpsec
+moceap                courier-unicode
+mochaa                rhythmbox-alternative-toolbar
+mooninite             mingw-libssh2 mingw-nettle
+mosvald               cyrus-imapd dhcp dhcpcd log4cplus nmap
+mpolacek              libmpc
+mrc0mmand             gpgme
+mripard               python-b4 python-ezgb python-liblore
+mrnuke                flashrom
+mrunge                python-gnocchiclient python-troveclient
+mruprich              bind grout wget2
+msekleta              curl emacs libnice nghttp2
+mspacek               perl-Net-DNS
+music                 cairomm gp2c libpri libss7 wcd xfontsel xmessage
+musuruan              gcompris-qt
+nb                    spamassassin znc
+ndim                  dd_rescue
+neil                  remind ssh-audit znc
+nforro                man-db s-nail
+ngompa                SDL3 bcachefs-tools btrfs-progs ffmpeg fish mingw-SDL3 musl pinentry slurp stunnel swappy webkitgtk wget2 wob
+nickblack             growlight notcurses
+nikic                 llvm llvm14 llvm19
+nmav                  ipcalc ocserv openconnect
+nonamedotc            keepassxc
+nphilipp              forgejo libmodulemd lilv serd sord sratom suil
+nphilipp-rh           forgejo
+nsella                crun
+obudai                weldr-client
+ochosi                weldr-client
+ofourdan              wayland xclipboard xgamma xkill xmessage xmodmap xwd xwud
+omajid                dotnet10.0
+onemorebyte           swayidle
+opohorel              git time
+orion                 Xaw3d ant-antunit conntrack-tools fail2ban glpk python-pskc yubico-piv-tool
+orphan                fuse-encfs
+otaylor               loudmouth
+ovasik                bc coreutils cpio inn
+pbrady                coreutils
+pbrezina              sssd
+pcahyna               acl attr bc cpio libburn
+pemensik              NetworkManager-strongswan bind bind9-next bmake dhcp dhcpcd dns-root-data dnssec-trigger getdns gnutls ipcalc ldns ngtcp2 openresolv strongswan unbound
+peter                 asterisk b43-fwcutter electron-cash flashrom fop fuse-sshfs libgsasl mpop msmtp pspp python-libusb1 rabbitmq-server sngrep spread-sheet-widget
+petersen              clang18 hello lld18 llvm14 llvm18
+pfilipen              libtalloc libtdb libtevent priv_wrapper samba
+pfrankli              bison
+pghmcfc               curl libssh2 pari pari-elldata pari-galdata pari-galpol pari-seadata
+pgreco                tor znc
+pjgeorg               signify
+pkratoch              dnf libdnf
+pkubat                cpio xz
+plautrba              fapolicyd libsepol secilc
+pmurphy               rust
+ppisar                ctstream cvs gscan2pdf indent libisds libmodulemd mod_perl oidentd pcre2 perl-Net-DNS perl-WWW-OrangeHRM-Client shigofumi slrn teckit time xgamma xmag
+praiskup              cgit cpio xz
+preichl               blktrace e2fsprogs fio xfsdump xfsprogs
+principis             kvantum mooltipass-udev vim-latex
+pspacek               bind bind9-next dns-root-data
+pstodulk              git
+psutter               iptables libnftnl nftables
+pwouters              conntrack-tools dehydrated dnssec-trigger getdns knot ldns libreswan perl-Net-DNS python-gnupg strongswan tor unbound
+pwu                   fcitx5-zhuyin
+pzacik                dhcpcd
+qulogic               git-lfs gplugin tinygo
+rajeeshknambiar       screenkey
+rathann               abcde cksfv ffmpeg inn libcap libdvdnav libdvdread mkvtoolnix ndisc6 normalize psad sysconftool xorg-x11-drv-amdgpu
+rcallicotte           cgit llvm19
+rcritten              freeipa
+rebus                 aesfix aeskeyfind dd_rescue john rsakeyfind
+remi                  ImageMagick php phpMyAdmin rnp roundcubemail
+rharwood              mpdscribble
+rhughes               dbus dbus-glib flashrom libXpm perl-Net-DNS poppler xkeyboard-config
+rjarry                grout
+rjones                fuse-sshfs guestfs-tools hivex libguestfs libnbd mingw-libssh2 nbdkit ocaml-augeas ocaml-mysql qemu qemu-sanity-check rabbitmq-server supermin virt-p2v virt-top virt-v2v virt-what xz
+robert                apachetop dehydrated eggdrop ethtool flashrom iec16022 libburn libidn2 libisoburn libisofs liblxi libmd libnids libssh lua-unbound lxi-tools mimedefang mingw-libidn2 openbgpd pdfgrep phpMyAdmin prosody radsecproxy rpki-client signify tio unrealircd xforms
+romaingeissler1a      msmtp
+rombobeorn            anet
+rominf                ldns python-gnupg
+rommell               ldns python-gnupg
+rrajesh               nmstate
+rrelyea               pcsc-lite pcsc-lite-ccid
+rruzicka              crun
+rsroka                aide fapolicyd
+rstrode               dbus dbus-glib libXpm perl-Net-DNS poppler xkeyboard-config
+runcom                i3
+sailer                mingw-pcre
+salimma               btrfs-progs fish jigdo libbsd musl python-authres python-b4 python-patatt weechat
+sandeen               blktrace btrfs-progs e2fsprogs fio nilfs-utils xfsdump xfsprogs
+saprasad              libreswan libssh libxcrypt pkcs11-provider stunnel
+sbose                 sssd
+scottt                llvm
+sdgathman             python-authres
+senderek              cryptlib cryptobone
+sentry                river
+sergesanspaille       llvm
+sergiopr              gnuastro
+sgallagh              libmodulemd librhsm libtalloc libtdb libtevent libuv
+sgrubb                fapolicyd
+siddharths            llvm
+simo                  fips-provider freeipa libtalloc libtasn1 libtdb libtevent libxcrypt samba sssd
+slaanesh              libssh openconnect xkeyboard-config xorg-x11-drv-amdgpu
+slankes               gscan2pdf
+smallorange           libusb1
+smani                 mingw-SDL3
+smooge                bc
+solopasha             kitty
+spike                 apache-commons-net
+spot                  SDL3 mingw-SDL3 xpdf
+stefanb               libnice
+stefanberger          libtpms
+stefw                 p11-kit
+steve                 dd_rescue pam_mount
+steved                acl
+stevetraylen          hiera python-barbicanclient python-magnumclient python-osc-placement python-stevedore python-sushy
+sthiell               rush
+stingray              conntrack-tools libnetfilter_conntrack weechat
+submachine            bison
+suve                  SDL3 SDL3_net mingw-SDL3 xkill
+svashisht             bash coreutils cscppc csdiff csmock cswrap curl file findutils fish libnice logrotate lynx nano nghttp2 nss-pem
+swt2c                 emacs
+szappis               tomcat
+szpak                 pylibacl pyxattr
+tadej                 nginx par2cmdline
+tartina               jalv lilv serd sord sratom suil zix
+tbaeder               llvm llvm22
+tdawson               gsl kdsoap kuserfeedback ocserv openconnect xerces-c xmessage
+terjeros              puppet
+teuf                  mingw-usbredir
+thebeanogamer         ansible-collection-dellemc-openmanage postfix-mta-sts-resolver
+thozza                dhcp dnssec-trigger squid unbound
+thrnciar              python3.10 python3.11 python3.12 python3.9
+tibbs                 cyrus-imapd
+till                  hxtools libHX nmstate
+tjikkun               pdns-recursor
+tkorbar               expat s-nail squid unbound xterm
+tmraz                 gnupg2 libgpg-error libksba stunnel
+torsava               python3.10 python3.11 python3.6 python3.9
+tpokorra              keepass
+trawets               libeatmydata
+tstellar              llvm llvm14 llvm20
+tuliom                clang15 lld15 llvm llvm15 llvm21
+turboben              znc
+twaugh                coreutils dos2unix
+twoerner              freeipa iptables libnftnl
+ueno                  emacs libreswan nettle nettle3.10 nss-pem p11-kit recutils
+van                   tomcat
+vascom                cryptopp fuse-encfs fuse-sshfs
+vmihalko              coreutils curl file logrotate
+vmiticka2             crun
+vmojzis               libsepol
+vpv                   libvoikko tmispell-voikko voikko-fi
+vstinner              python3.10 python3.11 python3.12 python3.6 python3.9
+walters               dbus dbus-glib
+wart                  libgsasl msmtp
+wef                   swappy wob
+whot                  mkfontscale setxkbmap xkeyboard-config xmodmap
+wojnilowicz           browserpass python-pass-import
+xavierb               suil
+xdbob                 pass-audit
+xiao                  mdadm
+yanqiyu               fcitx5 fcitx5-anthy fcitx5-chewing fcitx5-chinese-addons fcitx5-configtool fcitx5-gtk fcitx5-hangul fcitx5-kkc fcitx5-libthai fcitx5-lua fcitx5-m17n fcitx5-qt fcitx5-rime fcitx5-sayura fcitx5-skk fcitx5-table-extra fcitx5-table-other fcitx5-unikey fcitx5-zhuyin libime trojan xcb-imdkit
+ykarel                python-os-service-types
+zaitseff              trader
+zawertun              haruna kio-fuse kitty kuserfeedback
+zbyszek               geeqie
+zdohnal               bind cyrus-imapd log4cplus pdfio
+zfridric              aide gnutls guile-gnutls libtasn1
+zuul                  libcap

@@ -1,0 +1,38 @@
+From 5189bc7eb5247eb76509355506ce78bdaaa32bbe Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 12 Oct 2026 14:13:01 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ munge.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/munge.spec b/munge.spec
+index b440c3e..45c1233 100644
+--- a/munge.spec
++++ b/munge.spec
+@@ -20,6 +20,7 @@ BuildRequires:  git-core
+ BuildRequires:  gnupg2
+ BuildRequires:  systemd-rpm-macros
+ BuildRequires:  zlib-devel bzip2-devel openssl-devel
++BuildRequires:  openpgpverify
+ Requires:       munge-libs = %{version}-%{release}
+ Requires:       logrotate
+ 
+@@ -57,7 +58,7 @@ Runtime libraries for using MUNGE.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -N -S git
+ cp "%{SOURCE4}"  README-Fedora.md
+ 
+-- 
+2.55.0
+

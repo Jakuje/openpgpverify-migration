@@ -1,0 +1,39 @@
+From 3309b5e8b4f093d2ab38e521984dcbfc9ff29d01 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 12 Oct 2026 14:12:59 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ conntrack-tools.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/conntrack-tools.spec b/conntrack-tools.spec
+index e493447..9a8ac1a 100644
+--- a/conntrack-tools.spec
++++ b/conntrack-tools.spec
+@@ -14,7 +14,7 @@ BuildRequires:  autoconf
+ BuildRequires:  automake
+ BuildRequires:  libtool
+ BuildRequires:  gcc
+-BuildRequires: gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  libnfnetlink-devel >= 1.0.1, libnetfilter_conntrack-devel >= 1.1.1
+ BuildRequires:  libnetfilter_cttimeout-devel >= 1.0.0, libnetfilter_cthelper-devel >= 1.0.0
+ BuildRequires:  libmnl-devel >= 1.0.3, libnetfilter_queue-devel >= 1.0.2
+@@ -48,7 +48,7 @@ In addition, you can also monitor connection tracking events, e.g.
+ show an event message (one line) per newly established connection.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+-- 
+2.55.0
+

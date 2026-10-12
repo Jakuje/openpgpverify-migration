@@ -1,0 +1,192 @@
+From 59e30c1f3e08d0c26bd8244f4ff369e9a25a7196 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 12 Oct 2026 14:13:01 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Refresh msweet-pub.gpg from keyservers/WKD: same certificate(s), with self-signatures our copy was missing.
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ msweet-pub.gpg | 115 ++++++++++++++++++++++++++++++++-----------------
+ pdfio.spec     |   9 ++--
+ 2 files changed, 82 insertions(+), 42 deletions(-)
+
+diff --git a/msweet-pub.gpg b/msweet-pub.gpg
+index a95c4e1..fac9292 100644
+--- a/msweet-pub.gpg
++++ b/msweet-pub.gpg
+@@ -1,6 +1,6 @@
+ -----BEGIN PGP PUBLIC KEY BLOCK-----
+ 
+-mQINBF+cjnMBEADB0sQniR+sWOFBHWURGGkUwVPUbApFs4RNiy8HEpH9wdWG2jtz
++xsFNBF+cjnMBEADB0sQniR+sWOFBHWURGGkUwVPUbApFs4RNiy8HEpH9wdWG2jtz
+ 7qqJeoa9GoZYEFVsHi3O0bvxNxb+PZNbk7VwsWImWYox8SR9QVNo5Ie0Sh9HzKqD
+ ZA8FWf4KooIczKTYBqTsVvGsURcCAEMObh4WgvB2Yg1sGKPfMI2YUC/MnmN10Z4O
+ JW3m2hymDoOsYWWherXRwGDFZKJXWnZ6YTamxRuhKe0s7N9LiOKX5fl4heEmdlNz
+@@ -11,42 +11,79 @@ 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
+-TmrmetlmpxSMcMU=
+-=No6h
++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
++etlmpxSMcMU=
++=QNjA
+ -----END PGP PUBLIC KEY BLOCK-----
+diff --git a/pdfio.spec b/pdfio.spec
+index cdc340b..bb2d0f7 100644
+--- a/pdfio.spec
++++ b/pdfio.spec
+@@ -2,7 +2,7 @@
+ 
+ Name: pdfio
+ Version: 1.6.5
+-Release: 1%{?dist}
++Release: 2%{?dist}
+ Summary: C library for PDF I/O
+ # Apache 2.0 with exception - pdfio code
+ # GPL-2.0-or-later - code128 font from examples
+@@ -25,7 +25,7 @@ BuildRequires: git-core
+ # builds with gcc
+ BuildRequires: gcc
+ # for verifying the tarball signature
+-BuildRequires: gpgverify
++BuildRequires: openpgpverify
+ # use make for Makefile
+ BuildRequires: make
+ # uses pkg-config in SPEC and in configure
+@@ -64,7 +64,7 @@ The package contains HTML documentation and man page for PDFIO library.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -S git
+ 
+ 
+@@ -130,6 +130,9 @@ make test
+ 
+ 
+ %changelog
++* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 1.6.5-2
++- Verify upstream source signatures with openpgpverify
++
+ * Mon Aug 31 2026 Zdenek Dohnal <zdohnal@redhat.com> - 1.6.5-1
+ - 1.6.5
+ 
+-- 
+2.55.0
+

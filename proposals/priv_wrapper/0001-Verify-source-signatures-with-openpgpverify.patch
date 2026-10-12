@@ -1,0 +1,59 @@
+From 7a85bc5282d37c1df97ec7319ec45ebc5e9940c1 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 12 Oct 2026 14:13:01 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Refresh priv_wrapper.keyring from keyservers/WKD: same certificate(s), with self-signatures our copy was missing.
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ priv_wrapper.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/priv_wrapper.spec b/priv_wrapper.spec
+index be4c889..01a2f12 100644
+--- a/priv_wrapper.spec
++++ b/priv_wrapper.spec
+@@ -1,6 +1,6 @@
+ Name:           priv_wrapper
+ Version:        1.0.1
+-Release:        12%{?dist}
++Release:        13%{?dist}
+ 
+ Summary:        A library to disable resource limits and other privilege dropping
+ License:        GPL-3.0-or-later
+@@ -16,6 +16,7 @@ BuildRequires:  gcc
+ BuildRequires:  cmake
+ BuildRequires:  gnupg2
+ BuildRequires:  libcmocka-devel >= 1.1.0
++BuildRequires:  openpgpverify
+ 
+ Recommends:     cmake
+ Recommends:     pkgconfig
+@@ -36,7 +37,7 @@ This package does not have a devel package, because this project is for
+ development/testing.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+@@ -65,6 +66,9 @@ development/testing.
+ %{_mandir}/man1/priv_wrapper.1*
+ 
+ %changelog
++* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 1.0.1-13
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.0.1-12
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.55.0
+

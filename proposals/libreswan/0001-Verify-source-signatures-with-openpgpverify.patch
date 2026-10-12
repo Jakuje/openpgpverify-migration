@@ -1,0 +1,38 @@
+From 55368cc9c5e94311ed73cb2117df28364817d7a1 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 12 Oct 2026 14:13:00 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ libreswan.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/libreswan.spec b/libreswan.spec
+index 4c62740..a142969 100644
+--- a/libreswan.spec
++++ b/libreswan.spec
+@@ -70,6 +70,7 @@ BuildRequires: systemd-devel
+ BuildRequires: systemd-rpm-macros
+ BuildRequires: unbound-devel >= %{unbound_version}
+ BuildRequires: xmlto
++BuildRequires: openpgpverify
+ %if 0%{with_efence}
+ BuildRequires: ElectricFence
+ %endif
+@@ -128,7 +129,7 @@ This package contains the minimal set of daemons and userland tools
+ for setting up Libreswan.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %setup -q -n libreswan-%{version}%{?prever}
+ # enable crypto-policies support
+ sed -i "s:#[ ]*include \(.*\)\(/crypto-policies/back-ends/libreswan.config\)$:include \1\2:" configs/ipsec.conf.in
+-- 
+2.55.0
+

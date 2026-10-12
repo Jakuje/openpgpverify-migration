@@ -1,0 +1,38 @@
+From d63999b326b36725627b16c3d62e488e912e5a44 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 12 Oct 2026 14:13:00 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ libusb1.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/libusb1.spec b/libusb1.spec
+index 279e764..e2ef213 100644
+--- a/libusb1.spec
++++ b/libusb1.spec
+@@ -14,6 +14,7 @@ BuildRequires:  umockdev-devel
+ BuildRequires:  make
+ BuildRequires:  gcc
+ BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ # libusbx was removed in F34
+ Provides:       libusbx = %{version}-%{release}
+ Obsoletes:      libusbx < %{version}-%{release}
+@@ -89,7 +90,7 @@ MinGW Windows %{name} library.
+ %endif
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1 -n libusb-%{version}
+ 
+ %build
+-- 
+2.55.0
+

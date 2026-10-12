@@ -20,7 +20,7 @@ import state  # noqa: E402
 
 # Fields copied from the inventory; everything else belongs to later phases.
 INVENTORY_FIELDS = ('category', 'forms', 'conditional', 'rhel_conditional',
-                    'gnupg2_action', 'autochangelog', 'srpm_size')
+                    'gnupg2_action', 'autochangelog', 'autorelease', 'srpm_size')
 
 
 def main():

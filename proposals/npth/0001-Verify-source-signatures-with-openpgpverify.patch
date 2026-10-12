@@ -1,0 +1,38 @@
+From 57bee3f8e58bc84ea9288de9508ca3cff7cd0130 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 12 Oct 2026 14:13:01 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ npth.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/npth.spec b/npth.spec
+index 444bfd4..66acb1c 100644
+--- a/npth.spec
++++ b/npth.spec
+@@ -14,6 +14,7 @@ Source3:        npth-config.1
+ BuildRequires:  make
+ BuildRequires:  gcc
+ BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ 
+ %description
+ nPth is a non-preemptive threads implementation using an API very similar
+@@ -31,7 +32,7 @@ This package contains libraries and header files for
+ developing applications that use %{name}.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+-- 
+2.55.0
+

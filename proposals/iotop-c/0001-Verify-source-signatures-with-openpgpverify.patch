@@ -1,0 +1,59 @@
+From 2870d469fcf3f07fd0209ded4e75fad2c4f3cb2b Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 12 Oct 2026 14:12:59 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ iotop-c.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/iotop-c.spec b/iotop-c.spec
+index 2d5f1d6..490db72 100644
+--- a/iotop-c.spec
++++ b/iotop-c.spec
+@@ -1,6 +1,6 @@
+ Name:           iotop-c
+ Version:        1.31
+-Release:        2%{?dist}
++Release:        3%{?dist}
+ Summary:        Simple top-like I/O monitor (implemented in C)
+ 
+ License:        GPL-2.0-or-later
+@@ -13,7 +13,7 @@ Provides:       iotop
+ Obsoletes:      iotop < 0.7
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  ncurses-devel
+ BuildRequires:  make
+ BuildRequires:  pkgconfig(ncursesw)
+@@ -36,7 +36,7 @@ possible.
+ %global _hardened_build 1
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -n iotop-%{version}
+ 
+ %build
+@@ -53,6 +53,9 @@ V=1 STRIP=: BINDIR=$RPM_BUILD_ROOT%{_bindir} %make_install
+ %{_mandir}/man8/iotop.8*
+ 
+ %changelog
++* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 1.31-3
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.31-2
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.55.0
+

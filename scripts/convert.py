@@ -178,7 +178,7 @@ def convert_rhel_calls(out, first_section, insert_at, last_uncond_br, have_br, n
     while i < len(out):
         line = out[i]
         if (first_section is not None and i >= first_section and
-                SHELL_MACRO_CALL.search(line) and not line.lstrip().startswith('#')
+                SHELL_MACRO_CALL.search(line) and not line.lstrip().startswith(('#', '%dnl'))
                 and not re.match(r'^\s*%(global|define)\s', line)):
             # The whole command, including backslash-continued lines around it.
             start = i

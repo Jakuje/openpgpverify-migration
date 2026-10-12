@@ -19,7 +19,7 @@ Phase 1 reason: `binding-after-signature`
          Key flags: transport encryption, data-at-rest encryption
             UserID: Assaf Gordon <agordon@wi.mit.edu>
                     Revoked:
--                   Invalid: No binding signature at time 2026-10-09T13:01:20Z
+-                   Invalid: No binding signature at time 2026-10-12T11:57:03Z
             UserID: Assaf Gordon <assafgordon@gmail.com>
  self-signatures CertificationRevocation: 2015-08-13
 -self-signatures PositiveCertification: 2020-02-24

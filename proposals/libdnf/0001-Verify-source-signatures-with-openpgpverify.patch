@@ -1,0 +1,59 @@
+From c805b804a036f15816ebb0f5ff4eb9893efaa33f Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 12 Oct 2026 14:13:00 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ libdnf.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/libdnf.spec b/libdnf.spec
+index 1ed11eb..b0b400f 100644
+--- a/libdnf.spec
++++ b/libdnf.spec
+@@ -56,7 +56,7 @@
+ 
+ Name:           libdnf
+ Version:        %{libdnf_major_version}.%{libdnf_minor_version}.%{libdnf_micro_version}
+-Release:        1%{?dist}
++Release:        2%{?dist}
+ Summary:        Library providing simplified C and Python API to libsolv
+ License:        LGPL-2.1-or-later
+ URL:            https://github.com/rpm-software-management/libdnf
+@@ -90,6 +90,7 @@ BuildRequires:  pkgconfig(cppunit)
+ BuildRequires:  pkgconfig(modulemd-2.0) >= %{libmodulemd_version}
+ BuildRequires:  pkgconfig(smartcols)
+ BuildRequires:  gettext
++BuildRequires:  openpgpverify
+ 
+ %if %{with sanitizers}
+ BuildRequires:  libasan
+@@ -193,7 +194,7 @@ Python 3 bindings for the hawkey library.
+ %endif
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ %if %{with python2}
+ mkdir build-py2
+@@ -316,6 +317,9 @@ popd
+ %endif
+ 
+ %changelog
++* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 0.76.0-2
++- Verify upstream source signatures with openpgpverify
++
+ * Fri Sep 18 2026 Ales Matej <amatej@redhat.com> - 0.76.0-1
+ - Update to 0.76.0
+ 
+-- 
+2.55.0
+

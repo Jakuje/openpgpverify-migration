@@ -27,7 +27,7 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 | current (`%gpgverify`) | 1 | pass |
 | this PR (`%openpgpverify`) | 1 | fails with the keyring in dist-git; **passes with the refreshed keyring** (sqv run directly) |
 
-Tested on 2026-10-09 at dist-git commit `111374dee9c4` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
+Tested on 2026-10-12 at dist-git commit `111374dee9c4` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
 ### Keyring refresh
 
@@ -42,12 +42,12 @@ What changed in the certificate (`sq inspect`):
 +++ refreshed/roy.marples.asc
 @@ -1,15 +1,10 @@
        Fingerprint: A785ED2755955D9E93EA59F6597F97EA9AD45549
--                   Invalid: No binding signature at time 2026-10-09T13:01:23Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-12T11:56:34Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: certification, signing
             Subkey: E9EE92F5F6D5DBE878B3C2690B0EEE0F057A64CF
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-09T13:01:23Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-12T11:56:34Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: transport encryption, data-at-rest encryption
             UserID: Roy Marples (NetBSD) <roy@NetBSD.org>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance

@@ -206,6 +206,41 @@ rpm stops depending on gpg.
    Keep the forge layer swappable (dist-git is moving from Pagure to
    Forgejo).
 
+## ELN (coordinated with https://github.com/fedora-eln/eln/issues/610)
+
+ELN packages go first. `data/eln-in-scope.txt` lists the in-scope packages from
+the content resolver's ELN workload and buildroot source lists
+(`tiny.distro.builders`): 164 as of 2026-10-12. All of them were tested in
+rawhide, plus ELN for specs mentioning `%{?rhel}`. Packages with an open
+dist-git PR mentioning openpgpverify (`data/eln-open-prs-*.tsv`, from the
+Pagure API) are recorded as `existing_prs` and skipped.
+
+`scripts/eln_summary.py` writes `announce/eln-issue-610-comment.md`, a status
+comment for the issue: ready PRs, PRs waiting for a keyring review, bugs by
+reason and by shared signing key, and checklist differences.
+
+Harness notes from this run:
+- one mock root per parallel job (`--uniqueext opv-N`), reused; per-package
+  roots left a 200 MB bootstrap each;
+- `--prune-sources` removes downloaded sources of passing packages;
+- if `--installdeps` on a spec fails (specs that `%load` files from their
+  sources, like emacs and llvm), the BuildRequires come from an SRPM built
+  with the sources;
+- `not-verified`: a secondary chroot (ELN) where even the unchanged spec
+  doesn't verify (e.g. bind verifies only `%if 0%{?fedora}`); doesn't affect
+  the status;
+- specs with `%autorelease` are never bumped, also with a guarded
+  `%{?autochangelog}`;
+- new regression reasons: `weak-key` (DSA), `unparseable-cert` (old v3 key in
+  e.g. an Apache KEYS file; gpgv skips it, sqv rejects the whole keyring).
+
+## Announcement
+
+`announce/devel-mail.txt` is the draft for devel / devel-announce, following
+the FESCo mass package change policy. `scripts/announce_lists.py` regenerates
+the two package lists the policy asks for (`announce/packages-by-name.txt`,
+`announce/packages-by-maintainer.txt`).
+
 ## Layout
 
 ```
@@ -219,6 +254,7 @@ reports/                 generated summaries; reports/keyring-refresh/ holds the
 templates/               commit message, PR description and bug templates
 proposals/               rendered patches, PR and bug texts (scripts/render_proposals.py)
 docs/                    background write-ups
+announce/                devel mail draft, package lists, ELN issue comment draft
 ```
 
 ## Inventory as of 2026-10-06
@@ -313,7 +349,9 @@ Verification only actually runs when the package is built, so `merged` and
 - [ ] Pagure (dist-git) API token, Bugzilla API key
 - [x] Seed `data/state/packages.jsonl` from the inventory (`scripts/seed_state.py`, maintainers from `pagure_owner_alias.json`)
 - [x] Phase 1 harness and pilot (19 packages, `reports/phase1-pilot.md`)
-- [ ] Phase 1 on all in-scope packages
+- [x] Phase 1 on all ELN packages (164)
+- [ ] Phase 1 on the remaining ~400 packages
+- [ ] Decide on `unparseable-cert` (4 ELN packages): trim keyrings in PRs, or make openpgpverify/sqv skip unreadable certificates like gpgv does
 - [x] Semi-automatic keyring refresh with per-package review (`scripts/refresh_keys.py`)
 - [x] openpgpverify prototype: SHA-1 key bindings accepted + failure hints (local branch `sha1-bindings-and-hints` in `~/devel/openpgpverify`, tests pass in mock)
 - [x] Decided: no SHA-1 binding relaxation in openpgpverify

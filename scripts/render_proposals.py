@@ -90,6 +90,25 @@ REASONS = {
         "- Keep only the signature by the key in the keyring, or dearmor and join "
         "the packets."),
 }
+REASONS.update({
+    'unparseable-cert': (
+        'keyring contains a key sqv cannot read',
+        "The keyring contains a certificate that Sequoia can't parse (typically an "
+        "old version 3 key, common in long-lived KEYS files). GnuPG skips such keys "
+        "silently; sqv rejects the whole keyring, even though the key that signed the "
+        "release is fine.",
+        "- Trim the keyring to the keys that sign releases (for example `gpg --import "
+        "KEYS` into a temporary keyring, then `gpg --export FPR... > keyring.gpg`), and "
+        "use that file in the spec."),
+    'weak-key': (
+        'signing key algorithm rejected',
+        "The release is signed with a key whose algorithm the crypto policy rejects "
+        "(DSA, or RSA shorter than 2048 bits). A new signature with the same key won't "
+        "help.",
+        "- Ask upstream to sign releases with a current key (for example Ed25519 or RSA "
+        "3072+), then switch the keyring to it.\n"
+        "- Until then the package can keep `%gpgverify`."),
+})
 GENERIC = ('verification fails',
            "`%openpgpverify` rejects a signature that `%gpgverify` accepts; see the "
            "output above.",
@@ -141,7 +160,7 @@ def make_commit(pkg, s, refresh_files):
         shutil.copy(os.path.join(d, 'refresh', f['file']), os.path.join(pr, f['file']))
         extra.append('Refresh %s from keyservers/WKD: same certificate(s), with '
                      'self-signatures our copy was missing.' % f['file'])
-    if not s.get('autochangelog'):
+    if s.get('release_bumped'):
         extra.append('Release bumped with a changelog entry.')
     body = tmpl('commit-message.txt',
                 extra_body=('\n' + '\n'.join(extra) + '\n') if extra else '')
@@ -159,7 +178,7 @@ def render_pr(pkg, s, draft):
     kr = s.get('keyring_refresh') or {}
     files = [f for f in kr.get('files', []) if f.get('changed')] if draft or \
         s.get('keyring_refresh_applied') else []
-    if not s.get('autochangelog') and not s.get('release_bumped'):
+    if not s.get('autochangelog') and not s.get('autorelease') and not s.get('release_bumped'):
         raise RuntimeError('spec needs a Release bump; re-run phase1.py')
     patch, diff = make_commit(pkg, s, files)
     res = s['results'][0]
@@ -189,6 +208,8 @@ def render_pr(pkg, s, draft):
         c = r['chroot']
         if r.get('outcome') == 'not-buildable':
             c += ', where even the current spec cannot install its build dependencies'
+        elif r.get('outcome') == 'not-verified':
+            c += ', where the spec does not verify the sources (conditional)'
         chroots.append(c)
     calls_new = len(res.get('new_calls', []))
     if draft:
@@ -267,8 +288,11 @@ def main():
         s = st.get(pkg)
         d = os.path.join(OUT, pkg)
         shutil.rmtree(d, ignore_errors=True)
+        if s and s.get('existing_prs'):
+            index.append((pkg, 'skipped', 'open PR exists: %s' % ' '.join(s['existing_prs'])))
+            continue
         status = (s or {}).get('status')
-        if status in ('manual', 'superseded', 'skipped', 'error', 'guard-failed', 'both-fail'):
+        if status not in ('tested', 'regression'):
             index.append((pkg, 'skipped', '%s: %s' % (status, s.get('outcome_detail') or '')))
             continue
         if not s or not s.get('results'):

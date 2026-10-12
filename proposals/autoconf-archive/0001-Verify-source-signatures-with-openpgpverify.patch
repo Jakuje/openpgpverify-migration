@@ -1,0 +1,59 @@
+From 85f22dacd0463bb0a46d2db9cf22d54053b4514d Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 12 Oct 2026 14:12:58 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ autoconf-archive.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/autoconf-archive.spec b/autoconf-archive.spec
+index 971600e..89cb165 100644
+--- a/autoconf-archive.spec
++++ b/autoconf-archive.spec
+@@ -1,6 +1,6 @@
+ Name:           autoconf-archive
+ Version:        2024.10.16
+-Release:        7%{?dist}
++Release:        8%{?dist}
+ Summary:        The Autoconf Macro Archive
+ 
+ # The following licenses were seen in the binary rpm.
+@@ -13,7 +13,7 @@ Source1:        https://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz.sig
+ # gpg --export --export-options export-minimal 1A4F63A13A4649B632F65EE141BC28FE99089D72 > gpgkey-1A4F63A13A4649B632F65EE141BC28FE99089D72.gpg
+ Source2:        gpgkey-1A4F63A13A4649B632F65EE141BC28FE99089D72.gpg
+ BuildArch:      noarch
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  make
+ Requires:       autoconf
+ 
+@@ -25,7 +25,7 @@ GNU Autoconf that have been contributed as free software by friendly
+ supporters of the cause from all over the Internet.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+@@ -46,6 +46,9 @@ rm -frv %{buildroot}%{_datadir}/doc/%{name}
+ %{_infodir}/autoconf-archive.info*
+ 
+ %changelog
++* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 2024.10.16-8
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 2024.10.16-7
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.55.0
+
