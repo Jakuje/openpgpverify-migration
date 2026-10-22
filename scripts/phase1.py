@@ -330,7 +330,7 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
     log = os.path.join(d, 'checkout.log')
     open(log, 'w').close()
     upd = dict(harness_version=HARNESS_VERSION, results=[], outcome_detail=None,
-               release_bumped=False)
+               release_bumped=False, tested_at=state.now())
     g, err = checkout(pkg, d, log)
     if not g:
         upd.update(status='skipped' if 'retired' in err else 'error', outcome_detail=err)

@@ -1,15 +1,15 @@
 # Phase 1 results
 
-Generated 2026-10-12T12:13Z from `data/state/packages.jsonl`: 178 of 594 packages tested.
+Generated 2026-10-22T11:12Z from `data/state/packages.jsonl`: 178 of 595 packages tested.
 
 | Status | Packages |
 |---|---|
-| `tested` | 77 |
+| `tested` | 75 |
 | `regression` | 74 |
 | `manual` | 15 |
-| `superseded` | 10 |
-| `not-buildable` | 1 |
+| `skipped` | 12 |
 | `guard-failed` | 1 |
+| `not-buildable` | 1 |
 
 | Regression reason | Calls |
 |---|---|
@@ -34,12 +34,12 @@ Generated 2026-10-12T12:13Z from `data/state/packages.jsonl`: 178 of 594 package
 | babeltrace2 | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: sha1-cert; keyring refresh: proposed |
 | bash | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: sha1-sig |
 | bc | `tested` | 1→1 | rawhide: both-pass |  |
-| bind | `tested` | 1→1 | rawhide: both-pass, eln: not-verified | the unchanged spec does not verify sources in this chroot; BR gnupg2 kept (review) |
+| bind | `guard-failed` | 0→0 | rawhide: guard-failed, eln: not-verified | old spec executed no gpgverify call (prep rc 0); the unchanged spec does not verify sources in this chroot; B… |
 | bison | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: sha1-sig |
 | blktrace | `tested` | 1→1 | rawhide: both-pass |  |
 | bzip2 | `inventory` | -→- |  |  |
-| cairomm1.16 | `superseded` | -→- |  |  |
-| checkpolicy | `superseded` | -→- |  |  |
+| cairomm1.16 | `skipped` | -→- |  |  |
+| checkpolicy | `skipped` | -→- |  |  |
 | chrony | `tested` | 1→1 | rawhide: both-pass, eln: both-pass | BR gnupg2 kept (review) |
 | cmocka | `regression` | 1→1 | rawhide: regression | reason: sha1-cert; keyring refresh: proposed |
 | conntrack-tools | `tested` | 1→1 | rawhide: both-pass |  |
@@ -61,13 +61,13 @@ Generated 2026-10-12T12:13Z from `data/state/packages.jsonl`: 178 of 594 package
 | emacs | `tested` | 1→1 | rawhide: both-pass, eln: not-buildable | unchanged spec: installdeps failed; BR gnupg2 kept (review) |
 | ethtool | `tested` | 1→1 | rawhide: both-pass | BR gnupg2 kept (review) |
 | expat | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: expired; keyring refresh: proposed |
-| fapolicyd | `tested` | 2→2 | rawhide: both-pass, eln: not-buildable | unchanged spec: installdeps failed; replaced conditional BR in place: BuildRequires: gpgverify; rhel conditio… |
+| fapolicyd | `skipped` | 2→2 | rawhide: both-pass, eln: not-buildable | unchanged spec: installdeps failed; replaced conditional BR in place: BuildRequires: gpgverify; rhel conditio… |
 | file | `regression` | 1→1 | rawhide: regression, eln: regression | BR gnupg2 kept (review); reason: sha1-sig; reason: sha1-sig |
 | findutils | `regression` | 1→1 | rawhide: regression | reason: unparseable-cert |
 | fio | `tested` | 1→1 | rawhide: both-pass, eln: not-buildable | unchanged spec: installdeps failed |
 | fips-provider | `tested` | 1→1 | rawhide: both-pass, eln: both-pass | BR gnupg2 kept (review) |
 | git | `regression` | 1→1 | rawhide: regression, eln: not-buildable | unchanged spec: installdeps failed; rhel conditional: gpgverify kept for EPEL branches; BR gnupg2 kept (revie… |
-| git-lfs | `inventory` | -→- |  |  |
+| git-lfs | `skipped` | -→- |  |  |
 | gnulib-l10n | `tested` | 1→1 | rawhide: both-pass |  |
 | gnupg2 | `tested` | 1→1 | rawhide: both-pass | BR gnupg2 kept (review) |
 | gnutls | `tested` | 1→1 | rawhide: both-pass, eln: not-buildable | unchanged spec: installdeps failed; BR gnupg2 kept (review) |
@@ -81,7 +81,7 @@ Generated 2026-10-12T12:13Z from `data/state/packages.jsonl`: 178 of 594 package
 | ipcalc | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: sha1-cert; keyring refresh: proposed |
 | iptables | `tested` | 1→1 | rawhide: both-pass, eln: both-pass |  |
 | irssi | `regression` | 1→1 | rawhide: regression, eln: not-buildable | unchanged spec: installdeps failed; reason: sha1-sig |
-| kea | `superseded` | -→- |  |  |
+| kea | `skipped` | -→- |  |  |
 | ldns | `tested` | 1→1 | rawhide: both-pass |  |
 | libXpm | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: sha1-sig |
 | libburn | `regression` | 1→1 | rawhide: regression, eln: regression | reason: sha1-sig; reason: sha1-sig |
@@ -105,9 +105,9 @@ Generated 2026-10-12T12:13Z from `data/state/packages.jsonl`: 178 of 594 package
 | libnftnl | `tested` | 1→1 | rawhide: both-pass | BR gnupg2 kept (review) |
 | libreswan | `tested` | 1→1 | rawhide: both-pass | BR gnupg2 kept (review) |
 | librhsm | `tested` | 1→1 | rawhide: both-pass |  |
-| libselinux | `superseded` | -→- |  |  |
-| libsemanage | `superseded` | -→- |  |  |
-| libsepol | `inventory` | -→- |  |  |
+| libselinux | `skipped` | -→- |  |  |
+| libsemanage | `skipped` | -→- |  |  |
+| libsepol | `skipped` | -→- |  |  |
 | libssh | `tested` | 1→1 | rawhide: both-pass | BR gnupg2 kept (review) |
 | libssh2 | `tested` | 1→1 | rawhide: both-pass, eln: both-pass | BR gnupg2 kept (review) |
 | libtalloc | `manual` | 1→0 | rawhide: manual | raw verification baseline passes |
@@ -119,14 +119,14 @@ Generated 2026-10-12T12:13Z from `data/state/packages.jsonl`: 178 of 594 package
 | libuv | `manual` | 1→0 | rawhide: manual, eln: manual | raw verification baseline passes; raw verification baseline passes |
 | libvoikko | `regression` | 1→1 | rawhide: regression | reason: sha1-cert; keyring refresh: still-fails |
 | libxcrypt | `tested` | 1→1 | rawhide: both-pass, eln: not-buildable | unchanged spec: installdeps failed; BR gnupg2 kept (review) |
-| llvm | `tested` | 2→2 | rawhide: both-pass, eln: both-pass | BR gnupg2 kept (review) |
+| llvm | `tested` | 2→2 | rawhide: both-pass, eln: not-buildable | unchanged spec: installdeps failed; BR gnupg2 kept (review) |
 | llvm22 | `tested` | 1→1 | rawhide: both-pass, eln: not-buildable | unchanged spec: installdeps failed; BR gnupg2 kept (review) |
 | log4cplus | `tested` | 1→1 | rawhide: both-pass |  |
 | logrotate | `tested` | 1→1 | rawhide: both-pass | BR gnupg2 kept (review) |
 | lttng-ust | `tested` | 1→1 | rawhide: both-pass | BR gnupg2 kept (review) |
 | lynx | `tested` | 1→1 | rawhide: both-pass, eln: both-pass |  |
 | man-db | `tested` | 1→1 | rawhide: both-pass | BR gnupg2 kept (review) |
-| mcstrans | `superseded` | -→- |  |  |
+| mcstrans | `skipped` | -→- |  |  |
 | mdadm | `tested` | 1→1 | rawhide: both-pass |  |
 | mkfontscale | `inventory` | -→- |  |  |
 | munge | `tested` | 1→1 | rawhide: both-pass | BR gnupg2 kept (review) |
@@ -136,7 +136,7 @@ Generated 2026-10-12T12:13Z from `data/state/packages.jsonl`: 178 of 594 package
 | nettle | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: expired; keyring refresh: still-fails |
 | nftables | `tested` | 1→1 | rawhide: both-pass |  |
 | nghttp2 | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: sha1-cert; keyring refresh: no-update |
-| nginx | `inventory` | -→- |  |  |
+| nginx | `skipped` | -→- |  |  |
 | nmap | `regression` | 1→1 | rawhide: regression | reason: sha1-sig |
 | nmstate | `manual` | 2→0 | rawhide: manual, eln: manual | raw verification baseline passes; raw verification: no gpg call executed in baseline |
 | npth | `tested` | 1→1 | rawhide: both-pass | BR gnupg2 kept (review) |
@@ -150,15 +150,15 @@ Generated 2026-10-12T12:13Z from `data/state/packages.jsonl`: 178 of 594 package
 | pcsc-lite | `regression` | 1→1 | rawhide: regression | reason: sha1-cert; keyring refresh: proposed |
 | pcsc-lite-ccid | `manual` | 1→0 | rawhide: manual | raw verification baseline passes |
 | pdfio | `regression` | 1→1 | rawhide: regression | reason: expired; keyring refresh: proposed |
-| php | `tested` | 1→1 | rawhide: both-pass, eln: not-buildable | unchanged spec: installdeps failed; BR gnupg2 kept (review) |
+| php | `tested` | 1→1 | rawhide: both-pass, eln: both-pass | BR gnupg2 kept (review) |
 | pinentry | `tested` | 1→1 | rawhide: both-pass, eln: both-pass |  |
 | pkcs11-provider | `tested` | 1→1 | rawhide: both-pass | BR gnupg2 kept (review) |
-| policycoreutils | `superseded` | -→- |  |  |
+| policycoreutils | `skipped` | -→- |  |  |
 | poppler | `regression` | 1→1 | rawhide: regression, eln: regression | BR gnupg2 kept (review); reason: expired; reason: expired; keyring refresh: proposed |
 | priv_wrapper | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: sha1-cert; keyring refresh: proposed |
 | pyparted | `manual` | 1→0 | rawhide: manual | raw verification baseline passes |
 | pyxattr | `tested` | 1→1 | rawhide: both-pass | BR gnupg2 kept (review) |
-| radvd | `superseded` | -→- |  |  |
+| radvd | `skipped` | -→- |  |  |
 | resolv_wrapper | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: sha1-cert; keyring refresh: proposed |
 | rust | `regression` | 1→1 | rawhide: regression, eln: regression | replaced conditional BR in place: BuildRequires:  gpgverify; rhel conditional: gpgverify kept for EPEL branch… |
 | s-nail | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: sha1-cert; keyring refresh: still-fails |
@@ -168,8 +168,8 @@ Generated 2026-10-12T12:13Z from `data/state/packages.jsonl`: 178 of 594 package
 | sssd | `inventory` | -→- |  |  |
 | stunnel | `regression` | 1→1 | rawhide: regression, eln: regression | BR gnupg2 kept (review); reason: sha1-cert; reason: sha1-cert; keyring refresh: still-fails |
 | supermin | `regression` | 1→1 | rawhide: regression, eln: not-buildable | unchanged spec: installdeps failed; BR gnupg2 kept (review); reason: sha1-cert; keyring refresh: still-fails |
-| teckit | `guard-failed` | 0→0 | rawhide: guard-failed | old spec executed no gpgverify call (prep rc 0) |
-| tftp | `superseded` | -→- |  |  |
+| teckit | `skipped` | 0→0 | rawhide: guard-failed | old spec executed no gpgverify call (prep rc 0) |
+| tftp | `skipped` | -→- |  |  |
 | time | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: binding-after-signature; keyring refresh: proposed |
 | tomcat | `tested` | 1→1 | rawhide: both-pass |  |
 | tpm2-openssl | `manual` | 1→0 | rawhide: manual | raw verification baseline passes |
@@ -187,4 +187,4 @@ Generated 2026-10-12T12:13Z from `data/state/packages.jsonl`: 178 of 594 package
 | xkeyboard-config | `manual` | 1→0 | rawhide: manual | raw verification baseline passes |
 | xterm | `regression` | 1→1 | rawhide: regression | reason: expired; keyring refresh: proposed |
 | xz | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: expired; keyring refresh: proposed |
-| zsh | `superseded` | -→- |  |  |
+| zsh | `skipped` | -→- |  |  |

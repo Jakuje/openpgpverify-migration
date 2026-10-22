@@ -1,6 +1,6 @@
-From 3538309f8fca1c41349e7217a66af06c7623491b Mon Sep 17 00:00:00 2001
+From 9988879fae5f1ac53551b9044ee9a51099592293 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 12 Oct 2026 14:13:01 +0200
+Date: Thu, 22 Oct 2026 13:10:17 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/php.spec b/php.spec
-index 782eeec..acc2ac9 100644
+index 3b28240..bb646ef 100644
 --- a/php.spec
 +++ b/php.spec
 @@ -86,7 +86,7 @@ Name: php%{major_version}
@@ -48,11 +48,11 @@ index 782eeec..acc2ac9 100644
  
  
  %changelog
-+* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 8.5.12~RC1-2
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 8.5.12-2
 +- Verify upstream source signatures with openpgpverify
 +
- * Wed Oct  7 2026 Remi Collet <remi@remirepo.net> - 8.5.12~RC1-1
- - update to 8.5.12RC1
+ * Wed Oct 21 2026 Jitka Plesnikova <jplesnik@redhat.com> - 8.5.12-1
+ - Update to 8.5.12 - http://www.php.net/releases/8_5_12.php
  
 -- 
 2.55.0

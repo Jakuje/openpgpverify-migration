@@ -251,7 +251,7 @@ def render_pr(pkg, s, draft):
                 changes='\n'.join(changes) + '\n', stage='rpmbuild %s' % s.get('stage', '-bp'),
                 chroots=', '.join(chroots), calls_old=n_old, calls_new=calls_new,
                 result_old=result_old, result_new=result_new,
-                tested_on=s['updated'][:10], commit=s['spec_commit'][:12],
+                tested_on=(s.get('tested_at') or s['updated'])[:10], commit=s['spec_commit'][:12],
                 sqv_version=s.get('sqv_version') or '?',
                 refresh_section=refresh,
                 notes_section='\n### Notes\n\n' + '\n'.join(notes) + '\n')

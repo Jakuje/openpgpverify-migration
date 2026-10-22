@@ -1,6 +1,6 @@
 # Proposals
 
-Generated 2026-10-12T12:13Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
+Generated 2026-10-22T11:10Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
 
 - **PR**: `0001-*.patch` is the commit a PR would carry (`git am` applies it to dist-git at the tested commit); `PR.md` is the PR title and description.
 - **draft PR**: the same, but it includes a keyring refresh that hasn't been reviewed yet.
@@ -23,7 +23,7 @@ Generated 2026-10-12T12:13Z by `scripts/render_proposals.py` from the Phase 1 st
 | [dns-root-data](dns-root-data/) | bug | sha1-sig |
 | [libstrophe](libstrophe/) | PR |  |
 | [openresolv](openresolv/) | draft PR | keyring refresh proposed |
-| fapolicyd | skipped | open PR exists: https://src.fedoraproject.org/rpms/fapolicyd/pull-request/44 |
+| fapolicyd | skipped | skipped: fedora-rawhide-x86_64: both-pass; fedora-eln-x86_64: not-buildable (unchanged spec: installdeps failed) |
 | [python-oslo-metrics](python-oslo-metrics/) | PR |  |
 | [mpdscribble](mpdscribble/) | bug | sha1-cert |
 | [rsakeyfind](rsakeyfind/) | bug | v3-sig |
@@ -41,7 +41,7 @@ Generated 2026-10-12T12:13Z by `scripts/render_proposals.py` from the Phase 1 st
 | [time](time/) | draft PR | keyring refresh proposed |
 | [dbus-glib](dbus-glib/) | PR |  |
 | [gnulib-l10n](gnulib-l10n/) | PR |  |
-| radvd | skipped | superseded: already converted or no longer verifying |
+| radvd | skipped | skipped: already converted or no longer verifying |
 | [dbus](dbus/) | PR |  |
 | [SDL3](SDL3/) | PR |  |
 | [Xaw3d](Xaw3d/) | bug | weak-key |
@@ -53,12 +53,12 @@ Generated 2026-10-12T12:13Z by `scripts/render_proposals.py` from the Phase 1 st
 | [babeltrace2](babeltrace2/) | draft PR | keyring refresh proposed |
 | [bash](bash/) | bug | sha1-sig |
 | [bc](bc/) | PR |  |
-| [bind](bind/) | PR |  |
+| bind | skipped | guard-failed: fedora-rawhide-x86_64: guard-failed (old spec executed no gpgverify call (prep rc 0)); fedora-eln-x86_64: not-verified (the unchanged spec does not verify sources in this chroot) |
 | [bison](bison/) | bug | sha1-sig |
 | [blktrace](blktrace/) | PR |  |
 | bzip2 | skipped | open PR exists: https://src.fedoraproject.org/rpms/bzip2/pull-request/4 |
-| cairomm1.16 | skipped | superseded: already converted or no longer verifying |
-| checkpolicy | skipped | superseded: already converted or no longer verifying |
+| cairomm1.16 | skipped | skipped: already converted or no longer verifying |
+| checkpolicy | skipped | skipped: already converted or no longer verifying |
 | [chrony](chrony/) | PR |  |
 | [cmocka](cmocka/) | draft PR | keyring refresh proposed |
 | [conntrack-tools](conntrack-tools/) | PR |  |
@@ -72,7 +72,7 @@ Generated 2026-10-12T12:13Z by `scripts/render_proposals.py` from the Phase 1 st
 | [dialog](dialog/) | draft PR | keyring refresh proposed |
 | [dnf](dnf/) | PR |  |
 | [dos2unix](dos2unix/) | bug | sha1-cert |
-| [dotnet10.0](dotnet10.0/) | PR |  |
+| dotnet10.0 | skipped | dist-git changed since Phase 1; re-run it |
 | [e2fsprogs](e2fsprogs/) | bug | unparseable-cert |
 | [ed](ed/) | bug | sha1-sig |
 | [emacs](emacs/) | PR |  |
@@ -83,7 +83,7 @@ Generated 2026-10-12T12:13Z by `scripts/render_proposals.py` from the Phase 1 st
 | [fio](fio/) | PR |  |
 | [fips-provider](fips-provider/) | PR |  |
 | [git](git/) | draft PR | keyring refresh proposed |
-| git-lfs | skipped | open PR exists: https://src.fedoraproject.org/rpms/git-lfs/pull-request/9 |
+| git-lfs | skipped | skipped:  |
 | [gnutls](gnutls/) | PR |  |
 | gpgme | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes) |
 | [grep](grep/) | PR |  |
@@ -95,7 +95,7 @@ Generated 2026-10-12T12:13Z by `scripts/render_proposals.py` from the Phase 1 st
 | [ipcalc](ipcalc/) | draft PR | keyring refresh proposed |
 | [iptables](iptables/) | PR |  |
 | [irssi](irssi/) | bug | sha1-sig |
-| kea | skipped | superseded: already converted or no longer verifying |
+| kea | skipped | skipped: already converted or no longer verifying |
 | [ldns](ldns/) | PR |  |
 | [libXpm](libXpm/) | bug | sha1-sig |
 | [libburn](libburn/) | bug | sha1-sig |
@@ -116,9 +116,9 @@ Generated 2026-10-12T12:13Z by `scripts/render_proposals.py` from the Phase 1 st
 | [libnftnl](libnftnl/) | PR |  |
 | [libreswan](libreswan/) | PR |  |
 | [librhsm](librhsm/) | PR |  |
-| libselinux | skipped | superseded: already converted or no longer verifying |
-| libsemanage | skipped | superseded: already converted or no longer verifying |
-| libsepol | skipped | open PR exists: https://src.fedoraproject.org/rpms/libsepol/pull-request/30 |
+| libselinux | skipped | skipped: already converted or no longer verifying |
+| libsemanage | skipped | skipped: already converted or no longer verifying |
+| libsepol | skipped | skipped:  |
 | [libssh2](libssh2/) | PR |  |
 | libtalloc | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes) |
 | libtasn1 | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes) |
@@ -135,7 +135,7 @@ Generated 2026-10-12T12:13Z by `scripts/render_proposals.py` from the Phase 1 st
 | [lttng-ust](lttng-ust/) | PR |  |
 | [lynx](lynx/) | PR |  |
 | [man-db](man-db/) | PR |  |
-| mcstrans | skipped | superseded: already converted or no longer verifying |
+| mcstrans | skipped | skipped: already converted or no longer verifying |
 | [mdadm](mdadm/) | PR |  |
 | mkfontscale | skipped | open PR exists: https://src.fedoraproject.org/rpms/mkfontscale/pull-request/2 |
 | [munge](munge/) | PR |  |
@@ -145,7 +145,7 @@ Generated 2026-10-12T12:13Z by `scripts/render_proposals.py` from the Phase 1 st
 | [nettle](nettle/) | bug | expired |
 | [nftables](nftables/) | PR |  |
 | [nghttp2](nghttp2/) | bug | sha1-cert |
-| nginx | skipped | open PR exists: https://src.fedoraproject.org/rpms/nginx/pull-request/24 |
+| nginx | skipped | skipped:  |
 | [nmap](nmap/) | bug | sha1-sig |
 | nmstate | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes); fedora-eln-x86_64: manual (raw verification: no gpg call executed in baseline) |
 | [npth](npth/) | PR |  |
@@ -159,7 +159,7 @@ Generated 2026-10-12T12:13Z by `scripts/render_proposals.py` from the Phase 1 st
 | [pdfio](pdfio/) | draft PR | keyring refresh proposed |
 | [php](php/) | PR |  |
 | [pkcs11-provider](pkcs11-provider/) | PR |  |
-| policycoreutils | skipped | superseded: already converted or no longer verifying |
+| policycoreutils | skipped | skipped: already converted or no longer verifying |
 | [poppler](poppler/) | draft PR | keyring refresh proposed |
 | [priv_wrapper](priv_wrapper/) | draft PR | keyring refresh proposed |
 | pyparted | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes) |
@@ -173,8 +173,8 @@ Generated 2026-10-12T12:13Z by `scripts/render_proposals.py` from the Phase 1 st
 | sssd | skipped | open PR exists: https://src.fedoraproject.org/rpms/sssd/pull-request/94 |
 | [stunnel](stunnel/) | bug | sha1-cert |
 | [supermin](supermin/) | bug | sha1-cert |
-| teckit | skipped | guard-failed: fedora-rawhide-x86_64: guard-failed (old spec executed no gpgverify call (prep rc 0)) |
-| tftp | skipped | superseded: already converted or no longer verifying |
+| teckit | skipped | skipped: fedora-rawhide-x86_64: guard-failed (old spec executed no gpgverify call (prep rc 0)) |
+| tftp | skipped | skipped: already converted or no longer verifying |
 | [tomcat](tomcat/) | PR |  |
 | tpm2-openssl | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes) |
 | [uid_wrapper](uid_wrapper/) | draft PR | keyring refresh proposed |
@@ -191,4 +191,4 @@ Generated 2026-10-12T12:13Z by `scripts/render_proposals.py` from the Phase 1 st
 | xkeyboard-config | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes) |
 | [xterm](xterm/) | draft PR | keyring refresh proposed |
 | [xz](xz/) | draft PR | keyring refresh proposed |
-| zsh | skipped | superseded: already converted or no longer verifying |
+| zsh | skipped | skipped: already converted or no longer verifying |

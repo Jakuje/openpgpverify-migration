@@ -49,7 +49,6 @@ budgie-desktop                         joshstrobl
 budgie-desktop-defaults                joshstrobl
 bzip2                                  jamartis jchaloup
 cage                                   fedepell
-cairomm                                kalev music
 cgit                                   praiskup rcallicotte
 chewing-editor                         kanru
 chrony                                 mlichvar
@@ -80,6 +79,7 @@ cyrus-imapd                            jorton landgraf mosvald tibbs zdohnal
 davfs2                                 fschwarz jonathanspw
 dbus                                   alexl amigadave lennart rhughes rstrode walters
 dbus-glib                              alexl rhughes rstrode walters
+dbus-python                            alexl amigadave besser82 ngompa rhughes rstrode vtrefny
 dd_rescue                              jussilehtola ndim rebus steve
 debugedit                              mcermak mjw
 dehydrated                             pwouters robert
@@ -108,7 +108,6 @@ exim                                   dwmw2 jskarvad
 expat                                  jorton tkorbar
 facter                                 brandfbb ekohl
 fail2ban                               hobbes1069 orion
-fapolicyd                              plautrba rsroka sgrubb
 fcft                                   alebastr
 fcitx5                                 yanqiyu
 fcitx5-anthy                           yanqiyu
@@ -151,7 +150,6 @@ geeqie                                 mattdm zbyszek
 gencolormap                            dcavalca
 getdns                                 pemensik pwouters
 git                                    besser82 jonathanspw opohorel pstodulk
-git-lfs                                carlwgeorge qulogic
 glinf                                  dcavalca
 glpk                                   jjames konradm orion
 gnuastro                               sergiopr
@@ -159,7 +157,6 @@ gnucobol                               limb
 gnulib-l10n                            lzaoral
 gnupg2                                 bcl jjelen tmraz
 gnutls                                 ansasaki fkrenzel pemensik zfridric
-gp2c                                   jjames music
 gpgme                                  jkucera mhlavink mrc0mmand
 gpgmepp                                mhlavink
 gplugin                                qulogic
@@ -243,14 +240,11 @@ libnetfilter_conntrack                 stingray
 libnftnl                               kevin psutter twoerner
 libnice                                kdudka msekleta stefanb svashisht
 libnids                                robert
-libpri                                 music
 libptytty                              dcantrell
 libredwg                               fed500
 libreoffice                            dtardon limb
 libreswan                              pwouters saprasad ueno
 librhsm                                jmracek sgallagh
-libsepol                               dwalsh plautrba vmojzis
-libss7                                 jsmith music
 libssh                                 ansasaki asn jjelen robert saprasad slaanesh
 libssh2                                kdudka pghmcfc
 libstrophe                             fed500
@@ -285,7 +279,7 @@ maildrop                               bcl bruno
 mako                                   fnux
 man-db                                 jchaloup nforro
 mat2                                   infraw
-maven-doxia                            filiperosset mizdebsk mkoncek
+maven-doxia                            filiperosset kkeithle mizdebsk mkoncek
 maven-doxia-sitetools                  filiperosset mizdebsk mkoncek
 maven-reporting-api                    filiperosset mizdebsk mkoncek
 maven-reporting-impl                   filiperosset mizdebsk mkoncek
@@ -315,19 +309,17 @@ nano                                   dwmw2 kdudka lzaoral svashisht
 nbdkit                                 rjones
 ncmpc                                  ferdnyc
 ncurses                                mlichvar
-ndisc6                                 mbaldessari rathann
 nettle                                 dwmw2 ueno
 nettle3.10                             ueno
 newsboat                               jstanek
 nftables                               kevin psutter
 nghttp2                                jamacku kdudka msekleta svashisht
 nghttp3                                alebastr jamacku
-nginx                                  heffer jorton luhliarik tadej
 nginx-mod-fancyindex                   heffer luk1337
 ngtcp2                                 asn pemensik
 nilfs-utils                            sandeen
 nmap                                   landgraf mosvald
-nmstate                                cathay4t ffmancera ihuguet josie jvaclav rrajesh till
+nmstate                                cathay4t ffmancera ihuguet josie jvaclav praksany rrajesh till
 normalize                              dtimms rathann
 notcurses                              nickblack
 notmuch                                mjg
@@ -503,7 +495,6 @@ swaybg                                 jstanek
 swayidle                               onemorebyte
 swaylock                               jstanek
 sysconftool                            rathann
-teckit                                 ppisar
 terminator                             dmaphy mattrose
 time                                   opohorel ppisar
 tinygo                                 qulogic
@@ -533,11 +524,10 @@ virt-what                              rjones
 voikko-fi                              mfabian vpv
 volk                                   jskarvad
 wayland                                ajax jexposit ofourdan
-wcd                                    music
 webkitgtk                              decathorpe ngompa
 weechat                                luk1337 salimma stingray
 weldr-client                           bcl obudai ochosi
-wget2                                  jonathanspw mruprich ngompa
+wget2                                  jonathanspw mruprich ngompa suve
 wl-mirror                              alebastr
 wlr-randr                              alebastr
 wlroots                                alebastr
@@ -552,7 +542,6 @@ xdg-desktop-portal-wlr                 alebastr
 xdriinfo                               ernunes
 xerces-c                               kalev tdawson
 xev                                    ajax
-xfontsel                               music
 xforms                                 robert
 xfsdump                                preichl sandeen
 xfsprogs                               preichl sandeen
@@ -563,7 +552,6 @@ xload                                  aekoroglu jdekloe
 xlogo                                  dcantrell
 xlsclients                             ajax
 xmag                                   ppisar
-xmessage                               ajax music ofourdan tdawson
 xmodmap                                ajax ofourdan whot
 xorg-x11-drv-amdgpu                    rathann slaanesh
 xpdf                                   spot

@@ -1,8 +1,5 @@
 To: devel@lists.fedoraproject.org
-Cc: devel-announce@lists.fedoraproject.org      [TODO: devel first for
-    discussion, then devel-announce with the final lists, per the FESCo
-    mass package change policy]
-Subject: Mass change: %gpgverify -> %openpgpverify in rawhide (PRs for ~590 packages)
+Subject: Heads-up: %gpgverify -> %openpgpverify PRs are coming; please check your packages
 
 Hi all,
 
@@ -10,8 +7,47 @@ As part of the Fedora 45 Change "Sequoia openpgpverify" [1], rawhide has a
 new macro, %openpgpverify, that verifies upstream source signatures with
 Sequoia's sqv instead of GnuPG's gpgv. It takes the same options as
 %gpgverify, so for most packages the switch is a rename plus one
-BuildRequires. I'd like to do this for the remaining packages with pull
-requests, and I'm asking for comments on the plan before starting.
+BuildRequires.
+
+I'm starting to send pull requests for this, ELN packages first [2]. This
+is not a formal mass change; I'm writing so that you know what is coming,
+and because some packages need their maintainer's attention before the
+switch can work: their upstream keys or signatures are rejected by sqv.
+Those are the ones where your help matters most.
+
+
+What you can do now
+-------------------
+
+1. Find your packages in the per-maintainer list [3]. For each tested
+   package, proposals/<package>/ in the same repository has either the
+   exact patch and PR text, or an explanation of why it doesn't work yet.
+
+2. If your package is in the "needs action" group (BUG.md), the signature
+   check fails with sqv while gpgv accepts it. The most common causes:
+
+   - The keyring in dist-git is outdated: upstream extended the key's
+     expiry or re-signed it after we copied it. Refreshing the keyring
+     from upstream fixes it.
+   - The upstream key's self-signatures use SHA-1. Upstream needs to
+     renew them (renewing the expiry does that) and publish the key.
+   - The release itself is signed with SHA-1 or with a DSA key. Upstream
+     needs to sign with a current key.
+   - The keyring contains an old v3 key (common in long-lived KEYS
+     files), which sqv can't read. Keeping only the current signing keys
+     fixes it.
+
+   I'll file bugs for these later, but it's quicker if you or upstream can
+   fix them earlier. Several upstream keys are shared by many packages,
+   so one fix often helps a whole family.
+
+3. Convert the package yourself if you like: rename the macro, add
+   "BuildRequires: openpgpverify", drop "BuildRequires: gpgverify", and
+   run "fedpkg prep" or "fedpkg mockbuild". I check dist-git right before
+   opening a PR and skip packages that are already done. 21 packages were
+   converted by their maintainers since early October.
+
+If a package must not be changed now, reply here or comment on the PR.
 
 
 Why
@@ -30,10 +66,8 @@ sqv is a verifier built for exactly this job:
   verify package signatures.
 
 
-What changes in a spec
-----------------------
-
-A typical PR looks like this:
+What a PR looks like
+--------------------
 
     -BuildRequires:  gnupg2
     +BuildRequires:  openpgpverify
@@ -41,138 +75,67 @@ A typical PR looks like this:
     -%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
     +%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
 
-Details:
-
-- BuildRequires: openpgpverify is always added. %gpgverify works today
-  without an explicit BuildRequires because redhat-rpm-config pulls in
-  gpgverify; nothing does that for openpgpverify.
+- BuildRequires: openpgpverify is always added. %gpgverify works without
+  an explicit BuildRequires because redhat-rpm-config pulls in gpgverify;
+  nothing does that for openpgpverify.
 - BuildRequires: gnupg2 is dropped only when the spec uses gpg for nothing
-  else and has no %check. Otherwise it stays, since tests may use it.
-- The macro keeps its exact form: %{gpgverify} becomes %{openpgpverify},
-  %gpgverify -k 2 -s 1 -d 0 becomes %openpgpverify -k 2 -s 1 -d 0, and so
-  on. (Note: %openpgpverify --keyring=... without the braces does not
-  work.)
+  else and has no %check.
+- The macro keeps its exact form (%{gpgverify} -> %{openpgpverify},
+  %gpgverify -k 2 ... -> %openpgpverify -k 2 ...). Note that
+  %openpgpverify --keyring=... without braces does not work.
 - Specs without %autochangelog get a Release bump and a changelog entry.
   Nothing changes in the binary packages, so no build is needed right
-  away; the new check runs with your next build.
-- openpgpverify is available in Fedora 43 and later, but not in EPEL. The
-  PRs target rawhide only. Specs with %{?rhel} conditionals around the
-  check (likely shared with EPEL) keep %gpgverify for EPEL:
+  away.
+- PRs target rawhide only. openpgpverify is in Fedora 43 and later but not
+  in EPEL, so specs with %{?rhel} conditionals (likely shared with EPEL)
+  keep %gpgverify there.
 
-    %if 0%{?fedora} || 0%{?rhel} >= 11
-    %{openpgpverify} ...
-    %else
-    %{gpgverify} ...
-    %endif
-
-
-How the PRs are tested
-----------------------
-
-For each package, the current and the converted spec are both run through
-%prep (rpmbuild -bp) in a clean mock rawhide chroot without network
-access, plus ELN for specs with %{?rhel} conditionals. Every call of the
-verification tool is logged. A PR is only opened when the new spec makes
+Each PR is tested: the current and the changed spec are both run through
+%prep in a clean mock chroot without network access, and every call of
+the verification tool is logged. A PR is only sent when the new spec makes
 the same number of verification calls as the old one and all of them
-pass. This also catches checks that would silently disappear, for example
-%{?gpgverify:...} without the new BuildRequires.
+pass.
 
 
-Scope
------
+Expired keys
+------------
 
-[TODO: refresh the numbers before sending; state of 2026-10-12]
-
-- About 585 packages in rawhide verify signatures with %gpgverify or by
-  calling gpg/gpgv directly. The lists are attached below, by package and
-  by maintainer.
-- About 560 use the macro and can be converted mechanically; about 35
-  call gpg/gpgv directly and will get hand-written PRs.
-- So far 178 packages were tested: a pilot plus everything in ELN (which
-  has many long-established upstreams with old keys). 77 pass unchanged, 15 need hand-written PRs, 10 were already
-  converted by their maintainers, and 74 fail because sqv is stricter
-  than gpgv:
-  - 27 of them only have an outdated keyring in dist-git: the upstream key
-    was extended or re-signed after we copied it. Their PRs also update
-    the keyring. The same key is looked up by fingerprint on keyservers
-    and WKD, and the merged result is reviewed by a human before the PR
-    is opened. A scan of all packages found about 65 such outdated
-    keyrings.
-  - 47 need upstream or maintainer action: the key's own self-signatures
-    use SHA-1 and no updated key is published, the release is signed with
-    SHA-1 or with a DSA key, or the keyring contains an old v3 key that
-    sqv can't read. These get a bug (blocking the tracker [2]) explaining
-    the options instead of a PR. Often one upstream key covers several
-    packages, e.g. one key with SHA-1 self-signatures is behind 11
-    packages of the libguestfs family.
-
-A note on expired keys, since this came up in [3]: signatures made while
-the key was valid keep verifying after the key expires. sqv checks
-validity at the time the signature was made; we confirmed this on 14
-packages whose keys have expired since (dbus, logrotate, libmnl, ...).
-Builds therefore don't start failing just because time passes. What does
-fail is a keyring copy that is older than the signature, and that is
-fixed by refreshing it.
+This came up in [4]: signatures made while the key was valid keep
+verifying after the key expires. sqv checks validity at the time the
+signature was made; we confirmed it on 14 packages whose keys have expired
+since (dbus, logrotate, libmnl, ...). What fails is a keyring copy that is
+older than the signature, and refreshing the keyring fixes that.
 
 
-What you can do
----------------
+Numbers
+-------
 
-- Nothing, and review the PR when it comes. Comments on the PR are
-  welcome; I'll update it or close it.
-- Convert the package yourself: rename the macro, add
-  "BuildRequires: openpgpverify", drop "BuildRequires: gpgverify", and
-  run "fedpkg prep" (or "fedpkg mockbuild"). The tooling checks dist-git
-  right before opening a PR and skips converted packages.
-- If the package must not be changed now, reply here or on the PR.
+[TODO: refresh before sending; state of 2026-10-22]
 
-
-Timeline
---------
-
-[TODO: dates]
-
-- until <DATE>: discussion on this thread; package lists on
-  devel-announce
-- from <DATE>: PRs in batches of 30-50 per day, rawhide only. ELN
-  packages first, coordinated with the ELN maintainers who already track
-  them in [4], to avoid duplicate PRs.
-- <DATE> (4 weeks after the PR): for PRs without a response, a
-  provenpackager may merge them, as allowed by the mass package change
-  policy [5].
+- 572 packages in rawhide still verify with %gpgverify or call gpg/gpgv
+  directly; about 36 of them call gpg/gpgv directly and need hand-written
+  PRs.
+- 166 of them were tested so far (a pilot plus everything in ELN, which
+  has many long-established upstreams with old keys): 75 pass unchanged,
+  27 pass with a refreshed keyring, 47 need upstream or maintainer action,
+  and 15 call gpg directly.
 
 
 Links
 -----
 
-The scripts, the per-package state and the PR and bug templates are in
-[6]. You are welcome to look at what your package would get:
-proposals/<package>/ has the patch and PR text for the packages tested so
-far.
+[1] https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+[2] https://github.com/fedora-eln/eln/issues/610
+[3] https://github.com/Jakuje/openpgpverify-migration/blob/main/announce/packages-by-maintainer.txt
+[4] https://bugzilla.redhat.com/show_bug.cgi?id=2532553
 
-The scripts and PR texts were prepared with the help of an AI assistant;
+The scripts, per-package state and templates are in
+https://github.com/Jakuje/openpgpverify-migration. Tracker bug:
+https://bugzilla.redhat.com/show_bug.cgi?id=2523619
+
+The scripts and texts were prepared with the help of an AI assistant;
 the commits carry an Assisted-by trailer. Every PR is tested as described
 above and reviewed by me before it is opened.  [TODO: keep this paragraph?]
 
-[1] https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
-[2] https://bugzilla.redhat.com/show_bug.cgi?id=2523619
-[3] https://bugzilla.redhat.com/show_bug.cgi?id=2532553
-[4] https://github.com/fedora-eln/eln/issues/610
-[5] https://docs.fedoraproject.org/en-US/fesco/Mass_package_changes/
-[6] https://github.com/Jakuje/openpgpverify-migration
-
 Thanks,
 Jakub
-
-
-Affected packages by name
--------------------------
-
-[TODO: paste announce/packages-by-name.txt, regenerated with
- scripts/announce_lists.py]
-
-
-Affected packages by maintainer
--------------------------------
-
-[TODO: paste announce/packages-by-maintainer.txt]

@@ -1,6 +1,6 @@
-From c16e75c6641f180632e39e98676e8aae00009c2d Mon Sep 17 00:00:00 2001
+From e5c970201708d0344cf0ae91eea7abb22ec7f7e5 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 12 Oct 2026 14:13:00 +0200
+Date: Thu, 22 Oct 2026 13:10:16 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/llvm.spec b/llvm.spec
-index aa47abb..0dc4947 100644
+index d1cd85a..42993b8 100644
 --- a/llvm.spec
 +++ b/llvm.spec
-@@ -754,6 +754,7 @@ BuildRequires: python%{python3_pkgversion}-nanobind-devel
+@@ -757,6 +757,7 @@ BuildRequires: python%{python3_pkgversion}-nanobind-devel
  
  # This is required because we need "ps" when running LLDB tests
  BuildRequires: procps-ng
@@ -24,7 +24,7 @@ index aa47abb..0dc4947 100644
  
  # For reproducible pyc file generation
  # See https://docs.fedoraproject.org/en-US/packaging-guidelines/Python_Appendix/#_byte_compilation_reproducibility
-@@ -1435,15 +1436,15 @@ Mesa OpenCL support with RustiCL.
+@@ -1438,15 +1439,15 @@ Mesa OpenCL support with RustiCL.
  %prep
  %if %{without snapshot_build}
  # llvm

@@ -1,6 +1,6 @@
-From 2870d469fcf3f07fd0209ded4e75fad2c4f3cb2b Mon Sep 17 00:00:00 2001
+From 8288d04d27f2f188f9876a65d269f8fcd0d4d7c3 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 12 Oct 2026 14:12:59 +0200
+Date: Thu, 22 Oct 2026 13:10:15 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,14 +15,14 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/iotop-c.spec b/iotop-c.spec
-index 2d5f1d6..490db72 100644
+index 69732ba..c1ab3be 100644
 --- a/iotop-c.spec
 +++ b/iotop-c.spec
 @@ -1,6 +1,6 @@
  Name:           iotop-c
- Version:        1.31
--Release:        2%{?dist}
-+Release:        3%{?dist}
+ Version:        1.33
+-Release:        1%{?dist}
++Release:        2%{?dist}
  Summary:        Simple top-like I/O monitor (implemented in C)
  
  License:        GPL-2.0-or-later
@@ -48,11 +48,11 @@ index 2d5f1d6..490db72 100644
  %{_mandir}/man8/iotop.8*
  
  %changelog
-+* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 1.31-3
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 1.33-2
 +- Verify upstream source signatures with openpgpverify
 +
- * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.31-2
- - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ * Wed Oct 21 2026 Boian Bonev <bbonev@ipacct.com> - 1.33-1
+ - Update to latest ver 1.33
  
 -- 
 2.55.0
