@@ -1,6 +1,6 @@
-From 2d6b5249ef15f2ab8dcf250cece612974cea4436 Mon Sep 17 00:00:00 2001
+From 864ac965371c8afd70f803efa32d2eb393d56d81 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 22 Oct 2026 13:10:15 +0200
+Date: Fri, 23 Oct 2026 10:26:37 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -56,5 +56,5 @@ index deec1e8..df23d6d 100644
  - Fix for missing /var/lock/subsys directory in init scripts
  
 -- 
-2.55.0
+2.56.0
 

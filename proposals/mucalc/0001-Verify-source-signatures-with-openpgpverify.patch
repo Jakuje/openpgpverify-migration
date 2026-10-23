@@ -1,0 +1,39 @@
+From d8129bc6313b98c49a1baa5afc3adc90209a77b6 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:42 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ mucalc.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mucalc.spec b/mucalc.spec
+index bfc9a22..8cdf536 100644
+--- a/mucalc.spec
++++ b/mucalc.spec
+@@ -11,7 +11,7 @@ Source2:        https://marlam.de/key.txt
+ 
+ BuildRequires:  cmake
+ BuildRequires:  gcc-c++
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ 
+ BuildRequires:  muParser-devel
+ BuildRequires:  readline-devel
+@@ -24,7 +24,7 @@ with tab-completion and persistent history using GNU readline. The evaluation
+ of expressions is handled by the muParser math parser library.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+-- 
+2.56.0
+

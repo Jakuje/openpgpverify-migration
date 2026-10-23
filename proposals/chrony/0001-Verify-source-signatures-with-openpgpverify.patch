@@ -1,6 +1,6 @@
-From fc67cdefab1c7da1c5b66c1bd5c92f5b17315e7b Mon Sep 17 00:00:00 2001
+From 5222a71ec5baf4962563cfb1cebbd0ef0e1d99cb Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 22 Oct 2026 13:10:14 +0200
+Date: Fri, 23 Oct 2026 10:26:36 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -55,5 +55,5 @@ index 11a8de2..9729960 100644
  - Use gnutls for crypto on RHEL
  
 -- 
-2.55.0
+2.56.0
 

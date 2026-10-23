@@ -13,7 +13,7 @@ signature verification (`%gpgverify`, raw `gpg`/`gpgv2`) to Sequoia-based
 |---|---|
 | Branches | **rawhide only**. Maintainers decide whether to merge down. |
 | ELN | Rawhide changes **must work in ELN**; `openpgpverify` is available there. |
-| EPEL | `openpgpverify` is not in EPEL. Specs with `%{?rhel}` conditionals (likely shared with EPEL) keep `%gpgverify` for EPEL branches. |
+| EPEL | `openpgpverify` is in EPEL 9 and 10 (not 8), so specs shared with EPEL are converted fully; no `%if` for EPEL. |
 | Release | Specs without `%autochangelog` get a **Release bump** and a changelog entry, so the spec stays consistent outside the rpmautospec tooling. |
 | Delivery | **PRs first**. If maintainers don't respond, find a provenpackager. |
 | Wrapper fixes (concatenated armor, keybox keyrings) | Decide **after Phase 1** results. |
@@ -81,28 +81,14 @@ rpm stops depending on gpg.
    so the tested spec is exactly the proposed one.
 5. **Raw gpg/gpgv calls** (`raw-verify`) are rewritten by hand into a macro
    call, piped through `--data=-` where the data is decompressed on the fly.
-6. **RHEL conditionals**: rawhide and ELN both get openpgpverify, so the
-   plain conversion is the default. openpgpverify is in Fedora 43 and later
-   but **not in EPEL 9/10** (checked 2026-10-09). Where the verification or
-   its BR is already in an `%if 0%{?rhel} …` block (spec shared with EPEL /
-   CentOS / RDO), `convert.py` keeps the old variant for older RHEL:
-   - an unconditional gpg BR is wrapped; a gpg BR already inside a branch for
-     Fedora / newer RHEL (fapolicyd, rust) is replaced in place;
-   - verify calls are wrapped, and consecutive calls share one block.
-
-   ```
-   %if 0%{?fedora} || 0%{?rhel} >= 11
-   BuildRequires:  openpgpverify
-   %else
-   BuildRequires:  gnupg2
-   %endif
-   ...
-   %if 0%{?fedora} || 0%{?rhel} >= 11
-   %{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
-   %else
-   %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
-   %endif
-   ```
+6. **RHEL conditionals**: openpgpverify is available in Fedora 43+, ELN, EPEL 9
+   and EPEL 10 (not EPEL 8), so specs with `%{?rhel}` conditionals get the
+   plain conversion too. A gpg BuildRequires inside a conditional is dropped
+   and `BuildRequires: openpgpverify` is added unconditionally; a `%else`
+   branch or `%if` block that contained only that BuildRequires is removed.
+   (An earlier version kept `%gpgverify` for EPEL in a two-branch `%if`
+   template; dropped on 2026-10-22.) The PR text mentions EPEL 8 for these
+   specs. Escaped `%%gpgverify` (comments) is left alone.
 
    The added `BuildRequires` copies the alignment of the spec's first
    `BuildRequires:` line.
@@ -350,7 +336,10 @@ Verification only actually runs when the package is built, so `merged` and
 - [x] Seed `data/state/packages.jsonl` from the inventory (`scripts/seed_state.py`, maintainers from `pagure_owner_alias.json`)
 - [x] Phase 1 harness and pilot (19 packages, `reports/phase1-pilot.md`)
 - [x] Phase 1 on all ELN packages (164)
-- [ ] Phase 1 on the remaining ~400 packages
+- [x] Phase 1 on 316 of 572 packages (2026-10-23; ELN + the smaller rest)
+- [ ] Phase 1 on the remaining ~250 larger packages (disk: --prune-sources, the disk guard and periodic mock cache scrubs are needed on an 18 GB machine; dotnet10.0 needs >6 GB for %prep alone)
+- [ ] Review 63 proposed keyring refreshes
+- [ ] Open PRs: announce/eln-ready-prs.md (ELN), announce/ready-prs-other.md (rest)
 - [ ] Decide on `unparseable-cert` (4 ELN packages): trim keyrings in PRs, or make openpgpverify/sqv skip unreadable certificates like gpgv does
 - [x] Semi-automatic keyring refresh with per-package review (`scripts/refresh_keys.py`)
 - [x] openpgpverify prototype: SHA-1 key bindings accepted + failure hints (local branch `sha1-bindings-and-hints` in `~/devel/openpgpverify`, tests pass in mock)

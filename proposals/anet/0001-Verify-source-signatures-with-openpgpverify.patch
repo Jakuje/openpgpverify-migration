@@ -1,0 +1,59 @@
+From 774be19ed395dda9b143f723137a6d14d83be7a5 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:39 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ anet.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/anet.spec b/anet.spec
+index 95765f6..279bbed 100644
+--- a/anet.spec
++++ b/anet.spec
+@@ -1,6 +1,6 @@
+ Name:           anet
+ Version:        0.5.1
+-Release:        10%{?dist}
++Release:        11%{?dist}
+ Summary:        Ada Networking Library
+ 
+ License:        GPL-2.0-or-later WITH GNAT-exception
+@@ -13,7 +13,7 @@ Patch:          anet-0.3.3-no_IPv6_multicast_test.patch
+ 
+ BuildRequires:  gcc-gnat fedora-gnat-project-common make ahven-devel
+ BuildRequires:  gprbuild
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ BuildRequires:  asciidoctor
+ BuildRequires:  sed
+ # Build only on architectures where GPRbuild is available:
+@@ -54,7 +54,7 @@ för att utveckla program som använder Anet.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE5}' --signature='%{SOURCE2}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE5}' --signature='%{SOURCE2}' --data='%{SOURCE0}'
+ %autosetup -n libanet-%{version} -p0
+ 
+ 
+@@ -119,6 +119,9 @@ make tests %{all_the_flags}
+ 
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 0.5.1-11
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.5.1-10
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

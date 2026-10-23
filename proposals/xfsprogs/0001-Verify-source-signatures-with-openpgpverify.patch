@@ -1,6 +1,6 @@
-From 89607611edca78fbab18f63903666452342723d1 Mon Sep 17 00:00:00 2001
+From d3e7e735f813d758e69f59b743ed10a912ef00bf Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 22 Oct 2026 13:10:17 +0200
+Date: Fri, 23 Oct 2026 10:26:39 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -57,5 +57,5 @@ index cd94359..8fd5be8 100644
  - Fix FTBFS on i686
  - Related: rhbz#2555429
 -- 
-2.55.0
+2.56.0
 

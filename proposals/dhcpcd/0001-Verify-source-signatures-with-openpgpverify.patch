@@ -1,6 +1,6 @@
-From 0fc626c1562c8f3c67a07c243707597158255b77 Mon Sep 17 00:00:00 2001
+From 3e62a3feaace7ac4f992943c87d644929be636be Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 22 Oct 2026 13:10:14 +0200
+Date: Fri, 23 Oct 2026 10:26:36 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,37 +11,31 @@ Refresh rsmarples.gpg from keyservers/WKD: same certificate(s), with self-signat
 
 Assisted-by: Claude Opus 5.5
 ---
- dhcpcd.spec   |   7 +++
+ dhcpcd.spec   |   3 +-
  rsmarples.gpg | 142 ++++++++++++++++++++++++++++++++------------------
- 2 files changed, 99 insertions(+), 50 deletions(-)
+ 2 files changed, 94 insertions(+), 51 deletions(-)
 
 diff --git a/dhcpcd.spec b/dhcpcd.spec
-index 5b803d4..af27dfc 100644
+index 5b803d4..ebc79a0 100644
 --- a/dhcpcd.spec
 +++ b/dhcpcd.spec
-@@ -31,6 +31,9 @@ BuildRequires: systemd-devel
+@@ -31,6 +31,7 @@ BuildRequires: systemd-devel
  BuildRequires: ypbind
  %endif
  BuildRequires: make
-+%if 0%{?fedora} || 0%{?rhel} >= 11
 +BuildRequires: openpgpverify
-+%endif
  %if 0%{?fedora} || 0%{?rhel} > 8
  BuildRequires: gnupg2
  %endif
-@@ -42,8 +45,12 @@ through NDP, DHCPv4 and DHCPv6 protocols.
+@@ -42,7 +43,7 @@ through NDP, DHCPv4 and DHCPv6 protocols.
  
  %prep
  %if 0%{?fedora} || 0%{?rhel} > 8
-+%if 0%{?fedora} || 0%{?rhel} >= 11
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
 +%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
-+%else
- %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
  %endif
-+%endif
  %autosetup -p1
  
- %build
 diff --git a/rsmarples.gpg b/rsmarples.gpg
 index ea32ae7..f868929 100644
 --- a/rsmarples.gpg
@@ -202,5 +196,5 @@ index ea32ae7..f868929 100644
 +=UgCe
 +-----END PGP PUBLIC KEY BLOCK-----
 -- 
-2.55.0
+2.56.0
 

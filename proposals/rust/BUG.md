@@ -8,15 +8,15 @@ Summary: rust: source signature does not verify with openpgpverify (SHA-1 key se
 
 As part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify), `%gpgverify` (GnuPG) is being replaced by `%openpgpverify` (Sequoia `sqv`). For rust, the switch can't be done in a simple PR: `%gpgverify` accepts the current upstream signature, but `%openpgpverify` rejects it.
 
-Failing check (dist-git commit `8b7522feb42d`):
+Failing check (dist-git commit `29d7b25adbfd`):
 
 ```
-%openpgpverify --keyring=rust-key.gpg.ascii --signature=rustc-1.99.0-src.tar.xz.asc --data=rustc-1.99.0-src.tar.xz
+%openpgpverify --keyring=rust-key.gpg.ascii --signature=rustc-1.99.1-src.tar.xz.asc --data=rustc-1.99.1-src.tar.xz
 ```
 
 ```
 Signing key on 108F66205EAEB0AAA8DD5E1C85AB96E6FA1BE5FE is not bound:
-           No binding signature at time 2026-10-01T12:18:39Z
+           No binding signature at time 2026-10-15T17:25:04Z
   because: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
   because: SHA1 is not considered secure
 0 of 1 signatures are valid (threshold is: 1).

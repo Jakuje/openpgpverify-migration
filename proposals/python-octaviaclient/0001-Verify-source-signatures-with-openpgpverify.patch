@@ -1,0 +1,48 @@
+From e472cdbf500122e89d5f338eb45e678eda9ac205 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:43 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ python-octaviaclient.spec | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/python-octaviaclient.spec b/python-octaviaclient.spec
+index f949b82..1649823 100644
+--- a/python-octaviaclient.spec
++++ b/python-octaviaclient.spec
+@@ -26,6 +26,7 @@ BuildArch:      noarch
+ 
+ BuildRequires:  git-core
+ BuildRequires:  python3-devel
++BuildRequires:  openpgpverify
+ 
+ # pypi module has been broken into 3 rpms it seems.
+ %if 0%{?with_doc}
+@@ -33,9 +34,6 @@ BuildRequires:  python3-sphinxcontrib-rsvgconverter
+ %endif
+ 
+ # Required for tarball sources verification
+-%if 0%{?sources_gpg} == 1
+-BuildRequires:  /usr/bin/gpgv2
+-%endif
+ 
+ 
+ %description
+@@ -85,7 +83,7 @@ This package contains the example client test files.
+ %prep
+ # Required for tarball sources verification
+ %if 0%{?sources_gpg} == 1
+-%{gpgverify}  --keyring=%{SOURCE102} --signature=%{SOURCE101} --data=%{SOURCE0}
++%{openpgpverify}  --keyring=%{SOURCE102} --signature=%{SOURCE101} --data=%{SOURCE0}
+ %endif
+ %autosetup -n python_%{pypi_name}-%{version} -S git
+ 
+-- 
+2.56.0
+

@@ -1,0 +1,59 @@
+From 3299cd9996757ab2e99eaa6e39e889c661092519 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:42 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ kronometer.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/kronometer.spec b/kronometer.spec
+index 9f01a49..314bc3b 100644
+--- a/kronometer.spec
++++ b/kronometer.spec
+@@ -3,7 +3,7 @@
+ Name:    kronometer
+ Summary: A stopwatch application by KDE
+ Version: 2.3.0
+-Release: 11%{?dist}
++Release: 12%{?dist}
+ 
+ # code is GPLv2, appdata file is CC0
+ License: GPL-2.0-or-later AND CC0-1.0
+@@ -36,6 +36,7 @@ BuildRequires: cmake(KF5DocTools)
+ BuildRequires: cmake(KF5I18n)
+ BuildRequires: cmake(KF5WidgetsAddons)
+ BuildRequires: cmake(KF5XmlGui)
++BuildRequires: openpgpverify
+ 
+ %if %{with tests}
+ BuildRequires: cmake(Qt5Test)
+@@ -50,7 +51,7 @@ Kronometer is a stopwatch application.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ 
+@@ -89,6 +90,9 @@ export QT_QPA_PLATFORM=offscreen
+ 
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 2.3.0-12
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 2.3.0-11
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

@@ -1,0 +1,42 @@
+From 6f547f64b1972edbbed56d9bc0283986be01d019 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:43 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ python-oslo-concurrency.spec | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/python-oslo-concurrency.spec b/python-oslo-concurrency.spec
+index ad65bb2..9bae021 100644
+--- a/python-oslo-concurrency.spec
++++ b/python-oslo-concurrency.spec
+@@ -31,10 +31,8 @@ BuildArch:      noarch
+ 
+ BuildRequires:  python3-devel
+ BuildRequires:  git-core
++BuildRequires:  openpgpverify
+ # Required for tarball sources verification
+-%if 0%{?sources_gpg} == 1
+-BuildRequires:  /usr/bin/gpgv2
+-%endif
+ 
+ 
+ %description
+@@ -84,7 +82,7 @@ Translation files for Oslo concurrency library
+ %prep
+ # Required for tarball sources verification
+ %if 0%{?sources_gpg} == 1
+-%{gpgverify}  --keyring=%{SOURCE102} --signature=%{SOURCE101} --data=%{SOURCE0}
++%{openpgpverify}  --keyring=%{SOURCE102} --signature=%{SOURCE101} --data=%{SOURCE0}
+ %endif
+ %autosetup -n oslo_concurrency-%{version} -S git
+ 
+-- 
+2.56.0
+

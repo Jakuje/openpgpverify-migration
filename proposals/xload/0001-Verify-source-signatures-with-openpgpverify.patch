@@ -1,0 +1,36 @@
+From 4cf1b2739b2391a1e3794bf999b8cad990e1dcb6 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:45 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ xload.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/xload.spec b/xload.spec
+index 309e4c7..27ff529 100644
+--- a/xload.spec
++++ b/xload.spec
+@@ -18,12 +18,13 @@ BuildRequires:  pkgconfig(xaw7)
+ BuildRequires:  pkgconfig(xmu)
+ BuildRequires:  pkgconfig(xproto) >= 7.0.17
+ BuildRequires:  pkgconfig(xt)
++BuildRequires:  openpgpverify
+ 
+ %description
+ xload displays a periodically updating histogram of the system load average.
+ 
+ %prep
+-%{gpgverify} --keyring=%{SOURCE2} --signature=%{SOURCE1} --data=%{SOURCE0}
++%{openpgpverify} --keyring=%{SOURCE2} --signature=%{SOURCE1} --data=%{SOURCE0}
+ %autosetup
+ 
+ %build
+-- 
+2.56.0
+

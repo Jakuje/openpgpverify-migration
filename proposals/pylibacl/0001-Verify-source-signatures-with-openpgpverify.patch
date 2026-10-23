@@ -1,0 +1,59 @@
+From 60edcdc4c73c1c161711d582f37ff8181f9fcdc8 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:42 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ pylibacl.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/pylibacl.spec b/pylibacl.spec
+index ca30739..001ea6a 100644
+--- a/pylibacl.spec
++++ b/pylibacl.spec
+@@ -1,7 +1,7 @@
+ Name:           pylibacl
+ Summary:        POSIX.1e ACLs library wrapper for Python
+ Version:        0.6.0
+-Release:        19%{?dist}
++Release:        20%{?dist}
+ # Automatically converted from old format: LGPLv2+ - review is highly recommended.
+ License:        LicenseRef-Callaway-LGPLv2+
+ URL:            https://pylibacl.k1024.org
+@@ -17,6 +17,7 @@ BuildRequires:  python3-devel
+ BuildRequires:  gnupg2
+ BuildRequires:  python3dist(pytest)
+ BuildRequires:  python3-setuptools
++BuildRequires:  openpgpverify
+ 
+ %global _description %{expand:
+ Python extension module for POSIX ACLs. It allows to query, list,
+@@ -34,7 +35,7 @@ Obsoletes: py3libacl < 0.5.4
+ %description -n python3-%{name} %_description
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+@@ -61,6 +62,9 @@ python3 -m pytest tests -v \
+ 
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 0.6.0-20
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 22 2026 Python Maint <python-maint@redhat.com> - 0.6.0-19
+ - Rebuilt for Python 3.15.0b4 ABI change
+ 
+-- 
+2.56.0
+

@@ -86,9 +86,9 @@ What a PR looks like
 - Specs without %autochangelog get a Release bump and a changelog entry.
   Nothing changes in the binary packages, so no build is needed right
   away.
-- PRs target rawhide only. openpgpverify is in Fedora 43 and later but not
-  in EPEL, so specs with %{?rhel} conditionals (likely shared with EPEL)
-  keep %gpgverify there.
+- PRs target rawhide only. openpgpverify is also available in Fedora 43
+  and later, EPEL 9 and EPEL 10, so the change can be merged into those
+  branches as well if you like (not EPEL 8).
 
 Each PR is tested: the current and the changed spec are both run through
 %prep in a clean mock chroot without network access, and every call of
@@ -110,15 +110,14 @@ older than the signature, and refreshing the keyring fixes that.
 Numbers
 -------
 
-[TODO: refresh before sending; state of 2026-10-22]
+[TODO: refresh before sending; state of 2026-10-23]
 
 - 572 packages in rawhide still verify with %gpgverify or call gpg/gpgv
-  directly; about 36 of them call gpg/gpgv directly and need hand-written
-  PRs.
-- 166 of them were tested so far (a pilot plus everything in ELN, which
-  has many long-established upstreams with old keys): 75 pass unchanged,
-  27 pass with a refreshed keyring, 47 need upstream or maintainer action,
-  and 15 call gpg directly.
+  directly; 36 of them call gpg/gpgv directly and need hand-written PRs.
+- 316 of them were tested so far (everything in ELN plus the smaller
+  half of the rest): 166 pass unchanged, 63 pass with a refreshed keyring
+  (waiting for review), 68 need upstream or maintainer action, and 16
+  call gpg directly.
 
 
 Links

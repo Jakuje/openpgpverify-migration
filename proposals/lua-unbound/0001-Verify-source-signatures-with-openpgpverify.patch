@@ -1,0 +1,57 @@
+From 729cbbb736e354d25c0406d8360f6313e387bfb4 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:42 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ lua-unbound.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/lua-unbound.spec b/lua-unbound.spec
+index b072340..a00a517 100644
+--- a/lua-unbound.spec
++++ b/lua-unbound.spec
+@@ -1,7 +1,7 @@
+ Summary:        Binding to libunbound for Lua
+ Name:           lua-unbound
+ Version:        1.1.0
+-Release:        2%{?dist}
++Release:        3%{?dist}
+ License:        MIT
+ URL:            https://www.zash.se/luaunbound.html
+ Source0:        https://code.zash.se/dl/luaunbound/luaunbound-%{version}.tar.gz
+@@ -14,12 +14,13 @@ BuildRequires:  make
+ BuildRequires:  lua >= %{lua_version}
+ BuildRequires:  lua-devel >= %{lua_version}
+ BuildRequires:  unbound-devel
++BuildRequires:  openpgpverify
+ 
+ %description
+ Lua bindings for the Unbound APIs.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %setup -q -n luaunbound-%{version}
+ 
+ %build
+@@ -47,6 +48,9 @@ lua -e \
+ %{lua_libdir}/lunbound.so
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 1.1.0-3
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.1.0-2
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

@@ -1,0 +1,39 @@
+From 7eeae3d521bffba21ef760d7c5eac44c0ed6048d Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:44 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ setxkbmap.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/setxkbmap.spec b/setxkbmap.spec
+index fb6c1f5..6af4549 100644
+--- a/setxkbmap.spec
++++ b/setxkbmap.spec
+@@ -10,7 +10,7 @@ Source1:    https://www.x.org/pub/individual/app/%{name}-%{version}.tar.xz.sig
+ Source2:    3AB285232C46AE43D8E192F4DAB0F78EA6E7E2D2.asc
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ BuildRequires:  make
+ BuildRequires:  pkgconfig(x11)
+ BuildRequires:  pkgconfig(xkbfile)
+@@ -26,7 +26,7 @@ specified keyboard to use the layout determined by the options listed
+ on the command line.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+-- 
+2.56.0
+

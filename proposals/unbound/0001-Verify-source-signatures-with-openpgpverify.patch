@@ -1,6 +1,6 @@
-From e443523e4ef2035915bb28a8dde40007acd62f89 Mon Sep 17 00:00:00 2001
+From 1649d8a8278680fb5dd6e613c237337ec73b47eb Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 22 Oct 2026 13:10:17 +0200
+Date: Fri, 23 Oct 2026 10:26:39 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,36 +9,30 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- unbound.spec | 7 +++++++
- 1 file changed, 7 insertions(+)
+ unbound.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/unbound.spec b/unbound.spec
-index 29cb786..8ffd1fd 100644
+index 29cb786..2843bdf 100644
 --- a/unbound.spec
 +++ b/unbound.spec
-@@ -100,6 +100,9 @@ BuildRequires: flex
+@@ -100,6 +100,7 @@ BuildRequires: flex
  BuildRequires: byacc
  BuildRequires: dns-root-data >= 2026260100
  BuildRequires: gzip
-+%if 0%{?fedora} || 0%{?rhel} >= 11
 +BuildRequires: openpgpverify
-+%endif
  
  %if 0%{?fedora} || 0%{?rhel} >= 9
  BuildRequires: gnupg2
-@@ -232,8 +235,12 @@ in initramfs.
+@@ -232,7 +233,7 @@ in initramfs.
  
  %prep
  %if 0%{?fedora} || 0%{?rhel} >= 9
-+%if 0%{?fedora} || 0%{?rhel} >= 11
+-%{gpgverify} --keyring='%{SOURCE19}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
 +%{openpgpverify} --keyring='%{SOURCE19}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
-+%else
- %{gpgverify} --keyring='%{SOURCE19}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
  %endif
-+%endif
  %global pkgname %{name}-%{version}%{?extra_version}
  
- %if 0%{with_python2} && 0%{with_python3}
 -- 
-2.55.0
+2.56.0
 

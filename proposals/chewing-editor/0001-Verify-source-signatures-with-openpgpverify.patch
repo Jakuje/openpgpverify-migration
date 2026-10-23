@@ -1,0 +1,58 @@
+From e268c7345c9e5f6c8dd64fc90bccb594eb9f753b Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:40 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ chewing-editor.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/chewing-editor.spec b/chewing-editor.spec
+index 85551d6..982e388 100644
+--- a/chewing-editor.spec
++++ b/chewing-editor.spec
+@@ -1,6 +1,6 @@
+ Name:           chewing-editor
+ Version:        0.1.2
+-Release:        4%{?dist}
++Release:        5%{?dist}
+ Summary:        Cross platform chewing user phrase editor
+ Summary(zh_TW): 跨平台酷音詞庫編輯器
+ 
+@@ -20,6 +20,7 @@ BuildRequires:  pkgconfig(gtest) >= 1.7.0
+ BuildRequires:  help2man
+ BuildRequires:  desktop-file-utils
+ BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ Requires:       hicolor-icon-theme
+ 
+ %description
+@@ -32,7 +33,7 @@ chewing-editor 是一個跨平台的詞庫編輯器。它提供了簡單管理
+ 有了它，使用者可以自訂自己的詞庫來提高輸入效率。
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1 -n %{name}-%{version}-Source
+ 
+ 
+@@ -59,6 +60,9 @@ desktop-file-validate %{buildroot}/%{_datadir}/applications/chewing-editor.deskt
+ 
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 0.1.2-5
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.1.2-4
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

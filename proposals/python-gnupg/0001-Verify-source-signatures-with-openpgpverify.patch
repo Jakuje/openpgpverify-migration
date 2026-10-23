@@ -1,0 +1,38 @@
+From 3ccb9e4b8cfcd5ec9512ec471b13c77cd53139ea Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:43 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ python-gnupg.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/python-gnupg.spec b/python-gnupg.spec
+index 751ff71..1e6a183 100644
+--- a/python-gnupg.spec
++++ b/python-gnupg.spec
+@@ -14,6 +14,7 @@ Source3:        https://raw.githubusercontent.com/vsajip/python-gnupg/refs/tags/
+ Source4:        https://raw.githubusercontent.com/vsajip/python-gnupg/refs/tags/%{version}/pyproject.toml
+ BuildArch:      noarch
+ 
++BuildRequires:  openpgpverify
+ %description
+ GnuPG bindings for python. This uses the gpg command.
+ 
+@@ -29,7 +30,7 @@ Requires:       gnupg
+ GnuPG bindings for python. This uses the gpg command.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -n %{name}-%{version}
+ cp %{SOURCE3} %{SOURCE4} .
+ 
+-- 
+2.56.0
+

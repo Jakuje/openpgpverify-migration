@@ -1,0 +1,38 @@
+From ebb9bf6287cba37b07152aec43853c5203f36cb0 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:42 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ lilv.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/lilv.spec b/lilv.spec
+index 991a800..2b7bfc1 100644
+--- a/lilv.spec
++++ b/lilv.spec
+@@ -31,6 +31,7 @@ BuildRequires:  pkgconfig(zix-0) >= 0.6.0
+ BuildRequires:  python3-sphinx
+ BuildRequires:  python3-sphinx_lv2_theme
+ BuildRequires:  python3-sphinxygen
++BuildRequires:  openpgpverify
+ 
+ Requires:       lv2 >= 1.18.2
+ 
+@@ -75,7 +76,7 @@ supports reading and writing Turtle and NTriples.
+ This package contains the python libraries for %{name}.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+-- 
+2.56.0
+

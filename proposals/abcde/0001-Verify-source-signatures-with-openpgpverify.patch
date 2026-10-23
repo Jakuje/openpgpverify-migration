@@ -1,0 +1,59 @@
+From 783532b0f7af764c734139aa5e74337c8d4f54d7 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:39 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ abcde.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/abcde.spec b/abcde.spec
+index e0c4284..4bed3f0 100644
+--- a/abcde.spec
++++ b/abcde.spec
+@@ -1,6 +1,6 @@
+ Name:           abcde
+ Version:        2.9.3
+-Release:        21%{?dist}
++Release:        22%{?dist}
+ Summary:        A Better CD Encoder
+ 
+ # previously license field included Public Domain, but FOSSology scan of v2.9.3 did not 
+@@ -18,7 +18,7 @@ Patch0:         %{name}-normalize.patch
+ Patch1:         https://bugzilla.redhat.com/attachment.cgi?id=1748056#/abcde-gnudb.patch
+ 
+ BuildArch:      noarch
+-BuildRequires:  %{_bindir}/gpgv2
++BuildRequires:  openpgpverify
+ BuildRequires:  make
+ BuildRequires:  perl-generators
+ Requires:       cd-discid
+@@ -53,7 +53,7 @@ tags them, all in one go.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{S:2}' --signature='%{S:1}' --data='%{S:0}'
++%{openpgpverify} --keyring='%{S:2}' --signature='%{S:1}' --data='%{S:0}'
+ %autosetup
+ mv examples/cue2discid .
+ sed -i -e 's|bin/python\b|bin/python3|' cue2discid
+@@ -82,6 +82,9 @@ install -pm 755 cue2discid $RPM_BUILD_ROOT%{_bindir}
+ 
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 2.9.3-22
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 2.9.3-21
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

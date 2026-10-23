@@ -1,0 +1,38 @@
+From 8e7425a0d4ad881c4ea9dc3947fb3a92ab21fd37 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:44 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ sratom.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/sratom.spec b/sratom.spec
+index fe32d01..ce9d8a6 100644
+--- a/sratom.spec
++++ b/sratom.spec
+@@ -22,6 +22,7 @@ BuildRequires:  pkgconfig(lv2) >= 1.18.4
+ BuildRequires:  python3-sphinx
+ BuildRequires:  python3-sphinx_lv2_theme
+ BuildRequires:  python3-sphinxygen
++BuildRequires:  openpgpverify
+ 
+ %description
+ %{name} is a C library for serializing LV2 atoms to/from Turtle. It is
+@@ -44,7 +45,7 @@ control with network transparency.
+ This package contains the headers and development libraries for %{name}.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+-- 
+2.56.0
+

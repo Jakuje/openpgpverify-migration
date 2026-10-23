@@ -1,0 +1,43 @@
+From 109e0a71bba7385c2642b7ad94af8e10b13de926 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:43 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ python-oslo-log.spec | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/python-oslo-log.spec b/python-oslo-log.spec
+index 1bb4584..636b4cf 100644
+--- a/python-oslo-log.spec
++++ b/python-oslo-log.spec
+@@ -27,11 +27,9 @@ BuildArch:      noarch
+ 
+ BuildRequires:  python3-devel
+ BuildRequires:  git-core
++BuildRequires:  openpgpverify
+ 
+ # Required for tarball sources verification
+-%if 0%{?sources_gpg} == 1
+-BuildRequires:  %{gpgverify}
+-%endif
+ 
+ %description
+ %{common_desc}
+@@ -77,7 +75,7 @@ Translation files for Oslo log library
+ 
+ %prep
+ %if 0%{?sources_gpg} == 1
+-%{gpgverify}  --keyring=%{SOURCE102} --signature=%{SOURCE101} --data=%{SOURCE0}
++%{openpgpverify}  --keyring=%{SOURCE102} --signature=%{SOURCE101} --data=%{SOURCE0}
+ %endif
+ %autosetup -n oslo_log-%{version} -S git
+ 
+-- 
+2.56.0
+

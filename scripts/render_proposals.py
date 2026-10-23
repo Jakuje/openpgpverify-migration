@@ -189,14 +189,7 @@ def render_pr(pkg, s, draft):
         changes.append('- added `BuildRequires: openpgpverify`; nothing pulls it into the '
                        'buildroot implicitly (gpgverify comes in via redhat-rpm-config)')
     for br in removed_brs(diff):
-        if s.get('rhel_conditional'):
-            continue
         changes.append('- dropped `%s`, only needed for `%%gpgverify`' % br)
-    if s.get('rhel_conditional'):
-        changes.append('- the spec has `%{?rhel}` conditionals, so it is likely shared with '
-                       'EPEL, where openpgpverify is not available: `%if 0%{?fedora} || '
-                       '0%{?rhel} >= 11` (Fedora and ELN) uses openpgpverify, otherwise '
-                       'everything stays as it was')
     for f in files:
         changes.append('- refreshed keyring `%s` (see below)' % f['file'])
     rel = re.findall(r'(?m)^([-+])Release:\s*(.*)$', diff)
@@ -235,10 +228,10 @@ def render_pr(pkg, s, draft):
                       '\n'.join('- `%s`' % fp for f in files for fp in f['fingerprints']),
                       ''.join(diffs)))
     notes = ['- Rawhide only. Whether to merge it into other branches is up to you; '
-             'openpgpverify is in Fedora 43 and later' +
-             ('.' if s.get('rhel_conditional') else
-              ', but not in EPEL yet, so please keep `%gpgverify` on EPEL branches.')]
-    if s.get('gnupg2_action') in ('review', 'keep') and not s.get('rhel_conditional'):
+             'openpgpverify is available in Fedora 43 and later, EPEL 9 and EPEL 10' +
+             ('. It is not in EPEL 8, so if this spec is still used there, keep '
+              '`%gpgverify` on that branch.' if s.get('rhel_conditional') else '.')]
+    if s.get('gnupg2_action') in ('review', 'keep'):
         notes.append('- `BuildRequires: gnupg2` is kept: the spec has a `%check` section '
                      'or uses gpg elsewhere, and tests may need it. If it was only there '
                      'for the signature check, it can go too.')

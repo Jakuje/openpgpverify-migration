@@ -21,6 +21,7 @@ parsed and executed inside mock; on the host they are read as data.
 """
 import argparse
 import concurrent.futures
+import time
 import hashlib
 import json
 import os
@@ -436,6 +437,12 @@ def main():
                     help='also test in fedora-eln-x86_64 when the spec has rhel conditionals')
     ap.add_argument('--jobs', type=int, default=1)
     ap.add_argument('--keep', action='store_true', help='keep mock chroots for debugging')
+    ap.add_argument('--min-free-gb', type=float, default=1.5,
+                    help='do not start a package with less free disk than this')
+    ap.add_argument('--size-factor', type=float, default=12,
+                    help='also require SIZE_FACTOR x the source RPM size free (unpacking)')
+    ap.add_argument('--stop-after-min', type=float, default=None,
+                    help='start no new package after this many minutes')
     ap.add_argument('--prune-sources', action='store_true',
                     help='delete downloaded sources of packages that passed (saves disk); '
                          'failing ones keep them for refresh_keys.py')
@@ -447,11 +454,31 @@ def main():
     inv = state.load_inventory(a.inventory)
     os.makedirs(WORK, exist_ok=True)
 
+    started = time.time()
+    done_count = [0]
+    skipped = []
     slots = queue.Queue()
     for i in range(a.jobs):
         slots.put('opv-%d' % i)
 
     def one(pkg):
+        if a.stop_after_min and time.time() - started > a.stop_after_min * 60:
+            skipped.append((pkg, 'time limit'))
+            return
+        need = max(a.min_free_gb * 1e9,
+                   a.size_factor * (inv.get(pkg, {}).get('srpm_size') or 0))
+        # Space is freed when the other job finishes its package: wait for it,
+        # but don't wait for space that won't come (more than the disk can give).
+        waited = 0
+        while shutil.disk_usage(WORK).free < need and waited < 900 and \
+                need < shutil.disk_usage(WORK).total * 0.25:
+            time.sleep(15)
+            waited += 15
+        free = shutil.disk_usage(WORK).free
+        if free < need:
+            skipped.append((pkg, 'disk: %.1f GB free, needs %.1f GB' % (free / 1e9, need / 1e9)))
+            print('%-28s %-13s %s' % (pkg, 'not-started', skipped[-1][1]), flush=True)
+            return
         cfgs = [a.chroot]
         if a.eln and inv.get(pkg, {}).get('mentions_rhel'):
             cfgs.append('fedora-eln-x86_64')
@@ -465,9 +492,19 @@ def main():
                 slots.put(slot)
         except Exception as e:  # keep going with other packages
             upd = dict(status='error', outcome_detail='harness: %r' % e, results=[])
+        with LOCK:
+            done_count[0] += 1
+            scrub_cache = done_count[0] % 20 == 0
+        if scrub_cache:
+            # mock keeps every downloaded package; on a small disk that adds up
+            for cfg in {a.chroot, 'fedora-eln-x86_64'}:
+                for i in range(a.jobs):
+                    subprocess.run(['mock', '-r', cfg, '--uniqueext', 'opv-%d' % i, '--quiet',
+                                    '--scrub=dnf-cache'], capture_output=True, cwd=WORK)
         g = os.path.join(WORK, pkg, 'dist-git')
-        if a.prune_sources and upd.get('status') in ('tested', 'superseded', 'skipped') \
-                and os.path.isdir(os.path.join(g, '.git')):
+        # Failing packages are pruned too; refresh_keys.py downloads the
+        # sources again if it needs them.
+        if a.prune_sources and os.path.isdir(os.path.join(g, '.git')):
             subprocess.run(['git', '-C', g, 'clean', '-fdxq'])
         upd['updated'] = state.now()
         with LOCK:
@@ -478,6 +515,9 @@ def main():
 
     with concurrent.futures.ThreadPoolExecutor(a.jobs) as ex:
         list(ex.map(one, a.packages))
+    if skipped:
+        print('not started: %d (%s)' % (len(skipped), ', '.join(
+            sorted({why.split(':')[0] for _, why in skipped}))), flush=True)
 
 
 KEEP = False

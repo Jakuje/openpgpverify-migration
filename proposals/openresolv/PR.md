@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- the spec has `%{?rhel}` conditionals, so it is likely shared with EPEL, where openpgpverify is not available: `%if 0%{?fedora} || 0%{?rhel} >= 11` (Fedora and ELN) uses openpgpverify, otherwise everything stays as it was
+- dropped `BuildRequires:  gnupg2`, only needed for `%gpgverify`
 - refreshed keyring `roy.marples.asc` (see below)
 
 ### Testing
@@ -27,7 +27,7 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 | current (`%gpgverify`) | 1 | pass |
 | this PR (`%openpgpverify`) | 1 | fails with the keyring in dist-git; **passes with the refreshed keyring** (sqv run directly) |
 
-Tested on 2026-10-09 at dist-git commit `111374dee9c4` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
+Tested on 2026-10-22 at dist-git commit `111374dee9c4` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
 ### Keyring refresh
 
@@ -65,7 +65,7 @@ What changed in the certificate (`sq inspect`):
 
 ### Notes
 
-- Rawhide only. Whether to merge it into other branches is up to you; openpgpverify is in Fedora 43 and later.
+- Rawhide only. Whether to merge it into other branches is up to you; openpgpverify is available in Fedora 43 and later, EPEL 9 and EPEL 10. It is not in EPEL 8, so if this spec is still used there, keep `%gpgverify` on that branch.
 - Nothing changes in the built packages, so this doesn't need a build right away; the new check runs with your next build.
 
 ### Questions

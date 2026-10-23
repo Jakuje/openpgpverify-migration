@@ -1,26 +1,26 @@
 # Phase 1 results
 
-Generated 2026-10-22T11:12Z from `data/state/packages.jsonl`: 178 of 595 packages tested.
+Generated 2026-10-23T08:21Z from `data/state/packages.jsonl`: 328 of 595 packages tested.
 
 | Status | Packages |
 |---|---|
-| `tested` | 75 |
-| `regression` | 74 |
-| `manual` | 15 |
+| `tested` | 166 |
+| `regression` | 131 |
+| `manual` | 16 |
 | `skipped` | 12 |
-| `guard-failed` | 1 |
+| `guard-failed` | 2 |
 | `not-buildable` | 1 |
 
 | Regression reason | Calls |
 |---|---|
-| `sha1-cert` | 43 |
-| `sha1-sig` | 19 |
-| `expired` | 14 |
-| `unparseable-cert` | 6 |
-| `weak-key` | 2 |
+| `sha1-cert` | 67 |
+| `expired` | 35 |
+| `sha1-sig` | 21 |
+| `weak-key` | 9 |
+| `unparseable-cert` | 7 |
+| `v3-sig` | 4 |
+| `binding-after-signature` | 2 |
 | `keybox` | 1 |
-| `v3-sig` | 1 |
-| `binding-after-signature` | 1 |
 
 | Package | Status | Calls old→new | Chroots | Notes |
 |---|---|---|---|---|
@@ -50,7 +50,7 @@ Generated 2026-10-22T11:12Z from `data/state/packages.jsonl`: 178 of 595 package
 | cyrus-imapd | `regression` | 1→1 | rawhide: regression | reason: sha1-cert; keyring refresh: still-fails |
 | dbus | `tested` | 1→1 | rawhide: both-pass | BR gnupg2 kept (review) |
 | debugedit | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: keybox |
-| dhcpcd | `regression` | 1→1 | rawhide: regression, eln: not-buildable | unchanged spec: installdeps failed; rhel conditional: gpgverify kept for EPEL branches; BR gnupg2 kept (revie… |
+| dhcpcd | `regression` | 1→1 | rawhide: regression, eln: regression | BR gnupg2 kept (review); reason: sha1-cert; reason: sha1-cert; keyring refresh: proposed |
 | dialog | `regression` | 1→1 | rawhide: regression | reason: expired; keyring refresh: proposed |
 | dnf | `tested` | 1→1 | rawhide: both-pass, eln: both-pass | BR gnupg2 kept (review) |
 | dns-root-data | `regression` | 1→1 | rawhide: regression | reason: sha1-sig |
@@ -66,7 +66,7 @@ Generated 2026-10-22T11:12Z from `data/state/packages.jsonl`: 178 of 595 package
 | findutils | `regression` | 1→1 | rawhide: regression | reason: unparseable-cert |
 | fio | `tested` | 1→1 | rawhide: both-pass, eln: not-buildable | unchanged spec: installdeps failed |
 | fips-provider | `tested` | 1→1 | rawhide: both-pass, eln: both-pass | BR gnupg2 kept (review) |
-| git | `regression` | 1→1 | rawhide: regression, eln: not-buildable | unchanged spec: installdeps failed; rhel conditional: gpgverify kept for EPEL branches; BR gnupg2 kept (revie… |
+| git | `regression` | 1→1 | rawhide: regression, eln: regression | BR gnupg2 kept (review); reason: sha1-cert; reason: sha1-cert; keyring refresh: proposed |
 | git-lfs | `skipped` | -→- |  |  |
 | gnulib-l10n | `tested` | 1→1 | rawhide: both-pass |  |
 | gnupg2 | `tested` | 1→1 | rawhide: both-pass | BR gnupg2 kept (review) |
@@ -160,7 +160,7 @@ Generated 2026-10-22T11:12Z from `data/state/packages.jsonl`: 178 of 595 package
 | pyxattr | `tested` | 1→1 | rawhide: both-pass | BR gnupg2 kept (review) |
 | radvd | `skipped` | -→- |  |  |
 | resolv_wrapper | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: sha1-cert; keyring refresh: proposed |
-| rust | `regression` | 1→1 | rawhide: regression, eln: regression | replaced conditional BR in place: BuildRequires:  gpgverify; rhel conditional: gpgverify kept for EPEL branch… |
+| rust | `regression` | 1→1 | rawhide: regression, eln: regression | dropped conditional BR: BuildRequires:  gpgverify; BR gnupg2 kept (review); reason: sha1-cert; reason: sha1-c… |
 | s-nail | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: sha1-cert; keyring refresh: still-fails |
 | samba | `manual` | 2→0 | rawhide: manual, eln: manual | raw verification baseline passes; raw verification: no gpg call executed in baseline |
 | socket_wrapper | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: sha1-cert; keyring refresh: proposed |
@@ -174,7 +174,7 @@ Generated 2026-10-22T11:12Z from `data/state/packages.jsonl`: 178 of 595 package
 | tomcat | `tested` | 1→1 | rawhide: both-pass |  |
 | tpm2-openssl | `manual` | 1→0 | rawhide: manual | raw verification baseline passes |
 | uid_wrapper | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: sha1-cert; keyring refresh: proposed |
-| unbound | `tested` | 1→1 | rawhide: both-pass, eln: not-buildable | unchanged spec: installdeps failed; rhel conditional: gpgverify kept for EPEL branches; BR gnupg2 kept (revie… |
+| unbound | `tested` | 1→1 | rawhide: both-pass, eln: both-pass | BR gnupg2 kept (review) |
 | usbredir | `manual` | 1→0 | rawhide: manual | raw verification baseline passes |
 | virt-p2v | `regression` | 1→1 | rawhide: regression | BR gnupg2 kept (review); reason: sha1-cert; keyring refresh: still-fails |
 | virt-top | `regression` | 1→1 | rawhide: regression, eln: regression | reason: sha1-cert; reason: sha1-cert; keyring refresh: still-fails |

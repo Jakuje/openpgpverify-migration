@@ -1,0 +1,39 @@
+From b6d6b72495f3d8e6c5d8fada9d379f83151f1be4 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:44 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ rhythmbox-alternative-toolbar.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/rhythmbox-alternative-toolbar.spec b/rhythmbox-alternative-toolbar.spec
+index 01527cb..bb564c4 100644
+--- a/rhythmbox-alternative-toolbar.spec
++++ b/rhythmbox-alternative-toolbar.spec
+@@ -21,7 +21,7 @@ BuildRequires:	gobject-introspection
+ BuildRequires:	rhythmbox-devel
+ BuildRequires:	make
+ 
+-BuildRequires:	gnupg2
++BuildRequires:	openpgpverify
+ 
+ Requires:	rhythmbox
+ 
+@@ -32,7 +32,7 @@ Alternative Toolbar replaces the Rhythmbox large toolbar with a Client-Side
+ Decorated or Compact toolbar which can be hidden.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -n %{mod_name}-%{version} -p1
+ 
+ %build
+-- 
+2.56.0
+

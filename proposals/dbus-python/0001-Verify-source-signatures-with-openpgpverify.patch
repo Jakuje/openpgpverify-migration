@@ -1,0 +1,38 @@
+From 8094ddaa98ec61c834d05118263e42c023afcd8e Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:40 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ dbus-python.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/dbus-python.spec b/dbus-python.spec
+index 8c238a5..dec3349 100644
+--- a/dbus-python.spec
++++ b/dbus-python.spec
+@@ -22,6 +22,7 @@ BuildRequires: python3-gobject
+ 
+ BuildRequires: gcc
+ BuildRequires: meson
++BuildRequires: openpgpverify
+ 
+ %global _description\
+ D-Bus python bindings for use with python programs.
+@@ -50,7 +51,7 @@ Headers and static libraries for hooking up custom mainloops to the dbus python
+ bindings.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1 -n %{srcname}-%{version}
+ 
+ %build
+-- 
+2.56.0
+

@@ -1,0 +1,59 @@
+From 21c2e7ed2df3d69519bbdecc4749cd8dcb28a758 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:45 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ xgamma.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/xgamma.spec b/xgamma.spec
+index a6fb685..9d76312 100644
+--- a/xgamma.spec
++++ b/xgamma.spec
+@@ -1,6 +1,6 @@
+ Name:       xgamma
+ Version:    1.0.8
+-Release:    3%{?dist}
++Release:    4%{?dist}
+ Summary:    X utility to query and alter the gamma correction of a monitor
+ # COPYING:      X11 AND HPND-sell-variant
+ # man/xgamma.man:   X11 without the permision grant, probably a copy-and-paste
+@@ -36,7 +36,7 @@ BuildRequires:  autoconf >= 2.60
+ BuildRequires:  automake
+ BuildRequires:  coreutils
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  make
+ BuildRequires:  pkgconfig(x11)
+ BuildRequires:  pkgconfig(xxf86vm)
+@@ -50,7 +50,7 @@ xgamma allows X users to query and alter the gamma correction of a
+ monitor via the X video mode extension (XFree86-VidModeExtension).
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ rm aclocal.m4 compile config.guess config.sub configure depcomp install-sh \
+      Makefile.in man/Makefile.in missing
+@@ -70,6 +70,9 @@ autoreconf -v --force --install
+ %{_mandir}/man1/%{name}.1*
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 1.0.8-4
++- Verify upstream source signatures with openpgpverify
++
+ * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.0.8-3
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

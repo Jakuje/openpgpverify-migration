@@ -28,7 +28,7 @@ Tested on 2026-10-12 at dist-git commit `47a5888b0b10` with sequoia-sqv 1.5.0-2.
 
 ### Notes
 
-- Rawhide only. Whether to merge it into other branches is up to you; openpgpverify is in Fedora 43 and later, but not in EPEL yet, so please keep `%gpgverify` on EPEL branches.
+- Rawhide only. Whether to merge it into other branches is up to you; openpgpverify is available in Fedora 43 and later, EPEL 9 and EPEL 10.
 - `BuildRequires: gnupg2` is kept: the spec has a `%check` section or uses gpg elsewhere, and tests may need it. If it was only there for the signature check, it can go too.
 - Nothing changes in the built packages, so this doesn't need a build right away; the new check runs with your next build.
 

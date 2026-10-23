@@ -1,0 +1,37 @@
+From a89ce96981e5fc63b072f9f1be1476c733ede947 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:45 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ xdriinfo.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/xdriinfo.spec b/xdriinfo.spec
+index 463150e..981261c 100644
+--- a/xdriinfo.spec
++++ b/xdriinfo.spec
+@@ -18,13 +18,14 @@ BuildRequires: meson
+ BuildRequires: pkgconfig(gl)
+ BuildRequires: pkgconfig(glproto)
+ BuildRequires: pkgconfig(x11)
++BuildRequires: openpgpverify
+ 
+ %description
+ xdriinfo can be used to query configuration information of direct
+ rendering drivers.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+-- 
+2.56.0
+

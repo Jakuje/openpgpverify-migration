@@ -1,0 +1,38 @@
+From 17f4a90da9635ca97ec78a7a3dcdc316744eee33 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:45 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ trojan.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/trojan.spec b/trojan.spec
+index f5f46ab..0cd65b5 100644
+--- a/trojan.spec
++++ b/trojan.spec
+@@ -38,6 +38,7 @@ BuildRequires:    curl
+ BuildRequires:    openssl
+ #for verifying the tarball
+ BuildRequires:    gnupg2
++BuildRequires:    openpgpverify
+ 
+ 
+ %description
+@@ -54,7 +55,7 @@ without being identified ever.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ # change cipher list in shipped configuration file&example into PROFILE=SYSTEM
+ sed -i '/"cipher"/c\        "cipher": "PROFILE=SYSTEM",' examples/*.json-example
+-- 
+2.56.0
+

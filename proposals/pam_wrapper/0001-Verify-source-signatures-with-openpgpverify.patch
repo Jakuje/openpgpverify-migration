@@ -1,6 +1,6 @@
-From 19a31c3d077a926e0bace28637b63aa007440eb2 Mon Sep 17 00:00:00 2001
+From 1d21d8b790d4909d9fd7c30d89a915431c7898b9 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 22 Oct 2026 13:10:16 +0200
+Date: Fri, 23 Oct 2026 10:26:38 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -316,5 +316,5 @@ index 7105441..e6a345c 100644
  # Not compatible with Python 3.12 headers
  sed -i -e '/Werror=declaration-after-statement/d' CompilerChecks.cmake
 -- 
-2.55.0
+2.56.0
 

@@ -1,0 +1,36 @@
+From 6f7e3e812b1a294d52d72eb366f512ab0c355535 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:45 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ xwininfo.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/xwininfo.spec b/xwininfo.spec
+index f006135..e8559ec 100644
+--- a/xwininfo.spec
++++ b/xwininfo.spec
+@@ -14,12 +14,13 @@ BuildRequires:  meson
+ BuildRequires:  pkgconfig(x11)
+ BuildRequires:  pkgconfig(xcb)
+ BuildRequires:  pkgconfig(xcb-shape)
++BuildRequires:  openpgpverify
+ 
+ %description
+ xwininfo prints information about an X11 window.
+ 
+ %prep
+-%{gpgverify} --keyring=%{SOURCE2} --signature=%{SOURCE1} --data=%{SOURCE0}
++%{openpgpverify} --keyring=%{SOURCE2} --signature=%{SOURCE1} --data=%{SOURCE0}
+ %autosetup
+ 
+ %build
+-- 
+2.56.0
+

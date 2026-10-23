@@ -1,0 +1,38 @@
+From 0c20b00c0106f02f95ece171e208ace3d8a5f3b8 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:44 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ sord.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/sord.spec b/sord.spec
+index 4781bb7..e297bf5 100644
+--- a/sord.spec
++++ b/sord.spec
+@@ -18,6 +18,7 @@ BuildRequires: meson
+ BuildRequires: pkgconfig(libpcre2-8)
+ BuildRequires: pkgconfig(serd-0) >= 0.30.10
+ BuildRequires: pkgconfig(zix-0) >= 0.4.0
++BuildRequires: openpgpverify
+ 
+ %description
+ %{name} is a lightweight C library for storing Resource Description
+@@ -36,7 +37,7 @@ Framework (RDF) data in memory.
+ This package contains the headers and development libraries for %{name}.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+-- 
+2.56.0
+

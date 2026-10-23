@@ -1,0 +1,41 @@
+From 2eb41e22e32ee14547cdf42f4a80b32020b89fac Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:40 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Refresh bemenu-pgp.txt from keyservers/WKD: same certificate(s), with self-signatures our copy was missing.
+
+Assisted-by: Claude Opus 5.5
+---
+ bemenu.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/bemenu.spec b/bemenu.spec
+index dd98f2c..d87653d 100644
+--- a/bemenu.spec
++++ b/bemenu.spec
+@@ -16,7 +16,7 @@ Source2:    https://cloudef.pw/bemenu-pgp.txt
+ Patch:      respect-env-build-flags.patch
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  make
+ BuildRequires:  pkgconfig(cairo)
+ BuildRequires:  pkgconfig(ncursesw)
+@@ -42,7 +42,7 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
+ Development files for extending %{name}.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+-- 
+2.56.0
+

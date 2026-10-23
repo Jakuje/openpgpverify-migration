@@ -1,0 +1,38 @@
+From 59a4cf8d554279609b77fb1809e5fad3e05bb6dc Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:46 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ zix.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/zix.spec b/zix.spec
+index 211076e..914fda2 100644
+--- a/zix.spec
++++ b/zix.spec
+@@ -18,6 +18,7 @@ BuildRequires:  doxygen
+ BuildRequires:  python3-sphinx
+ BuildRequires:  python3-sphinxygen
+ BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ 
+ %description
+ %{name} is a lightweight C library of portability wrappers and data structures.
+@@ -40,7 +41,7 @@ The %{name}-doc package contains documentation files for
+ developing applications that use %{name}.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+-- 
+2.56.0
+

@@ -1,0 +1,39 @@
+From 995db275534a99bc0e035848e5687b618d4b282e Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:40 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ cproto.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/cproto.spec b/cproto.spec
+index 48ba7ef..fac1999 100644
+--- a/cproto.spec
++++ b/cproto.spec
+@@ -11,7 +11,7 @@ URL: https://invisible-island.net/cproto/
+ BuildRequires: byacc
+ BuildRequires: flex
+ BuildRequires: gcc-c++
+-BuildRequires: gpgverify
++BuildRequires: openpgpverify
+ BuildRequires: make
+ 
+ %description
+@@ -24,7 +24,7 @@ generated parser, so it should not be confused by complex function
+ definitions as much as other prototype generators.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+-- 
+2.56.0
+

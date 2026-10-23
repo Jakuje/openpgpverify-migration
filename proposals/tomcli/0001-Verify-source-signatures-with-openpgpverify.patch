@@ -1,0 +1,59 @@
+From 011a8ceebda52b652700e104d666838f2a4eabf0 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:45 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ tomcli.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/tomcli.spec b/tomcli.spec
+index 1f21214..269bbd0 100644
+--- a/tomcli.spec
++++ b/tomcli.spec
+@@ -31,7 +31,7 @@ PATH=%{buildroot}%{_bindir}:${PATH}
+ 
+ Name:           tomcli
+ Version:        0.10.1
+-Release:        6%{?dist}
++Release:        7%{?dist}
+ Summary:        CLI for working with TOML files. Pronounced "tom clee."
+ 
+ License:        MIT
+@@ -44,6 +44,7 @@ Source2:        https://meta.sr.ht/~gotmax23.pgp
+ BuildArch:      noarch
+ BuildRequires:  gnupg2
+ BuildRequires:  python3-devel
++BuildRequires:  openpgpverify
+ %if %{with manpages}
+ BuildRequires:  scdoc
+ %endif
+@@ -63,7 +64,7 @@ tomcli is a CLI for working with TOML files. Pronounced "tom clee."
+ 
+ 
+ %prep
+-%gpgverify -d0 -s1 -k2
++%openpgpverify -d0 -s1 -k2
+ %autosetup -p1
+ 
+ 
+@@ -143,6 +144,9 @@ test "${newname}" = "not-tomcli"
+ 
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 0.10.1-7
++- Verify upstream source signatures with openpgpverify
++
+ * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.10.1-6
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

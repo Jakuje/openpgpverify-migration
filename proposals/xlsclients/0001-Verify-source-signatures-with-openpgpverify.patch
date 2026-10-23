@@ -1,0 +1,39 @@
+From c37c356cbee5ba048866887d1476abbf5f61f248 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:45 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ xlsclients.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/xlsclients.spec b/xlsclients.spec
+index 665bafe..2238352 100644
+--- a/xlsclients.spec
++++ b/xlsclients.spec
+@@ -9,7 +9,7 @@ Source1:    https://www.x.org/pub/individual/app/%{name}-%{version}.tar.xz.sig
+ Source2:    gpgkey-3AB285232C46AE43D8E192F4DAB0F78EA6E7E2D2.gpg
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ BuildRequires:  meson
+ BuildRequires:  pkgconfig(xcb) >= 1.6
+ 
+@@ -17,7 +17,7 @@ BuildRequires:  pkgconfig(xcb) >= 1.6
+ xlsclients lists the names of the clients currently connected to an X server.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+-- 
+2.56.0
+

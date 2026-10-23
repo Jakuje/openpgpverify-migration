@@ -1,0 +1,38 @@
+From 74c57d134242bcff31ce4f622d126641dce73274 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:41 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ gplugin.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/gplugin.spec b/gplugin.spec
+index e6e2e4b..cd26691 100644
+--- a/gplugin.spec
++++ b/gplugin.spec
+@@ -25,6 +25,7 @@ BuildRequires:  pkgconfig(glib-2.0) >= 2.70.0
+ BuildRequires:  pkgconfig(gobject-2.0)
+ BuildRequires:  pkgconfig(gmodule-2.0)
+ BuildRequires:  gettext
++BuildRequires:  openpgpverify
+ %if %{with check}
+ BuildRequires:  /usr/bin/gtester
+ %endif
+@@ -117,7 +118,7 @@ Requires:       %{name}-vala%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
+ %{summary}.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ # We install docs ourselves
+ sed -i -e '/install_data/,+1 d' meson.build
+-- 
+2.56.0
+

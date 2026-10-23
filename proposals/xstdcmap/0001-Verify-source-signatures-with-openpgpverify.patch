@@ -1,0 +1,39 @@
+From fe10b7287f0f6296b4af070f487c3294eeafa484 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:45 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ xstdcmap.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/xstdcmap.spec b/xstdcmap.spec
+index 3fd8cc8..6071778 100644
+--- a/xstdcmap.spec
++++ b/xstdcmap.spec
+@@ -10,7 +10,7 @@ Source1:        %{url}/pub/individual/app/%{name}-%{version}.tar.xz.sig
+ Source2:        %{name}.gpg
+ BuildRequires:  gcc
+ BuildRequires:  gnupg2
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ BuildRequires:  meson
+ BuildRequires:  pkgconfig(x11)
+ BuildRequires:  pkgconfig(xmu)
+@@ -23,7 +23,7 @@ create standard colormap definitions in order to facilitate sharing of
+ scarce colormap resources among clients using PseudoColor visuals.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+-- 
+2.56.0
+

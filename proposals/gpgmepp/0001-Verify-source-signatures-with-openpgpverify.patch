@@ -1,0 +1,60 @@
+From 01c45379699c138b8062abe188aeecffa1729640 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:41 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ gpgmepp.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/gpgmepp.spec b/gpgmepp.spec
+index feb6708..8e449c8 100644
+--- a/gpgmepp.spec
++++ b/gpgmepp.spec
+@@ -1,7 +1,7 @@
+ Name:           gpgmepp
+ Summary:        C++ bindings/wrapper for GPGME
+ Version:        2.2.0
+-Release:        1%{?dist}
++Release:        2%{?dist}
+ Epoch:          1
+ 
+ License:        LGPL-2.0-or-later
+@@ -16,7 +16,7 @@ BuildRequires:  gcc
+ BuildRequires:  gcc-c++
+ BuildRequires:  pkgconfig(gpgme) >= %{version}
+ BuildRequires:  pkgconfig(gpg-error) >= 1.47
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ 
+ %description
+ %{summary}. GnuPG Made Easy (GPGME) is a library designed
+@@ -35,7 +35,7 @@ Requires:       gpgme-devel%{?_isa} >= %{version}
+ 
+ %prep
+ # verify sources
+-%{gpgverify} --keyring=%{SOURCE2} --signature=%{SOURCE1} --data=%{SOURCE0}
++%{openpgpverify} --keyring=%{SOURCE2} --signature=%{SOURCE1} --data=%{SOURCE0}
+ %autosetup -p1 -S gendiff
+ 
+ %build
+@@ -57,6 +57,9 @@ Requires:       gpgme-devel%{?_isa} >= %{version}
+ %{_libdir}/pkgconfig/%{name}.pc
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 1:2.2.0-2
++- Verify upstream source signatures with openpgpverify
++
+ * Tue Oct 13 2026 Michal Hlavinka <mhlavink@redhat.com> - 1:2.2.0-1
+ - updated to 2.2.0
+ 
+-- 
+2.56.0
+

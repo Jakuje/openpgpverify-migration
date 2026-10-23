@@ -1,0 +1,39 @@
+From e21eded68ff9020c7a7007dbd914b856dc04d6d0 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:44 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ secilc.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/secilc.spec b/secilc.spec
+index 24981ee..3f1579e 100644
+--- a/secilc.spec
++++ b/secilc.spec
+@@ -19,7 +19,7 @@ Requires:       libsepol >= %{libsepolver}
+ BuildRequires:  gcc
+ BuildRequires:  make
+ BuildRequires:  libsepol-static >= %{libsepolver}, dblatex, flex, xmlto, pandoc-pdf, texlive-mdwtools
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ 
+ %description
+ The SELinux CIL Compiler is a compiler that converts the CIL language as
+@@ -40,7 +40,7 @@ http://github.com/SELinuxProject/cil/wiki/
+ for more information about the goals and features on the CIL language.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p 2 -n secilc-%{version}
+ 
+ 
+-- 
+2.56.0
+

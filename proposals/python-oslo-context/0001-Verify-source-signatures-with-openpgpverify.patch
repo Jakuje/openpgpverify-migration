@@ -1,0 +1,43 @@
+From 44849fec3c3a823fc7428640b23f39688e8bd2e8 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:43 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ python-oslo-context.spec | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/python-oslo-context.spec b/python-oslo-context.spec
+index 5630dc3..f5826e5 100644
+--- a/python-oslo-context.spec
++++ b/python-oslo-context.spec
+@@ -30,11 +30,9 @@ BuildArch:      noarch
+ BuildRequires:  python3-devel
+ 
+ # Required for tarball sources verification
+-%if 0%{?sources_gpg} == 1
+-BuildRequires:  /usr/bin/gpgv2
+-%endif
+ 
+ BuildRequires:  git-core
++BuildRequires:  openpgpverify
+ 
+ 
+ %package -n python3-%{pkg_name}
+@@ -72,7 +70,7 @@ Documentation for the OpenStack Oslo context library.
+ %prep
+ # Required for tarball sources verification
+ %if 0%{?sources_gpg} == 1
+-%{gpgverify}  --keyring=%{SOURCE102} --signature=%{SOURCE101} --data=%{SOURCE0}
++%{openpgpverify}  --keyring=%{SOURCE102} --signature=%{SOURCE101} --data=%{SOURCE0}
+ %endif
+ %autosetup -n oslo_context-%{version} -S git
+ 
+-- 
+2.56.0
+

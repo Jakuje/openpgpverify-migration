@@ -1,0 +1,38 @@
+From 0355b2fa3eef4dba81a72d582f722a08f55fa0d0 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:45 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ xmodmap.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/xmodmap.spec b/xmodmap.spec
+index f1361a1..f7c1195 100644
+--- a/xmodmap.spec
++++ b/xmodmap.spec
+@@ -13,6 +13,7 @@ BuildRequires:  gcc
+ BuildRequires:  gnupg2
+ BuildRequires:  meson
+ BuildRequires:  pkgconfig(x11)
++BuildRequires:  openpgpverify
+ 
+ %description
+ The xmodmap program is used to edit and display the keyboard modifier
+@@ -20,7 +21,7 @@ map and keymap table that are used by client applications to convert
+ event keycodes into keysyms.
+ 
+ %prep
+-%{gpgverify} --keyring=%{SOURCE2} --signature=%{SOURCE1} --data=%{SOURCE0}
++%{openpgpverify} --keyring=%{SOURCE2} --signature=%{SOURCE1} --data=%{SOURCE0}
+ %autosetup
+ 
+ %build
+-- 
+2.56.0
+

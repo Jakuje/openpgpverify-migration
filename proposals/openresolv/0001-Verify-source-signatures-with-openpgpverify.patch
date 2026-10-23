@@ -1,6 +1,6 @@
-From bd16630997fea0ea217c2aafc3f82883e9cb8a1c Mon Sep 17 00:00:00 2001
+From 87704431fa26141795984311ab40e926c7f2b019 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 22 Oct 2026 13:10:12 +0200
+Date: Fri, 23 Oct 2026 10:26:35 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,39 +11,32 @@ Refresh roy.marples.asc from keyservers/WKD: same certificate(s), with self-sign
 
 Assisted-by: Claude Opus 5.5
 ---
- openresolv.spec |   8 +++
+ openresolv.spec |   4 +-
  roy.marples.asc | 150 ++++++++++++++++++++++++++++++------------------
- 2 files changed, 103 insertions(+), 55 deletions(-)
+ 2 files changed, 97 insertions(+), 57 deletions(-)
 
 diff --git a/openresolv.spec b/openresolv.spec
-index 0f80aea..5f9f46c 100644
+index 0f80aea..508f689 100644
 --- a/openresolv.spec
 +++ b/openresolv.spec
-@@ -28,7 +28,11 @@ Source2:        http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xa785ed275
+@@ -28,7 +28,7 @@ Source2:        http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xa785ed275
  Requires:       bash
  BuildArch:      noarch
  BuildRequires:  make
-+%if 0%{?fedora} || 0%{?rhel} >= 11
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
-+%else
- BuildRequires:  gnupg2
-+%endif
  Provides:       resolvconf = %{version}-%{release}
  Requires(post): %{_sbindir}/update-alternatives
  Requires(postun): %{_sbindir}/update-alternatives
-@@ -44,8 +48,12 @@ openresolv can generate a combined resolv.conf or a configuration file for a loc
+@@ -44,7 +44,7 @@ openresolv can generate a combined resolv.conf or a configuration file for a loc
  
  %prep
  %if 0%{?fedora} || 0%{?rhel} > 8
-+%if 0%{?fedora} || 0%{?rhel} >= 11
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
 +%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
-+%else
- %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
  %endif
-+%endif
  
  %autosetup
- for F in *.in; do
 diff --git a/roy.marples.asc b/roy.marples.asc
 index fffc66e..f868929 100644
 --- a/roy.marples.asc
@@ -208,5 +201,5 @@ index fffc66e..f868929 100644
 +=UgCe
  -----END PGP PUBLIC KEY BLOCK-----
 -- 
-2.55.0
+2.56.0
 

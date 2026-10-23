@@ -1,6 +1,6 @@
 # Proposals
 
-Generated 2026-10-22T11:10Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
+Generated 2026-10-23T08:26Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
 
 - **PR**: `0001-*.patch` is the commit a PR would carry (`git am` applies it to dist-git at the tested commit); `PR.md` is the PR title and description.
 - **draft PR**: the same, but it includes a keyring refresh that hasn't been reviewed yet.
@@ -192,3 +192,153 @@ Generated 2026-10-22T11:10Z by `scripts/render_proposals.py` from the Phase 1 st
 | [xterm](xterm/) | draft PR | keyring refresh proposed |
 | [xz](xz/) | draft PR | keyring refresh proposed |
 | zsh | skipped | skipped: already converted or no longer verifying |
+| [abcde](abcde/) | PR |  |
+| [aesfix](aesfix/) | bug | v3-sig |
+| [aeskeyfind](aeskeyfind/) | bug | v3-sig |
+| [anet](anet/) | PR |  |
+| [ant-antunit](ant-antunit/) | bug | unparseable-cert |
+| [apachetop](apachetop/) | PR |  |
+| [b43-fwcutter](b43-fwcutter/) | draft PR | keyring refresh proposed |
+| [batctl](batctl/) | PR |  |
+| [bemenu](bemenu/) | draft PR | keyring refresh proposed |
+| [bpfmon](bpfmon/) | PR |  |
+| [budgie-desktop-defaults](budgie-desktop-defaults/) | PR |  |
+| [cage](cage/) | draft PR | keyring refresh proposed |
+| [chewing-editor](chewing-editor/) | PR |  |
+| [cksfv](cksfv/) | PR |  |
+| [cproto](cproto/) | PR |  |
+| [cscppc](cscppc/) | draft PR | keyring refresh proposed |
+| [csmock](csmock/) | PR |  |
+| [cswrap](cswrap/) | draft PR | keyring refresh proposed |
+| [ctstream](ctstream/) | PR |  |
+| [dbus-python](dbus-python/) | PR |  |
+| [dehydrated](dehydrated/) | PR |  |
+| [dhcpdump](dhcpdump/) | draft PR | keyring refresh proposed |
+| [drm_info](drm_info/) | draft PR | keyring refresh proposed |
+| [facter](facter/) | PR |  |
+| [fcitx5-anthy](fcitx5-anthy/) | draft PR | keyring refresh proposed |
+| [fcitx5-chewing](fcitx5-chewing/) | draft PR | keyring refresh proposed |
+| [fcitx5-configtool](fcitx5-configtool/) | draft PR | keyring refresh proposed |
+| [fcitx5-gtk](fcitx5-gtk/) | draft PR | keyring refresh proposed |
+| [fcitx5-hangul](fcitx5-hangul/) | draft PR | keyring refresh proposed |
+| [fcitx5-kkc](fcitx5-kkc/) | draft PR | keyring refresh proposed |
+| [fcitx5-libthai](fcitx5-libthai/) | draft PR | keyring refresh proposed |
+| [fcitx5-lua](fcitx5-lua/) | draft PR | keyring refresh proposed |
+| [fcitx5-m17n](fcitx5-m17n/) | draft PR | keyring refresh proposed |
+| [fcitx5-qt](fcitx5-qt/) | draft PR | keyring refresh proposed |
+| [fcitx5-rime](fcitx5-rime/) | draft PR | keyring refresh proposed |
+| [fcitx5-sayura](fcitx5-sayura/) | draft PR | keyring refresh proposed |
+| [fcitx5-skk](fcitx5-skk/) | draft PR | keyring refresh proposed |
+| [fcitx5-unikey](fcitx5-unikey/) | draft PR | keyring refresh proposed |
+| [fuse-sshfs](fuse-sshfs/) | PR |  |
+| [gencolormap](gencolormap/) | PR |  |
+| [glinf](glinf/) | bug | binding-after-signature |
+| [gpgmepp](gpgmepp/) | PR |  |
+| [gplugin](gplugin/) | PR |  |
+| [grim](grim/) | draft PR | keyring refresh proposed |
+| [hcxtools](hcxtools/) | bug | sha1-cert |
+| [i3lock](i3lock/) | draft PR | keyring refresh proposed |
+| [jalv](jalv/) | PR |  |
+| [kanshi](kanshi/) | draft PR | keyring refresh proposed |
+| [kronometer](kronometer/) | PR |  |
+| [libgnt](libgnt/) | PR |  |
+| [liblxi](liblxi/) | bug | sha1-cert |
+| [libnids](libnids/) | bug | sha1-sig |
+| [libptytty](libptytty/) | PR |  |
+| [libredwg](libredwg/) | draft PR | keyring refresh proposed |
+| [lilv](lilv/) | PR |  |
+| [lua-unbound](lua-unbound/) | PR |  |
+| [mako](mako/) | draft PR | keyring refresh proposed |
+| [maven-reporting-api](maven-reporting-api/) | draft PR | keyring refresh proposed |
+| [mingw-cmocka](mingw-cmocka/) | draft PR | keyring refresh proposed |
+| mingw-usbredir | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes) |
+| [mucalc](mucalc/) | PR |  |
+| [nginx-mod-fancyindex](nginx-mod-fancyindex/) | bug | weak-key |
+| [nss-pem](nss-pem/) | draft PR | keyring refresh proposed |
+| [ocaml-mysql](ocaml-mysql/) | bug | sha1-sig |
+| [oclock](oclock/) | bug | weak-key |
+| [oidentd](oidentd/) | PR |  |
+| [opendoas](opendoas/) | bug | expired |
+| [pari-galdata](pari-galdata/) | bug | v3-sig |
+| [pass-audit](pass-audit/) | PR |  |
+| [pdfgrep](pdfgrep/) | bug | weak-key |
+| [perl-WWW-OrangeHRM-Client](perl-WWW-OrangeHRM-Client/) | bug | weak-key |
+| [pianobar](pianobar/) | PR |  |
+| [postfix-mta-sts-resolver](postfix-mta-sts-resolver/) | PR |  |
+| [pylibacl](pylibacl/) | PR |  |
+| [python-aodhclient](python-aodhclient/) | PR |  |
+| [python-authres](python-authres/) | PR |  |
+| [python-automaton](python-automaton/) | PR |  |
+| [python-barbicanclient](python-barbicanclient/) | PR |  |
+| [python-debtcollector](python-debtcollector/) | PR |  |
+| [python-dijitso](python-dijitso/) | bug | sha1-cert |
+| [python-futurist](python-futurist/) | PR |  |
+| python-gnocchiclient | skipped | guard-failed: fedora-rawhide-x86_64: guard-failed (old spec executed no gpgverify call (prep rc 0)) |
+| [python-gnupg](python-gnupg/) | PR |  |
+| [python-hacking](python-hacking/) | PR |  |
+| [python-heatclient](python-heatclient/) | PR |  |
+| [python-liblore](python-liblore/) | PR |  |
+| [python-libusb1](python-libusb1/) | bug | sha1-cert |
+| [python-magnumclient](python-magnumclient/) | PR |  |
+| [python-mistralclient](python-mistralclient/) | PR |  |
+| [python-neutronclient](python-neutronclient/) | PR |  |
+| [python-octaviaclient](python-octaviaclient/) | PR |  |
+| [python-osc-lib](python-osc-lib/) | PR |  |
+| [python-osc-placement](python-osc-placement/) | PR |  |
+| [python-oslo-concurrency](python-oslo-concurrency/) | PR |  |
+| [python-oslo-config](python-oslo-config/) | PR |  |
+| [python-oslo-context](python-oslo-context/) | PR |  |
+| [python-oslo-i18n](python-oslo-i18n/) | PR |  |
+| [python-oslo-log](python-oslo-log/) | PR |  |
+| [python-oslo-serialization](python-oslo-serialization/) | PR |  |
+| [python-oslotest](python-oslotest/) | PR |  |
+| [python-oslo-utils](python-oslo-utils/) | PR |  |
+| [python-os-service-types](python-os-service-types/) | PR |  |
+| [python-patatt](python-patatt/) | PR |  |
+| [python-pskc](python-pskc/) | PR |  |
+| [python-reno](python-reno/) | PR |  |
+| [python-swiftclient](python-swiftclient/) | PR |  |
+| [python-tackerclient](python-tackerclient/) | PR |  |
+| [python-troveclient](python-troveclient/) | PR |  |
+| [python-zaqarclient](python-zaqarclient/) | PR |  |
+| [python-zstarfile](python-zstarfile/) | PR |  |
+| [qemu-sanity-check](qemu-sanity-check/) | bug | sha1-cert |
+| [qgpgme](qgpgme/) | PR |  |
+| [rhythmbox-alternative-toolbar](rhythmbox-alternative-toolbar/) | PR |  |
+| [rpminspect-data-centos](rpminspect-data-centos/) | PR |  |
+| [screenkey](screenkey/) | PR |  |
+| [secilc](secilc/) | PR |  |
+| [serd](serd/) | PR |  |
+| [setxkbmap](setxkbmap/) | PR |  |
+| [signify](signify/) | bug | weak-key |
+| [slurp](slurp/) | draft PR | keyring refresh proposed |
+| [sord](sord/) | PR |  |
+| [sratom](sratom/) | PR |  |
+| [suil](suil/) | PR |  |
+| [swaybg](swaybg/) | draft PR | keyring refresh proposed |
+| [swayidle](swayidle/) | draft PR | keyring refresh proposed |
+| [swaylock](swaylock/) | draft PR | keyring refresh proposed |
+| [sysconftool](sysconftool/) | PR |  |
+| [tomcli](tomcli/) | PR |  |
+| [trojan](trojan/) | PR |  |
+| [wlr-randr](wlr-randr/) | draft PR | keyring refresh proposed |
+| [xclipboard](xclipboard/) | PR |  |
+| [xdg-desktop-portal-wlr](xdg-desktop-portal-wlr/) | draft PR | keyring refresh proposed |
+| [xdriinfo](xdriinfo/) | PR |  |
+| [xev](xev/) | PR |  |
+| [xgamma](xgamma/) | PR |  |
+| [xkill](xkill/) | PR |  |
+| [xload](xload/) | PR |  |
+| [xlogo](xlogo/) | bug | weak-key |
+| [xlsclients](xlsclients/) | PR |  |
+| [xmag](xmag/) | bug | weak-key |
+| [xmodmap](xmodmap/) | PR |  |
+| [xorg-x11-drv-amdgpu](xorg-x11-drv-amdgpu/) | bug | expired |
+| [xstdcmap](xstdcmap/) | PR |  |
+| [xvinfo](xvinfo/) | PR |  |
+| [xwd](xwd/) | PR |  |
+| [xwininfo](xwininfo/) | PR |  |
+| [xwud](xwud/) | PR |  |
+| [yambar](yambar/) | PR |  |
+| [yascreen](yascreen/) | draft PR | keyring refresh proposed |
+| [zix](zix/) | PR |  |

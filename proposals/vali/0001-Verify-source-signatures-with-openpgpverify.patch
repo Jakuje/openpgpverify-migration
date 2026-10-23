@@ -1,6 +1,6 @@
-From 8f0ecb84f747b411d44a52e8fc2477f986a3fedf Mon Sep 17 00:00:00 2001
+From 53055c95f291825aa52c2b8a8fcc235d7cd034c9 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 22 Oct 2026 13:10:12 +0200
+Date: Fri, 23 Oct 2026 10:26:35 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,7 +13,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/vali.spec b/vali.spec
-index c8f5646..273e7c9 100644
+index f18ffab..e4ed2fe 100644
 --- a/vali.spec
 +++ b/vali.spec
 @@ -13,7 +13,7 @@ Source1:        %{url}/-/releases/v%{version}/downloads/%{name}-%{version}.tar.g
@@ -23,7 +23,7 @@ index c8f5646..273e7c9 100644
 -BuildRequires:  gpgverify
 +BuildRequires:  openpgpverify
  BuildRequires:  meson >= 1
- BuildRequires:  pkgconfig(aml)
+ BuildRequires:  (pkgconfig(aml1) or pkgconfig(aml))
  BuildRequires:  pkgconfig(json-c)
 @@ -31,7 +31,7 @@ developing applications that use %{name}.
  
@@ -35,5 +35,5 @@ index c8f5646..273e7c9 100644
  
  
 -- 
-2.55.0
+2.56.0
 

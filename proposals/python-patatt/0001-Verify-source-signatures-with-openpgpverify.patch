@@ -1,0 +1,38 @@
+From 7a1979af218b7b75fae7dfc43e35ec4243ea39d5 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:44 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ python-patatt.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/python-patatt.spec b/python-patatt.spec
+index 9ff773a..c3edb0f 100644
+--- a/python-patatt.spec
++++ b/python-patatt.spec
+@@ -15,6 +15,7 @@ BuildArch:      noarch
+ 
+ BuildRequires:  gnupg2
+ BuildRequires:  python%{python3_pkgversion}-devel
++BuildRequires:  openpgpverify
+ 
+ %global _description %{expand:
+ This utility allows an easy way to add end-to-end cryptographic attestation to
+@@ -32,7 +33,7 @@ Provides:       python%{python3_pkgversion}-%{srcname} = %{version}-%{release}
+ 
+ 
+ %prep
+-xz -dc '%{SOURCE0}' | %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data=-
++xz -dc '%{SOURCE0}' | %{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data=-
+ %autosetup -p1 -n %{srcname}-%{version}
+ 
+ 
+-- 
+2.56.0
+

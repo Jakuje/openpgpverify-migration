@@ -1,0 +1,38 @@
+From f6ffada20043bebdfd61a1662c32178c21f2e5ca Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:45 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ sysconftool.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/sysconftool.spec b/sysconftool.spec
+index 9482425..7696b3d 100644
+--- a/sysconftool.spec
++++ b/sysconftool.spec
+@@ -15,6 +15,7 @@ BuildRequires:	automake
+ BuildRequires:	gnupg2
+ BuildRequires:  make
+ BuildRequires:	perl-generators
++BuildRequires:	openpgpverify
+ 
+ %description
+ sysconftool is a development utility that helps to install application
+@@ -28,7 +29,7 @@ istniejących aplikacji na nowsze wersje bez straty starszych wersji
+ plików konfiguracyjnych.
+ 
+ %prep
+-%{gpgverify} --keyring='%{S:2}' --signature='%{S:1}' --data='%{S:0}'
++%{openpgpverify} --keyring='%{S:2}' --signature='%{S:1}' --data='%{S:0}'
+ %setup -q
+ 
+ %build
+-- 
+2.56.0
+

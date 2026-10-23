@@ -1,0 +1,59 @@
+From dbf54e2376cb2ea881d4ea1d73474aba44bd40a4 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:44 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ serd.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/serd.spec b/serd.spec
+index 7995ef1..14eb0e3 100644
+--- a/serd.spec
++++ b/serd.spec
+@@ -2,7 +2,7 @@
+ 
+ Name:           serd
+ Version:        0.32.10
+-Release:        2%{?dist}
++Release:        3%{?dist}
+ Summary:        A lightweight C library for RDF syntax
+ 
+ License:        ISC
+@@ -20,6 +20,7 @@ BuildRequires:  gnupg2
+ BuildRequires:  python3-sphinx
+ BuildRequires:  python3-sphinx_lv2_theme
+ BuildRequires:  python-sphinxygen
++BuildRequires:  openpgpverify
+ 
+ %description
+ %{name} is a lightweight C library for RDF syntax which supports reading and 
+@@ -40,7 +41,7 @@ writing Turtle, TRiG, NTriples, and NQuads.
+ This package contains the headers and development libraries for %{name}.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+@@ -70,6 +71,9 @@ mv %{buildroot}%{_docdir}/%{name}-%{maj} %{buildroot}%{_docdir}/%{name}
+ %{_includedir}/%{name}-%{maj}/
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 0.32.10-3
++- Verify upstream source signatures with openpgpverify
++
+ * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.32.10-2
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

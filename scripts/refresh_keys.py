@@ -30,6 +30,7 @@ import hashlib
 import os
 import re
 import shutil
+import signal
 import subprocess
 import sys
 
@@ -42,12 +43,23 @@ FLOOD_LIMIT = 256 * 1024     # bytes; larger certificates need a closer look
 
 
 def sh(cmd, timeout=180):
-    return subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+    """Run a command; on timeout kill its whole process group (fedpkg starts
+    downloaders that would otherwise keep the pipes open and block forever)."""
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+                         start_new_session=True)
+    try:
+        out, err = p.communicate(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        os.killpg(p.pid, signal.SIGKILL)
+        out, err = p.communicate()
+        return subprocess.CompletedProcess(cmd, -9, out, err + '\ntimed out after %ds' % timeout)
+    return subprocess.CompletedProcess(cmd, p.returncode, out, err)
 
 
 def fingerprints(path):
     p = sh(['sq', 'keyring', 'list', path])
-    return re.findall(r'^\s*\d+\.\s+([0-9A-F]{40,64})\b', p.stdout, re.M)
+    # A keyring (e.g. an Apache KEYS file) may list the same key twice.
+    return list(dict.fromkeys(re.findall(r'^\s*\d+\.\s+([0-9A-F]{40,64})\b', p.stdout, re.M)))
 
 
 def summary(path):
@@ -156,6 +168,12 @@ def propose(pkg, rec):
     shutil.rmtree(out, ignore_errors=True)
     os.makedirs(tmp)
     keyrings, sig, data = call_files(bad[0])
+    # Sources may have been pruned after Phase 1 (phase1.py --prune-sources).
+    for f in (sig, data):
+        h = phase1.host_path(f or '', g)
+        if h and not os.path.exists(h):
+            sh(['fedpkg', '--path', g, '--name', pkg, 'sources'], timeout=900)
+            break
     files = []
     review = ['# Keyring refresh for %s' % pkg, '',
               'Failing call: `%s`' % bad[0]['args'], '',
@@ -234,7 +252,10 @@ def main():
             p for p, r in st.items() if r.get('status') == 'regression' and
             (r.get('results') or [{}])[0].get('failure_reason') in REFRESHABLE)
         for pkg in pkgs:
-            kr = propose(pkg, st[pkg])
+            try:
+                kr = propose(pkg, st[pkg])
+            except Exception as e:  # one broken package must not stop the run
+                kr = dict(status='error', note='refresh_keys: %r' % e, proposed=state.now())
             with phase1.LOCK:
                 cur = state.load()
                 cur[pkg]['keyring_refresh'] = kr

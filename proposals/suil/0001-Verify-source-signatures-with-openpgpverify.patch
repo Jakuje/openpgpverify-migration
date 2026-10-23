@@ -1,0 +1,39 @@
+From 863d6cdf1cb9386b7fe31095f46d3ccc355b8187 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:44 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ suil.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/suil.spec b/suil.spec
+index 06b5a5e..1bd16e0 100644
+--- a/suil.spec
++++ b/suil.spec
+@@ -14,7 +14,7 @@ Source2:    https://drobilla.net/drobilla.gpg
+ 
+ BuildRequires:  doxygen
+ BuildRequires:  graphviz
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  lv2-devel >= 1.18.3
+ BuildRequires:  meson >= 0.56
+ # We need to track changes to these toolkits manually due to the
+@@ -50,7 +50,7 @@ Requires:   %{name}%{_isa} = %{version}-%{release}
+ This package contains the headers and development libraries for %{name}.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+-- 
+2.56.0
+

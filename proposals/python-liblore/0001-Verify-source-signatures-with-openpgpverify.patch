@@ -1,0 +1,38 @@
+From 8c952ba42d88ec047554a52d984c3ffe27e1e53b Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:43 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ python-liblore.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/python-liblore.spec b/python-liblore.spec
+index 701a02e..5d3dd99 100644
+--- a/python-liblore.spec
++++ b/python-liblore.spec
+@@ -25,6 +25,7 @@ BuildRequires:  python3dist(pytest)
+ BuildRequires:  python3dist(pytest-asyncio)
+ BuildRequires:  python3dist(responses)
+ BuildRequires:  python3dist(typing-extensions)
++BuildRequires:  openpgpverify
+ 
+ %global _description %{expand:
+ A Python library for working with public-inbox servers, particularly
+@@ -42,7 +43,7 @@ Provides:       python%{python3_pkgversion}-%{srcname} = %{version}-%{release}
+ 
+ 
+ %prep
+-xz -dc '%{SOURCE0}' | %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data=-
++xz -dc '%{SOURCE0}' | %{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data=-
+ %autosetup -p1 -n %{srcname}-%{version}
+ 
+ 
+-- 
+2.56.0
+

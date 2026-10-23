@@ -1,0 +1,39 @@
+From 7d9d0bb06680f6cbbd9c2748644c8f9178140086 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:45 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ xwd.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/xwd.spec b/xwd.spec
+index ffa4ed0..19507e4 100644
+--- a/xwd.spec
++++ b/xwd.spec
+@@ -14,7 +14,7 @@ Source1:    https://www.x.org/pub/individual/app/%{name}-%{version}.tar.xz.sig
+ Source2:    gpgkey-3AB285232C46AE43D8E192F4DAB0F78EA6E7E2D2.gpg
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ BuildRequires:  meson
+ BuildRequires:  pkgconfig(x11)
+ BuildRequires:  pkgconfig(xkbfile)
+@@ -27,7 +27,7 @@ be read by various other X utilities for redisplay, printing, editing,
+ formatting, archiving, image processing, etc.
+ 
+ %prep
+-%gpgverify -k 2 -s 1 -d 0
++%openpgpverify -k 2 -s 1 -d 0
+ %autosetup
+ 
+ %build
+-- 
+2.56.0
+

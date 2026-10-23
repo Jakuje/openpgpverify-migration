@@ -1,6 +1,6 @@
-From 39cac0e67d43f0bac1b8d8710813131d21faaf63 Mon Sep 17 00:00:00 2001
+From ad8d5119da7e5b5f4f25b061e8f8e54bb67ef033 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 22 Oct 2026 13:10:16 +0200
+Date: Fri, 23 Oct 2026 10:26:38 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,13 +15,13 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/nano.spec b/nano.spec
-index 416ca3d..ef09c49 100644
+index 904ce49..f51c7f5 100644
 --- a/nano.spec
 +++ b/nano.spec
 @@ -8,7 +8,7 @@
  Summary:         A small text editor
  Name:            nano
- Version:         9.2
+ Version:         9.3
 -Release:         1%{?dist}
 +Release:         2%{?dist}
  License:         GPL-3.0-or-later
@@ -49,12 +49,12 @@ index 416ca3d..ef09c49 100644
  
  
  %changelog
-+* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 9.2-2
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 9.3-2
 +- Verify upstream source signatures with openpgpverify
 +
- * Fri Jul 31 2026 Lukáš Zaoral <lzaoral@redhat.com> - 9.2-1
- - rebase to the latest upstream release (rhbz#2509695)
+ * Thu Oct 22 2026 Lukáš Zaoral <lzaoral@redhat.com> - 9.3-1
+ - rebase to the latest upstream release (rhbz#2558494)
  
 -- 
-2.55.0
+2.56.0
 

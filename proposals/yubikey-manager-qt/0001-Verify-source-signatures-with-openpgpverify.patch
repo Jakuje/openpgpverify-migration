@@ -1,6 +1,6 @@
-From b0b30bf0f004390617d0fbf2710ea6cde9699f57 Mon Sep 17 00:00:00 2001
+From dfed6204be3cb624941a3d501de76db38c705bfb Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 22 Oct 2026 13:10:12 +0200
+Date: Fri, 23 Oct 2026 10:26:34 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -37,5 +37,5 @@ index 216547a..d013246 100644
  %patch 1 -p1
  sed -i 's|python |python3 |g' ykman-cli/ykman-cli.pro
 -- 
-2.55.0
+2.56.0
 

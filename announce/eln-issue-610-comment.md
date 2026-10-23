@@ -1,4 +1,4 @@
-Status of the ELN packages that verify sources with `%gpgverify` or gpg, from the test runs in https://github.com/Jakuje/openpgpverify-migration (2026-10-22). 164 packages are in scope; each was tested by running `%prep` with the current and the converted spec in mock (rawhide, plus ELN where the spec has `%{?rhel}` conditionals).
+Status of the ELN packages that verify sources with `%gpgverify` or gpg, from the test runs in https://github.com/Jakuje/openpgpverify-migration (2026-10-23). 164 packages are in scope; each was tested by running `%prep` with the current and the converted spec in mock (rawhide, plus ELN where the spec has `%{?rhel}` conditionals).
 
 **Ready for a PR** (61): converted spec passes; patch and PR text under `proposals/`:
 

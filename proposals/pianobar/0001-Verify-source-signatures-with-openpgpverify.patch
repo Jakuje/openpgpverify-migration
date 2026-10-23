@@ -1,0 +1,60 @@
+From 5cf874ff0c0cf457840891563a61bf07d6b7a084 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:42 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ pianobar.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/pianobar.spec b/pianobar.spec
+index e6d5b5e..3363563 100644
+--- a/pianobar.spec
++++ b/pianobar.spec
+@@ -5,7 +5,7 @@ online radio Pandora.}
+ 
+ Name:           pianobar
+ Version:        2024.12.21
+-Release:        6%{?dist}
++Release:        7%{?dist}
+ Summary:        Console-based client for Pandora
+ 
+ License:        MIT
+@@ -17,7 +17,7 @@ Source:         %{baseurl}/08D8092A.gpg
+ 
+ BuildRequires:  coreutils
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  make
+ BuildRequires:  sed
+ 
+@@ -65,7 +65,7 @@ This package contains shared libraries for %{name}.
+ 
+ # Verify source tarball
+ (cd "%{_sourcedir}" && sha256sum --check "%{SOURCE1}")
+-%{gpgverify} --keyring="%{SOURCE3}" --signature="%{SOURCE2}" --data="%{SOURCE0}"
++%{openpgpverify} --keyring="%{SOURCE3}" --signature="%{SOURCE2}" --data="%{SOURCE0}"
+ 
+ # Preserve timestamps on install
+ sed -i 's/install /install -p /g' Makefile
+@@ -96,6 +96,9 @@ rm %{buildroot}%{_libdir}/libpiano.a
+ %{_libdir}/libpiano.so.0{,.*}
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 2024.12.21-7
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Sep 03 2026 Dominik Mierzejewski <dominik@greysector.net> - 2024.12.21-6
+ - Rebuilt for FFmpeg 9
+ 
+-- 
+2.56.0
+

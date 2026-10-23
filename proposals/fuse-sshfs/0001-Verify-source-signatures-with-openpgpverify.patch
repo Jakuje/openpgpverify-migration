@@ -1,0 +1,58 @@
+From 1ca3d5890a0f181cb03e370513ba8abd8034c687 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:41 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ fuse-sshfs.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/fuse-sshfs.spec b/fuse-sshfs.spec
+index 17011fd..b05f832 100644
+--- a/fuse-sshfs.spec
++++ b/fuse-sshfs.spec
+@@ -1,6 +1,6 @@
+ Name:           fuse-sshfs
+ Version:        3.7.6
+-Release:        2%{?dist}
++Release:        3%{?dist}
+ Summary:        FUSE-Filesystem to access remote filesystems via SSH
+ License:        GPL-2.0-only
+ URL:            https://github.com/libfuse/sshfs
+@@ -37,6 +37,7 @@ BuildRequires:  python3-docutils
+ # for tests
+ BuildRequires:  fuse3
+ BuildRequires:  python3-pytest
++BuildRequires:  openpgpverify
+ 
+ 
+ %description
+@@ -47,7 +48,7 @@ mounting the filesystem is as easy as logging into the server with ssh.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1 -n sshfs-%{version}
+ # fix tests
+ sed -i "s/'fusermount'/'fusermount3'/g" test/util.py
+@@ -78,6 +79,9 @@ cd %{_vpath_builddir}
+ 
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 3.7.6-3
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 3.7.6-2
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

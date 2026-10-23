@@ -1,0 +1,42 @@
+From b862728e801f39732ead6ee9be9b872256b5b9d8 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:43 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ python-hacking.spec | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/python-hacking.spec b/python-hacking.spec
+index a9b92f8..5e5b902 100644
+--- a/python-hacking.spec
++++ b/python-hacking.spec
+@@ -50,10 +50,8 @@ Patch1:         test-requirements.txt.patch
+ BuildArch:      noarch
+ 
+ # Required for tarball sources verification
+-%if 0%{?sources_gpg} == 1
+-BuildRequires:  /usr/bin/gpgv2
+-%endif
+ 
++BuildRequires:  openpgpverify
+ %description
+ %{common_desc}
+ %if 0%{?fedora}
+@@ -81,7 +79,7 @@ https://bugs.launchpad.net/hacking/+bug/1652409 for details.
+ %prep
+ # Required for tarball sources verification
+ %if 0%{?sources_gpg} == 1
+-%{gpgverify}  --keyring=%{SOURCE102} --signature=%{SOURCE101} --data=%{SOURCE0}
++%{openpgpverify}  --keyring=%{SOURCE102} --signature=%{SOURCE101} --data=%{SOURCE0}
+ %endif
+ %autosetup -n %{pypi_name}-%{upstream_version} -S git
+ # Remove bundled egg-info
+-- 
+2.56.0
+

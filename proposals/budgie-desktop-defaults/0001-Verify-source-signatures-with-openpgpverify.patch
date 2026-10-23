@@ -1,0 +1,59 @@
+From 6aebaa54829b2b64f348b6e75b7bc72a528ec255 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:40 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ budgie-desktop-defaults.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/budgie-desktop-defaults.spec b/budgie-desktop-defaults.spec
+index 9605933..ec0fb54 100644
+--- a/budgie-desktop-defaults.spec
++++ b/budgie-desktop-defaults.spec
+@@ -1,6 +1,6 @@
+ Name:           budgie-desktop-defaults
+ Version:        0.5.4
+-Release:        4%{?dist}
++Release:        5%{?dist}
+ Summary:        Budgie Desktop Defaults for Fedora
+ 
+ License:        CC-BY-SA-4.0
+@@ -11,7 +11,7 @@ Source2:        https://forge.moderndesktop.dev/BuddiesOfBudgie/keyrings/raw/bra
+ 
+ BuildArch:      noarch
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  meson
+ Requires:       budgie-desktop
+ Requires:       desktop-backgrounds-budgie
+@@ -22,7 +22,7 @@ Requires:       pocillo-gtk-theme
+ Budgie Desktop Defaults for Fedora.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+@@ -39,6 +39,9 @@ Budgie Desktop Defaults for Fedora.
+ %{_datadir}/glib-2.0/schemas/10_budgie_*.gschema.override
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 0.5.4-5
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.5.4-4
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

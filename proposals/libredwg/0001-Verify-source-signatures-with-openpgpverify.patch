@@ -1,0 +1,41 @@
+From f86cc122f10f4de9d049729a91e028e1fbdcfc78 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:42 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Refresh gnu-keyring.gpg from keyservers/WKD: same certificate(s), with self-signatures our copy was missing.
+
+Assisted-by: Claude Opus 5.5
+---
+ libredwg.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/libredwg.spec b/libredwg.spec
+index 60ed35d..db8599a 100644
+--- a/libredwg.spec
++++ b/libredwg.spec
+@@ -51,7 +51,7 @@ BuildRequires:  perl-Module-CoreList-tools
+ BuildRequires:  python3-libxml2
+ %endif
+ # Verify signature
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ 
+ 
+ %description
+@@ -93,7 +93,7 @@ applications that use %{name}.
+ %endif
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ # Remove bundled jsmn and use the one in Fedora
+ rm jsmn/jsmn.h
+-- 
+2.56.0
+

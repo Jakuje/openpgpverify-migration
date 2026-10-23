@@ -1,0 +1,59 @@
+From 6da5ca7cc03dbe27ea04e30c427e1dff6151944a Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:40 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ bpfmon.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/bpfmon.spec b/bpfmon.spec
+index e86c583..c3895d0 100644
+--- a/bpfmon.spec
++++ b/bpfmon.spec
+@@ -1,6 +1,6 @@
+ Name:           bpfmon
+ Version:        2.60
+-Release:        1%{?dist}
++Release:        2%{?dist}
+ Summary:        Traffic monitor for BPF expression/iptables rule/custom script
+ 
+ License:        GPL-2.0-or-later
+@@ -10,7 +10,7 @@ Source1:        %{url}releases/download/v%{version}/bpfmon-%{version}.tar.xz.asc
+ Source2:        https://raw.githubusercontent.com/bbonev/bpfmon/v%{version}/debian/upstream/signing-key.asc
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  make
+ BuildRequires:  pkgconfig(libpcap)
+ BuildRequires:  pkgconfig(yascreen)
+@@ -31,7 +31,7 @@ counters from a custom script.
+ %global _hardened_build 1
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+@@ -48,6 +48,9 @@ install -TD -m 0644 bpfmon.8 $RPM_BUILD_ROOT/%{_mandir}/man8/bpfmon.8
+ %{_mandir}/man8/bpfmon.8*
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 2.60-2
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 29 2026 Boian Bonev <bbonev@ipacct.com> - 2.60-1
+ - New version 2.60
+ 
+-- 
+2.56.0
+

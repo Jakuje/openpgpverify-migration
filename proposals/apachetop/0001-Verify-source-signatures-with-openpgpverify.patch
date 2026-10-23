@@ -1,0 +1,58 @@
+From 6d881b9978231d86248199fb5724c19fad067574 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:39 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ apachetop.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/apachetop.spec b/apachetop.spec
+index 42a0a45..ee718bb 100644
+--- a/apachetop.spec
++++ b/apachetop.spec
+@@ -1,13 +1,13 @@
+ Summary:        Top-like display of Apache logs
+ Name:           apachetop
+ Version:        0.23.2
+-Release:        10%{?dist}
++Release:        11%{?dist}
+ License:        BSD-3-Clause
+ URL:            https://github.com/tessus/apachetop
+ Source0:        https://github.com/tessus/apachetop/releases/download/%{version}/apachetop-%{version}.tar.gz
+ Source1:        https://github.com/tessus/apachetop/releases/download/%{version}/apachetop-%{version}.tar.gz.asc
+ Source2:        https://keys.openpgp.org/vks/v1/by-fingerprint/8A5570C1BD85D34EADBC386C172380A011EF4944
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  gcc-c++
+ BuildRequires:  ncurses-devel
+ BuildRequires:  m4
+@@ -21,7 +21,7 @@ combined logformat, although it doesn't (yet) make use of any of the extra
+ fields in combined) and generates human-parsable output in realtime.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %setup -q
+ 
+ %build
+@@ -38,6 +38,9 @@ fields in combined) and generates human-parsable output in realtime.
+ %{_mandir}/man1/%{name}.1*
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 0.23.2-11
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.23.2-10
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

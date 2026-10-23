@@ -1,6 +1,6 @@
-From a7d03a53b8c5e34356a0db44983ad17f9a0fbfcc Mon Sep 17 00:00:00 2001
+From 84ded10a5ae2c67a03132aa238fe8a2721fe843a Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 22 Oct 2026 13:10:14 +0200
+Date: Fri, 23 Oct 2026 10:26:37 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -43,5 +43,5 @@ index 6eaf19c..5687db5 100644
  mkdir -p bundled_nettle
  pushd bundled_nettle
 -- 
-2.55.0
+2.56.0
 

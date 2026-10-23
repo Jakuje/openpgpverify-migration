@@ -1,0 +1,48 @@
+From abd63a0ecb2190ba3ee6b7d3bfd63ddb3ba137fa Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:43 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ python-oslo-config.spec | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/python-oslo-config.spec b/python-oslo-config.spec
+index ee62d1e..567e1d9 100644
+--- a/python-oslo-config.spec
++++ b/python-oslo-config.spec
+@@ -31,9 +31,6 @@ Source102:        https://releases.openstack.org/_static/%{sources_gpg_sign}.txt
+ BuildArch:  noarch
+ 
+ # Required for tarball sources verification
+-%if 0%{?sources_gpg} == 1
+-BuildRequires:  gpgverify
+-%endif
+ 
+ %global _description %{expand:
+ The Oslo project intends to produce a python library containing
+@@ -44,6 +41,7 @@ useful.
+ The oslo-config library is a command line and configuration file
+ parsing library from the Oslo project.}
+ 
++BuildRequires:  openpgpverify
+ %description
+ %_description
+ 
+@@ -70,7 +68,7 @@ Documentation for the oslo-config library.
+ %prep
+ # Required for tarball sources verification
+ %if 0%{?sources_gpg} == 1
+-%{gpgverify}  --keyring=%{SOURCE102} --signature=%{SOURCE101} --data=%{SOURCE0}
++%{openpgpverify}  --keyring=%{SOURCE102} --signature=%{SOURCE101} --data=%{SOURCE0}
+ %endif
+ %autosetup -n oslo_config-%{version} -S git
+ # Remove shebang from non executable file, it's used by the oslo-config-validator binary.
+-- 
+2.56.0
+

@@ -1,0 +1,38 @@
+From 934092774b84a1faea895ba42b6b2f4a0db2c39a Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:42 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ postfix-mta-sts-resolver.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/postfix-mta-sts-resolver.spec b/postfix-mta-sts-resolver.spec
+index c3b6801..e2cb87a 100644
+--- a/postfix-mta-sts-resolver.spec
++++ b/postfix-mta-sts-resolver.spec
+@@ -24,6 +24,7 @@ BuildRequires:  systemd-rpm-macros
+ BuildRequires:  pyproject-rpm-macros
+ BuildRequires:  sed
+ BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ 
+ # uvloop subpkg removed due to rhbz#2326210
+ Obsoletes:      postfix-mta-sts-resolver+uvloop < 1.5.1-2
+@@ -36,7 +37,7 @@ client policy to Postfix via socketmap.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE4}' --signature='%{SOURCE3}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE4}' --signature='%{SOURCE3}' --data='%{SOURCE0}'
+ %autosetup -n %{name}-%{version} -p1
+ 
+ # Create a sysusers.d config file
+-- 
+2.56.0
+

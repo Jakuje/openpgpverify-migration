@@ -1,0 +1,43 @@
+From a60ae3db2282b2dee65904ec8040be9a69bd5693 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:42 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ python-aodhclient.spec | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/python-aodhclient.spec b/python-aodhclient.spec
+index 6a76c27..65fd4de 100644
+--- a/python-aodhclient.spec
++++ b/python-aodhclient.spec
+@@ -27,11 +27,9 @@ BuildArch:        noarch
+ 
+ BuildRequires:    python3-devel
+ BuildRequires:    git-core
++BuildRequires:    openpgpverify
+ 
+ # Required for tarball sources verification
+-%if 0%{?sources_gpg} == 1
+-BuildRequires:  /usr/bin/gpgv2
+-%endif
+ 
+ 
+ %description
+@@ -71,7 +69,7 @@ Requires:         python3-%{pypi_name} = %{version}-%{release}
+ %prep
+ # Required for tarball sources verification
+ %if 0%{?sources_gpg} == 1
+-%{gpgverify}  --keyring=%{SOURCE102} --signature=%{SOURCE101} --data=%{SOURCE0}
++%{openpgpverify}  --keyring=%{SOURCE102} --signature=%{SOURCE101} --data=%{SOURCE0}
+ %endif
+ %autosetup -n %{pypi_name}-%{version} -S git
+ 
+-- 
+2.56.0
+

@@ -1,0 +1,58 @@
+From b675d08650e892a74d25f98d040114d666232370 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:42 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ jalv.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/jalv.spec b/jalv.spec
+index 1e89823..4a62753 100644
+--- a/jalv.spec
++++ b/jalv.spec
+@@ -1,6 +1,6 @@
+ Name:       jalv
+ Version:    1.8.0
+-Release:    2%{?dist}
++Release:    3%{?dist}
+ Summary:    A simple but fully featured LV2 host for Jack
+ 
+ License:    MIT
+@@ -31,6 +31,7 @@ BuildRequires:  gcc-c++
+ BuildRequires:  desktop-file-utils
+ BuildRequires:  mandoc
+ BuildRequires:  libappstream-glib
++BuildRequires:  openpgpverify
+ Requires:       lv2 >= 1.18.0
+ 
+ # gtkmm is no longer supported
+@@ -57,7 +58,7 @@ Requires:   %{name}%{_isa} = %{version}-%{release}
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+@@ -91,6 +92,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
+ %{_mandir}/man1/%{name}.gtk3.1.*
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 1.8.0-3
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.8.0-2
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

@@ -1,6 +1,6 @@
-From 8617b3bcf8a9a2eab38248e779282a70e214b249 Mon Sep 17 00:00:00 2001
+From 43337de9aa7f76b694e1527a00f3f97c22c6b481 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 22 Oct 2026 13:10:17 +0200
+Date: Fri, 23 Oct 2026 10:26:39 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -55,5 +55,5 @@ index 56a1d48..2d33749 100644
  - Rebuilt for Python 3.15.0b4 ABI change
  
 -- 
-2.55.0
+2.56.0
 

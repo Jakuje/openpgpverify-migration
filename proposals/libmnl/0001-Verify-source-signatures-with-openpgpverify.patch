@@ -1,6 +1,6 @@
-From 94b2e955159d68e9030c73f5f2b8666605ba892f Mon Sep 17 00:00:00 2001
+From cd862d56e9b3ca1b075bae1953ca8e8406b43dac Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 22 Oct 2026 13:10:13 +0200
+Date: Fri, 23 Oct 2026 10:26:35 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -55,5 +55,5 @@ index 2455ee9..5ed42b8 100644
  - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
  
 -- 
-2.55.0
+2.56.0
 

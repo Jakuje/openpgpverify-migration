@@ -1,0 +1,59 @@
+From 2d2adf01d270ac51dddc95d866c867d6d8d8453b Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:44 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ rpminspect-data-centos.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/rpminspect-data-centos.spec b/rpminspect-data-centos.spec
+index 93c1afe..36993b9 100644
+--- a/rpminspect-data-centos.spec
++++ b/rpminspect-data-centos.spec
+@@ -1,6 +1,6 @@
+ Name:           rpminspect-data-centos
+ Version:        1.4
+-Release:        9%{?dist}
++Release:        10%{?dist}
+ Epoch:          1
+ Summary:        Build deviation compliance tool data files for CentOS
+ Group:          Development/Tools
+@@ -14,7 +14,7 @@ BuildArch:      noarch
+ 
+ BuildRequires:  meson
+ BuildRequires:  ninja-build
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ 
+ Requires:       rpminspect >= 1.11
+ 
+@@ -37,7 +37,7 @@ and data files used by the inspections provided by librpminspect.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ 
+@@ -58,6 +58,9 @@ and data files used by the inspections provided by librpminspect.
+ 
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 1:1.4-10
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.4-9
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

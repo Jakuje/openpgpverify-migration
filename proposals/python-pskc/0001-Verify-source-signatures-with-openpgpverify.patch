@@ -1,0 +1,39 @@
+From aa1339d00bae1354b9c8c50daa8e83bb1315633c Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:44 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ python-pskc.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/python-pskc.spec b/python-pskc.spec
+index 05bba3a..7d4ac2a 100644
+--- a/python-pskc.spec
++++ b/python-pskc.spec
+@@ -22,7 +22,7 @@ Source0:        %{cgiturl}%{name}/%{cgitname}-%{version}.tar.gz
+ Source1:        %{cgiturl}%{name}/%{cgitname}-%{version}.tar.gz.asc
+ Source2:        %{cgiturl}arthur.asc
+ 
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ BuildRequires:  %{py3_dist pytest pytest-timeout}
+ 
+ BuildSystem:    pyproject
+@@ -38,7 +38,7 @@ Summary:        Python library for handling PSKC files
+ %{pkg_description}
+ 
+ %prep
+-%{gpgverify} --data=%{SOURCE0} --signature=%{SOURCE1} --keyring=%{SOURCE2}
++%{openpgpverify} --data=%{SOURCE0} --signature=%{SOURCE1} --keyring=%{SOURCE2}
+ %autosetup -n %{cgitname}-%{version}
+ 
+ # Fedora does not run coverage tools during %check
+-- 
+2.56.0
+

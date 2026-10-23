@@ -1,0 +1,42 @@
+From 7ec3182ab2c8b2a56f372dae5db3329d04b2a041 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:43 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ python-osc-lib.spec | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/python-osc-lib.spec b/python-osc-lib.spec
+index 5d8d7a6..f3a347d 100644
+--- a/python-osc-lib.spec
++++ b/python-osc-lib.spec
+@@ -25,10 +25,8 @@ BuildArch:  noarch
+ 
+ BuildRequires:  python3-devel
+ BuildRequires:  git-core
++BuildRequires:  openpgpverify
+ 
+-%if 0%{?sources_gpg} == 1
+-BuildRequires:  /usr/bin/gpgv2
+-%endif
+ 
+ 
+ %description
+@@ -67,7 +65,7 @@ This package contains the documentation.
+ %prep
+ # Required for tarball sources verification
+ %if 0%{?sources_gpg} == 1
+-%{gpgverify}  --keyring=%{SOURCE102} --signature=%{SOURCE101} --data=%{SOURCE0}
++%{openpgpverify}  --keyring=%{SOURCE102} --signature=%{SOURCE101} --data=%{SOURCE0}
+ %endif
+ %autosetup -n %{module}-%{version} -S git
+ 
+-- 
+2.56.0
+

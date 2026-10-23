@@ -1,0 +1,59 @@
+From 87a2fe6eac6c062a12a7910bb6be8337053528c0 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:46 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ yambar.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/yambar.spec b/yambar.spec
+index e4451ce..58184aa 100644
+--- a/yambar.spec
++++ b/yambar.spec
+@@ -9,7 +9,7 @@ end}
+ 
+ Name:           yambar
+ Version:        1.11.0
+-Release:        6%{?dist}
++Release:        7%{?dist}
+ Summary:        Modular status panel for X11 and Wayland
+ 
+ # The main source is MIT
+@@ -67,6 +67,7 @@ BuildRequires:  pkgconfig(libmpdclient)
+ BuildRequires:  pkgconfig(libpipewire-0.3)
+ BuildRequires:  pkgconfig(libpulse)
+ BuildRequires:  pkgconfig(libudev)
++BuildRequires:  openpgpverify
+ 
+ %description
+ yambar is a lightweight and configurable status panel (bar, for short)
+@@ -84,7 +85,7 @@ applications and plugins for %{name}.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ chmod -x examples/scripts/*
+ 
+@@ -125,6 +126,9 @@ desktop-file-validate \
+ %{_includedir}/%{name}
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 1.11.0-7
++- Verify upstream source signatures with openpgpverify
++
+ * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.11.0-6
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

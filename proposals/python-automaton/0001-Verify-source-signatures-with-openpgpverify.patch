@@ -1,0 +1,43 @@
+From a95bdb6c442844abb324bb0a927991681d13b203 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:43 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ python-automaton.spec | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/python-automaton.spec b/python-automaton.spec
+index 23557d8..6c697ff 100644
+--- a/python-automaton.spec
++++ b/python-automaton.spec
+@@ -20,11 +20,9 @@ Source102:        https://releases.openstack.org/_static/%{sources_gpg_sign}.txt
+ 
+ BuildRequires:  python3-devel
+ BuildRequires:  git-core
++BuildRequires:  openpgpverify
+ 
+ # Required for tarball sources verification
+-%if 0%{?sources_gpg} == 1
+-BuildRequires:  /usr/bin/gpgv2
+-%endif
+ 
+ BuildArch:      noarch
+ 
+@@ -54,7 +52,7 @@ Friendly state machines for python (documentation)
+ %prep
+ # Required for tarball sources verification
+ %if 0%{?sources_gpg} == 1
+-%{gpgverify}  --keyring=%{SOURCE102} --signature=%{SOURCE101} --data=%{SOURCE0}
++%{openpgpverify}  --keyring=%{SOURCE102} --signature=%{SOURCE101} --data=%{SOURCE0}
+ %endif
+ %autosetup -n %{pypi_name}-%{version} -S git
+ 
+-- 
+2.56.0
+

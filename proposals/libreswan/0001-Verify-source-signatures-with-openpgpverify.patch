@@ -1,6 +1,6 @@
-From f36ed291a43094bf1449c835183b6c2915b8892d Mon Sep 17 00:00:00 2001
+From cc54c1c29a552c7fbf404882e9e0c81a9c3b7077 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 22 Oct 2026 13:10:15 +0200
+Date: Fri, 23 Oct 2026 10:26:37 +0200
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -34,5 +34,5 @@ index 4c62740..a142969 100644
  # enable crypto-policies support
  sed -i "s:#[ ]*include \(.*\)\(/crypto-policies/back-ends/libreswan.config\)$:include \1\2:" configs/ipsec.conf.in
 -- 
-2.55.0
+2.56.0
 

@@ -1,0 +1,37 @@
+From 21a90847b45c70706e7efdf0998ece8744ca157a Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 23 Oct 2026 10:26:41 +0200
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ gencolormap.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/gencolormap.spec b/gencolormap.spec
+index fc56469..8230945 100644
+--- a/gencolormap.spec
++++ b/gencolormap.spec
+@@ -19,13 +19,14 @@ BuildRequires:  libappstream-glib
+ 
+ BuildRequires:  libGL-devel
+ BuildRequires:  qt6-qtbase-devel
++BuildRequires:  openpgpverify
+ 
+ %description
+ gencolormap provides tools generate color maps for visualization. A variety of
+ methods for sequential, diverging, and qualitative maps is available.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+-- 
+2.56.0
+
