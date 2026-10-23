@@ -79,7 +79,10 @@ def drop_empty_branches(lines):
     return [l for l in out if l != DROPPED]
 
 
-def convert(text, rec):
+def convert(text, rec, drop_gnupg2=False):
+    """drop_gnupg2: also drop "BR: gnupg2" when the spec has a %check
+    (gnupg2_action "review"); the caller has to prove that the build and its
+    tests work without gnupg2 (phase1.py gnupg2 check)."""
     if rec['raw_verify']:
         raise Unconvertible('raw gpg/gpgv verification needs a manual rewrite')
     if not rec['calls']:
@@ -124,7 +127,8 @@ def convert(text, rec):
             name = d.split()[0]
             if DROP.match(name):
                 dropped.append(d)
-            elif GNUPG2.match(name) and rec['gnupg2_action'] == 'remove':
+            elif GNUPG2.match(name) and (rec['gnupg2_action'] == 'remove' or
+                                         drop_gnupg2 and rec['gnupg2_action'] == 'review'):
                 dropped.append(d)
             else:
                 keep.append(d)
@@ -157,7 +161,7 @@ def convert(text, rec):
         raise Unconvertible('no macro call rewritten')
     if re.search(r'(?<!%)%\{?\??gpgverify', body.replace('openpgpverify', '')):
         raise Unconvertible('gpgverify still referenced after rewrite')
-    if rec['gnupg2_action'] in ('review', 'keep'):
+    if rec['gnupg2_action'] == 'keep' or rec['gnupg2_action'] == 'review' and not drop_gnupg2:
         notes.append('BR gnupg2 kept (%s)' % rec['gnupg2_action'])
     return body + changelog, notes
 

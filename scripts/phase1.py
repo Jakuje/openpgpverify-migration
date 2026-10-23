@@ -38,7 +38,7 @@ import classify  # noqa: E402
 import convert  # noqa: E402
 import state  # noqa: E402
 
-HARNESS_VERSION = '3'
+HARNESS_VERSION = '4'
 # Specs without %autochangelog get a Release bump and a changelog entry, done by
 # rpmdev-bumpspec inside the chroot (it evaluates the spec), before %prep runs,
 # so the tested spec is exactly the proposed one.
@@ -47,6 +47,7 @@ CHANGELOG_LINE = 'Verify upstream source signatures with openpgpverify'
 WORK = os.path.join(state.ROOT, 'work')
 DISTGIT = 'https://src.fedoraproject.org/rpms/%s.git'
 LOCK = threading.Lock()
+GNUPG2_CHECK = True
 
 # Wrapped inside the chroot. Raw tools only for raw-verify packages, since
 # gpgverify itself runs gpgv and would be counted twice.
@@ -79,6 +80,39 @@ PREP = ('cd /builddir/%(v)s && rpmbuild %(stage)s --nodeps '
         '--define "_sourcedir /builddir/%(v)s" --define "_topdir /builddir/top-%(v)s" '
         '%(spec)s > /builddir/%(v)s.log 2>&1; echo "rpmbuild-rc: $?" >> /builddir/%(v)s.log; '
         'cp /tmp/opv-calls.log /builddir/%(v)s.calls; : > /tmp/opv-calls.log')
+
+# gnupg2 check: when "BR: gnupg2" is dropped, prove the package does not need
+# gpg. gnupg2 is in every buildroot through rpm-sign-libs, so a normal build
+# proves nothing; remove it (and gpgverify) from the chroot, then build the
+# changed spec completely, %check included. Tests often skip silently without
+# gpg, so the build log and the unpacked test files are searched for gpg too.
+GNUPG2_REMOVE = (
+    "rpm -qa --qf '%{NAME}\\n' 'gnupg2*' gpgverify sequoia-chameleon-gnupg "
+    "> /builddir/gpg-removed.txt; xargs -r rpm -e --nodeps < /builddir/gpg-removed.txt; "
+    "for t in gpg gpg2 gpgv gpgv2 gpgconf gpg-agent gpgsm; do command -v $t; done "
+    "> /builddir/gpg-left.txt; true")
+GPG_WORD = r'\b(gpg|gpg2|gpgv|gpgv2|gpgconf|gpgsm|gpg-agent)\b|GNUPGHOME|gnupg'
+GNUPG2_TREE = (
+    "cd /builddir/top-new/BUILD 2>/dev/null && grep -rIlE '%s' . 2>/dev/null "
+    "| grep -E '(^|/)(t|tests?|testing|testsuite|testdata)/|(^|/)test_|_test\\.|\\.t$' "
+    "| head -20 | xargs -r -d '\\n' grep -nHE '%s' | cut -c1-200 | head -40 "
+    "> /builddir/gpg-tree.txt; true" % (GPG_WORD, GPG_WORD))
+# %generate_buildrequires: "mock --installdeps SPEC" only knows the static
+# BuildRequires; resolve the dynamic ones like mock does, before gnupg2 goes.
+# rpmbuild -br exits with 11 while some of them are missing.
+DYN_BR = ('cd /builddir/new && rm -rf /builddir/top-new/SRPMS && rpmbuild -br '
+          '--define "_sourcedir /builddir/new" --define "_topdir /builddir/top-new" '
+          '%(spec)s > /builddir/dynbr.log 2>&1; [ $? = 11 ] && '
+          'cp /builddir/top-new/SRPMS/*.buildreqs.nosrc.rpm /builddir/dynbr.nosrc.rpm; '
+          ': > /tmp/opv-calls.log')
+FULL_BUILD = ('cd /builddir/new && timeout %(timeout)d rpmbuild -bb --nodeps '
+              '--define "_sourcedir /builddir/new" --define "_topdir /builddir/top-new" '
+              '%(spec)s > /builddir/%(log)s 2>&1; echo "rpmbuild-rc: $?" >> /builddir/%(log)s')
+FULL_BUILD_TIMEOUT = 2 * 3600
+# gpg named as a command in the build log (keyring file names like gpgkey-*.gpg
+# and the openpgpverify call itself do not count)
+LOG_GPG = re.compile(r'(?<![\w./-])(gpg2?|gpgv2?|gpgconf|gpgsm|gpg-agent)(?![\w.-])|GNUPGHOME|gnupg',
+                     re.I)
 
 ENV_INFO = ('rpm -q rpm openpgpverify gpgverify sequoia-sqv gnupg2; '
             'echo "crypto-policy: $(cat /etc/crypto-policies/config 2>/dev/null)"; '
@@ -222,8 +256,47 @@ def installdeps_srpm(m, spec, g, out, v):
     return ok
 
 
+def gnupg2_verdict(res, out, has_check):
+    """Decide from the gnupg2 check whether "BR: gnupg2" can go."""
+    def lines(f):
+        f = os.path.join(out, f)
+        return [l.strip() for l in open(f, errors='replace')] if os.path.exists(f) else []
+    left = [l for l in lines('gpg-left.txt') if l]
+    tree = [l for l in lines('gpg-tree.txt') if l]
+    log_hits = [l[:200] for l in lines('new-build.log')
+                if LOG_GPG.search(l) and 'openpgpverify' not in l][:20]
+    chk = dict(has_check=has_check, gpg_left=left, tree_hits=tree, log_hits=log_hits,
+               build_rc=prep_rc(os.path.join(out, 'new-build.log'))
+               if os.path.exists(os.path.join(out, 'new-build.log')) else None,
+               baseline_rc=prep_rc(os.path.join(out, 'base-build.log'))
+               if os.path.exists(os.path.join(out, 'base-build.log')) else None)
+    if left:
+        chk.update(verdict='keep', reason='gpg still installed after removing gnupg2: %s' % left)
+    elif res.get('new_prep_rc') != 0:
+        chk.update(verdict='keep', reason='not checked: the changed spec does not get past '
+                   'the signature check')
+    elif chk['build_rc'] != 0:
+        if chk['baseline_rc'] == 0:
+            reason = 'the build fails without gnupg2 and passes with it'
+        elif log_hits:
+            reason = 'the build fails without gnupg2 and its log shows gpg use (%s)' % log_hits[0]
+        elif chk['build_rc'] == 124:
+            reason = 'not checked: the build did not finish in %d h' % (FULL_BUILD_TIMEOUT // 3600)
+        else:
+            reason = 'not checked: the build fails with gnupg2 too (rc %s)' % chk['baseline_rc']
+        chk.update(verdict='keep', reason=reason)
+    elif log_hits or tree and has_check:   # tests that never run don't matter
+        chk.update(verdict='keep', reason='the build log or test files mention gpg; tests may '
+                   'skip without it')
+    else:
+        chk.update(verdict='drop', reason='full build including %check passed without gnupg2 '
+                   'installed; no gpg use in the build log or test files')
+    return chk
+
+
 def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp', overlay=None,
-                   bump=False, slot='opv-0'):
+                   bump=False, slot='opv-0', gnupg2_check=False, has_check=False,
+                   dynamic_br=False):
     """Run old and new %prep in one fresh chroot. Returns a result dict."""
     log = os.path.join(d, 'mock-%s.log' % cfg)
     open(log, 'w').close()
@@ -253,6 +326,9 @@ def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp', overlay
             res['error'] = 'copyin failed'
             return res
         variants = ([('new', new_spec)] if new_spec else []) + [('old', old_spec)]
+        if gnupg2_check:
+            # gnupg2 is removed before the new run, so the old one goes first
+            variants.reverse()
         for v, spec in variants:
             if m('--installdeps', spec, timeout=7200):
                 if not installdeps_srpm(m, spec, g, out, v) or not populate():
@@ -271,11 +347,41 @@ def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp', overlay
             if v == variants[0][0]:
                 m.chroot('{ %s; } > /builddir/env.txt 2>&1' % ENV_INFO)
                 m('--copyout', '/builddir/env.txt', out)
+            if v == 'new' and gnupg2_check and dynamic_br:
+                for _ in range(5):
+                    if os.path.exists(os.path.join(out, 'dynbr.nosrc.rpm')):
+                        os.remove(os.path.join(out, 'dynbr.nosrc.rpm'))
+                    m.chroot(DYN_BR % dict(spec='%s.spec' % pkg), unpriv=True)
+                    m('--copyout', '/builddir/dynbr.nosrc.rpm', out)
+                    nosrc = os.path.join(out, 'dynbr.nosrc.rpm')
+                    if not os.path.exists(nosrc):
+                        break     # all dynamic BuildRequires are installed
+                    m('--installdeps', nosrc, timeout=7200)
+                    m.chroot('rm -f /builddir/dynbr.nosrc.rpm')
+            if v == 'new' and gnupg2_check:
+                m.chroot(GNUPG2_REMOVE)
+                m('--copyout', '/builddir/gpg-left.txt', out)
+                m('--copyout', '/builddir/gpg-removed.txt', out)
             m.chroot(PREP % dict(v=v, spec='%s.spec' % pkg, stage=stage), unpriv=True)
             for f in ('%s.log' % v, '%s.calls' % v):
                 m('--copyout', '/builddir/' + f, out)
             res['%s_calls' % v] = read_calls(os.path.join(out, '%s.calls' % v))
             res['%s_prep_rc' % v] = prep_rc(os.path.join(out, '%s.log' % v))
+            if v == 'new' and gnupg2_check and res['new_prep_rc'] == 0 and \
+                    not open(os.path.join(out, 'gpg-left.txt')).read().strip():
+                m.chroot(GNUPG2_TREE, unpriv=True)
+                m('--copyout', '/builddir/gpg-tree.txt', out)
+                full = dict(spec='%s.spec' % pkg, timeout=FULL_BUILD_TIMEOUT)
+                m.chroot(FULL_BUILD % dict(full, log='new-build.log'), unpriv=True)
+                m('--copyout', '/builddir/new-build.log', out)
+                if prep_rc(os.path.join(out, 'new-build.log')) not in (0, 124):
+                    # pre-existing FTBFS, or does it need gpg?
+                    m('--install', *(open(os.path.join(out, 'gpg-removed.txt')).read().split()
+                                     or ['gnupg2']))
+                    m.chroot(FULL_BUILD % dict(full, log='base-build.log'), unpriv=True)
+                    m('--copyout', '/builddir/base-build.log', out)
+        if gnupg2_check:
+            res['gnupg2_check'] = gnupg2_verdict(res, out, has_check)
     finally:
         if not KEEP:
             m('--scrub', 'chroot')
@@ -353,9 +459,16 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
                rhel_conditional=rec['rhel_conditional'], gnupg2_action=rec['gnupg2_action'])
     raw = bool(rec['raw_verify'])
     new_spec = None
+    # Drop "BR: gnupg2" whenever the spec has no other gpg use, and prove it
+    # with the gnupg2 check; the variant keeping it is the fallback.
+    gnupg2_check = GNUPG2_CHECK and not raw and rec['gnupg2_action'] in ('remove', 'review')
+    keep_text = None
     if not raw:
         try:
-            new_text, notes = convert.convert(text, rec)
+            new_text, notes = convert.convert(text, rec, drop_gnupg2=gnupg2_check)
+            if gnupg2_check:
+                keep_text, _ = convert.convert(text, rec, drop_gnupg2=False)
+                open(os.path.join(d, pkg + '.opv-unbumped.spec'), 'w').write(new_text)
             new_spec = os.path.join(d, pkg + '.opv.spec')
             open(new_spec, 'w').write(new_text)
             upd['convert_notes'] = notes
@@ -388,7 +501,10 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
     for cfg in cfgs:
         res = test_in_chroot(cfg, pkg, d, g, spec_path, new_spec, raw, stage, overlay,
                              bump=bool(new_spec) and not rec['autochangelog']
-                             and not rec['autorelease'], slot=slot)
+                             and not rec['autorelease'], slot=slot,
+                             gnupg2_check=gnupg2_check and cfg == cfgs[0],
+                             has_check=rec['has_check'],
+                             dynamic_br='%generate_buildrequires' in text)
         bumped = os.path.join(d, 'out-' + cfg, 'bumped.spec')
         if cfg == cfgs[0] and os.path.exists(bumped):
             shutil.copy(bumped, new_spec)
@@ -410,6 +526,25 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
                 os.path.join(d, 'mock-%s.log' % cfg))
         upd['results'].append(res)
         statuses.append(outcome)
+        if 'gnupg2_check' in res:
+            upd['gnupg2_check'] = res['gnupg2_check']
+    if gnupg2_check and new_spec:
+        chk = upd.get('gnupg2_check') or dict(verdict='keep', reason='check did not run')
+        upd['gnupg2_check'] = chk
+        if chk['verdict'] != 'drop':
+            # same spec with "BR: gnupg2" kept: apply the Release bump to it
+            keep_spec = os.path.join(d, pkg + '.opv-keep.spec')
+            open(keep_spec, 'w').write(keep_text)
+            bump = subprocess.run(['diff', '-u', os.path.join(d, pkg + '.opv-unbumped.spec'),
+                                   new_spec], capture_output=True, text=True).stdout
+            if bump and subprocess.run(['patch', '-s', '--no-backup-if-mismatch', keep_spec],
+                                       input=bump, text=True, capture_output=True).returncode:
+                upd.update(status='error', outcome_detail='cannot apply the Release bump '
+                           'to the spec keeping gnupg2')
+                return upd
+            shutil.move(keep_spec, new_spec)
+            subprocess.run(['diff', '-u', spec_path, new_spec], stdout=open(
+                os.path.join(d, 'conversion.diff'), 'w'))
     # The first chroot (rawhide) decides; extra chroots (ELN) count only if they
     # could test the unchanged spec at all.
     order = ['error', 'guard-failed', 'regression', 'both-fail', 'not-buildable', 'manual',
@@ -430,13 +565,16 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
 
 
 def main():
-    global KEEP
+    global KEEP, GNUPG2_CHECK
     ap = argparse.ArgumentParser()
     ap.add_argument('--chroot', default='fedora-rawhide-x86_64')
     ap.add_argument('--eln', action='store_true',
                     help='also test in fedora-eln-x86_64 when the spec has rhel conditionals')
     ap.add_argument('--jobs', type=int, default=1)
     ap.add_argument('--keep', action='store_true', help='keep mock chroots for debugging')
+    ap.add_argument('--no-gnupg2-check', action='store_true',
+                    help='keep "BR: gnupg2" in specs with %%check instead of proving with a '
+                         'full build that it can go')
     ap.add_argument('--min-free-gb', type=float, default=1.5,
                     help='do not start a package with less free disk than this')
     ap.add_argument('--size-factor', type=float, default=12,
@@ -451,6 +589,7 @@ def main():
     ap.add_argument('packages', nargs='+')
     a = ap.parse_args()
     KEEP = a.keep
+    GNUPG2_CHECK = not a.no_gnupg2_check
     inv = state.load_inventory(a.inventory)
     os.makedirs(WORK, exist_ok=True)
 

@@ -59,6 +59,8 @@ def main():
         rows.append((p, ' '.join(s.get('maintainers', [])), ds,
                      'yes' if s.get('release_bumped') else '',
                      'yes' if s.get('rhel_conditional') else '',
+                     {'drop': 'dropped (checked)', 'keep': 'kept'}.get(
+                         (s.get('gnupg2_check') or {}).get('verdict'), ''),
                      (s.get('tested_at') or '?')[:10]))
     out = ['# PRs ready to open', '',
            'Generated %s by `scripts/ready_list.py` from `%s`. Every package below passed '
@@ -67,10 +69,10 @@ def main():
            'the tested commit (checked when this list was generated).'
            % (state.now(), sys.argv[1]), '']
     out += ['## Ready (%d)' % len(rows), '',
-            '| Package | Maintainers | Diff | Release bump | `%{?rhel}` | Tested |',
-            '|---|---|---|---|---|---|']
-    out += ['| [%s](%s%s/) | %s | %s | %s | %s | %s |' % (p, REPO, p, m, ds, rb, rh, t)
-            for p, m, ds, rb, rh, t in rows]
+            '| Package | Maintainers | Diff | Release bump | `%{?rhel}` | BR gnupg2 | Tested |',
+            '|---|---|---|---|---|---|---|']
+    out += ['| [%s](%s%s/) | %s | %s | %s | %s | %s | %s |' % (p, REPO, p, m, ds, rb, rh, gn, t)
+            for p, m, ds, rb, rh, gn, t in rows]
     out.append('')
     if stale:
         out += ['Not listed because dist-git moved since the test (re-run `phase1.py`): ' +

@@ -231,7 +231,20 @@ def render_pr(pkg, s, draft):
              'openpgpverify is available in Fedora 43 and later, EPEL 9 and EPEL 10' +
              ('. It is not in EPEL 8, so if this spec is still used there, keep '
               '`%gpgverify` on that branch.' if s.get('rhel_conditional') else '.')]
-    if s.get('gnupg2_action') in ('review', 'keep'):
+    chk = s.get('gnupg2_check')
+    if chk and chk['verdict'] == 'drop':
+        notes.append('- `BuildRequires: gnupg2` is dropped too. To check that nothing else '
+                     'needs it, the changed spec was built completely (`rpmbuild -bb`%s) in '
+                     'a chroot with gnupg2 and gpgverify removed, and %s.'
+                     % ((', including `%check`', 'neither the build log nor the test files '
+                         'in the sources mention gpg') if chk.get('has_check') else
+                        ('; the spec has no `%check`', 'the build log doesn\'t mention gpg')))
+    elif chk:
+        reason = ' '.join(chk['reason'].split())
+        notes.append('- `BuildRequires: gnupg2` is kept: %s.%s' % (
+            reason, ' If it was only there for the signature check, it can go too.'
+            if reason.startswith('not checked') else ''))
+    elif s.get('gnupg2_action') in ('review', 'keep'):
         notes.append('- `BuildRequires: gnupg2` is kept: the spec has a `%check` section '
                      'or uses gpg elsewhere, and tests may need it. If it was only there '
                      'for the signature check, it can go too.')

@@ -70,10 +70,19 @@ rpm stops depending on gpg.
    `%{_bindir}/gpgv2`, `BR: %{gpgverify}`, or another package's dependency.
    Nothing pulls in openpgpverify that way.
 3. **`BR: gpgverify`, `%{_bindir}/gpgv2`, `%{gpgverify}`**: drop them.
-   **`BR: gnupg2`**: drop it only when `gnupg2_action == "remove"`, meaning
-   the spec has no other gpg use and no `%check`. With `review` (has
-   `%check`; tests often skip gpg silently when it's missing) or `keep`
-   (other gpg use), leave it for the later hardening campaign.
+   **`BR: gnupg2`**: with `keep` (other gpg use in the spec) it stays. With
+   `remove` (no other gpg use, no `%check`) or `review` (has `%check`), it is
+   dropped only if the **gnupg2 check** in Phase 1 passes (harness v4):
+   gnupg2 is in every buildroot, so a normal build proves nothing. Instead,
+   all `gnupg2*` packages and gpgverify are removed from the chroot with
+   `rpm -e --nodeps`, and the changed spec is built completely (`rpmbuild -bb`,
+   `%check` included, 2 h limit). The BR is dropped only if that build
+   passes and neither the build log nor test files in the unpacked sources
+   mention gpg (tests often skip silently without it). If the build fails,
+   it is repeated with gnupg2 installed to tell "needs gpg" from an existing
+   FTBFS. In all other cases the BR is kept and the PR says why
+   (`gnupg2_check` in the state). PRs prepared before harness v4 keep
+   `BR: gnupg2` whenever the spec has a `%check`.
 4. **Release / changelog**: specs with `%autochangelog` get nothing extra
    (the commit subject becomes the changelog line). The others get a Release
    bump and a changelog entry from `rpmdev-bumpspec`. Because bumpspec
