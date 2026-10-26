@@ -1,0 +1,39 @@
+From 6c5cae0c45d0753a5dabbf53207ea5a69c993e56 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 15:23:40 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ passwordsafe.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/passwordsafe.spec b/passwordsafe.spec
+index 9dfd58c..2a0e5dd 100644
+--- a/passwordsafe.spec
++++ b/passwordsafe.spec
+@@ -32,7 +32,7 @@ BuildRequires:  desktop-file-utils libappstream-glib
+ # for line ending fixups
+ BuildRequires:  dos2unix
+ # for source file verification
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ # system libraries used by this package
+ BuildRequires:  file-devel
+ BuildRequires:  gtest-devel
+@@ -94,7 +94,7 @@ extraction) from the Password Safe GUI (Help menu or button).
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ %autosetup -p1 -n %{short}-%{version}
+ # make sure our binaries don't depend on any windows/mac stuff
+-- 
+2.56.0
+

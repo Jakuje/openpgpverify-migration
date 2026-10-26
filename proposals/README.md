@@ -1,6 +1,6 @@
 # Proposals
 
-Generated 2026-10-26T12:17Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
+Generated 2026-10-26T14:23Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
 
 - **PR**: `0001-*.patch` is the commit a PR would carry (`git am` applies it to dist-git at the tested commit); `PR.md` is the PR title and description.
 - **draft PR**: the same, but it includes a keyring refresh that hasn't been reviewed yet.
@@ -536,3 +536,28 @@ Generated 2026-10-26T12:17Z by `scripts/render_proposals.py` from the Phase 1 st
 | [wget2](wget2/) | PR |  |
 | [xerces-c](xerces-c/) | PR |  |
 | [xpdf](xpdf/) | bug | sha1-cert |
+| [asahi-installer](asahi-installer/) | PR |  |
+| [budgie-backgrounds](budgie-backgrounds/) | PR |  |
+| [clang15](clang15/) | PR |  |
+| [clang18](clang18/) | bug | expired |
+| [feather](feather/) | PR |  |
+| [fop](fop/) | bug | sha1-cert |
+| [forgejo](forgejo/) | PR |  |
+| [freeipa](freeipa/) | PR |  |
+| [gcompris-qt](gcompris-qt/) | PR |  |
+| [grout](grout/) | PR |  |
+| [inkscape](inkscape/) | bug | weak-key |
+| [kitty](kitty/) | PR |  |
+| [libclc22](libclc22/) | PR |  |
+| [libime](libime/) | bug | sha1-cert |
+| [llvm14](llvm14/) | bug | sha1-cert |
+| [llvm15](llvm15/) | PR |  |
+| [llvm18](llvm18/) | bug | expired |
+| [llvm19](llvm19/) | PR |  |
+| [llvm20](llvm20/) | bug | expired |
+| [llvm21](llvm21/) | PR |  |
+| [opam](opam/) | bug | expired |
+| [pari-elldata](pari-elldata/) | bug | sha1-cert |
+| [pari-seadata](pari-seadata/) | bug | sha1-sig |
+| [passwordsafe](passwordsafe/) | PR |  |
+| [webkitgtk](webkitgtk/) | bug | expired |

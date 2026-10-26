@@ -1,0 +1,58 @@
+From ec5f56a73da5466340f7b1ca940530c6945c8e55 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 15:23:40 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ gcompris-qt.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/gcompris-qt.spec b/gcompris-qt.spec
+index b0a5f37..45e9587 100644
+--- a/gcompris-qt.spec
++++ b/gcompris-qt.spec
+@@ -1,6 +1,6 @@
+ Name:           gcompris-qt
+ Version:        26.2
+-Release:        1%{?dist}
++Release:        2%{?dist}
+ Summary:        Educational software suite for children aged 2 to 10
+ 
+ License:        AGPL-3.0-only
+@@ -36,6 +36,7 @@ BuildRequires:  kf6-kdoctools-devel
+ BuildRequires:  gettext
+ BuildRequires:  desktop-file-utils
+ BuildRequires:  libappstream-glib
++BuildRequires:  openpgpverify
+ Requires:       qt6-qtmultimedia
+ Requires:       qt6-qtdeclarative
+ Requires:       qt6-qtsvg
+@@ -74,7 +75,7 @@ More than 100 activities are available.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' \
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' \
+   --data='%{SOURCE0}'
+ %autosetup
+ 
+@@ -115,6 +116,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_kf6_metainfodir}/org.kde.gc
+ 
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 26.2-2
++- Verify upstream source signatures with openpgpverify
++
+ * Fri Sep 25 2026 Andrea Musuruane <musuruan@gmail.com> - 26.2-1
+ - Updated to new upstream release
+ 
+-- 
+2.56.0
+

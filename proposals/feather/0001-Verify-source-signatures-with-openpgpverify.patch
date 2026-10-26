@@ -1,0 +1,38 @@
+From 8bb8eef05605e3d6381b889f5f8a5694d125ba44 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 15:23:40 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ feather.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/feather.spec b/feather.spec
+index 4dabfd2..87cb252 100644
+--- a/feather.spec
++++ b/feather.spec
+@@ -40,6 +40,7 @@ BuildRequires: libusb1-devel
+ BuildRequires: unbound-devel
+ BuildRequires: wayland-devel
+ BuildRequires: zxing-cpp-devel
++BuildRequires: openpgpverify
+ Requires:      tor
+ 
+ # virtual memory exhausted: Cannot allocate memory
+@@ -49,7 +50,7 @@ ExcludeArch:   %{arm} %{ix86}
+ Feather is a wallet for the Monero cryptocurrency.
+ 
+ %prep
+-%{gpgverify} --keyring=%{SOURCE2} --signature=%{SOURCE1} --data=%{SOURCE0}
++%{openpgpverify} --keyring=%{SOURCE2} --signature=%{SOURCE1} --data=%{SOURCE0}
+ %autosetup -p0
+ 
+ %build
+-- 
+2.56.0
+

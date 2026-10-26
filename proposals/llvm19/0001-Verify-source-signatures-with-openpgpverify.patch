@@ -1,0 +1,64 @@
+From ced5b9a649725054cc91089aa69317e86bc5541e Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 15:23:40 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ llvm19.spec | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/llvm19.spec b/llvm19.spec
+index 9d7f104..b8136a0 100644
+--- a/llvm19.spec
++++ b/llvm19.spec
+@@ -246,7 +246,7 @@
+ #region main package
+ Name:		%{pkg_name_llvm}
+ Version:	%{maj_ver}.%{min_ver}.%{patch_ver}%{?rc_ver:~rc%{rc_ver}}%{?llvm_snapshot_version_suffix:~%{llvm_snapshot_version_suffix}}
+-Release:	20%{?dist}
++Release:	21%{?dist}
+ Summary:	The Low Level Virtual Machine
+ 
+ License:	Apache-2.0 WITH LLVM-exception OR NCSA
+@@ -494,6 +494,7 @@ BuildRequires:	graphviz
+ 
+ # This is required because we need "ps" when running LLDB tests
+ BuildRequires: procps-ng
++BuildRequires: openpgpverify
+ 
+ # For reproducible pyc file generation
+ # See https://docs.fedoraproject.org/en-US/packaging-guidelines/Python_Appendix/#_byte_compilation_reproducibility
+@@ -1078,11 +1079,11 @@ Polly header files.
+ %prep
+ %if %{without snapshot_build}
+ # llvm
+-%{gpgverify} --keyring='%{SOURCE6}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE6}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %endif
+ 
+ %if %{with bundle_compat_lib}
+-%{gpgverify} --keyring='%{SOURCE6}' --signature='%{SOURCE3001}' --data='%{SOURCE3000}'
++%{openpgpverify} --keyring='%{SOURCE6}' --signature='%{SOURCE3001}' --data='%{SOURCE3000}'
+ %setup -T -q -b 3000 -n llvm-project-%{compat_ver}.src
+ 
+ # Apply all patches with number < 500 (unconditionally)
+@@ -3153,6 +3154,9 @@ fi
+ 
+ #region changelog
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 19.1.7-21
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Sep 10 2026 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 19.1.7-20
+ - Rebuilt for libxml-2.5.4
+ 
+-- 
+2.56.0
+

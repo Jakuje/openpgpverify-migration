@@ -106,8 +106,11 @@ DYN_BR = ('cd /builddir/new && rm -rf /builddir/top-new/SRPMS && rpmbuild -br '
           '%(spec)s > /builddir/dynbr.log 2>&1; [ $? = 11 ] && '
           'cp /builddir/top-new/SRPMS/*.buildreqs.nosrc.rpm /builddir/dynbr.nosrc.rpm; '
           ': > /tmp/opv-calls.log')
-FULL_BUILD = ('cd /builddir/new && timeout %(timeout)d rpmbuild -bb --nodeps '
-              '--define "_sourcedir /builddir/new" --define "_topdir /builddir/top-new" '
+# Each full build starts from a pristine copy of the new tree: %prep may move
+# or delete files in the source directory (grout moves a tarball away).
+FULL_BUILD = ('rm -rf /builddir/full /builddir/top-full && cp -a /builddir/new.orig /builddir/full '
+              '&& cd /builddir/full && timeout %(timeout)d rpmbuild -bb --nodeps '
+              '--define "_sourcedir /builddir/full" --define "_topdir /builddir/top-full" '
               '%(spec)s > /builddir/%(log)s 2>&1; echo "rpmbuild-rc: $?" >> /builddir/%(log)s')
 FULL_BUILD_TIMEOUT = 2 * 3600
 # gpg named as a command in the build log (keyring file names like gpgkey-*.gpg
@@ -283,7 +286,10 @@ def gnupg2_verdict(res, out, has_check):
             reason = 'not checked: the changed spec does not get past the signature check'
         chk.update(verdict='keep', reason=reason)
     elif chk['build_rc'] != 0:
-        if chk['baseline_rc'] == 0:
+        if any('No space left on device' in l for f in ('new-build.log', 'base-build.log')
+               for l in lines(f)):
+            reason = 'not checked: the build ran out of disk space on the test machine'
+        elif chk['baseline_rc'] == 0:
             reason = 'the build fails without gnupg2 and passes with it'
         elif log_hits:
             reason = 'the build fails without gnupg2 and its log shows gpg use (%s)' % log_hits[0]
@@ -350,6 +356,9 @@ def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp', overlay
                     res['new_error'] = 'rpmdev-bumpspec failed'
                     continue
                 m('--copyout', '/builddir/new/%s.spec' % pkg, os.path.join(out, 'bumped.spec'))
+            if v == 'new' and gnupg2_check:
+                m.chroot('rm -rf /builddir/new.orig && cp -a /builddir/new /builddir/new.orig',
+                         unpriv=True)
             m.chroot(wrap)
             if v == variants[0][0]:
                 m.chroot('{ %s; } > /builddir/env.txt 2>&1' % ENV_INFO)

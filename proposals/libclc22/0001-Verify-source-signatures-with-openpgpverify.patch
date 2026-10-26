@@ -1,0 +1,59 @@
+From b11ad0d11c6594318cd2cdd06738d26d22497903 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 15:23:40 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ libclc22.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/libclc22.spec b/libclc22.spec
+index c1ff333..b07aee2 100644
+--- a/libclc22.spec
++++ b/libclc22.spec
+@@ -8,7 +8,7 @@
+ 
+ Name:           libclc22
+ Version:        %{libclc_version}%{?rc_ver:~rc%{rc_ver}}
+-Release:        4%{?dist}
++Release:        5%{?dist}
+ Summary:        An open source implementation of the OpenCL 1.1 library requirements
+ 
+ License:        Apache-2.0 WITH LLVM-exception OR NCSA OR MIT
+@@ -27,6 +27,7 @@ BuildRequires:  spirv-llvm-translator-tools
+ 
+ # For signature verification
+ BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ 
+ Requires:       %{name}-spirv%{?_isa} = %{version}-%{release}
+ 
+@@ -75,7 +76,7 @@ The %{name}-devel package contains libraries and header files for
+ developing applications that use %{name}.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -n %{src_tarball_dir}
+ 
+ %build
+@@ -116,6 +117,9 @@ cd libclc
+ %{_libdir}/pkgconfig/libclc.pc
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 22.1.8-5
++- Verify upstream source signatures with openpgpverify
++
+ * Fri Sep 11 2026 Timm Baeder <tbaeder@redhat.com> - 22.1.8-4
+ - Bump release for llvm23 update
+ 
+-- 
+2.56.0
+

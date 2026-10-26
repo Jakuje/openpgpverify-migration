@@ -1,0 +1,38 @@
+From 930ffaa0b999260140343e657bd5ef64f2881371 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 15:23:40 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ asahi-installer.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/asahi-installer.spec b/asahi-installer.spec
+index 9a5f3d8..4a2794a 100644
+--- a/asahi-installer.spec
++++ b/asahi-installer.spec
+@@ -60,6 +60,7 @@ BuildRequires:  python3
+ BuildRequires:  python3dist(certifi)
+ BuildRequires:  system-logos
+ BuildRequires:  tar
++BuildRequires:  openpgpverify
+ 
+ # LZFSE isn't supported on big-endian architectures
+ # https://github.com/lzfse/lzfse/issues/23
+@@ -99,7 +100,7 @@ Asahi Linux firmware tools
+ 
+ %prep
+ %autosetup -p1
+-%{gpgverify} --keyring='%{SOURCE4}' --signature='%{SOURCE3}' --data='%{SOURCE2}'
++%{openpgpverify} --keyring='%{SOURCE4}' --signature='%{SOURCE3}' --data='%{SOURCE2}'
+ 
+ # Set version
+ echo "%{version}" > version.tag
+-- 
+2.56.0
+
