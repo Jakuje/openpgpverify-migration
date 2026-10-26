@@ -1,0 +1,39 @@
+From 63e79a9e5dbb5477c6247f9b4b3945ccf2d1b7ea Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 13:17:34 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ pspp.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/pspp.spec b/pspp.spec
+index 8d47ee4..2cbf973 100644
+--- a/pspp.spec
++++ b/pspp.spec
+@@ -37,7 +37,7 @@ BuildRequires:  gcc
+ BuildRequires:  gettext
+ BuildRequires:  gettext-devel
+ BuildRequires:  gnulib-devel
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  gsl-devel >= 1.11-2
+ BuildRequires:  gtk3-devel
+ BuildRequires:  gtksourceview4-devel
+@@ -74,7 +74,7 @@ support is currently limited, but growing.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE3}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE3}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ # Remove bundled Gnulib and prepare to import system-wide one
+ rm -rf gl/
+-- 
+2.56.0
+

@@ -1,0 +1,39 @@
+From b35bfde8fe386b57a96a93b7c9f17334eadfedfa Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 13:17:34 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ gnuastro.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/gnuastro.spec b/gnuastro.spec
+index 13bde51..6c14380 100644
+--- a/gnuastro.spec
++++ b/gnuastro.spec
+@@ -19,7 +19,7 @@ Patch3: gnuastro-skip-test2.patch
+ 
+ ExcludeArch: %{ix86}
+ 
+-BuildRequires: gpgverify
++BuildRequires: openpgpverify
+ 
+ BuildRequires: gcc
+ #
+@@ -64,7 +64,7 @@ BuildArch: noarch
+ This %{name}-doc package contains the full documentation for %{name}.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+-- 
+2.56.0
+

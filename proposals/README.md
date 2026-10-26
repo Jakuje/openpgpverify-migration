@@ -1,6 +1,6 @@
 # Proposals
 
-Generated 2026-10-26T07:28Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
+Generated 2026-10-26T12:17Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
 
 - **PR**: `0001-*.patch` is the commit a PR would carry (`git am` applies it to dist-git at the tested commit); `PR.md` is the PR title and description.
 - **draft PR**: the same, but it includes a keyring refresh that hasn't been reviewed yet.
@@ -476,3 +476,63 @@ Generated 2026-10-26T07:28Z by `scripts/render_proposals.py` from the Phase 1 st
 | [xcb-imdkit](xcb-imdkit/) | bug | sha1-cert |
 | [xcb-util-errors](xcb-util-errors/) | bug | binding-after-signature |
 | [xforms](xforms/) | bug | sha1-sig |
+| [AusweisApp2](AusweisApp2/) | PR |  |
+| [bcachefs-tools](bcachefs-tools/) | PR |  |
+| [bind9-next](bind9-next/) | PR |  |
+| [borgbackup](borgbackup/) | bug | expired |
+| [botan3](botan3/) | bug | sha1-cert |
+| [btrfs-progs](btrfs-progs/) | bug | expired |
+| [budgie-desktop](budgie-desktop/) | PR |  |
+| [cgit](cgit/) | bug | expired |
+| [cryptopp](cryptopp/) | PR |  |
+| [csdiff](csdiff/) | bug | expired |
+| [dhcp](dhcp/) | bug | sha1-sig |
+| [electron-cash](electron-cash/) | bug | weak-key |
+| [electrum](electrum/) | PR |  |
+| [fcitx5](fcitx5/) | bug | sha1-cert |
+| [fcitx5-table-extra](fcitx5-table-extra/) | bug | sha1-cert |
+| [fcitx5-zhuyin](fcitx5-zhuyin/) | bug | sha1-cert |
+| [ffmpeg](ffmpeg/) | bug | sha1-cert |
+| [fish](fish/) | PR |  |
+| [flashrom](flashrom/) | bug | weak-key |
+| [gcl](gcl/) | PR |  |
+| [glpk](glpk/) | bug | v3-sig |
+| [gnuastro](gnuastro/) | PR |  |
+| [gnucobol](gnucobol/) | bug | unparseable-cert |
+| [gsl](gsl/) | bug | sha1-sig |
+| [hello](hello/) | PR |  |
+| [ImageMagick](ImageMagick/) | bug | sha1-cert |
+| [john](john/) | bug | sha1-sig |
+| [kdsoap](kdsoap/) | bug | sha1-cert |
+| [keepass](keepass/) | PR |  |
+| [keepassxc](keepassxc/) | bug | expired |
+| [libextractor](libextractor/) | bug | unparseable-cert |
+| [libmodsecurity](libmodsecurity/) | PR |  |
+| [mat2](mat2/) | bug | expired |
+| [mingw-SDL3](mingw-SDL3/) | PR |  |
+| [mkvtoolnix](mkvtoolnix/) | PR |  |
+| [mod_perl](mod_perl/) | PR |  |
+| [notcurses](notcurses/) | PR |  |
+| [oath-toolkit](oath-toolkit/) | bug | expired |
+| [pari](pari/) | bug | sha1-cert |
+| [pari-galpol](pari-galpol/) | bug | sha1-cert |
+| [pari-nftables](pari-nftables/) | bug | sha1-sig |
+| [phpMyAdmin](phpMyAdmin/) | PR |  |
+| [poke](poke/) | PR |  |
+| [pspp](pspp/) | PR |  |
+| [qbittorrent](qbittorrent/) | PR |  |
+| [quodlibet](quodlibet/) | bug | expired |
+| [qvr](qvr/) | PR |  |
+| [rabbitmq-server](rabbitmq-server/) | PR |  |
+| [rkward](rkward/) | PR |  |
+| [rnp](rnp/) | bug | expired |
+| [roundcubemail](roundcubemail/) | PR |  |
+| [spamassassin](spamassassin/) | bug | sha1-cert |
+| [strongswan](strongswan/) | bug | sha1-cert |
+| [sway](sway/) | bug | expired |
+| [tor](tor/) | bug | concatenated-armor |
+| [trafficserver](trafficserver/) | PR |  |
+| [unrealircd](unrealircd/) | bug | sha1-cert |
+| [wget2](wget2/) | PR |  |
+| [xerces-c](xerces-c/) | PR |  |
+| [xpdf](xpdf/) | bug | sha1-cert |

@@ -1,0 +1,39 @@
+From 73d5992e45ca87e4ca5110c4a7bd215ed1980039 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 13:17:34 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ poke.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/poke.spec b/poke.spec
+index f32aed3..3d87c7e 100644
+--- a/poke.spec
++++ b/poke.spec
+@@ -29,7 +29,7 @@ BuildRequires:	make
+ BuildRequires:	readline-devel
+ BuildRequires:	vim-common
+ # for gpg verification
+-BuildRequires:	gnupg2
++BuildRequires:	openpgpverify
+ # for check
+ BuildRequires:	dejagnu
+ 
+@@ -79,7 +79,7 @@ Summary:	vim support for %{name}
+ vim support for %{name}.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+-- 
+2.56.0
+

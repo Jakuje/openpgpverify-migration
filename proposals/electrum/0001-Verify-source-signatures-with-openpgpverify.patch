@@ -1,0 +1,58 @@
+From 0e90ddcff1281d27cf942b16e200eaee659caf6f Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 13:17:34 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ electrum.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/electrum.spec b/electrum.spec
+index 05c6492..a4d17b6 100644
+--- a/electrum.spec
++++ b/electrum.spec
+@@ -1,6 +1,6 @@
+ Name:           electrum
+ Version:        4.8.1
+-Release:        1%{?dist}
++Release:        2%{?dist}
+ Summary:        A lightweight Bitcoin Client
+ 
+ License:        MIT
+@@ -27,6 +27,7 @@ BuildRequires:  desktop-file-utils
+ BuildRequires:  libappstream-glib
+ BuildRequires:  gnupg2
+ BuildRequires:  protobuf-compiler
++BuildRequires:  openpgpverify
+ 
+ Requires:       hicolor-icon-theme
+ 
+@@ -52,7 +53,7 @@ by heart. There is no waiting time when you start the client, because
+ it does not download the Bitcoin block chain.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p0 -n Electrum-%{version}
+ rm -rf Electrum.egg-info
+ rm -rf electrum/_vendor
+@@ -96,6 +97,9 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
+ %{_metainfodir}/%{name}.metainfo.xml
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 4.8.1-2
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 4.5.8-12
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

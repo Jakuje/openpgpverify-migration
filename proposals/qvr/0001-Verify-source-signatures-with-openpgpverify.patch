@@ -1,0 +1,39 @@
+From b6d82c70d5709e7b5a959f643e05ae879f910ef7 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 13:17:35 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ qvr.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/qvr.spec b/qvr.spec
+index 8726b46..64762a4 100644
+--- a/qvr.spec
++++ b/qvr.spec
+@@ -12,7 +12,7 @@ Source2:        https://marlam.de/key.txt
+ BuildRequires:  cmake
+ BuildRequires:  doxygen
+ BuildRequires:  gcc-c++
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  make
+ 
+ BuildRequires:  libxkbcommon-devel
+@@ -43,7 +43,7 @@ BuildArch:      noarch
+ This package provides additional documentation for %{name}.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+-- 
+2.56.0
+

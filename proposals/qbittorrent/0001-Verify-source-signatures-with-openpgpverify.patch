@@ -1,0 +1,39 @@
+From 939a4ed6355f5fcc1cbf319a01cf1edf5f04a131 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 13:17:34 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ qbittorrent.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/qbittorrent.spec b/qbittorrent.spec
+index 7b3be96..ab900be 100644
+--- a/qbittorrent.spec
++++ b/qbittorrent.spec
+@@ -28,7 +28,7 @@ BuildRequires: cmake(Qt6Widgets)
+ BuildRequires: cmake(Qt6Xml)
+ BuildRequires: desktop-file-utils
+ BuildRequires: gcc-c++
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ BuildRequires: ninja-build
+ BuildRequires: openssl-devel
+ BuildRequires: qt6-qtbase-private-devel
+@@ -52,7 +52,7 @@ A Headless Bittorrent client using rb_libtorrent.
+ It aims to be as fast as possible and to provide multi-OS, unicode support.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ cp %{SOURCE3} .
+ 
+-- 
+2.56.0
+

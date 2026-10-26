@@ -1,0 +1,39 @@
+From fa927751b82c37c6011f8b2bbad952f32eddbe8f Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 13:17:34 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ notcurses.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/notcurses.spec b/notcurses.spec
+index 1ff77a6..bf0d273 100644
+--- a/notcurses.spec
++++ b/notcurses.spec
+@@ -8,7 +8,7 @@ Source0:       https://github.com/dankamongmen/%{name}/releases/download/v%{vers
+ Source1:       https://github.com/dankamongmen/%{name}/releases/download/v%{version}/notcurses_%{version}+dfsg.orig.tar.xz.asc
+ Source2:       https://nick-black.com/dankamongmen.gpg
+ 
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ BuildRequires: cmake
+ BuildRequires: doctest-devel
+ BuildRequires: gcc-c++
+@@ -67,7 +67,7 @@ Requires:      %{name}%{?_isa} = %{version}-%{release}
+ Python wrappers and a demonstration script for the notcurses library.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %define __cmake_in_source_build 1
+-- 
+2.56.0
+

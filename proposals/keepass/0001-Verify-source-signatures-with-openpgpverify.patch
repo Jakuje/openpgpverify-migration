@@ -1,0 +1,39 @@
+From 95f6f4ad5c0f618dba308e651ffd2e2244d47061 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 13:17:34 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ keepass.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/keepass.spec b/keepass.spec
+index ea99dd2..c459da4 100644
+--- a/keepass.spec
++++ b/keepass.spec
+@@ -20,7 +20,7 @@ Patch1:         keepass-fix-XSL-search-path.patch
+ ExclusiveArch:  %{mono_arches}
+ ExcludeArch:    armv7hl
+ BuildRequires:  desktop-file-utils
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  libappstream-glib
+ BuildRequires:  libgdiplus-devel
+ BuildRequires:  mono-devel
+@@ -48,7 +48,7 @@ to unlock the whole database.
+ 
+ 
+ %prep
+-%{gpgverify}                \
++%{openpgpverify}                \
+   --keyring='%{SOURCE2}'    \
+   --signature='%{SOURCE1}'  \
+   --data='%{SOURCE0}'
+-- 
+2.56.0
+

@@ -1,0 +1,59 @@
+From 1605637e7b89597639bae1854f106ab961277c35 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 13:17:35 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ wget2.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/wget2.spec b/wget2.spec
+index 64dbf3c..7730368 100644
+--- a/wget2.spec
++++ b/wget2.spec
+@@ -8,7 +8,7 @@
+ 
+ Name:           wget2
+ Version:        2.3.0
+-Release:        2%{?dist}
++Release:        3%{?dist}
+ Summary:        An advanced file and recursive website downloader
+ 
+ # Documentation is GFDL
+@@ -69,6 +69,7 @@ BuildRequires:  lzip
+ 
+ # For gpg signature verification
+ BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ 
+ Provides:       webclient
+ Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
+@@ -119,7 +120,7 @@ the system provider of wget.
+ %endif
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -S git_am
+ 
+ 
+@@ -183,6 +184,9 @@ echo ".so man1/%{name}.1" > %{buildroot}%{_mandir}/man1/wget.1
+ 
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 2.3.0-3
++- Verify upstream source signatures with openpgpverify
++
+ * Fri Oct 23 2026 Artur Frenszek-Iwicki <fedora@svgames.pl> - 2.3.0-2
+ - Backport fix for using -P with absolute paths (rhbz#2558146)
+ 
+-- 
+2.56.0
+

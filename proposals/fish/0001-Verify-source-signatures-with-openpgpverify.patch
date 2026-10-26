@@ -1,0 +1,39 @@
+From 3d14a4e86a3b1eadb5dc43241d54858a02b403e7 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 13:17:34 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ fish.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fish.spec b/fish.spec
+index 3bba401..4c1365a 100644
+--- a/fish.spec
++++ b/fish.spec
+@@ -65,7 +65,7 @@ BuildRequires:  gettext
+ BuildRequires:  git-core
+ BuildRequires:  ncurses-devel
+ BuildRequires:  pcre2-devel
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  python3-devel
+ BuildRequires:  python3-pexpect
+ BuildRequires:  procps-ng
+@@ -96,7 +96,7 @@ nothing to learn or configure.
+ 
+ %prep
+ %if %{undefined gitnum}
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %endif
+ %autosetup -N %{?gitnum:-n fish-shell-%{githash}}
+ 
+-- 
+2.56.0
+

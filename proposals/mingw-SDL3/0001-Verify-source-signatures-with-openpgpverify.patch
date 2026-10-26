@@ -1,0 +1,59 @@
+From 9ceb754f915033b13c3d5e5eaa8b84f90c3d4856 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 13:17:34 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ mingw-SDL3.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/mingw-SDL3.spec b/mingw-SDL3.spec
+index 75bbc41..e2288dc 100644
+--- a/mingw-SDL3.spec
++++ b/mingw-SDL3.spec
+@@ -2,7 +2,7 @@
+ 
+ Name:           mingw-SDL3
+ Version:        3.4.18
+-Release:        1%{?dist}
++Release:        2%{?dist}
+ Summary:        MinGW Windows port of SDL3 cross-platform multimedia library
+ 
+ License:        Zlib AND MIT AND Apache-2.0 AND (Apache-2.0 OR MIT)
+@@ -26,6 +26,7 @@ BuildRequires:  mingw32-gcc-c++
+ BuildRequires:  mingw64-filesystem >= 95
+ BuildRequires:  mingw64-gcc
+ BuildRequires:  mingw64-gcc-c++
++BuildRequires:  openpgpverify
+ 
+ %ifarch %{ix86}
+ BuildRequires: nasm
+@@ -84,7 +85,7 @@ device.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1 -n SDL3-%{version}
+ 
+ 
+@@ -134,6 +135,9 @@ rm -rf %{buildroot}%{mingw64_datadir}/licenses
+ 
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 3.4.18-2
++- Verify upstream source signatures with openpgpverify
++
+ * Sat Oct 03 2026 Artur Frenszek-Iwicki <fedora@svgames.pl> - 3.4.18-1
+ - Update to v3.4.18
+ 
+-- 
+2.56.0
+

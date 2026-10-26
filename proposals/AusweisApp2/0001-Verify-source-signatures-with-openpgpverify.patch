@@ -1,0 +1,39 @@
+From 4a409f41f70e4f40cbdf047ad955918428d9fc66 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 13:17:33 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ AusweisApp2.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/AusweisApp2.spec b/AusweisApp2.spec
+index b34fd73..f81dc25 100644
+--- a/AusweisApp2.spec
++++ b/AusweisApp2.spec
+@@ -65,7 +65,7 @@ BuildRequires:    cmake
+ BuildRequires:    crypto-policies
+ BuildRequires:    desktop-file-utils
+ BuildRequires:    gcc-c++
+-BuildRequires:    gnupg2
++BuildRequires:    openpgpverify
+ BuildRequires:    libappstream-glib
+ BuildRequires:    libudev-devel
+ BuildRequires:    libxkbcommon-devel
+@@ -165,7 +165,7 @@ This package contains the user and API documentation for %{name}.
+ 
+ %prep
+ # Verify tarball integrity.
+-%{gpgverify}                \
++%{openpgpverify}                \
+   --keyring='%{SOURCE2}'    \
+   --signature='%{SOURCE1}'  \
+   --data='%{SOURCE0}'
+-- 
+2.56.0
+

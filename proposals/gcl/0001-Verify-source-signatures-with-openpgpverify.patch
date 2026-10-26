@@ -1,0 +1,39 @@
+From 5b79e2f7eb75dfd081476d0597cd46d32f7ab6fe Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 13:17:34 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ gcl.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/gcl.spec b/gcl.spec
+index 74b7185..3b84c3d 100644
+--- a/gcl.spec
++++ b/gcl.spec
+@@ -78,7 +78,7 @@ BuildRequires:  binutils-devel
+ BuildRequires:  bzip2
+ BuildRequires:  gcc
+ BuildRequires:  gmp-devel
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ BuildRequires:  make
+ BuildRequires:  pkgconfig(libtirpc)
+ BuildRequires:  pkgconfig(readline)
+@@ -116,7 +116,7 @@ Emacs mode for interacting with GCL
+ 
+ 
+ %prep
+-%{gpgverify} --data=%{SOURCE0} --signature=%{SOURCE1} --keyring=%{SOURCE2}
++%{openpgpverify} --data=%{SOURCE0} --signature=%{SOURCE1} --keyring=%{SOURCE2}
+ %autosetup -p1
+ 
+ 
+-- 
+2.56.0
+

@@ -273,8 +273,14 @@ def gnupg2_verdict(res, out, has_check):
     if left:
         chk.update(verdict='keep', reason='gpg still installed after removing gnupg2: %s' % left)
     elif res.get('new_prep_rc') != 0:
-        chk.update(verdict='keep', reason='not checked: the changed spec does not get past '
-                   'the signature check')
+        if res.get('new_calls') and all(c['rc'] == 0 for c in res['new_calls']):
+            reason = ('not checked: the signature check passes, but `rpmbuild %s` fails '
+                      'later, with the unchanged spec too' % res.get('stage', '-bp')
+                      if res.get('old_prep_rc') else
+                      'not checked: `rpmbuild` fails after the signature check')
+        else:
+            reason = 'not checked: the changed spec does not get past the signature check'
+        chk.update(verdict='keep', reason=reason)
     elif chk['build_rc'] != 0:
         if chk['baseline_rc'] == 0:
             reason = 'the build fails without gnupg2 and passes with it'
@@ -304,7 +310,7 @@ def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp', overlay
     shutil.rmtree(out, ignore_errors=True)
     os.makedirs(out)
     m = Mock(cfg, slot, log)
-    res = dict(chroot=cfg)
+    res = dict(chroot=cfg, stage=stage)
     wrap = WRAP_SCRIPT % ' '.join(MACRO_TOOLS + (RAW_TOOLS if raw else []))
     try:
         if m('--clean') or m('--init', timeout=3600):

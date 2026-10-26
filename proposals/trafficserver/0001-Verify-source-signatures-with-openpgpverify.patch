@@ -1,0 +1,61 @@
+From db327cbea9b74c9d9ac63d2965de2f7b760dc1c8 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 13:17:35 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ trafficserver.spec | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/trafficserver.spec b/trafficserver.spec
+index 5934281..82875e0 100644
+--- a/trafficserver.spec
++++ b/trafficserver.spec
+@@ -4,7 +4,7 @@
+ 
+ Name:           trafficserver
+ Version:        10.2.1
+-Release:        1%{?dist}
++Release:        2%{?dist}
+ Summary:        Fast, scalable and extensible HTTP/1.1 and HTTP/2 caching proxy server
+ 
+ License:        Apache-2.0
+@@ -33,7 +33,8 @@ ExcludeArch:    %{arm} %{ix86} riscv64 s390x
+ 
+ BuildRequires:  gdb
+ BuildRequires:  expat-devel hwloc-devel pcre2-devel zlib-devel xz-devel brotli-devel
+-BuildRequires:  libcurl-devel ncurses-devel gnupg python3-devel
++BuildRequires:  libcurl-devel ncurses-devel python3-devel
++BuildRequires:  openpgpverify
+ BuildRequires:  gcc gcc-c++
+ BuildRequires:  cmake
+ BuildRequires:  libcap-devel
+@@ -112,7 +113,7 @@ hadling ESI requests to providing a different caching algorithm.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ %autosetup -p0
+ rm -r lib/yamlcpp
+@@ -269,6 +270,9 @@ fi
+ 
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 10.2.1-2
++- Verify upstream source signatures with openpgpverify
++
+ * Tue Oct 20 2026 Jered Floyd <jered@convivian.com> - 10.2.1-1
+ - Update to upstream 10.2.1
+ 
+-- 
+2.56.0
+

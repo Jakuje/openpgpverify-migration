@@ -1,0 +1,60 @@
+From e66935f08084f0a526c6a906fb0f6256248f5c06 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 13:17:33 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ bcachefs-tools.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/bcachefs-tools.spec b/bcachefs-tools.spec
+index f3a2231..c8cff0a 100644
+--- a/bcachefs-tools.spec
++++ b/bcachefs-tools.spec
+@@ -13,7 +13,7 @@
+ 
+ Name:           bcachefs-tools
+ Version:        1.39.3
+-Release:        1%{?dist}
++Release:        2%{?dist}
+ Summary:        Userspace tools for bcachefs
+ 
+ # --- rust ---
+@@ -48,7 +48,7 @@ Patch1002:      bcachefs-tools-no-prebuilt-dkms.patch
+ BuildRequires:  findutils
+ BuildRequires:  gcc
+ BuildRequires:  git-core
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  make
+ BuildRequires:  libaio-devel
+ BuildRequires:  libattr-devel
+@@ -164,7 +164,7 @@ fi
+ 
+ %prep
+ # Verify the integrity of the sources
+-zstdcat '%{SOURCE0}' | %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data=-
++zstdcat '%{SOURCE0}' | %{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data=-
+ # Prep sources
+ %autosetup -S git_am
+ %if ! %{with rust_vendorized}
+@@ -205,6 +205,9 @@ rm -rf %{buildroot}%{_usrsrc}
+ 
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 1.39.3-2
++- Verify upstream source signatures with openpgpverify
++
+ * Sun Aug 30 2026 Neal Gompa <ngompa@fedoraproject.org> - 1.39.3-1
+ - Update to version 1.39.3
+ - Resolves: rhbz#2496903
+-- 
+2.56.0
+

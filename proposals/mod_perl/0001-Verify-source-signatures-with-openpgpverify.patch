@@ -1,0 +1,60 @@
+From bb078faaa04a45a326cc0fb90389410a97b1edf0 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 13:17:34 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ mod_perl.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/mod_perl.spec b/mod_perl.spec
+index 2bcbc36..f93d5d4 100644
+--- a/mod_perl.spec
++++ b/mod_perl.spec
+@@ -14,7 +14,7 @@
+ 
+ Name:           mod_perl
+ Version:        2.0.13
+-Release:        14%{?dist}
++Release:        15%{?dist}
+ Summary:        An embedded Perl interpreter for the Apache HTTP Server
+ # other files:                  ASL 2.0
+ ## Not in binary packages
+@@ -43,7 +43,7 @@ BuildRequires:  coreutils
+ BuildRequires:  findutils
+ BuildRequires:  gcc
+ BuildRequires:  gdbm-devel
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  httpd
+ BuildRequires:  httpd-devel >= 2.4.0
+ BuildRequires:  make
+@@ -179,7 +179,7 @@ This mod_perl extension allows to reload Perl modules that changed on the disk.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p 1
+ 
+ # Remove docs/os. It's only win32 info with non-ASL-2.0 license. Bug #1199044.
+@@ -323,6 +323,9 @@ fi
+ %endif
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 2.0.13-15
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 22 2026 Jitka Plesnikova <jplesnik@redhat.com> - 2.0.13-14
+ - Perl 5.44 rebuild
+ 
+-- 
+2.56.0
+

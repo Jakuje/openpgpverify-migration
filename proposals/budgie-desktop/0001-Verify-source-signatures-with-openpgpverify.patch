@@ -1,0 +1,60 @@
+From 0f5ed0f39eb41ffa294c1cdd1b23ac286ce73e09 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 13:17:34 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ budgie-desktop.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/budgie-desktop.spec b/budgie-desktop.spec
+index 5525097..b074c6d 100644
+--- a/budgie-desktop.spec
++++ b/budgie-desktop.spec
+@@ -8,7 +8,7 @@
+ 
+ Name:           budgie-desktop
+ Version:        10.10.3
+-Release:        3%{?dist}
++Release:        4%{?dist}
+ Summary:        A feature-rich, modern desktop designed to keep out the way of the user
+ 
+ # GPL-2.0-or-later:
+@@ -63,7 +63,7 @@ BuildRequires:  gammastep
+ BuildRequires:  gcc
+ BuildRequires:  gettext
+ BuildRequires:  git
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  grim
+ BuildRequires:  gsettings-desktop-schemas >= %{gsettings_desktop_schemas_version}
+ BuildRequires:  gtk-doc >= 1.33.0
+@@ -146,7 +146,7 @@ Requires:       %{name} = %{version}-%{release}
+ Documentation for budgie-desktop
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+@@ -247,6 +247,9 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/*.desktop
+ %{_datadir}/gtk-doc/html/%{name}/*
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 10.10.3-4
++- Verify upstream source signatures with openpgpverify
++
+ * Sun Oct 11 2026 Joshua Strobl <joshua@buddiesofbudgie.org> - 10.10.3-3
+ - Add patches for not forcing Qt QPA platform and fix plugin load on non-EN locales
+ 
+-- 
+2.56.0
+

@@ -1,0 +1,41 @@
+From 2ff0d50167e774785498ee3042584deb0655efa1 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 13:17:35 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ rabbitmq-server.spec | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/rabbitmq-server.spec b/rabbitmq-server.spec
+index dfecb8d..829e5ce 100644
+--- a/rabbitmq-server.spec
++++ b/rabbitmq-server.spec
+@@ -29,8 +29,8 @@ Patch: rabbitmq-server-0005-rabbit_plugins-demote-duplicate-plugin-warnings-from
+ URL: https://www.rabbitmq.com/
+ BuildRequires: elixir
+ BuildRequires: erlang >= %{erlang_minver}
+-# for %%gpgverify
+-BuildRequires: gnupg2
++# for %%openpgpverify
++BuildRequires: openpgpverify
+ BuildRequires: hostname
+ BuildRequires: libxslt
+ BuildRequires: make
+@@ -65,7 +65,7 @@ performance enterprise messaging. The RabbitMQ server is a robust and
+ scalable implementation of an AMQP broker.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ 
+-- 
+2.56.0
+

@@ -1,0 +1,39 @@
+From 437169e4b7ddcbd390cdf2f8e68339c1412bfb55 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 13:17:34 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ hello.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/hello.spec b/hello.spec
+index 90a1a06..ee8e049 100644
+--- a/hello.spec
++++ b/hello.spec
+@@ -11,7 +11,7 @@ Source1:        https://ftp.gnu.org/gnu/hello/hello-%{version}.tar.gz.sig
+ Source2:        https://ftp.gnu.org/gnu/gnu-keyring.gpg
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  make
+ Recommends:     info
+ Provides:       bundled(gnulib)
+@@ -30,7 +30,7 @@ practices.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %setup -q
+ 
+ 
+-- 
+2.56.0
+
