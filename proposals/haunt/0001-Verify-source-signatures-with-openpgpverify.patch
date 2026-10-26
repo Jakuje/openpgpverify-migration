@@ -1,0 +1,39 @@
+From 8fbaffa429506994b8ead77553c9b4361a92efca Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:47 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ haunt.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/haunt.spec b/haunt.spec
+index d2f0308..769483b 100644
+--- a/haunt.spec
++++ b/haunt.spec
+@@ -19,7 +19,7 @@ BuildRequires:  autoconf
+ BuildRequires:  automake
+ BuildRequires:  gcc
+ BuildRequires:  guile30-devel
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  guile-commonmark
+ BuildRequires:  guile-reader-devel
+ # hut is not available in i686
+@@ -56,7 +56,7 @@ empowered to tweak, replace, or create builders to do things that aren't
+ provided out-of-the-box.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ 
+-- 
+2.56.0
+

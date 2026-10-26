@@ -1,0 +1,59 @@
+From 42c8cafc4ab8bed09767835874fc4d02e15e41a6 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:47 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ libbsd.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/libbsd.spec b/libbsd.spec
+index 356daff..4eea805 100644
+--- a/libbsd.spec
++++ b/libbsd.spec
+@@ -1,6 +1,6 @@
+ Name:           libbsd
+ Version:        0.12.2
+-Release:        8%{?dist}
++Release:        9%{?dist}
+ Summary:        Library providing BSD-compatible functions for portability
+ URL:            https://libbsd.freedesktop.org/
+ # Breakdown in COPYING file of libbsd release tarball, see also:
+@@ -14,7 +14,7 @@ Source2:        https://keys.openpgp.org/vks/v1/by-fingerprint/4F3E74F436050C10F
+ Source3:        libbsd-cdefs.h
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  libmd-devel
+ BuildRequires:  make
+ 
+@@ -45,7 +45,7 @@ configured using "pkg-config --libs libbsd-ctor".
+ 
+ %prep
+ %setup -q
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ %build
+ %configure
+@@ -85,6 +85,9 @@ install -p -m 0644 %{SOURCE3} %{buildroot}%{_includedir}/bsd/sys/cdefs.h
+ %{_libdir}/pkgconfig/%{name}-ctor.pc
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 0.12.2-9
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.12.2-8
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

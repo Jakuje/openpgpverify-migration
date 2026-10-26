@@ -1,0 +1,39 @@
+From beffcc787e397a0b791ff2a76f7fe241a7c20360 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:47 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ maven-doxia.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/maven-doxia.spec b/maven-doxia.spec
+index 5f623a3..631bb9e 100644
+--- a/maven-doxia.spec
++++ b/maven-doxia.spec
+@@ -14,7 +14,7 @@ Source2:        https://downloads.apache.org/maven/KEYS
+ BuildArch:      noarch
+ ExclusiveArch:  %{java_arches} noarch
+ 
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ %if 0%{?rhel} && 0%{?rhel} <= 10
+ BuildRequires:  maven-local-openjdk21
+ %else
+@@ -185,7 +185,7 @@ Summary:        API documentation for %{name}
+ API documentation for %{name}.
+ 
+ %prep
+-%{gpgverify} --data=%{SOURCE0} --signature=%{SOURCE1} --keyring=%{SOURCE2}
++%{openpgpverify} --data=%{SOURCE0} --signature=%{SOURCE1} --keyring=%{SOURCE2}
+ %autosetup -p1 -n doxia-%{version}
+ 
+ # Convert to Unix line terminators
+-- 
+2.56.0
+

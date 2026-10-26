@@ -1,0 +1,39 @@
+From de0b6bb371ada7dea6a72e45e229266c71097daf Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:47 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ kvantum.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kvantum.spec b/kvantum.spec
+index 330c91f..62c4ff2 100644
+--- a/kvantum.spec
++++ b/kvantum.spec
+@@ -15,7 +15,7 @@ Source2:        https://github.com/tsujan.gpg
+ BuildRequires:  gcc-c++
+ BuildRequires:  cmake
+ BuildRequires:  make
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  pkgconfig(x11)
+ BuildRequires:  pkgconfig(xext)
+ BuildRequires:  pkgconfig(Qt6Core)
+@@ -84,7 +84,7 @@ emphasis on elegance, usability and practicality.
+ This package contains the data needed Kvantum.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -n Kvantum-%{version}
+ 
+ %build
+-- 
+2.56.0
+

@@ -1,0 +1,74 @@
+package	id	status	author	url	title
+SDL3	4	Open	jjelen	https://src.fedoraproject.org/rpms/SDL3/pull-request/4	Verify source signatures with openpgpverify
+acl	10	Open	jjelen	https://src.fedoraproject.org/rpms/acl/pull-request/10	Verify source signatures with openpgpverify
+attr	7	Open	jjelen	https://src.fedoraproject.org/rpms/attr/pull-request/7	Verify source signatures with openpgpverify
+autoconf-archive	8	Open	jjelen	https://src.fedoraproject.org/rpms/autoconf-archive/pull-request/8	Verify source signatures with openpgpverify
+bc	9	Open	jjelen	https://src.fedoraproject.org/rpms/bc/pull-request/9	Verify source signatures with openpgpverify
+blktrace	8	Open	jjelen	https://src.fedoraproject.org/rpms/blktrace/pull-request/8	Verify source signatures with openpgpverify
+checkpolicy	12	Merged	plautrba	https://src.fedoraproject.org/rpms/checkpolicy/pull-request/12	Use %openpgpverify macro
+chrony	15	Open	jjelen	https://src.fedoraproject.org/rpms/chrony/pull-request/15	Verify source signatures with openpgpverify
+conntrack-tools	5	Open	jjelen	https://src.fedoraproject.org/rpms/conntrack-tools/pull-request/5	Verify source signatures with openpgpverify
+crun	159	Open	jjelen	https://src.fedoraproject.org/rpms/crun/pull-request/159	Verify source signatures with openpgpverify
+dbus	21	Open	jjelen	https://src.fedoraproject.org/rpms/dbus/pull-request/21	Verify source signatures with openpgpverify
+dnf	28	Open	jjelen	https://src.fedoraproject.org/rpms/dnf/pull-request/28	Verify source signatures with openpgpverify
+emacs	51	Merged	jjelen	https://src.fedoraproject.org/rpms/emacs/pull-request/51	Verify source signatures with openpgpverify
+ethtool	9	Open	jjelen	https://src.fedoraproject.org/rpms/ethtool/pull-request/9	Verify source signatures with openpgpverify
+fapolicyd	44	Closed	anaessen	https://src.fedoraproject.org/rpms/fapolicyd/pull-request/44	Use openpgpverify
+fio	20	Open	jjelen	https://src.fedoraproject.org/rpms/fio/pull-request/20	Verify source signatures with openpgpverify
+fips-provider	3	Merged	jjelen	https://src.fedoraproject.org/rpms/fips-provider/pull-request/3	Verify source signatures with openpgpverify
+git-lfs	9	Merged	anaessen	https://src.fedoraproject.org/rpms/git-lfs/pull-request/9	Use openpgpverify
+gnulib-l10n	1	Open	jjelen	https://src.fedoraproject.org/rpms/gnulib-l10n/pull-request/1	Verify source signatures with openpgpverify
+gnutls	188	Open	jjelen	https://src.fedoraproject.org/rpms/gnutls/pull-request/188	Verify source signatures with openpgpverify
+grep	6	Open	jjelen	https://src.fedoraproject.org/rpms/grep/pull-request/6	Verify source signatures with openpgpverify
+ibus-chewing	4	Merged	jjelen	https://src.fedoraproject.org/rpms/ibus-chewing/pull-request/4	Verify source signatures with openpgpverify
+iotop-c	2	Merged	jjelen	https://src.fedoraproject.org/rpms/iotop-c/pull-request/2	Verify source signatures with openpgpverify
+iptables	18	Open	jjelen	https://src.fedoraproject.org/rpms/iptables/pull-request/18	Verify source signatures with openpgpverify
+kea	72	Merged	anaessen	https://src.fedoraproject.org/rpms/kea/pull-request/72	Use openpgpverify
+ldns	10	Open	jjelen	https://src.fedoraproject.org/rpms/ldns/pull-request/10	Verify source signatures with openpgpverify
+libchewing	9	Merged	jjelen	https://src.fedoraproject.org/rpms/libchewing/pull-request/9	Verify source signatures with openpgpverify
+libdnf	14	Open	jjelen	https://src.fedoraproject.org/rpms/libdnf/pull-request/14	Verify source signatures with openpgpverify
+libmnl	4	Open	jjelen	https://src.fedoraproject.org/rpms/libmnl/pull-request/4	Verify source signatures with openpgpverify
+libmodulemd	39	Closed	jjelen	https://src.fedoraproject.org/rpms/libmodulemd/pull-request/39	Verify source signatures with openpgpverify
+libnetfilter_conntrack	4	Open	jjelen	https://src.fedoraproject.org/rpms/libnetfilter_conntrack/pull-request/4	Verify source signatures with openpgpverify
+libnftnl	3	Open	jjelen	https://src.fedoraproject.org/rpms/libnftnl/pull-request/3	Verify source signatures with openpgpverify
+libreswan	14	Open	jjelen	https://src.fedoraproject.org/rpms/libreswan/pull-request/14	Verify source signatures with openpgpverify
+librhsm	3	Open	jjelen	https://src.fedoraproject.org/rpms/librhsm/pull-request/3	Verify source signatures with openpgpverify
+libselinux	45	Merged	plautrba	https://src.fedoraproject.org/rpms/libselinux/pull-request/45	Use %openpgpverify macro
+libsemanage	24	Merged	plautrba	https://src.fedoraproject.org/rpms/libsemanage/pull-request/24	Use %openpgpverify macro
+libsepol	30	Merged	plautrba	https://src.fedoraproject.org/rpms/libsepol/pull-request/30	Checkpolicy revdeps and openpgpverify
+libssh2	4	Open	jjelen	https://src.fedoraproject.org/rpms/libssh2/pull-request/4	Verify source signatures with openpgpverify
+libusb1	11	Open	jjelen	https://src.fedoraproject.org/rpms/libusb1/pull-request/11	Verify source signatures with openpgpverify
+libxcrypt	23	Open	jjelen	https://src.fedoraproject.org/rpms/libxcrypt/pull-request/23	Verify source signatures with openpgpverify
+llvm	670	Open	jjelen	https://src.fedoraproject.org/rpms/llvm/pull-request/670	Verify source signatures with openpgpverify
+llvm22	3	Open	jjelen	https://src.fedoraproject.org/rpms/llvm22/pull-request/3	Verify source signatures with openpgpverify
+log4cplus	13	Merged	jjelen	https://src.fedoraproject.org/rpms/log4cplus/pull-request/13	Verify source signatures with openpgpverify
+logrotate	4	Open	jjelen	https://src.fedoraproject.org/rpms/logrotate/pull-request/4	Verify source signatures with openpgpverify
+lttng-ust	3	Open	jjelen	https://src.fedoraproject.org/rpms/lttng-ust/pull-request/3	Verify source signatures with openpgpverify
+lynx	8	Open	jjelen	https://src.fedoraproject.org/rpms/lynx/pull-request/8	Verify source signatures with openpgpverify
+man-db	22	Open	jjelen	https://src.fedoraproject.org/rpms/man-db/pull-request/22	Verify source signatures with openpgpverify
+mcstrans	6	Merged	plautrba	https://src.fedoraproject.org/rpms/mcstrans/pull-request/6	Use %openpgpverify macro
+mdadm	14	Open	jjelen	https://src.fedoraproject.org/rpms/mdadm/pull-request/14	Verify source signatures with openpgpverify
+mkfontscale	2	Open	anaessen	https://src.fedoraproject.org/rpms/mkfontscale/pull-request/2	Use openpgpverify
+munge	11	Merged	jjelen	https://src.fedoraproject.org/rpms/munge/pull-request/11	Verify source signatures with openpgpverify
+nano	9	Open	jjelen	https://src.fedoraproject.org/rpms/nano/pull-request/9	Verify source signatures with openpgpverify
+nftables	7	Open	jjelen	https://src.fedoraproject.org/rpms/nftables/pull-request/7	Verify source signatures with openpgpverify
+parted	9	Merged	jjelen	https://src.fedoraproject.org/rpms/parted/pull-request/9	Verify source signatures with openpgpverify
+pcre2	39	Open	jjelen	https://src.fedoraproject.org/rpms/pcre2/pull-request/39	Verify source signatures with openpgpverify
+php	9	Open	jjelen	https://src.fedoraproject.org/rpms/php/pull-request/9	Verify source signatures with openpgpverify
+policycoreutils	69	Merged	plautrba	https://src.fedoraproject.org/rpms/policycoreutils/pull-request/69	Use %openpgpverify macro
+python3.10	256	Open	churchyard	https://src.fedoraproject.org/rpms/python3.10/pull-request/256	Switch to %openpgpverify
+python3.11	248	Open	churchyard	https://src.fedoraproject.org/rpms/python3.11/pull-request/248	Switch to %openpgpverify
+python3.12	243	Open	churchyard	https://src.fedoraproject.org/rpms/python3.12/pull-request/243	Switch to %openpgpverify (and refetch the upstream public key)
+python3.13	279	Merged	churchyard	https://src.fedoraproject.org/rpms/python3.13/pull-request/279	Switch to %openpgpverify (and refetch the upstream public key)
+python3.6	177	Open	churchyard	https://src.fedoraproject.org/rpms/python3.6/pull-request/177	Switch to %openpgpverify
+python3.9	253	Open	churchyard	https://src.fedoraproject.org/rpms/python3.9/pull-request/253	Switch to %openpgpverify and use a fresh key
+pyxattr	8	Merged	jjelen	https://src.fedoraproject.org/rpms/pyxattr/pull-request/8	Verify source signatures with openpgpverify
+radvd	17	Merged	anaessen	https://src.fedoraproject.org/rpms/radvd/pull-request/17	Use openpgpverify
+squid	10	Open	jjelen	https://src.fedoraproject.org/rpms/squid/pull-request/10	Verify source signatures with openpgpverify
+sssd	94	Open	anaessen	https://src.fedoraproject.org/rpms/sssd/pull-request/94	Use openpgpverify
+tftp	10	Merged	anaessen	https://src.fedoraproject.org/rpms/tftp/pull-request/10	Use openpgpverify
+tomcat	104	Open	jjelen	https://src.fedoraproject.org/rpms/tomcat/pull-request/104	Verify source signatures with openpgpverify
+unbound	41	Open	jjelen	https://src.fedoraproject.org/rpms/unbound/pull-request/41	Verify source signatures with openpgpverify
+xfsdump	6	Open	jjelen	https://src.fedoraproject.org/rpms/xfsdump/pull-request/6	Verify source signatures with openpgpverify
+xfsprogs	30	Open	jjelen	https://src.fedoraproject.org/rpms/xfsprogs/pull-request/30	Verify source signatures with openpgpverify
+zsh	13	Merged	anaessen	https://src.fedoraproject.org/rpms/zsh/pull-request/13	Use openpgpverify

@@ -1,0 +1,39 @@
+From fbc65bac34319aee1dc324ac5ae3cde2c7a08e36 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:45 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ bino.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/bino.spec b/bino.spec
+index bdf22f0..1e7438d 100644
+--- a/bino.spec
++++ b/bino.spec
+@@ -14,7 +14,7 @@ Requires:       hicolor-icon-theme
+ BuildRequires:  cmake
+ BuildRequires:  desktop-file-utils
+ BuildRequires:  gcc-c++
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  libappstream-glib
+ BuildRequires:  pandoc
+ 
+@@ -32,7 +32,7 @@ and it can be used for powerwalls, virtual reality installations and other
+ multi-projector setups.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+-- 
+2.56.0
+

@@ -1,0 +1,60 @@
+From 6a167defac727d5f9c6c536ca8dcaf754fa8b970 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:47 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ mimedefang.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/mimedefang.spec b/mimedefang.spec
+index 86a9b23..6108ecc 100644
+--- a/mimedefang.spec
++++ b/mimedefang.spec
+@@ -1,7 +1,7 @@
+ Summary:        E-mail filtering framework using Sendmail's Milter interface
+ Name:           mimedefang
+ Version:        3.7.1
+-Release:        2%{?dist}
++Release:        3%{?dist}
+ # {event{,_tcp}.{c,h},eventpriv.h} are GPL-2.0-or-later, rest is GPL-2.0-only
+ License:        GPL-2.0-only AND GPL-2.0-or-later
+ URL:            https://mimedefang.org/
+@@ -14,7 +14,7 @@ Source5:        mimedefang-multiplexor.service
+ Source6:        mimedefang-wrapper
+ Source7:        mimedefang.tmpfilesd
+ Source8:        mimedefang.sysusersd
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  gcc
+ BuildRequires:  make
+ BuildRequires:  perl-generators
+@@ -66,7 +66,7 @@ agreement" that mail transfer agents do not modify message bodies. This
+ could cause problems, for example, with encrypted or signed messages.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -n Mail-MIMEDefang-%{version} -p1
+ cp -pf %{SOURCE3} .
+ 
+@@ -165,6 +165,9 @@ fi
+ %dir %attr(0750,defang,defang) %{_localstatedir}/spool/MD-Quarantine/
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 3.7.1-3
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 22 2026 Jitka Plesnikova <jplesnik@redhat.com> - 3.7.1-2
+ - Perl 5.44 rebuild
+ 
+-- 
+2.56.0
+

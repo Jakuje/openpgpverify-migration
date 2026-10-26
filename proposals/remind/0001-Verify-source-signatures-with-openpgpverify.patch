@@ -1,0 +1,39 @@
+From 83aab04585d032445e79e57fe2d601cb65353760 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:49 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ remind.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/remind.spec b/remind.spec
+index b0a9036..20b1ddb 100644
+--- a/remind.spec
++++ b/remind.spec
+@@ -17,7 +17,7 @@ Source:         685A5A5E511D30E2.gpg
+ Patch:          use-system-libjsonparser.diff
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  make
+ BuildRequires:  perl(Cairo)
+ BuildRequires:  perl(ExtUtils::MakeMaker)
+@@ -84,7 +84,7 @@ License:        GPL-2.0-only AND GPL-2.0-or-later AND GPL-3.0-only
+ Tools to convert the remind output to ps, pdf or html as well as example files.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1 -n %{name}-%{version}
+ # Disable packlist and perllocal update
+ sed -i 's|\$(PERL) Makefile.PL|\$(PERL) Makefile.PL NO_PACKLIST=1 NO_PERLLOCAL=1 OPTIMIZE="$RPM_OPT_FLAGS"|g' rem2pdf/Makefile.top.in
+-- 
+2.56.0
+

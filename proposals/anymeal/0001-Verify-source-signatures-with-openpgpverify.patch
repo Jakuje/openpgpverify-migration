@@ -1,0 +1,60 @@
+From 9538df573061e418b7e00cffa645c502fdc130cc Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:45 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ anymeal.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/anymeal.spec b/anymeal.spec
+index bc5d0c7..36793a2 100644
+--- a/anymeal.spec
++++ b/anymeal.spec
+@@ -2,7 +2,7 @@ Summary:  A free and open source recipe management software
+ Name:     anymeal
+ License:  GPL-3.0-or-later
+ Version:  1.33
+-Release:  6%{?dist}
++Release:  7%{?dist}
+ 
+ URL:      https://github.com/wedesoft/anymeal
+ Source0:  %{url}/releases/download/v%{version}/%{name}-%{version}.tar.xz
+@@ -14,7 +14,7 @@ BuildRequires:  automake
+ BuildRequires:  desktop-file-utils
+ BuildRequires:  flex
+ BuildRequires:  gcc-c++
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  libtool
+ BuildRequires:  libappstream-glib
+ BuildRequires:  recode-devel
+@@ -35,7 +35,7 @@ edit, and print them.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -n %{name}-%{version}
+ # cleanup moc/rcc/uic output in tarball
+ rm -f anymeal/{moc,qrc,ui}_*
+@@ -67,6 +67,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/de.wedesoft.%{
+ 
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 1.33-7
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.33-6
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

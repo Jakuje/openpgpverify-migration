@@ -1,0 +1,59 @@
+From daa6304b7372cd0b23f77593444c2c02255e29a4 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:49 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ reprotest.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/reprotest.spec b/reprotest.spec
+index a1c7a42..476111a 100644
+--- a/reprotest.spec
++++ b/reprotest.spec
+@@ -1,6 +1,6 @@
+ Name:           reprotest
+ Version:        0.7.32
+-Release:        2%{?dist}
++Release:        3%{?dist}
+ Summary:        Build packages and check them for reproducibility
+ URL:            https://salsa.debian.org/reproducible-builds/%{name}
+ 
+@@ -10,7 +10,7 @@ Source1:        https://reproducible-builds.org/_lfs/releases/%{name}/%{name}_%{
+ Source2:        https://salsa.debian.org/reproducible-builds/reproducible-website/-/raw/master/reproducible-builds-developers-keys.asc
+ BuildArch:      noarch
+ 
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  python%{python3_pkgversion}-devel
+ 
+ Requires:       python%{python3_pkgversion}-rstr
+@@ -34,7 +34,7 @@ example schroot, ssh, qemu, and several others.
+ reprotest is developed as part of the "reproducible builds" Debian project.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -n %{name}
+ # Remove bundled egg-info
+ rm -rf %{name}.egg-info
+@@ -55,6 +55,9 @@ rm -rf %{name}.egg-info
+ %{python3_sitelib}/%{name}-%{version}.dist-info
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 0.7.32-3
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.7.32-2
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

@@ -1,0 +1,38 @@
+From 01de5928daf11cc16cd61bec26e2d14e69efff7c Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:48 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ python-b4.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/python-b4.spec b/python-b4.spec
+index e654e98..526b21e 100644
+--- a/python-b4.spec
++++ b/python-b4.spec
+@@ -29,6 +29,7 @@ BuildRequires:  gnupg2
+ BuildRequires:  python%{python3_pkgversion}-devel
+ BuildRequires:  python3dist(pytest)
+ BuildRequires:  python3dist(shtab)
++BuildRequires:  openpgpverify
+ 
+ %global _description %{expand:
+ B4 is a helper utility to work with patches made available via a public-inbox
+@@ -46,7 +47,7 @@ Provides:       python%{python3_pkgversion}-%{srcname} = %{version}-%{release}
+ 
+ 
+ %prep
+-xz -dc '%{SOURCE0}' | %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data=-
++xz -dc '%{SOURCE0}' | %{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data=-
+ %autosetup -p1 -n %{srcname}-%{version}
+ 
+ # Disable attestation (only applicable to EPEL)
+-- 
+2.56.0
+

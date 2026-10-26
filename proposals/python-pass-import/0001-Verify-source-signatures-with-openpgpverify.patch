@@ -1,0 +1,38 @@
+From fdf0272ce2ee6242f93d2074301e084dfb98c037 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:49 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ python-pass-import.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/python-pass-import.spec b/python-pass-import.spec
+index b2c61f9..466aaec 100644
+--- a/python-pass-import.spec
++++ b/python-pass-import.spec
+@@ -23,6 +23,7 @@ BuildRequires: python3-devel
+ BuildRequires: python3dist(pytest)
+ BuildRequires: gnupg2
+ BuildRequires: pass
++BuildRequires: openpgpverify
+ 
+ Requires:      pass
+ 
+@@ -42,7 +43,7 @@ Summary:    %{summary}
+ %pyproject_extras_subpkg -n python3-%{srcname} xml keepass gnomekeyring encrypted_otp decrypt %{?has_jsonpath_ng_170:filter}
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1 -n %{srcname}-%{version}
+ 
+ %generate_buildrequires
+-- 
+2.56.0
+

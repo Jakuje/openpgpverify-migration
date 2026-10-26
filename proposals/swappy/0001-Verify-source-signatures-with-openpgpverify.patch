@@ -1,0 +1,60 @@
+From 6e4004f59d489c25b6d43f3982df8b3e8e7b275d Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:50 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ swappy.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/swappy.spec b/swappy.spec
+index f47b565..4ae3c27 100644
+--- a/swappy.spec
++++ b/swappy.spec
+@@ -2,7 +2,7 @@
+ 
+ Name: swappy
+ Version: 1.5.1
+-Release: 9%{?dist}
++Release: 10%{?dist}
+ Summary: Wayland native snapshot editing tool, inspired by Snappy on macOS
+ License: MIT
+ URL:     https://github.com/jtheoof/swappy
+@@ -14,7 +14,7 @@ Source1: %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz.sig
+ Source2: 6A6B35DBE9442683.gpg
+ 
+ BuildRequires: gcc
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ BuildRequires: meson
+ BuildRequires: scdoc
+ BuildRequires: pkgconfig(gtk+-3.0)
+@@ -39,7 +39,7 @@ macOS. Works great with grim, slurp and sway. But can easily work with
+ other screen copy tools that can output a final PNG image to stdout.
+ 
+ %prep
+-%gpgverify -k 2 -s 1 -d 0
++%openpgpverify -k 2 -s 1 -d 0
+ %autosetup -p1
+ 
+ %build
+@@ -68,6 +68,9 @@ sed -i 's/^Exec=.*$/Exec=sh -c "if [ -n \\"\\\\$*\\" ]; then exec swappy -f \\"\
+ %{_mandir}/man1/%{name}.1.*
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 1.5.1-10
++- Verify upstream source signatures with openpgpverify
++
+ * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.1-9
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

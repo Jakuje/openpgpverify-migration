@@ -1,0 +1,38 @@
+From d21863de209c400563e06acaae2ebdf5f115906c Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:49 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ sngrep.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/sngrep.spec b/sngrep.spec
+index 35cd292..db7f2fe 100644
+--- a/sngrep.spec
++++ b/sngrep.spec
+@@ -15,6 +15,7 @@ BuildRequires:  pkgconfig(libpcre2-8)
+ BuildRequires:  pkgconfig(libssl)
+ BuildRequires:  pkgconfig(ncursesw)
+ BuildRequires:  pkgconfig(zlib)
++BuildRequires:  openpgpverify
+ BuildSystem:    cmake
+ BuildOption(conf): -DWITH_OPENSSL=ON -DWITH_PCRE2=ON -DWITH_ZLIB=ON -DWITH_NCURSES=ON -DWITH_UNICODE=ON -DUSE_IPV6=ON -DUSE_EEP=ON -DCMAKE_INSTALL_SYSCONFDIR=/etc
+ 
+@@ -24,7 +25,7 @@ supports live capture to display realtime SIP packets and can also be used as
+ PCAP viewer.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ rm -f README.md
+ cp -f README README.md
+-- 
+2.56.0
+

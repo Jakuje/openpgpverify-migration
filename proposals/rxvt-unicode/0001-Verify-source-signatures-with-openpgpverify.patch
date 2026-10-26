@@ -1,0 +1,59 @@
+From f499e3db24df588f8e53d9ce2050ea3891b3bfe4 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:49 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ rxvt-unicode.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/rxvt-unicode.spec b/rxvt-unicode.spec
+index 1e3f1f7..1f02a72 100644
+--- a/rxvt-unicode.spec
++++ b/rxvt-unicode.spec
+@@ -1,6 +1,6 @@
+ Name:           rxvt-unicode
+ Version:        9.31
+-Release:        17%{?dist}
++Release:        18%{?dist}
+ Summary:        Unicode version of rxvt
+ 
+ License:        GPL-3.0-or-later
+@@ -29,7 +29,7 @@ BuildRequires:  gcc-c++
+ BuildRequires:  gdk-pixbuf2-devel
+ BuildRequires:  git
+ BuildRequires:  glib2-devel
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  libptytty-devel
+ BuildRequires:  libX11-devel
+ BuildRequires:  libXext-devel
+@@ -60,7 +60,7 @@ and output. It also supports mixing multiple fonts at the same time, including
+ Xft fonts.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE4}' --signature='%{SOURCE3}' --data='%{SOURCE2}'
++%{openpgpverify} --keyring='%{SOURCE4}' --signature='%{SOURCE3}' --data='%{SOURCE2}'
+ signify -V -p '%{SOURCE2}' -m '%{SOURCE0}'
+ %autosetup -S git
+ 
+@@ -185,6 +185,9 @@ popd
+ %{_libdir}/urxvt
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 9.31-18
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 23 2026 Jitka Plesnikova <jplesnik@redhat.com> - 9.31-17
+ - Perl 5.44 rebuild
+ 
+-- 
+2.56.0
+

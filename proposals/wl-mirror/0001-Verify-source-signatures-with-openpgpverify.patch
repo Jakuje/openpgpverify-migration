@@ -1,0 +1,39 @@
+From 4d1320708982cddda58384770dc264bd17033700 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:50 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ wl-mirror.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/wl-mirror.spec b/wl-mirror.spec
+index 873e051..36bf207 100644
+--- a/wl-mirror.spec
++++ b/wl-mirror.spec
+@@ -12,7 +12,7 @@ Source2:        gpgkey-A4FAD9CEDA213AF3.asc
+ 
+ BuildRequires:  cmake
+ BuildRequires:  gcc
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ BuildRequires:  pkgconfig(egl)
+ BuildRequires:  pkgconfig(gbm)
+ BuildRequires:  pkgconfig(glesv2)
+@@ -35,7 +35,7 @@ wl-mirror attempts to provide a solution to sway's lack of output
+ mirroring by mirroring an output onto a client surface.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ # remove bundled wayland-protocols, just in case
+ rm -rf proto/wayland-protocols
+-- 
+2.56.0
+

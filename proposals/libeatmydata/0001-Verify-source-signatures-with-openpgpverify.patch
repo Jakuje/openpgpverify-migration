@@ -1,0 +1,57 @@
+From bbc3358852e3f0be52fbb74e5bdee3295707d7a1 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:47 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ libeatmydata.spec | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/libeatmydata.spec b/libeatmydata.spec
+index ae1884f..ee53bb3 100644
+--- a/libeatmydata.spec
++++ b/libeatmydata.spec
+@@ -1,11 +1,12 @@
+ Name:           libeatmydata
+ Version:        131
+-Release:        4%{?dist}
++Release:        5%{?dist}
+ Group:          Development/Tools
+ # Automatically converted from old format: GPLv3 - review is highly recommended.
+ License:        GPL-3.0-only
+ Summary:        Library and utilities designed to disable fsync and friends
+-BuildRequires:  gcc, make, libtool, strace, gnupg
++BuildRequires:  gcc, make, libtool, strace
++BuildRequires:  openpgpverify
+ Source0:        https://www.flamingspork.com/projects/libeatmydata/%{name}-%{version}.tar.gz
+ Source1:        https://www.flamingspork.com/projects/libeatmydata/%{name}-%{version}.tar.gz.asc
+ Source2:        https://flamingspork.com/stewart.gpg
+@@ -37,7 +38,7 @@ wrapper will find the command in PATH and then execute it after setting up
+ the libeatmydata LD_PRELOAD
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+@@ -68,6 +69,9 @@ find %{buildroot} -name "*.la" -type f -delete
+ %{_libdir}/*.so
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 131-5
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 131-4
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

@@ -1,0 +1,59 @@
+From 4a336641f5fba28b66f9a86363613d213fbbce40 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:45 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ SDL3_net.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/SDL3_net.spec b/SDL3_net.spec
+index b18c7a9..3a12e22 100644
+--- a/SDL3_net.spec
++++ b/SDL3_net.spec
+@@ -7,7 +7,7 @@ License: Zlib
+ %global ver_micro 0
+ 
+ Version: %{ver_major}.%{ver_minor}.%{ver_micro}
+-Release: 3%{?dist}
++Release: 4%{?dist}
+ 
+ %global so_major 0
+ %global so_version %{so_major}.%{ver_minor}.%{ver_micro}
+@@ -23,6 +23,7 @@ BuildRequires: gcc
+ BuildRequires: perl-interpreter
+ 
+ BuildRequires: SDL3-devel
++BuildRequires: openpgpverify
+ 
+ %description
+ This is a portable network library for use with SDL3. It's goal is to simplify
+@@ -40,7 +41,7 @@ applications that use %{name} along with relevant documentation.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE9}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE9}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ %autosetup
+ %cmake \
+@@ -74,6 +75,9 @@ applications that use %{name} along with relevant documentation.
+ 
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 3.2.0-4
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 3.2.0-3
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

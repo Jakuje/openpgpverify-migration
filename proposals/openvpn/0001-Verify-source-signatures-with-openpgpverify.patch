@@ -1,0 +1,60 @@
+From 8802d96c217a7c98be360afae73e7776369ab4c9 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:48 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ openvpn.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/openvpn.spec b/openvpn.spec
+index 0d7b9f0..bb5a1b8 100644
+--- a/openvpn.spec
++++ b/openvpn.spec
+@@ -20,7 +20,7 @@
+ 
+ Name:              openvpn
+ Version:           2.7.8
+-Release:           1%{?dist}
++Release:           2%{?dist}
+ Summary:           A full-featured TLS VPN solution
+ URL:               https://community.openvpn.net/
+ Source0:           https://build.openvpn.net/downloads/releases/%{name}-%{version}.tar.gz
+@@ -32,7 +32,7 @@ Source10:          gpgkey-F554A3687412CFFEBDEFE0A312F5F7B42F2B01E7.gpg
+ Patch1:            fedora-crypto-policy-compliance.patch
+ Patch50:           openvpn-2.4-change-tmpfiles-permissions.patch
+ License:           GPL-2.0-only
+-BuildRequires:     gnupg2
++BuildRequires:     openpgpverify
+ BuildRequires:     gcc
+ BuildRequires:     automake
+ BuildRequires:     autoconf
+@@ -90,7 +90,7 @@ written in C and provides a more low-level and information rich access
+ to similar features as the various script-hooks.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE10}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE10}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1 -n %{name}-%{version}
+ 
+ # %%doc items shouldn't be executable.
+@@ -236,6 +236,9 @@ done
+ 
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 2.7.8-2
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Oct 7 2026 Frank Lichtenheld <frank@lichtenheld.com> - 2.7.8-1
+ - Update to upstream 2.7.8 release
+ 
+-- 
+2.56.0
+

@@ -1,0 +1,60 @@
+From 81dcd16d7f1b38ea10bd10e65e393248ab1f3402 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:49 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ radsecproxy.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/radsecproxy.spec b/radsecproxy.spec
+index 0a87f21..5eac34f 100644
+--- a/radsecproxy.spec
++++ b/radsecproxy.spec
+@@ -1,7 +1,7 @@
+ Summary:        Generic RADIUS proxy with RadSec support
+ Name:           radsecproxy
+ Version:        1.11.4
+-Release:        1%{?dist}
++Release:        2%{?dist}
+ License:        BSD-3-Clause
+ URL:            https://radsecproxy.github.io/
+ Source0:        https://github.com/radsecproxy/radsecproxy/releases/download/%{version}/%{name}-%{version}.tar.gz
+@@ -12,7 +12,7 @@ Source4:        %{name}.service
+ Source5:        %{name}.logrotate
+ Source6:        %{name}.tmpfilesd
+ Source7:        %{name}.sysusersd
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  gcc
+ BuildRequires:  make
+ BuildRequires:  nettle-devel
+@@ -29,7 +29,7 @@ The aim is for the proxy to have sufficient features to be flexible, while
+ at the same time to be small, efficient and easy to configure.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+@@ -82,6 +82,9 @@ make check
+ %dir %attr(0750,%{name},%{name}) %{_localstatedir}/log/%{name}/
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 1.11.4-2
++- Verify upstream source signatures with openpgpverify
++
+ * Mon Aug 10 2026 Robert Scheck <robert@fedoraproject.org> 1.11.4-1
+ - Upgrade to 1.11.4 (#2513031)
+ 
+-- 
+2.56.0
+

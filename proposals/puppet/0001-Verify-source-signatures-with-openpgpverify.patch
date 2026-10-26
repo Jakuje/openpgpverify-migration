@@ -1,0 +1,60 @@
+From 54d4e659e375235395fb1099b727075836903bf8 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:48 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ puppet.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/puppet.spec b/puppet.spec
+index a19be7f..de7bb9e 100644
+--- a/puppet.spec
++++ b/puppet.spec
+@@ -4,7 +4,7 @@
+ 
+ Name:           puppet
+ Version:        8.10.0
+-Release:        6%{?dist}
++Release:        7%{?dist}
+ Summary:        Network tool for managing many disparate systems
+ License:        Apache-2.0
+ URL:            https://puppet.com
+@@ -35,7 +35,7 @@ BuildArch: noarch
+ 
+ # ruby-devel does not require the base package, but requires -libs instead
+ BuildRequires: facter
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ BuildRequires: hiera
+ BuildRequires: ruby
+ BuildRequires: ruby-devel
+@@ -71,7 +71,7 @@ normally aggregated in different files, like users, cron jobs, and hosts,
+ along with obviously discrete elements like packages, services, and files.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ cp -a %{sources} .
+ for f in puppetlabs-*.tar*; do
+@@ -225,6 +225,9 @@ export RUBYLIB=%{buildroot}%{_datadir}/ruby/vendor_ruby
+ %systemd_postun_with_restart %{name}.service
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 8.10.0-7
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 8.10.0-6
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

@@ -1,0 +1,39 @@
+From dac3db2017bc68a86a6cfcc31faeb8717483ac7d Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:47 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ maven-doxia-sitetools.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/maven-doxia-sitetools.spec b/maven-doxia-sitetools.spec
+index dcfc8f9..2783d27 100644
+--- a/maven-doxia-sitetools.spec
++++ b/maven-doxia-sitetools.spec
+@@ -14,7 +14,7 @@ Source2:        https://downloads.apache.org/maven/KEYS
+ 
+ Patch:          0001-Remove-dependency-on-velocity-tools.patch
+ 
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ BuildRequires:  maven-local-openjdk25
+ BuildRequires:  mvn(com.google.inject:guice)
+ BuildRequires:  mvn(commons-io:commons-io)
+@@ -69,7 +69,7 @@ Summary:        Javadoc for %{name}
+ API documentation for %{name}.
+ 
+ %prep
+-%{gpgverify} --data=%{SOURCE0} --signature=%{SOURCE1} --keyring=%{SOURCE2}
++%{openpgpverify} --data=%{SOURCE0} --signature=%{SOURCE1} --keyring=%{SOURCE2}
+ %autosetup -p1 -n doxia-sitetools-%{version}
+ 
+ # Unavailable plugins
+-- 
+2.56.0
+

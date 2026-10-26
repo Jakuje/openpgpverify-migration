@@ -1,0 +1,39 @@
+From 5a3cc6556a5a7d6c3eecfe20ada83667c160a6ec Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:45 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ ansible-collection-dellemc-openmanage.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/ansible-collection-dellemc-openmanage.spec b/ansible-collection-dellemc-openmanage.spec
+index e628d63..fa38d1b 100644
+--- a/ansible-collection-dellemc-openmanage.spec
++++ b/ansible-collection-dellemc-openmanage.spec
+@@ -31,7 +31,7 @@ Patch1:         https://github.com/dell/dellemc-openmanage-ansible-modules/pull/
+ 
+ BuildArch:      noarch
+ 
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  ansible-packaging
+ %if %{with tests}
+ BuildRequires:  ansible-packaging-tests
+@@ -53,7 +53,7 @@ Requires:       python3dist(defusedxml)
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -N -c -n dellemc-openmanage-%{version}
+ cp '%{SOURCE3}' galaxy.yml
+ %autopatch -p1
+-- 
+2.56.0
+

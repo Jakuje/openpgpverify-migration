@@ -1,0 +1,39 @@
+From e11f59eba53e2ec538be2107fbb9b2f8d7ebd733 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:49 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ river-classic.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/river-classic.spec b/river-classic.spec
+index 742ab9c..f3e0b19 100644
+--- a/river-classic.spec
++++ b/river-classic.spec
+@@ -43,7 +43,7 @@ Patch:          river-classic-0.3.16-Revert-build-switch-to-translate-c-package.
+ ExclusiveArch:  %{zig_arches}
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  scdoc
+ BuildRequires:  (zig >= 0.16 with zig < 0.17)
+ BuildRequires:  zig-rpm-macros
+@@ -101,7 +101,7 @@ License:        ISC
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %setup -q -a 4 -a 5 -a 6 -a 7
+ %autopatch -p1
+ 
+-- 
+2.56.0
+

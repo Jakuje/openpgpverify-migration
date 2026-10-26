@@ -1,0 +1,60 @@
+From 699fff8dd380459276f94477592c81cd38cefca5 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:46 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ foot.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/foot.spec b/foot.spec
+index 70d6b97..202a868 100644
+--- a/foot.spec
++++ b/foot.spec
+@@ -4,7 +4,7 @@
+ 
+ Name:           foot
+ Version:        1.28.0
+-Release:        1%{?dist}
++Release:        2%{?dist}
+ Summary:        Fast, lightweight and minimalistic Wayland terminal emulator
+ 
+ # Main package license: MIT
+@@ -18,7 +18,7 @@ Source2:        gpgkey-5BBD4992C116573F.asc
+ Source3:        org.codeberg.dnkl.foot.metainfo.xml
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ BuildRequires:  meson >= 0.59.0
+ BuildRequires:  desktop-file-utils
+ BuildRequires:  libappstream-glib
+@@ -83,7 +83,7 @@ Requires:       ncurses-base
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ 
+@@ -148,6 +148,9 @@ desktop-file-validate \
+ 
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 1.28.0-2
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Sep 02 2026 Aleksei Bavshin <alebastr@fedoraproject.org> - 1.28.0-1
+ - Update to 1.28.0 (#2527360)
+ 
+-- 
+2.56.0
+

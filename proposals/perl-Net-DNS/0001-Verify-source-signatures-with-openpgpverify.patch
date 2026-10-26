@@ -1,0 +1,59 @@
+From 045c86467bb2db3c972b41a0bc7239d2779d2778 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:48 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ perl-Net-DNS.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/perl-Net-DNS.spec b/perl-Net-DNS.spec
+index 1f2721c..bc57f0c 100644
+--- a/perl-Net-DNS.spec
++++ b/perl-Net-DNS.spec
+@@ -1,6 +1,6 @@
+ Name:          perl-Net-DNS
+ Version:       1.57
+-Release:       1%{?dist}
++Release:       2%{?dist}
+ Summary:       DNS resolver modules for Perl
+ License:       MIT
+ URL:           https://www.net-dns.org
+@@ -10,7 +10,7 @@ Source2:       https://keys.openpgp.org/pks/lookup?op=get&search=0x231018690C4D9
+ 
+ BuildArch:     noarch
+ 
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ BuildRequires: coreutils
+ BuildRequires: findutils
+ BuildRequires: make
+@@ -115,7 +115,7 @@ Tests from %{name}. Execute them
+ with "%{_libexecdir}/%{name}/test".
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ %setup -q -n Net-DNS-%{version} 
+ chmod -x demo/*
+@@ -182,6 +182,9 @@ make test
+ %{_libexecdir}/%{name}
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 1.57-2
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Sep 02 2026 Jitka Plesnikova <jplesnik@redhat.com> - 1.57-1
+ - 1.57 bump (rhbz#2526802)
+ 
+-- 
+2.56.0
+

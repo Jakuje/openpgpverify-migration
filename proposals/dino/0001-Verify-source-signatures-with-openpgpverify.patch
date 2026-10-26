@@ -1,0 +1,39 @@
+From 3b9afa06eeac9b2ce9b3beaeae26fb004b3448eb Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:46 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ dino.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/dino.spec b/dino.spec
+index d51132e..23e7715 100644
+--- a/dino.spec
++++ b/dino.spec
+@@ -25,7 +25,7 @@ BuildRequires: desktop-file-utils
+ BuildRequires: gcc
+ BuildRequires: gcc-c++
+ BuildRequires: glib2-devel
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ BuildRequires: gpgme-devel
+ BuildRequires: gspell-devel
+ BuildRequires: gstreamer1-devel
+@@ -70,7 +70,7 @@ Development files for dino.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1 -n %{name}-%{version}
+ 
+ 
+-- 
+2.56.0
+

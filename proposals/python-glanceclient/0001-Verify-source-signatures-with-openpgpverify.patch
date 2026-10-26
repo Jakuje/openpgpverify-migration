@@ -1,0 +1,43 @@
+From 75b7de7e179374abbaee2eb7441ff47c55c4f930 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:48 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ python-glanceclient.spec | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/python-glanceclient.spec b/python-glanceclient.spec
+index 4294d60..0758c7a 100644
+--- a/python-glanceclient.spec
++++ b/python-glanceclient.spec
+@@ -31,11 +31,9 @@ Patch0:           0001-fix-hashlib-ValueError-message-check-for-py3.15.patch
+ BuildArch:        noarch
+ 
+ # Required for tarball sources verification
+-%if 0%{?sources_gpg} == 1
+-BuildRequires:  /usr/bin/gpgv2
+-%endif
+ 
+ BuildRequires:    git-core
++BuildRequires:  openpgpverify
+ 
+ %description
+ %{common_desc}
+@@ -61,7 +59,7 @@ This package contains auto-generated documentation.
+ %prep
+ # Required for tarball sources verification
+ %if 0%{?sources_gpg} == 1
+-%{gpgverify}  --keyring=%{SOURCE102} --signature=%{SOURCE101} --data=%{SOURCE0}
++%{openpgpverify}  --keyring=%{SOURCE102} --signature=%{SOURCE101} --data=%{SOURCE0}
+ %endif
+ %autosetup -n python_glanceclient-%{version} -S git
+ 
+-- 
+2.56.0
+

@@ -1,0 +1,62 @@
+From 5ad583132323f0e3d3fbcc5047de3021fa94b6ad Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:45 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ NetworkManager-strongswan.spec | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/NetworkManager-strongswan.spec b/NetworkManager-strongswan.spec
+index 504cb55..25cbe64 100644
+--- a/NetworkManager-strongswan.spec
++++ b/NetworkManager-strongswan.spec
+@@ -17,7 +17,7 @@
+ 
+ Name:      NetworkManager-strongswan
+ Version:   1.6.0
+-Release:   13%{?dist}
++Release:   14%{?dist}
+ Summary:   NetworkManager strongSwan IPSec VPN plug-in
+ # Automatically converted from old format: GPLv2+ - review is highly recommended.
+ License:   GPL-2.0-or-later
+@@ -33,9 +33,7 @@ BuildRequires: pkgconfig(libnm) >= 1.1.0
+ BuildRequires: pkgconfig(libnma) >= 1.1.0
+ BuildRequires: intltool
+ BuildRequires: libtool
+-%if 0%{?fedora}
+-BuildRequires: gnupg2
+-%endif
++BuildRequires: openpgpverify
+ 
+ %if %{with gtk4}
+ BuildRequires: pkgconfig(gtk4)
+@@ -73,7 +71,7 @@ with the graphical desktop.
+ 
+ %prep
+ %if 0%{?fedora}
+-%gpgverify -k 2 -d 0 -s 1
++%openpgpverify -k 2 -d 0 -s 1
+ %endif
+ %autosetup -p1
+ 
+@@ -119,6 +117,9 @@ rm -f %{buildroot}%{_libdir}/NetworkManager/libnm-*.la
+ 
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 1.6.0-14
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.6.0-13
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

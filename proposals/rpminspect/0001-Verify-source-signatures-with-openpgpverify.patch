@@ -1,0 +1,39 @@
+From 3f2d75458f35a8970f59bdcb9ce4a34539c570b8 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:49 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ rpminspect.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/rpminspect.spec b/rpminspect.spec
+index 26647b2..5cc2b8c 100644
+--- a/rpminspect.spec
++++ b/rpminspect.spec
+@@ -47,7 +47,7 @@ BuildRequires:  libcap-devel
+ BuildRequires:  gettext-devel
+ BuildRequires:  clamav-devel
+ BuildRequires:  libmandoc-devel >= 1.14.5
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  libicu-devel
+ BuildRequires:  libcdson-devel
+ %if 0%{?fedora}
+@@ -167,7 +167,7 @@ control files.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ # not always compatible with new warnings in latest GCC (particularly libtoml)
+ sed -i -e 's|werror=true|werror=false|' meson.build
+-- 
+2.56.0
+

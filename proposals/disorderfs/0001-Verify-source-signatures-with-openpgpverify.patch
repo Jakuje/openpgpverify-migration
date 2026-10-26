@@ -1,0 +1,59 @@
+From e846d83ae9863f0f141f432317075f37c8d95860 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:46 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ disorderfs.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/disorderfs.spec b/disorderfs.spec
+index 682223f..7a79bbd 100644
+--- a/disorderfs.spec
++++ b/disorderfs.spec
+@@ -1,6 +1,6 @@
+ Name:           disorderfs
+ Version:        0.6.2
+-Release:        2%{?dist}
++Release:        3%{?dist}
+ Summary:        FUSE filesystem that introduces non-determinism
+ URL:            https://salsa.debian.org/reproducible-builds/%{name}
+ License:        GPL-3.0-or-later
+@@ -8,7 +8,7 @@ Source0:        https://reproducible-builds.org/_lfs/releases/%{name}/%{name}-%{
+ Source1:        https://reproducible-builds.org/_lfs/releases/%{name}/%{name}-%{version}.tar.bz2.asc
+ Source2:        https://salsa.debian.org/reproducible-builds/reproducible-website/-/raw/master/reproducible-builds-developers-keys.asc
+ 
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  gcc-c++
+ BuildRequires:  fuse3-devel
+ BuildRequires:  pkg-config
+@@ -26,7 +26,7 @@ in which directory entries are read.  This is useful for detecting
+ non-determinism in the build process.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -n %{name}-%{version}
+ # The test suite uses the FUSE 2 unmount helper 'fusermount'; on FUSE 3 it is
+ # named 'fusermount3'.  Without this, the test mount is never torn down and
+@@ -50,6 +50,9 @@ make -C tests test || true
+ %{_datadir}/man/man1/disorderfs.1*
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 0.6.2-3
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.6.2-2
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

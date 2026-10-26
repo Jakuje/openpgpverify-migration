@@ -1,0 +1,61 @@
+From 9a04ed9f018118d426623f4d7167dbc992bbc16c Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:50 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ trader.spec | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/trader.spec b/trader.spec
+index e0daa86..c912cf5 100644
+--- a/trader.spec
++++ b/trader.spec
+@@ -13,7 +13,7 @@
+ 
+ Name:           trader
+ Version:        7.21
+-Release:        2%{?dist}
++Release:        3%{?dist}
+ Summary:        Star Traders, a simple game of interstellar trading
+ License:        GPL-3.0-or-later
+ Url:            https://www.zap.org.au/projects/trader/
+@@ -21,7 +21,8 @@ Source0:        https://ftp.zap.org.au/pub/trader/unix/trader-%{version}.tar.xz
+ Source1:        https://ftp.zap.org.au/pub/trader/unix/trader-%{version}.tar.xz.sig
+ Source2:        https://www.zap.org.au/~john/pubkey.gpg
+ 
+-BuildRequires:  gcc make gettext pkgconfig(ncurses) desktop-file-utils libappstream-glib gperf gnupg2
++BuildRequires:  gcc make gettext pkgconfig(ncurses) desktop-file-utils libappstream-glib gperf
++BuildRequires:  openpgpverify
+ Provides:       bundled(gnulib)
+ 
+ %description
+@@ -32,7 +33,7 @@ order to become the wealthiest player (the winner).
+ %global _hardened_build 1
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %setup -q
+ 
+ %build
+@@ -55,6 +56,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
+ %{_metainfodir}/*.metainfo.xml
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 7.21-3
++- Verify upstream source signatures with openpgpverify
++
+ * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 7.21-2
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

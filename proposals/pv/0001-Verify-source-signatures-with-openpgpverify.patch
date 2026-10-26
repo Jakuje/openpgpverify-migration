@@ -1,0 +1,39 @@
+From 7c37d8f5e12fd782ecc513fa690fdaf4b4193f33 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:48 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ pv.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/pv.spec b/pv.spec
+index ecb96f7..147d1de 100644
+--- a/pv.spec
++++ b/pv.spec
+@@ -9,7 +9,7 @@ Source0: https://www.ivarch.com/programs/sources/%{name}-%{version}.tar.gz
+ Source1: https://www.ivarch.com/programs/sources/%{name}-%{version}.tar.gz.txt
+ Source2: https://www.ivarch.com/personal/public-key.txt
+ 
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ BuildRequires: make
+ BuildRequires: gcc
+ BuildRequires: gettext
+@@ -24,7 +24,7 @@ will be until completion.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+-- 
+2.56.0
+

@@ -1,0 +1,60 @@
+From 49536156dfee1c58dab29c5321d5ef1b72e22161 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:48 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ nilfs-utils.spec | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/nilfs-utils.spec b/nilfs-utils.spec
+index a07f6c2..91681d4 100644
+--- a/nilfs-utils.spec
++++ b/nilfs-utils.spec
+@@ -1,6 +1,6 @@
+ Name:		nilfs-utils
+ Version:	2.2.11
+-Release:	9%{?dist}
++Release:	10%{?dist}
+ Summary:	Utilities for managing NILFS v2 filesystems
+ 
+ # Automatically converted from old format: GPLv2+ - review is highly recommended.
+@@ -10,7 +10,8 @@ Source0:	http://nilfs.sourceforge.net/download/%{name}-%{version}.tar.bz2
+ Source1:	http://nilfs.sourceforge.net/download/%{name}-%{version}.tar.bz2.asc
+ Source2:	8B055AE86DEFF458.asc
+ BuildRequires: make
+-BuildRequires:	gcc, libuuid-devel, libmount-devel, gnupg2
++BuildRequires:	gcc, libuuid-devel, libmount-devel
++BuildRequires: openpgpverify
+ 
+ %description
+ Userspace utilities for creating and mounting NILFS v2 filesystems.
+@@ -28,7 +29,7 @@ filesystem-specific programs. If you install nilfs-utils-devel, you'll
+ also want to install nilfs-utils.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %setup -q
+ 
+ %build
+@@ -88,6 +89,9 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/libnilfs*.la
+ %{_includedir}/nilfs_cleaner.h
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 2.2.11-10
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 2.2.11-9
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

@@ -1,0 +1,59 @@
+From 3ec633004dcda80bb429ff4f6ad4619b3ed5f9ed Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:46 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ dropbear.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/dropbear.spec b/dropbear.spec
+index b060791..864a99c 100644
+--- a/dropbear.spec
++++ b/dropbear.spec
+@@ -1,6 +1,6 @@
+ Name:              dropbear
+ Version:           2026.94
+-Release:           1%{?dist}
++Release:           2%{?dist}
+ Summary:           Lightweight SSH server and client
+ License:           MIT
+ URL:               https://matt.ucc.asn.au/dropbear/dropbear.html
+@@ -11,7 +11,7 @@ Source4:           dropbear.service
+ Source5:           dropbear-keygen.service
+ BuildRequires:     gcc
+ # for gpg verification
+-BuildRequires:     gnupg2
++BuildRequires:     openpgpverify
+ BuildRequires:     libtomcrypt-devel
+ BuildRequires:     libtommath-devel
+ BuildRequires:     libxcrypt-devel
+@@ -27,7 +27,7 @@ Dropbear is a relatively small SSH server and client. It's particularly useful
+ for "embedded"-type Linux (or other Unix) systems, such as wireless routers.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %setup -q
+ 
+ %build
+@@ -82,6 +82,9 @@ systemctl try-restart dropbear.service >/dev/null 2>&1 || :
+ %{_mandir}/man8/*.8*
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 2026.94-2
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 23 2026 Federico Pellegrin <fede@evolware.org> - 2026.94-1
+ - Update to 2026.94 (rhbz#2506522)
+ 
+-- 
+2.56.0
+

@@ -1,0 +1,60 @@
+From 732e592050e9a737cdc4696e8f4c0faab7c6197e Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:48 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ openbgpd.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/openbgpd.spec b/openbgpd.spec
+index 7688239..bfd3da2 100644
+--- a/openbgpd.spec
++++ b/openbgpd.spec
+@@ -1,7 +1,7 @@
+ Summary:        OpenBGPD Routing Daemon
+ Name:           openbgpd
+ Version:        9.3
+-Release:        1%{?dist}
++Release:        2%{?dist}
+ # OpenBGPD itself is ISC but uses other source codes, breakdown:
+ # BSD-2-Clause: include/sys/tree.h
+ # BSD-3-Clause: compat/{fmt_scaled,setproctitle,sha2,vis}.c and include/{sha2_openbsd,util,vis,sys/queue}.h
+@@ -18,7 +18,7 @@ Source4:        openbgpd.tmpfilesd
+ Source5:        openbgpd.sysusersd
+ # Adjust path of Validated ROA Payloads (VRP) for rpki-client
+ Patch0:         openbgpd-6.7p0-rpki-client.patch
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  gcc
+ BuildRequires:  libmnl-devel >= 1.0.4
+ BuildRequires:  make
+@@ -33,7 +33,7 @@ Version 4. It allows ordinary machines to be used as routers exchanging
+ routes with other systems speaking the BGP protocol.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %setup -q
+ %patch -P0 -p1 -b .rpki-client
+ touch -c -r bgpd.conf{.rpki-client,}
+@@ -81,6 +81,9 @@ install -D -p -m 0644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysusersdir}/%{name}.conf
+ %dir %attr(0711,root,root) %{_localstatedir}/empty/bgpd/
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 9.3-2
++- Verify upstream source signatures with openpgpverify
++
+ * Sat Oct 03 2026 Robert Scheck <robert@fedoraproject.org> 9.3-1
+ - Upgrade to 9.3 (#2543832)
+ 
+-- 
+2.56.0
+

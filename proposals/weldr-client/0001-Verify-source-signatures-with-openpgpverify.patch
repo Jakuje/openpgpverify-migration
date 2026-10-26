@@ -1,0 +1,39 @@
+From 7f64311242f575b93ca2b6a30a2efd1debe49a33 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:50 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ weldr-client.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/weldr-client.spec b/weldr-client.spec
+index c5de9ab..21e9c11 100644
+--- a/weldr-client.spec
++++ b/weldr-client.spec
+@@ -34,7 +34,7 @@ Requires: diffutils
+ BuildRequires: go-vendor-tools
+ BuildRequires: git-core
+ BuildRequires: make
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ 
+ %description
+ Go client library and cmdline tool for WELDR API servers like lorax-composer
+@@ -42,7 +42,7 @@ and osbuild-composer.
+ 
+ %prep
+ %if %{with signed}
+-%{gpgverify} --keyring='%{SOURCE4}' --signature='%{SOURCE3}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE4}' --signature='%{SOURCE3}' --data='%{SOURCE0}'
+ %endif
+ %goprep -p1
+ tar -xf %{S:1}
+-- 
+2.56.0
+

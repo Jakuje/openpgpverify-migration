@@ -1,0 +1,38 @@
+From ffac045e87ff72faaf3576bf85e480f4f5ea4dff Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:48 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ objfw.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/objfw.spec b/objfw.spec
+index 7ec0ba7..867fab2 100644
+--- a/objfw.spec
++++ b/objfw.spec
+@@ -20,6 +20,7 @@ BuildRequires: pkgconfig(gnutls)
+ BuildRequires: gnupg2
+ BuildRequires: doxygen
+ BuildRequires: lksctp-tools-devel
++BuildRequires: openpgpverify
+ Requires:      libobjfw%{_isa} = %{version}-%{release}
+ Requires:      libobjfw-devel%{_isa} = %{version}-%{release}
+ Requires:      libobjfwrt%{_isa} = %{version}-%{release}
+@@ -158,7 +159,7 @@ BuildArch:     noarch
+ Documentation for ObjFW.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p0
+ 
+ %build
+-- 
+2.56.0
+

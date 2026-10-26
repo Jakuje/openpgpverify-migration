@@ -1,0 +1,39 @@
+From bdcb21a4b001873f22e003068c9cd5125989dad0 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:48 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ nettle3.10.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/nettle3.10.spec b/nettle3.10.spec
+index aa58ee5..07bb8db 100644
+--- a/nettle3.10.spec
++++ b/nettle3.10.spec
+@@ -46,7 +46,7 @@ BuildRequires:	libtool, automake, autoconf, gettext-devel
+ %if %{with fipshmac}
+ BuildRequires:  fipscheck
+ %endif
+-BuildRequires:  gnupg2
++BuildRequires: openpgpverify
+ Conflicts:      nettle < 4.0
+ Provides:       deprecated()
+ 
+@@ -78,7 +78,7 @@ applications with nettle.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ %autosetup -n nettle-%{version} -Tb 0 -p1
+ 
+-- 
+2.56.0
+

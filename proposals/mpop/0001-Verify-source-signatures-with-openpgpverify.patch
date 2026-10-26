@@ -1,0 +1,41 @@
+From 15f1b6c2d7646d48776c0b7637816d9fb1ac5f8b Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:48 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ mpop.spec | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/mpop.spec b/mpop.spec
+index 4cbfb7f..45e693c 100644
+--- a/mpop.spec
++++ b/mpop.spec
+@@ -17,8 +17,8 @@ BuildRequires:  libgsasl-devel
+ BuildRequires:  libidn-devel
+ BuildRequires:  make
+ BuildRequires:  openssl-devel
+-# for %%gpgverify
+-BuildRequires:  gnupg2
++# for %%openpgpverify
++BuildRequires:  openpgpverify
+ 
+ %description
+ mpop is a small and fast POP3 client. Features include mail filtering,
+@@ -27,7 +27,7 @@ fast POP3 implementation, many authentication methods, good TLS/SSL
+ support, IPv6 support, and more.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+-- 
+2.56.0
+

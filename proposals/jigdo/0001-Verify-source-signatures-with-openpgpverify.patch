@@ -1,0 +1,39 @@
+From e807b7216c8be078ac5b5e1b9ce7e6a7907ff44e Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:47 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ jigdo.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/jigdo.spec b/jigdo.spec
+index f43ef25..ad9737d 100644
+--- a/jigdo.spec
++++ b/jigdo.spec
+@@ -21,7 +21,7 @@ BuildRequires: docbook-utils
+ BuildRequires: gawk
+ BuildRequires: gcc-c++
+ BuildRequires: gettext
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ BuildRequires: libdb-devel
+ BuildRequires: make
+ BuildRequires: wget
+@@ -46,7 +46,7 @@ files for download.}
+ 
+ %prep
+ %autosetup -p1
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ # don't clobber -g from C*FLAGS
+ sed -i '/.*echo "$C.*FLAGS"/d' configure
+-- 
+2.56.0
+

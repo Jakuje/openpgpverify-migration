@@ -1,0 +1,39 @@
+From 70b469574d95f7e1a75ebc71856d5576b0545056 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:46 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ freetalk.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/freetalk.spec b/freetalk.spec
+index a9818f0..4d5a0ab 100644
+--- a/freetalk.spec
++++ b/freetalk.spec
+@@ -15,7 +15,7 @@ BuildRequires:  automake
+ BuildRequires:  gcc
+ BuildRequires:  gcc-c++
+ BuildRequires:  glib2-devel
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  guile30-devel
+ BuildRequires:  loudmouth-devel
+ BuildRequires:  ncurses-devel
+@@ -30,7 +30,7 @@ ordinary English words. Similar to GNU Emacs, You can customize and extend GNU
+ Freetalk with Scheme language.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ 
+-- 
+2.56.0
+

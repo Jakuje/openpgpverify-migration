@@ -1,0 +1,60 @@
+From 1ba22147089f350ecde1fd91ea50885d447ee343 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 08:28:47 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ kuserfeedback.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/kuserfeedback.spec b/kuserfeedback.spec
+index cbd3dd5..2ef7282 100644
+--- a/kuserfeedback.spec
++++ b/kuserfeedback.spec
+@@ -3,7 +3,7 @@
+ Name:    kuserfeedback
+ Summary: Framework for collecting user feedback for apps via telemetry and surveys
+ Version: 1.3.0
+-Release: 10%{?dist}
++Release: 11%{?dist}
+ 
+ License: MIT
+ URL:     https://invent.kde.org/libraries/%{name}
+@@ -14,7 +14,7 @@ Source2: gpgkey-E0A3EB202F8E57528E13E72FD7574483BB57B18D.gpg
+ ## upstream patches
+ 
+ BuildRequires: cmake
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ BuildRequires: gcc-c++
+ 
+ BuildRequires: kf5-rpm-macros
+@@ -59,7 +59,7 @@ Analytics and administration tool for UserFeedback servers.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ 
+@@ -110,6 +110,9 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/org.kde.kuserfeedback
+ 
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 1.3.0-11
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.3.0-10
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+
