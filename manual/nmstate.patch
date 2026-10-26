@@ -1,0 +1,13 @@
+--- a/nmstate.spec
++++ b/nmstate.spec
+@@ -164,9 +164,7 @@
+ %endif
+ 
+ %prep
+-gpg2 --import --import-options import-export,import-minimal \
+-    %{SOURCE2} > ./gpgkey-mantainers.gpg
+-gpgv2 --keyring ./gpgkey-mantainers.gpg %{SOURCE1} %{SOURCE0}
++%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ %autosetup -n %{name}-%{version_no_tilde} -p1 %{?rhel:-a3}
+ 

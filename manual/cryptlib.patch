@@ -1,0 +1,17 @@
+--- a/cryptlib.spec
++++ b/cryptlib.spec
+@@ -120,12 +120,8 @@
+ 
+ 
+ %prep
+-# source code signature check with GnuPG
+-KEYRING=$(echo %{SOURCE2})
+-KEYRING=${KEYRING%%.asc}.gpg
+-mkdir -p .gnupg
+-gpg2 --homedir .gnupg --no-default-keyring --quiet --yes --output $KEYRING --dearmor  %{SOURCE2}
+-gpg2 --homedir .gnupg --no-default-keyring --keyring $KEYRING --verify %{SOURCE1} %{SOURCE0}
++# source code signature check
++%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ rm -rf %{name}-%{version}
+ mkdir %{name}-%{version}

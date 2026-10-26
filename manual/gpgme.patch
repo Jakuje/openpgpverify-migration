@@ -1,0 +1,12 @@
+--- a/gpgme.spec
++++ b/gpgme.spec
+@@ -70,8 +70,7 @@
+ %prep
+ %autosetup -N -p1 -S gendiff
+ # verify sources
+-gpg2 --import --import-options import-export,import-minimal %{SOURCE3} > ./gpg-keyring.gpg
+-gpgv2 --keyring ./gpg-keyring.gpg %{SOURCE1} %{SOURCE0}
++%{gpgverify} --keyring='%{SOURCE3}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ %autopatch -p1 
+ 

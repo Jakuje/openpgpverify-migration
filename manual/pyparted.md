@@ -1,0 +1,1 @@
+- the `gpg --verify` call with its own keyring and trust database is replaced by `%{openpgpverify}` with the same keyring, signature and data. sqv does not use a trust database, so `trustdb.gpg` (Source3) is no longer needed; it is left in place here and can be removed together with the file

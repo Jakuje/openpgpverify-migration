@@ -38,7 +38,7 @@ import classify  # noqa: E402
 import convert  # noqa: E402
 import state  # noqa: E402
 
-HARNESS_VERSION = '4'
+HARNESS_VERSION = '5'
 # Specs without %autochangelog get a Release bump and a changelog entry, done by
 # rpmdev-bumpspec inside the chroot (it evaluates the spec), before %prep runs,
 # so the tested spec is exactly the proposed one.
@@ -360,7 +360,8 @@ def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp', overlay
                 m.chroot('rm -rf /builddir/new.orig && cp -a /builddir/new /builddir/new.orig',
                          unpriv=True)
             m.chroot(wrap)
-            if v == variants[0][0]:
+            # After the new variant's deps, so sequoia-sqv is installed
+            if v == 'new' or not new_spec:
                 m.chroot('{ %s; } > /builddir/env.txt 2>&1' % ENV_INFO)
                 m('--copyout', '/builddir/env.txt', out)
             if v == 'new' and gnupg2_check and dynamic_br:
@@ -410,12 +411,12 @@ def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp', overlay
     return res
 
 
-def evaluate(res, raw, g, primary=True):
+def evaluate(res, raw, g, primary=True, rewritten=None):
     """Turn the call logs of one chroot run into an outcome."""
     if 'error' in res:
         return 'error', res['error']
     old = res.get('old_calls', [])
-    if raw:
+    if raw and not rewritten:
         # Only the baseline can be run; the rewrite is manual.
         if not old:
             return 'manual', 'raw verification: no gpg call executed in baseline'
@@ -431,13 +432,18 @@ def evaluate(res, raw, g, primary=True):
             # e.g. verification inside "%if 0%{?fedora}": nothing to compare in ELN
             return 'not-verified', 'the unchanged spec does not verify sources in this chroot'
         return 'guard-failed', 'old spec executed no gpgverify call (prep rc %s)' % res.get('old_prep_rc')
-    if any(c['tool'] != 'gpgverify' for c in old):
+    if not rewritten and any(c['tool'] != 'gpgverify' for c in old):
         return 'guard-failed', 'unexpected tools in old run: %s' % sorted({c['tool'] for c in old})
     if any(c['tool'] != 'openpgpverify' for c in new):
-        return 'guard-failed', 'new spec still runs gpgverify'
+        return 'guard-failed', 'new spec still runs %s' % sorted(
+            {c['tool'] for c in new} - {'openpgpverify'})
     if any(c['rc'] != 0 for c in old):
-        return 'both-fail', 'gpgverify fails already (rc %s)' % [c['rc'] for c in old]
-    if len(new) != len(old):
+        return 'both-fail', 'old verification fails already (rc %s)' % [c['rc'] for c in old]
+    if rewritten:
+        # gpg calls (key import, verify) don't map 1:1 onto openpgpverify calls
+        if not new:
+            return 'guard-failed', 'new spec executed no openpgpverify call'
+    elif len(new) != len(old):
         # a failing call stops %prep, so fewer new calls are fine if the last one failed
         if not (new and new[-1]['rc'] != 0 and len(new) < len(old)):
             return 'guard-failed', 'old ran %d verify calls, new ran %d' % (len(old), len(new))
@@ -475,9 +481,39 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
                rhel_conditional=rec['rhel_conditional'], gnupg2_action=rec['gnupg2_action'])
     raw = bool(rec['raw_verify'])
     new_spec = None
+    # Direct gpg/gpgv calls: rewrite them into %{gpgverify} calls (simple
+    # gpgv form automatically, anything else by a hand-written
+    # manual/PKG.patch), then convert like any other spec. The raw tools stay
+    # wrapped in both runs, so a leftover gpg call in the new spec shows up.
+    rewritten = None
+    src_text = text
+    if raw:
+        try:
+            mp = convert.manual_patch(pkg)
+            if mp:
+                pr = subprocess.run(['patch', '-s', '--no-backup-if-mismatch', '-o', '-',
+                                     spec_path, mp], capture_output=True, text=True)
+                if pr.returncode:
+                    raise convert.Unconvertible('%s does not apply to the current spec'
+                                                % os.path.relpath(mp, state.ROOT))
+                src_text, rewritten = pr.stdout, 'manual'
+            else:
+                src_text, rewritten = convert.rewrite_raw(text, rec), 'auto'
+            rec2 = classify.classify(pkg, src_text)
+            if not rec2 or not rec2['calls'] or \
+                    any(not convert.non_fedora(x) for x in rec2['raw_verify']):
+                raise convert.Unconvertible('the rewrite left direct gpg calls')
+            rec = dict(rec2, raw_verify=[])   # only old-EL branches keep gpgv
+            upd.update(rhel_conditional=rec['rhel_conditional'],
+                       gnupg2_action=rec['gnupg2_action'])
+        except convert.Unconvertible as e:
+            upd['convert_notes'] = ['unconvertible: %s' % e]
+            rewritten, src_text = None, text
+    upd['raw_rewritten'] = rewritten
     # Drop "BR: gnupg2" whenever the spec has no other gpg use, and prove it
     # with the gnupg2 check; the variant keeping it is the fallback.
-    gnupg2_check = GNUPG2_CHECK and not raw and rec['gnupg2_action'] in ('remove', 'review')
+    gnupg2_check = GNUPG2_CHECK and (not raw or rewritten) and \
+        rec['gnupg2_action'] in ('remove', 'review')
     too_big = ((inv_rec or {}).get('srpm_size') or 0) > FULL_BUILD_MAX_MB * 1e6
     if gnupg2_check and too_big:
         gnupg2_check = False
@@ -486,13 +522,13 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
                                    'the full build without gnupg2 on the test machine'
                                    % FULL_BUILD_MAX_MB)
     keep_text = None
-    if not raw:
+    if not raw or rewritten:
         try:
             # None (legacy, --no-gnupg2-check): drop only without %check
             new_text, notes = convert.convert(
-                text, rec, drop_gnupg2=gnupg2_check if GNUPG2_CHECK else None)
+                src_text, rec, drop_gnupg2=gnupg2_check if GNUPG2_CHECK else None)
             if gnupg2_check:
-                keep_text, _ = convert.convert(text, rec, drop_gnupg2=False)
+                keep_text, _ = convert.convert(src_text, rec, drop_gnupg2=False)
                 open(os.path.join(d, pkg + '.opv-unbumped.spec'), 'w').write(new_text)
             new_spec = os.path.join(d, pkg + '.opv.spec')
             open(new_spec, 'w').write(new_text)
@@ -501,7 +537,8 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
                 os.path.join(d, 'conversion.diff'), 'w'))
         except convert.Unconvertible as e:
             upd['convert_notes'] = ['unconvertible: %s' % e]
-            raw = True   # run the baseline only
+            raw, rewritten = True, None   # run the baseline only
+            new_spec = None
     # Verification outside %prep (e.g. at the start of %build) needs a later stage;
     # failures after the verify call do not matter, the wrapper has logged it.
     # Approved keyring refreshes (scripts/refresh_keys.py) replace keyring files
@@ -536,7 +573,7 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
             upd['release_bumped'] = True
             subprocess.run(['diff', '-u', spec_path, new_spec], stdout=open(
                 os.path.join(d, 'conversion.diff'), 'w'))
-        outcome, detail = evaluate(res, raw, g, primary=(cfg == cfgs[0]))
+        outcome, detail = evaluate(res, raw, g, primary=(cfg == cfgs[0]), rewritten=rewritten)
         res['outcome'] = outcome
         res['detail'] = detail
         if outcome == 'regression':

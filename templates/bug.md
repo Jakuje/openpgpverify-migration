@@ -6,7 +6,7 @@ Summary: $package: source signature does not verify with openpgpverify ($reason_
 
 ---
 
-As part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify), `%gpgverify` (GnuPG) is being replaced by `%openpgpverify` (Sequoia `sqv`). For $package, the switch can't be done in a simple PR: `%gpgverify` accepts the current upstream signature, but `%openpgpverify` rejects it.
+As part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify), `%gpgverify` (GnuPG) is being replaced by `%openpgpverify` (Sequoia `sqv`). For $package, the switch can't be done in a simple PR: $old_check accepts the current upstream signature, but `%openpgpverify` rejects it.
 
 Failing check (dist-git commit `$commit`):
 
@@ -26,6 +26,6 @@ $reason_text
 
 $actions
 
-The rest of the conversion is mechanical. Once the signature or key is sorted out, the spec change is the same as for other packages: `%{gpgverify}` → `%{openpgpverify}` and `BuildRequires: openpgpverify`. I'm happy to send the PR.
+The rest of the conversion is mechanical. Once the signature or key is sorted out, $spec_change I'm happy to send the PR.
 
 (The check was run with scripts from https://github.com/Jakuje/openpgpverify-migration.)

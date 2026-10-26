@@ -28,7 +28,7 @@ COND_END = re.compile(r'^%endif\b')
 BR_LINE = re.compile(r'^(BuildRequires\s*:\s*)(.*?)(\s*)$', re.I)
 # Dependencies replaced by openpgpverify. gnupg2 is handled separately.
 DROP = re.compile(r'^(gpgverify|%\{gpgverify\}|(%\{_bindir\}|/usr/bin)/gpgv2?)$')
-GNUPG2 = re.compile(r'^gnupg2?$')
+GNUPG2 = re.compile(r'^(gnupg2?|gpg)$')   # gpg is a provide of gnupg2
 OP = re.compile(r'^(<|>|<=|>=|=|==)$')
 
 
@@ -77,6 +77,48 @@ def drop_empty_branches(lines):
             elif COND_OPEN.match(opener):
                 del out[-3:]                   # the whole "%if ... %endif"
     return [l for l in out if l != DROPPED]
+
+
+# A direct gpgv call that maps 1:1 onto the macro:
+#   [CMD |] gpgv[2] [--quiet] --keyring[= ]KEYRING SIGNATURE DATA
+RAW_SIMPLE = re.compile(r'^(?P<indent>\s*)(?:(?P<pipe>\S.*?)\s*(?<!\|)\|(?!\|)\s*)?gpgv2?\s+(?:--quiet\s+)?'
+                        r'--keyring[= ](?P<k>\S+)\s+(?:--quiet\s+)?(?P<s>\S+)\s+(?P<d>\S+)\s*$')
+MANUAL = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'manual')
+
+
+def quote(arg):
+    return arg if arg[:1] in '\'"' else "'%s'" % arg
+
+
+def non_fedora(x):
+    """A raw call in the "%else" of a Fedora condition ("%if 0%{?fedora} ||
+    0%{?rhel} >= 9 ... %else") is for old EL branches without openpgpverify."""
+    return any(re.search(r'fedora.*\| %else$', c) for c in x['conditions'])
+
+
+def manual_patch(pkg):
+    path = os.path.join(MANUAL, pkg + '.patch')
+    return path if os.path.exists(path) else None
+
+
+def rewrite_raw(text, rec):
+    """Rewrite direct gpgv calls into %{gpgverify} calls, so that convert()
+    can take over (rename, BuildRequires, Release). Only the simple form is
+    rewritten; anything else needs a hand-written manual/PKG.patch, which
+    turns the spec into one using %{gpgverify}."""
+    lines = text.split('\n')
+    for x in rec['raw_verify']:
+        if non_fedora(x):
+            continue
+        i = x['line'] - 1
+        m = RAW_SIMPLE.match(lines[i])
+        if not m:
+            raise Unconvertible('raw gpg call needs a manual rewrite: %s' % lines[i].strip())
+        data = '--data=-' if m.group('d') == '-' else '--data=%s' % quote(m.group('d'))
+        call = "%%{gpgverify} --keyring=%s --signature=%s %s" % (
+            quote(m.group('k')), quote(m.group('s')), data)
+        lines[i] = m.group('indent') + (m.group('pipe') + ' | ' if m.group('pipe') else '') + call
+    return '\n'.join(lines)
 
 
 def convert(text, rec, drop_gnupg2=None):

@@ -1,0 +1,1 @@
+- the two `gpgv2` calls (one per upstream key, `||`) are replaced by one `%{openpgpverify} --keyrings` call that accepts a signature from either key

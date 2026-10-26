@@ -1,0 +1,60 @@
+From 629a05f8b274f9195409a56064455df4bb19ab66 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 21:26:42 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the direct GnuPG verification with %openpgpverify, which
+uses Sequoia sqv, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ gsi-openssh.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/gsi-openssh.spec b/gsi-openssh.spec
+index 0dbfec8..b547332 100644
+--- a/gsi-openssh.spec
++++ b/gsi-openssh.spec
+@@ -28,7 +28,7 @@
+ Summary: An implementation of the SSH protocol with GSI authentication
+ Name: gsi-openssh
+ Version: %{openssh_ver}
+-Release: 1%{?dist}
++Release: 2%{?dist}
+ Provides: gsissh = %{version}-%{release}
+ Obsoletes: gsissh < 5.8p2-2
+ URL: http://www.openssh.com/portable.html
+@@ -151,7 +151,7 @@ BuildRequires: audit-libs >= 1.0.8
+ 
+ BuildRequires: xauth
+ # for tarball signature verification
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ 
+ %package clients
+ Summary: SSH client applications with GSI authentication
+@@ -214,7 +214,7 @@ securely connect to your SSH server.
+ This version of OpenSSH has been modified to support GSI authentication.
+ 
+ %prep
+-gpgv2 --quiet --keyring %{SOURCE3} %{SOURCE1} %{SOURCE0}
++%{openpgpverify} --keyring='%{SOURCE3}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -T -b 0 -p1 -n openssh-%{version}
+ 
+ sed 's/sshd.pid/gsisshd.pid/' -i pathnames.h
+@@ -436,6 +436,9 @@ fi
+ %ghost %attr(0644,root,root) %{_localstatedir}/lib/.gsissh-host-keys-migration
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 10.5p1-2
++- Verify upstream source signatures with openpgpverify
++
+ * Sun Sep 20 2026 Mattias Ellert <mattias.ellert@physics.uu.se> - 10.5p1-1
+ - Based on openssh-10.5p1-1.fc45
+ 
+-- 
+2.56.0
+

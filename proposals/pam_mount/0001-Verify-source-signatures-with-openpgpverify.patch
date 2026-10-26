@@ -1,0 +1,66 @@
+From f4f62fbe9d92f4f80ef584b2fdcb96f029956708 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 21:26:43 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the direct GnuPG verification with %openpgpverify, which
+uses Sequoia sqv, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ pam_mount.spec | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/pam_mount.spec b/pam_mount.spec
+index 0673578..a568654 100644
+--- a/pam_mount.spec
++++ b/pam_mount.spec
+@@ -1,6 +1,6 @@
+ Name:           pam_mount
+ Version:        2.20
+-Release:        8%{?dist}
++Release:        9%{?dist}
+ Summary:        A PAM module that can mount volumes for a user session
+ 
+ # The library and binaries are LGPLv2.1+ with these Exceptions:
+@@ -15,12 +15,12 @@ Source2:        gpgkey-BCA0C5C309CAC569E74A921CF76EFE5D0C223A8F.asc
+ # AM_PROG_LIBTOOL is obsolete
+ Patch0:         pam_mount-2.16-LTINIT.patch
+ 
+-# For source verification with gpgv
++# For source verification with %%openpgpverify
+ BuildRequires:  autoconf
+ BuildRequires:  automake
+ BuildRequires:  cryptsetup-devel
+ BuildRequires:  gcc
+-BuildRequires:  gpg
++BuildRequires:  openpgpverify
+ BuildRequires:  libHX-devel >= 3.12.1
+ BuildRequires:  libmount-devel >= 2.20
+ BuildRequires:  libtool
+@@ -68,8 +68,7 @@ potential threats.
+ 
+ 
+ %prep
+-rm -f %{SOURCE2}.gpg ; gpg --dearmor %{SOURCE2}
+-xzcat %{SOURCE0} | gpgv --quiet --keyring %{SOURCE2}.gpg %{SOURCE1} -
++xzcat %{SOURCE0} | %{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data=-
+ %setup -q
+ %patch -P0 -p1 -b.LTINIT
+ ./autogen.sh
+@@ -150,6 +149,9 @@ and transparent use of the OS's crypto layer.
+ 
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 2.20-9
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Sep 10 2026 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 2.20-8
+ - Rebuilt for libxml-2.5.4
+ 
+-- 
+2.56.0
+

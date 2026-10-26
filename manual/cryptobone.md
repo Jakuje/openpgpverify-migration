@@ -1,0 +1,1 @@
+- the GnuPG verification (dearmor the key into a temporary keyring, then `gpg2 --verify`) is replaced by one `%{openpgpverify}` call with the same key, signature and data; sqv reads the armored key directly

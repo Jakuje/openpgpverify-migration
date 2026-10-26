@@ -1,0 +1,17 @@
+--- a/znc.spec
++++ b/znc.spec
+@@ -123,12 +123,8 @@
+ 
+ 
+ %prep
+-# Verify GPG signature
+-gpghome="$(mktemp -qd)" # Ensure we don't use any existing gpg keyrings
+-key="%{SOURCE2}"
+-gpg2 --dearmor --quiet --batch --yes $key >/dev/null
+-gpgv2 --homedir "$gpghome" --quiet --keyring $key.gpg %{SOURCE1} %{SOURCE0}
+-rm -rf "$gpghome" $key.gpg # Cleanup tmp gpg home dir and dearmored key
++# Verify the source signature
++%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ %autosetup -p1
+ 

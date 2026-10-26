@@ -108,10 +108,36 @@ def call_files(call):
     return keyrings, sig, data
 
 
+def is_keybox(path):
+    """A GnuPG keybox ("gpg --keyring" files made by gpg >= 2.1), which gpgv
+    reads but sqv does not."""
+    with open(path, 'rb') as fh:
+        head = fh.read(12)
+    return len(head) == 12 and head[8:12] == b'KBXf'
+
+
+def export_keybox(src, dst, tmp):
+    """Export the certificates of a keybox into a binary OpenPGP keyring."""
+    home = os.path.join(tmp, 'gnupg-home')
+    os.makedirs(home, mode=0o700, exist_ok=True)
+    p = sh(['gpg', '--homedir', home, '--batch', '--no-default-keyring',
+            '--keyring', os.path.abspath(src), '--export', '--output', dst])
+    return p.returncode == 0 and os.path.exists(dst) and os.path.getsize(dst) > 0
+
+
 def refresh_file(src, dst, tmp):
     """Refresh one keyring file. Returns a dict describing the result."""
+    keybox = is_keybox(src)
+    orig = src
+    if keybox:
+        conv = os.path.join(tmp, 'from-keybox.pgp')
+        if not export_keybox(src, conv, tmp):
+            return dict(fingerprints=[], changed=False, found_via=[],
+                        size_old=os.path.getsize(src), error='keybox export failed')
+        src = conv
     fprs = fingerprints(src)
-    info = dict(fingerprints=fprs, changed=False, found_via=[], size_old=os.path.getsize(src))
+    info = dict(fingerprints=fprs, changed=False, found_via=[], size_old=os.path.getsize(orig),
+                keybox=keybox)
     if not fprs:
         info['error'] = 'no certificates found in keyring (keybox or malformed?)'
         return info
@@ -132,7 +158,10 @@ def refresh_file(src, dst, tmp):
             if fingerprints(os.path.join(parts, f)) == [fpr]:
                 fetched.append(os.path.join(parts, f))
                 break
-    if not fetched:
+    if not fetched and keybox:
+        # Nothing newer, but the converted keyring alone may be enough.
+        fetched = [src]
+    elif not fetched:
         info['error'] = 'no updates found on keyservers/WKD'
         return info
     merged = os.path.join(tmp, 'merged.pgp')
@@ -149,7 +178,7 @@ def refresh_file(src, dst, tmp):
     info['size_new'] = os.path.getsize(dst)
     # The approval is bound to exactly this file (checked by phase1.py).
     info['sha256_new'] = hashlib.sha256(open(dst, 'rb').read()).hexdigest()
-    info['changed'] = summary(src) != summary(dst)
+    info['changed'] = keybox or summary(src) != summary(dst)
     if info['size_new'] > FLOOD_LIMIT:
         info['warning'] = 'refreshed keyring is %d bytes (flooded third-party signatures?)' \
             % info['size_new']
@@ -188,6 +217,8 @@ def propose(pkg, rec):
         info['file'] = rel
         files.append(info)
         review += ['## %s' % rel, '',
+                   *(['- **format: GnuPG keybox, converted to an OpenPGP keyring '
+                      '(sqv does not read keyboxes)**'] if info.get('keybox') else []),
                    '- certificates: %s' % ', '.join(info['fingerprints']),
                    '- found via: %s' % ('; '.join(info['found_via']) or '-'),
                    '- size: %s → %s bytes' % (info['size_old'], info.get('size_new', '-'))]
@@ -197,9 +228,12 @@ def propose(pkg, rec):
         if info.get('size_new'):
             new = os.path.join(out, rel)
             old_s, new_s = os.path.join(tmp, 'old.summary'), os.path.join(tmp, 'new.summary')
-            open(old_s, 'w').write('\n'.join(summary(src)) + '\n')
+            # A keybox has no readable summary; compare with its plain export.
+            base = os.path.join(tmp, 'from-keybox.pgp') if info.get('keybox') else src
+            open(old_s, 'w').write('\n'.join(summary(base)) + '\n')
             open(new_s, 'w').write('\n'.join(summary(new)) + '\n')
-            p = sh(['diff', '-u', '--label', 'dist-git/' + rel, '--label', 'refreshed/' + rel,
+            label = 'dist-git/' + rel + (' (exported from keybox)' if info.get('keybox') else '')
+            p = sh(['diff', '-u', '--label', label, '--label', 'refreshed/' + rel,
                     old_s, new_s], timeout=60)
             review += ['', '```diff', p.stdout.rstrip() or '(no change in sq inspect summary)',
                        '```']

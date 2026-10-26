@@ -1,0 +1,1 @@
+- the GnuPG verification (import the key into a temporary `GNUPGHOME`, then `gpg2 --verify`) is replaced by one `%{openpgpverify}` call with the same key, signature and data; `GPG_CHECK` still switches it

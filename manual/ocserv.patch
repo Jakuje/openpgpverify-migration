@@ -1,0 +1,11 @@
+--- a/ocserv.spec
++++ b/ocserv.spec
+@@ -84,7 +84,7 @@
+ 
+ %prep
+ %if %{have_gpgv2}
+-gpgv2 --keyring %{SOURCE2} %{SOURCE1} %{SOURCE0} || gpgv2 --keyring %{SOURCE10} %{SOURCE1} %{SOURCE0}
++%{gpgverify} --keyrings '%{SOURCE2}' '%{SOURCE10}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %endif
+ 
+ %autosetup -p1

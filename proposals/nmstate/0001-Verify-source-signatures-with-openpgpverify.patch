@@ -1,0 +1,41 @@
+From f118f1d6bb175a4c97ba8422711f57e4a76a017f Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 21:26:05 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the direct GnuPG verification with %openpgpverify, which
+uses Sequoia sqv, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ nmstate.spec | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/nmstate.spec b/nmstate.spec
+index 2971a1e..3af3417 100644
+--- a/nmstate.spec
++++ b/nmstate.spec
+@@ -17,7 +17,7 @@ Patch0:         0001-Change-dependent-toml-version-from-1.0.3-to-1.0.patch
+ # https://issues.redhat.com/browse/RHEL-52890
+ Requires:       (nmstate-libs%{?_isa} = %{version}-%{release} if nmstate-libs)
+ BuildRequires:  python3-devel
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  systemd-devel
+ BuildRequires:  systemd-rpm-macros
+ %if 0%{?rhel}
+@@ -164,9 +164,7 @@ which use "%{name}" crate with gen_revert feature.
+ %endif
+ 
+ %prep
+-gpg2 --import --import-options import-export,import-minimal \
+-    %{SOURCE2} > ./gpgkey-mantainers.gpg
+-gpgv2 --keyring ./gpgkey-mantainers.gpg %{SOURCE1} %{SOURCE0}
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ %autosetup -n %{name}-%{version_no_tilde} -p1 %{?rhel:-a3}
+ 
+-- 
+2.56.0
+

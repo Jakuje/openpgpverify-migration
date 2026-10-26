@@ -20,8 +20,10 @@ import shutil
 import string
 import subprocess
 import sys
+import textwrap
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import convert  # noqa: E402
 import phase1  # noqa: E402
 import state  # noqa: E402
 
@@ -156,13 +158,24 @@ def make_commit(pkg, s, refresh_files):
     # Exactly the spec Phase 1 tested (incl. the Release bump done in the chroot).
     shutil.copy(os.path.join(d, pkg + '.opv.spec'), os.path.join(pr, pkg + '.spec'))
     extra = []
+    if s.get('raw_rewritten'):
+        lead = ('Replace the direct GnuPG verification with %openpgpverify, which\n'
+                'uses Sequoia sqv, as part of the Fedora 45 Change\n'
+                'https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify')
+    else:
+        lead = ('Replace the GnuPG-based %gpgverify with %openpgpverify, which uses\n'
+                'Sequoia sqv and takes the same options, as part of the Fedora 45 Change\n'
+                'https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify')
     for f in refresh_files:
         shutil.copy(os.path.join(d, 'refresh', f['file']), os.path.join(pr, f['file']))
         extra.append('Refresh %s from keyservers/WKD: same certificate(s), with '
-                     'self-signatures our copy was missing.' % f['file'])
+                     'self-signatures our copy was missing.%s' % (
+                         f['file'], ' The GnuPG keybox becomes a plain OpenPGP keyring, '
+                         'which sqv can read.' if f.get('keybox') else ''))
     if s.get('release_bumped'):
         extra.append('Release bumped with a changelog entry.')
-    body = tmpl('commit-message.txt',
+    extra = [textwrap.fill(e, 72) for e in extra]
+    body = tmpl('commit-message.txt', lead=lead,
                 extra_body=('\n' + '\n'.join(extra) + '\n') if extra else '')
     sh(['git', '-C', pr, 'add', '-A'])
     env = dict(os.environ, GIT_AUTHOR_NAME=AUTHOR[0], GIT_AUTHOR_EMAIL=AUTHOR[1],
@@ -183,13 +196,26 @@ def render_pr(pkg, s, draft):
     patch, diff = make_commit(pkg, s, files)
     res = s['results'][0]
     n_old = len(res.get('old_calls', []))
-    changes = ['- `%%gpgverify` → `%%openpgpverify` (%d call%s; the macro keeps the same form '
-               'and options)' % (n_old, '' if n_old == 1 else 's')]
+    raw = s.get('raw_rewritten')
+    if raw:
+        tools = sorted({c['tool'] for c in res.get('old_calls', [])} - {'gpgverify'})
+        old_tool = ', '.join('`%s`' % x for x in tools) or '`gpgv`'
+        desc = os.path.join(convert.MANUAL, pkg + '.md')
+        changes = [open(desc).read().strip() if raw == 'manual' and os.path.exists(desc) else
+                   '- the direct %s call is replaced by `%%{openpgpverify}` with the same '
+                   'keyring, signature and data' % old_tool]
+        if re.search(r'(?m)^[-+].*%\{?gpgverify', diff):
+            changes.append('- `%gpgverify` → `%openpgpverify` for the existing macro call')
+    else:
+        old_tool = '`%gpgverify`'
+        changes = ['- `%%gpgverify` → `%%openpgpverify` (%d call%s; the macro keeps the same '
+                   'form and options)' % (n_old, '' if n_old == 1 else 's')]
     if re.search(r'(?m)^\+BuildRequires\s*:\s*openpgpverify', diff):
         changes.append('- added `BuildRequires: openpgpverify`; nothing pulls it into the '
                        'buildroot implicitly (gpgverify comes in via redhat-rpm-config)')
     for br in removed_brs(diff):
-        changes.append('- dropped `%s`, only needed for `%%gpgverify`' % br)
+        changes.append('- dropped `%s`, only needed for %s' %
+                       (br, 'the GnuPG verification' if raw else '`%gpgverify`'))
     for f in files:
         changes.append('- refreshed keyring `%s` (see below)' % f['file'])
     rel = re.findall(r'(?m)^([-+])Release:\s*(.*)$', diff)
@@ -216,15 +242,19 @@ def render_pr(pkg, s, draft):
         review = open(os.path.join(state.ROOT, kr['review'])).read()
         diffs = re.findall(r'```diff\n(.*?)```', review, re.S)
         reason = (REASONS.get(res.get('failure_reason')) or GENERIC)[0]
-        refresh = ('\n### Keyring refresh\n\n'
-                   '`%%openpgpverify` rejected the signature with the keyring in dist-git '
-                   '(%s), while `%%gpgverify` ignores that. The same certificate, looked up '
+        keybox = any(f.get('keybox') for f in files)
+        refresh = ('\n### Keyring refresh\n\n%sThe same certificate, looked up '
                    'by fingerprint (%s), has self-signatures our copy is missing (a renewed '
                    'expiry, modern hashes or the older binding history), so this PR updates '
                    'the keyring. No key was added or removed. Please check the fingerprint '
                    'against upstream:\n\n%s\n\nWhat changed in the certificate (`sq '
                    'inspect`):\n\n```diff\n%s```\n'
-                   % (reason, '; '.join(sorted({v for f in files for v in f['found_via']})),
+                   % (('`%%openpgpverify` cannot read the keyring in dist-git: it is a GnuPG '
+                       'keybox, which %s reads but sqv does not, so it is exported to a '
+                       'plain OpenPGP keyring. ' % old_tool) if keybox else
+                      ('`%%openpgpverify` rejected the signature with the keyring in dist-git '
+                       '(%s), while %s ignores that. ' % (reason, old_tool)),
+                      '; '.join(sorted({v for f in files for v in f['found_via']})),
                       '\n'.join('- `%s`' % fp for f in files for fp in f['fingerprints']),
                       ''.join(diffs)))
     notes = ['- Rawhide only. Whether to merge it into other branches is up to you; '
@@ -255,7 +285,13 @@ def render_pr(pkg, s, draft):
                      '`%prep` would check the sources before anything else uses them.')
     text = tmpl('pr-description.md',
                 changes='\n'.join(changes) + '\n', stage='rpmbuild %s' % s.get('stage', '-bp'),
-                chroots=', '.join(chroots), calls_old=n_old, calls_new=calls_new,
+                chroots=', '.join(chroots), old_tool=old_tool,
+                intro_from='a direct GnuPG call (%s)' % old_tool if raw else
+                '`%gpgverify` (GnuPG `gpgv`)',
+                intro_tail='The spec called GnuPG itself instead of using `%gpgverify`; the '
+                'check becomes one `%openpgpverify` call with the same keyring, signature '
+                'and data.' if raw else
+                'The macro takes the same options, so the call itself only changes its name.', calls_old=n_old, calls_new=calls_new,
                 result_old=result_old, result_new=result_new,
                 tested_on=(s.get('tested_at') or s['updated'])[:10], commit=s['spec_commit'][:12],
                 sqv_version=s.get('sqv_version') or '?',
@@ -276,7 +312,22 @@ def render_bug(pkg, s):
     if kr.get('status') in ('no-update', 'not-found') and res.get('failure_reason') not in (
             'sha1-cert', 'expired', 'binding-after-signature'):
         why += ' (A refreshed key from keyservers/WKD doesn\'t help either.)'
+    if s.get('raw_rewritten'):
+        tools = sorted({c['tool'] for c in res.get('old_calls', [])} - {'gpgverify'})
+        old_check = 'the current check with %s' % (
+            ', '.join('`%s`' % x for x in tools) or 'GnuPG')
+        actions = actions.replace('keep `%gpgverify`', 'keep the current GnuPG check')
+        why = why.replace('`%gpgverify`', 'the current GnuPG check')
+        spec_change = ('the spec change replaces the direct GnuPG call with one '
+                       '`%{openpgpverify}` call (same keyring, signature and data) and adds '
+                       '`BuildRequires: openpgpverify`; it is ready and tested up to the '
+                       'signature check.')
+    else:
+        old_check = '`%gpgverify`'
+        spec_change = ('the spec change is the same as for other packages: `%{gpgverify}` → '
+                       '`%{openpgpverify}` and `BuildRequires: openpgpverify`.')
     return tmpl('bug.md', package=pkg, reason_short=short, commit=s['spec_commit'][:12],
+                old_check=old_check, spec_change=spec_change,
                 call='%%openpgpverify %s' % short_args(bad['args']),
                 log_excerpt=sqv_excerpt(res.get('log_tail', '')), reason_text=why,
                 actions=actions)

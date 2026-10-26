@@ -1,0 +1,15 @@
+--- a/knot.spec
++++ b/knot.spec
+@@ -197,11 +197,7 @@
+ 
+ %prep
+ %if 0%{?GPG_CHECK}
+-export GNUPGHOME=./gpg-keyring
+-[ -d ${GNUPGHOME} ] && rm -r ${GNUPGHOME}
+-mkdir --mode=700 ${GNUPGHOME}
+-gpg2 --import %{SOURCE100}
+-gpg2 --verify %{SOURCE1} %{SOURCE0}
++%{gpgverify} --keyring='%{SOURCE100}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %endif
+ %autosetup -p1
+ 

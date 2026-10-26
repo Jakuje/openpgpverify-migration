@@ -1,0 +1,71 @@
+From 80c550c354e0b12a2c686c0767fa830e86f22459 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 21:26:43 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the direct GnuPG verification with %openpgpverify, which
+uses Sequoia sqv, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ knot.spec | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/knot.spec b/knot.spec
+index 29f7b8c..7217a1a 100644
+--- a/knot.spec
++++ b/knot.spec
+@@ -15,7 +15,7 @@
+ Summary:	High-performance authoritative DNS server
+ Name:		knot
+ Version:	3.6.2
+-Release:	1%{?dist}
++Release:	2%{?dist}
+ License:	GPL-2.0-or-later
+ URL:		https://www.knot-dns.cz
+ Source0:	https://secure.nic.cz/files/knot-dns/%{name}-%{version}.tar.xz
+@@ -26,7 +26,6 @@ Source1:	https://secure.nic.cz/files/knot-dns/%{name}-%{version}.tar.xz.asc
+ # Export with --armor using command from https://fedoraproject.org/wiki/PackagingDrafts:GPGSignatures
+ # Don't forget to update %%prep section when adding/removing keys
+ Source100:	gpgkey-742FA4E95829B6C5EAC6B85710BB7AF6FEBBD6AB.gpg.asc
+-BuildRequires:	gnupg2
+ %endif
+ 
+ # Required dependencies
+@@ -59,6 +58,7 @@ BuildRequires:	pkgconfig(libmaxminddb)
+ BuildRequires:	pkgconfig(libbpf)
+ # Python modules (python3-libknot, knot-exporter) dependencies
+ BuildRequires:	python3-devel
++BuildRequires:	openpgpverify
+ %if 0%{?PYPROJECT}
+ BuildRequires:	pyproject-rpm-macros
+ BuildRequires:	python3-pip
+@@ -197,11 +197,7 @@ On-line version is available on https://www.knot-dns.cz/documentation/
+ 
+ %prep
+ %if 0%{?GPG_CHECK}
+-export GNUPGHOME=./gpg-keyring
+-[ -d ${GNUPGHOME} ] && rm -r ${GNUPGHOME}
+-mkdir --mode=700 ${GNUPGHOME}
+-gpg2 --import %{SOURCE100}
+-gpg2 --verify %{SOURCE1} %{SOURCE0}
++%{openpgpverify} --keyring='%{SOURCE100}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %endif
+ %autosetup -p1
+ 
+@@ -431,6 +427,9 @@ V=1 make check
+ %doc %{_pkgdocdir}/html
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 3.6.2-2
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Oct 21 2026 Jan Včelák <jvcelak@fedoraproject.org> - 3.6.2-1
+ - update to 3.6.2 (security fixes)
+ 
+-- 
+2.56.0
+

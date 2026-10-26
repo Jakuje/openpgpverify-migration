@@ -1,0 +1,39 @@
+From 760542b3c6b4943021214dea2aa7fac9b71a28f9 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 21:26:42 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the direct GnuPG verification with %openpgpverify, which
+uses Sequoia sqv, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ dd_rescue.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/dd_rescue.spec b/dd_rescue.spec
+index 4541438..92bff75 100644
+--- a/dd_rescue.spec
++++ b/dd_rescue.spec
+@@ -25,7 +25,7 @@ BuildRequires:  autoconf
+ # We require aclocal which is shipped with automake
+ BuildRequires:  automake
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  lzo-devel
+ BuildRequires:  xz-devel
+ BuildRequires:  make
+@@ -63,7 +63,7 @@ might be used with sub-sequent runs cooperatively on the same disk image.
+ 
+ 
+ %prep
+-gpgv2 --keyring %{SOURCE3} %{SOURCE2} %{SOURCE0}
++%{openpgpverify} --keyring='%{SOURCE3}' --signature='%{SOURCE2}' --data='%{SOURCE0}'
+ %setup -q -n %{name}-%{version}
+ %setup -q -n %{name}-%{version} -a 1 -D -T
+ %autopatch -p 1
+-- 
+2.56.0
+

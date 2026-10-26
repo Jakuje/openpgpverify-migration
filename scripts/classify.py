@@ -123,7 +123,8 @@ def classify(name, text):
                 hit = False
                 if re.search(r'(?<![\w-])gpgverify\b', v) and not GPGVERIFY.search(v):
                     r['br']['gpgverify'] = hit = True
-                if re.search(r'(?<![\w-])gnupg2?\b', v):
+                # "gpg" is a provide of gnupg2
+                if re.search(r'(?<![\w-])(gnupg2?\b|gpg(?![\w.(-]))', v):
                     r['br']['gnupg2'] = hit = True
                 if re.search(r'/gpgv2?\b', v):
                     r['br']['gpgv2_path'] = hit = True

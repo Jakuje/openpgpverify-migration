@@ -1,6 +1,6 @@
 # Proposals
 
-Generated 2026-10-26T17:56Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
+Generated 2026-10-26T20:26Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
 
 - **PR**: `0001-*.patch` is the commit a PR would carry (`git am` applies it to dist-git at the tested commit); `PR.md` is the PR title and description.
 - **draft PR**: the same, but it includes a keyring refresh that hasn't been reviewed yet.
@@ -16,7 +16,7 @@ Generated 2026-10-26T17:56Z by `scripts/render_proposals.py` from the Phase 1 st
 | pinentry | skipped | superseded: converted in dist-git (snapshot 2026-10-26) |
 | yubikey-manager-qt | skipped | superseded: converted in dist-git (snapshot 2026-10-26) |
 | openssh | skipped | superseded: converted in dist-git (snapshot 2026-10-26) |
-| pcsc-lite-ccid | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes) |
+| [pcsc-lite-ccid](pcsc-lite-ccid/) | draft PR | keyring refresh proposed |
 | [wob](wob/) | PR |  |
 | [getdns](getdns/) | bug | sha1-cert |
 | [python-ezgb](python-ezgb/) | PR |  |
@@ -85,7 +85,7 @@ Generated 2026-10-26T17:56Z by `scripts/render_proposals.py` from the Phase 1 st
 | [git](git/) | draft PR | keyring refresh proposed |
 | git-lfs | skipped | open PR exists: https://src.fedoraproject.org/rpms/git-lfs/pull-request/9 |
 | gnutls | skipped | open PR exists: https://src.fedoraproject.org/rpms/gnutls/pull-request/188 |
-| gpgme | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes) |
+| [gpgme](gpgme/) | PR |  |
 | grep | skipped | open PR exists: https://src.fedoraproject.org/rpms/grep/pull-request/6 |
 | [guestfs-tools](guestfs-tools/) | bug | sha1-cert |
 | [hivex](hivex/) | bug | sha1-cert |
@@ -120,13 +120,13 @@ Generated 2026-10-26T17:56Z by `scripts/render_proposals.py` from the Phase 1 st
 | libsemanage | skipped | open PR exists: https://src.fedoraproject.org/rpms/libsemanage/pull-request/24 |
 | libsepol | skipped | open PR exists: https://src.fedoraproject.org/rpms/libsepol/pull-request/30 |
 | libssh2 | skipped | open PR exists: https://src.fedoraproject.org/rpms/libssh2/pull-request/4 |
-| libtalloc | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes) |
-| libtasn1 | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes) |
-| libtdb | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes) |
-| libtevent | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes) |
+| [libtalloc](libtalloc/) | draft PR | keyring refresh proposed |
+| [libtasn1](libtasn1/) | draft PR | keyring refresh proposed |
+| [libtdb](libtdb/) | draft PR | keyring refresh proposed |
+| [libtevent](libtevent/) | draft PR | keyring refresh proposed |
 | [libtpms](libtpms/) | bug | sha1-cert |
 | libusb1 | skipped | open PR exists: https://src.fedoraproject.org/rpms/libusb1/pull-request/11 |
-| libuv | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes); fedora-eln-x86_64: manual (raw verification baseline passes) |
+| [libuv](libuv/) | draft PR | keyring refresh proposed |
 | [libvoikko](libvoikko/) | bug | sha1-cert |
 | libxcrypt | skipped | open PR exists: https://src.fedoraproject.org/rpms/libxcrypt/pull-request/23 |
 | llvm | skipped | open PR exists: https://src.fedoraproject.org/rpms/llvm/pull-request/670 |
@@ -147,11 +147,11 @@ Generated 2026-10-26T17:56Z by `scripts/render_proposals.py` from the Phase 1 st
 | [nghttp2](nghttp2/) | bug | sha1-cert |
 | nginx | skipped | superseded: converted in dist-git (snapshot 2026-10-26) |
 | [nmap](nmap/) | bug | sha1-sig |
-| nmstate | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes); fedora-eln-x86_64: manual (raw verification: no gpg call executed in baseline) |
+| [nmstate](nmstate/) | PR |  |
 | npth | skipped | superseded: converted in dist-git (snapshot 2026-10-26) |
 | [nss_wrapper](nss_wrapper/) | draft PR | keyring refresh proposed |
 | [ocaml-augeas](ocaml-augeas/) | bug | sha1-cert |
-| p11-kit | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes) |
+| [p11-kit](p11-kit/) | draft PR | keyring refresh proposed |
 | [pam_wrapper](pam_wrapper/) | draft PR | keyring refresh proposed |
 | parted | skipped | open PR exists: https://src.fedoraproject.org/rpms/parted/pull-request/9 |
 | pcre2 | skipped | open PR exists: https://src.fedoraproject.org/rpms/pcre2/pull-request/39 |
@@ -162,12 +162,12 @@ Generated 2026-10-26T17:56Z by `scripts/render_proposals.py` from the Phase 1 st
 | policycoreutils | skipped | open PR exists: https://src.fedoraproject.org/rpms/policycoreutils/pull-request/69 |
 | [poppler](poppler/) | draft PR | keyring refresh proposed |
 | [priv_wrapper](priv_wrapper/) | draft PR | keyring refresh proposed |
-| pyparted | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes) |
+| [pyparted](pyparted/) | draft PR | keyring refresh proposed |
 | pyxattr | skipped | open PR exists: https://src.fedoraproject.org/rpms/pyxattr/pull-request/8 |
 | [resolv_wrapper](resolv_wrapper/) | draft PR | keyring refresh proposed |
 | [rust](rust/) | bug | sha1-cert |
 | [s-nail](s-nail/) | bug | sha1-cert |
-| samba | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes); fedora-eln-x86_64: manual (raw verification: no gpg call executed in baseline) |
+| [samba](samba/) | draft PR | keyring refresh proposed |
 | [socket_wrapper](socket_wrapper/) | draft PR | keyring refresh proposed |
 | squid | skipped | open PR exists: https://src.fedoraproject.org/rpms/squid/pull-request/10 |
 | sssd | skipped | open PR exists: https://src.fedoraproject.org/rpms/sssd/pull-request/94 |
@@ -176,10 +176,10 @@ Generated 2026-10-26T17:56Z by `scripts/render_proposals.py` from the Phase 1 st
 | teckit | skipped | skipped: fedora-rawhide-x86_64: guard-failed (old spec executed no gpgverify call (prep rc 0)) |
 | tftp | skipped | open PR exists: https://src.fedoraproject.org/rpms/tftp/pull-request/10 |
 | tomcat | skipped | open PR exists: https://src.fedoraproject.org/rpms/tomcat/pull-request/104 |
-| tpm2-openssl | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes) |
+| [tpm2-openssl](tpm2-openssl/) | PR |  |
 | [uid_wrapper](uid_wrapper/) | draft PR | keyring refresh proposed |
 | unbound | skipped | open PR exists: https://src.fedoraproject.org/rpms/unbound/pull-request/41 |
-| usbredir | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes) |
+| [usbredir](usbredir/) | draft PR | keyring refresh proposed |
 | [virt-p2v](virt-p2v/) | bug | sha1-cert |
 | [virt-top](virt-top/) | bug | sha1-cert |
 | [virt-v2v](virt-v2v/) | bug | sha1-cert |
@@ -188,7 +188,7 @@ Generated 2026-10-26T17:56Z by `scripts/render_proposals.py` from the Phase 1 st
 | [wayland](wayland/) | draft PR | keyring refresh proposed |
 | xfsdump | skipped | open PR exists: https://src.fedoraproject.org/rpms/xfsdump/pull-request/6 |
 | xfsprogs | skipped | open PR exists: https://src.fedoraproject.org/rpms/xfsprogs/pull-request/30 |
-| xkeyboard-config | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes) |
+| [xkeyboard-config](xkeyboard-config/) | bug | sha1-cert |
 | [xterm](xterm/) | draft PR | keyring refresh proposed |
 | [xz](xz/) | draft PR | keyring refresh proposed |
 | zsh | skipped | open PR exists: https://src.fedoraproject.org/rpms/zsh/pull-request/13 |
@@ -251,7 +251,7 @@ Generated 2026-10-26T17:56Z by `scripts/render_proposals.py` from the Phase 1 st
 | [mako](mako/) | draft PR | keyring refresh proposed |
 | [maven-reporting-api](maven-reporting-api/) | draft PR | keyring refresh proposed |
 | [mingw-cmocka](mingw-cmocka/) | draft PR | keyring refresh proposed |
-| mingw-usbredir | skipped | manual: fedora-rawhide-x86_64: manual (raw verification baseline passes) |
+| [mingw-usbredir](mingw-usbredir/) | draft PR | keyring refresh proposed |
 | [mucalc](mucalc/) | PR |  |
 | [nginx-mod-fancyindex](nginx-mod-fancyindex/) | bug | weak-key |
 | [nss-pem](nss-pem/) | draft PR | keyring refresh proposed |
@@ -561,3 +561,20 @@ Generated 2026-10-26T17:56Z by `scripts/render_proposals.py` from the Phase 1 st
 | [pari-seadata](pari-seadata/) | bug | sha1-sig |
 | [passwordsafe](passwordsafe/) | PR |  |
 | [webkitgtk](webkitgtk/) | draft PR | keyring refresh proposed |
+| [asterisk](asterisk/) | draft PR | keyring refresh proposed |
+| [cryptlib](cryptlib/) | bug | sha1-cert |
+| [cryptobone](cryptobone/) | bug | sha1-cert |
+| [dd_rescue](dd_rescue/) | PR |  |
+| [gsi-openssh](gsi-openssh/) | PR |  |
+| [hxtools](hxtools/) | draft PR | keyring refresh proposed |
+| [inn](inn/) | draft PR | keyring refresh proposed |
+| [knot](knot/) | PR |  |
+| [knot-resolver](knot-resolver/) | draft PR | keyring refresh proposed |
+| [libHX](libHX/) | draft PR | keyring refresh proposed |
+| [loudmouth](loudmouth/) | bug | sha1-sig |
+| [ocserv](ocserv/) | draft PR | keyring refresh proposed |
+| [pam_mount](pam_mount/) | PR |  |
+| [psad](psad/) | bug | sha1-sig |
+| [qemu](qemu/) | draft PR | keyring refresh proposed |
+| [slrn](slrn/) | bug | v3-sig |
+| [znc](znc/) | draft PR | keyring refresh proposed |

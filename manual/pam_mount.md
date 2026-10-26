@@ -1,0 +1,1 @@
+- the GnuPG verification (`gpg --dearmor` of the key, then `gpgv` on the decompressed tarball) is replaced by `%{openpgpverify}` reading the decompressed tarball from stdin; sqv reads the armored key directly

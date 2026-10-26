@@ -1,4 +1,4 @@
-This switches the upstream source signature check from `%gpgverify` (GnuPG `gpgv`) to `%openpgpverify` (Sequoia `sqv`), as part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify). The macro takes the same options, so the call itself only changes its name.
+This switches the upstream source signature check from $intro_from to `%openpgpverify` (Sequoia `sqv`), as part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify). $intro_tail
 
 Why `sqv`:
 
@@ -16,7 +16,7 @@ The current and the changed spec were both run through `$stage` in a clean mock 
 
 | Spec | Verification calls | Result |
 |---|---|---|
-| current (`%gpgverify`) | $calls_old | $result_old |
+| current ($old_tool) | $calls_old | $result_old |
 | this PR (`%openpgpverify`) | $calls_new | $result_new |
 
 Tested on $tested_on at dist-git commit `$commit` with sequoia-sqv $sqv_version (Fedora DEFAULT crypto policy).

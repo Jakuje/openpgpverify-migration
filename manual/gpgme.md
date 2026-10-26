@@ -1,0 +1,1 @@
+- the GnuPG verification (export the key into a temporary keyring with `gpg2 --import`, then `gpgv2`) is replaced by one `%{openpgpverify}` call with the same key, signature and data; sqv reads the key file directly

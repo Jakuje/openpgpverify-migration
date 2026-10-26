@@ -1,0 +1,17 @@
+--- a/pam_mount.spec
++++ b/pam_mount.spec
+@@ -17,3 +17,3 @@
+ 
+-# For source verification with gpgv
++# For source verification with %%gpgverify
+ BuildRequires:  autoconf
+@@ -68,8 +68,7 @@
+ 
+ 
+ %prep
+-rm -f %{SOURCE2}.gpg ; gpg --dearmor %{SOURCE2}
+-xzcat %{SOURCE0} | gpgv --quiet --keyring %{SOURCE2}.gpg %{SOURCE1} -
++xzcat %{SOURCE0} | %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data=-
+ %setup -q
+ %patch -P0 -p1 -b.LTINIT
+ ./autogen.sh

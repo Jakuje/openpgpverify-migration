@@ -1,0 +1,1 @@
+- the GnuPG verification (temporary home, dearmored key, `gpgv2`, cleanup) is replaced by one `%{openpgpverify}` call with the same key, signature and data; sqv reads the armored key directly and uses no home directory

@@ -88,8 +88,16 @@ rpm stops depending on gpg.
    bump and a changelog entry from `rpmdev-bumpspec`. Because bumpspec
    evaluates the spec, it runs inside the Phase 1 mock chroot before `%prep`,
    so the tested spec is exactly the proposed one.
-5. **Raw gpg/gpgv calls** (`raw-verify`) are rewritten by hand into a macro
-   call, piped through `--data=-` where the data is decompressed on the fly.
+5. **Raw gpg/gpgv calls** (`raw-verify`, harness v5) are first turned into a
+   `%{gpgverify}` call and then converted like any other spec. The simple form
+   `[CMD |] gpgv[2] [--quiet] --keyring K SIG DATA` is rewritten by
+   `convert.rewrite_raw()` (`--data=-` when the data is piped in). Anything
+   else (temporary GNUPGHOME, `gpg --import`/`--dearmor`, `||` between keys)
+   has a hand-written `manual/PKG.patch` plus `manual/PKG.md` with the PR
+   bullet. Raw calls in the `%else` of a Fedora condition (old EL branches)
+   stay. Phase 1 keeps `gpg`/`gpgv` wrapped in both runs, so a leftover GnuPG
+   call in the new spec fails the guard. `BuildRequires: gpg` (a provide of
+   gnupg2) is treated like `gnupg2`.
 6. **RHEL conditionals**: openpgpverify is available in Fedora 43+, ELN, EPEL 9
    and EPEL 10 (not EPEL 8), so specs with `%{?rhel}` conditionals get the
    plain conversion too. A gpg BuildRequires inside a conditional is dropped
@@ -154,7 +162,9 @@ rpm stops depending on gpg.
      keeps only exact matches. It merges them into the existing certificates,
      checks the set of certificates is unchanged, keeps the armored/binary
      format and re-runs sqv on the host. Writes `work/PKG/refresh/FILE` and
-     `REVIEW.md` (a before/after `sq inspect` diff). Results: `proposed`,
+     `REVIEW.md` (a before/after `sq inspect` diff). A GnuPG keybox, which
+     sqv cannot read, is first exported to a plain OpenPGP keyring with gpg
+     (data only, on the host) and always counts as changed. Results: `proposed`,
      `no-update`, `not-found`, `still-fails`.
    - `show PKG`, then `approve PKG [--note]` or `reject PKG --note`. Only
      `proposed` can be approved, and the reviewer and time are recorded.

@@ -1,0 +1,11 @@
+--- a/pyparted.spec
++++ b/pyparted.spec
+@@ -33,7 +33,7 @@
+ 
+ %prep
+ # Verify source archive signature
+-gpg --no-default-keyring --keyring %{SOURCE2} --trustdb-name %{SOURCE3} --verify %{SOURCE1} %{SOURCE0} || exit 1
++%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ %autosetup
+ 

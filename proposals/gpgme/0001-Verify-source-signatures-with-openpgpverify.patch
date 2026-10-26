@@ -1,0 +1,60 @@
+From 4a5ac8cecd6409f00bf9da2751104650f6edc441 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 26 Oct 2026 21:26:03 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the direct GnuPG verification with %openpgpverify, which
+uses Sequoia sqv, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ gpgme.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/gpgme.spec b/gpgme.spec
+index e08a038..5dc0411 100644
+--- a/gpgme.spec
++++ b/gpgme.spec
+@@ -9,7 +9,7 @@
+ Name:           gpgme
+ Summary:        GnuPG Made Easy - high level crypto API
+ Version:        2.2.0
+-Release:        1%{?dist}
++Release:        2%{?dist}
+ 
+ # MIT: src/cJSON.{c,h} (used by gpgme-json)
+ License:        LGPL-2.1-or-later AND MIT
+@@ -43,6 +43,7 @@ BuildRequires:  chrpath
+ 
+ # For AutoReq cmake-filesystem
+ BuildRequires:  cmake
++BuildRequires:  openpgpverify
+ 
+ Requires:       gnupg2 >= %{gnupg2_min_ver}
+ Obsoletes:      %{name}2 <= %{version}-%{release}
+@@ -70,8 +71,7 @@ Conflicts:      %{name}2-devel <= %{version}-%{release}
+ %prep
+ %autosetup -N -p1 -S gendiff
+ # verify sources
+-gpg2 --import --import-options import-export,import-minimal %{SOURCE3} > ./gpg-keyring.gpg
+-gpgv2 --keyring ./gpg-keyring.gpg %{SOURCE1} %{SOURCE0}
++%{openpgpverify} --keyring='%{SOURCE3}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ %autopatch -p1 
+ 
+@@ -150,6 +150,9 @@ make check
+ %{_libdir}/pkgconfig/%{name}*.pc
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 2.2.0-2
++- Verify upstream source signatures with openpgpverify
++
+ * Tue Oct 13 2026 Michal Hlavinka <mhlavink@redhat.com> - 2.2.0-1
+ - updated to 2.2.0
+ 
+-- 
+2.56.0
+
