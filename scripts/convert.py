@@ -79,10 +79,11 @@ def drop_empty_branches(lines):
     return [l for l in out if l != DROPPED]
 
 
-def convert(text, rec, drop_gnupg2=False):
-    """drop_gnupg2: also drop "BR: gnupg2" when the spec has a %check
-    (gnupg2_action "review"); the caller has to prove that the build and its
-    tests work without gnupg2 (phase1.py gnupg2 check)."""
+def convert(text, rec, drop_gnupg2=None):
+    """drop_gnupg2: None drops "BR: gnupg2" only for gnupg2_action "remove"
+    (no %check); True also for "review" (has %check), False never. With True
+    the caller has to prove that the build and its tests work without gnupg2
+    (phase1.py gnupg2 check)."""
     if rec['raw_verify']:
         raise Unconvertible('raw gpg/gpgv verification needs a manual rewrite')
     if not rec['calls']:
@@ -127,8 +128,9 @@ def convert(text, rec, drop_gnupg2=False):
             name = d.split()[0]
             if DROP.match(name):
                 dropped.append(d)
-            elif GNUPG2.match(name) and (rec['gnupg2_action'] == 'remove' or
-                                         drop_gnupg2 and rec['gnupg2_action'] == 'review'):
+            elif GNUPG2.match(name) and drop_gnupg2 is not False and (
+                    rec['gnupg2_action'] == 'remove' or
+                    drop_gnupg2 and rec['gnupg2_action'] == 'review'):
                 dropped.append(d)
             else:
                 keep.append(d)
@@ -161,7 +163,8 @@ def convert(text, rec, drop_gnupg2=False):
         raise Unconvertible('no macro call rewritten')
     if re.search(r'(?<!%)%\{?\??gpgverify', body.replace('openpgpverify', '')):
         raise Unconvertible('gpgverify still referenced after rewrite')
-    if rec['gnupg2_action'] == 'keep' or rec['gnupg2_action'] == 'review' and not drop_gnupg2:
+    if rec['br']['gnupg2'] and (rec['gnupg2_action'] == 'keep' or drop_gnupg2 is False or
+                                rec['gnupg2_action'] == 'review' and not drop_gnupg2):
         notes.append('BR gnupg2 kept (%s)' % rec['gnupg2_action'])
     return body + changelog, notes
 

@@ -48,6 +48,7 @@ WORK = os.path.join(state.ROOT, 'work')
 DISTGIT = 'https://src.fedoraproject.org/rpms/%s.git'
 LOCK = threading.Lock()
 GNUPG2_CHECK = True
+FULL_BUILD_MAX_MB = 40   # larger sources: no full build (disk/time), BR gnupg2 stays
 
 # Wrapped inside the chroot. Raw tools only for raw-verify packages, since
 # gpgverify itself runs gpgv and would be counted twice.
@@ -468,10 +469,19 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
     # Drop "BR: gnupg2" whenever the spec has no other gpg use, and prove it
     # with the gnupg2 check; the variant keeping it is the fallback.
     gnupg2_check = GNUPG2_CHECK and not raw and rec['gnupg2_action'] in ('remove', 'review')
+    too_big = ((inv_rec or {}).get('srpm_size') or 0) > FULL_BUILD_MAX_MB * 1e6
+    if gnupg2_check and too_big:
+        gnupg2_check = False
+        upd['gnupg2_check'] = dict(verdict='keep', has_check=rec['has_check'],
+                                   reason='not checked: sources over %d MB, too large for '
+                                   'the full build without gnupg2 on the test machine'
+                                   % FULL_BUILD_MAX_MB)
     keep_text = None
     if not raw:
         try:
-            new_text, notes = convert.convert(text, rec, drop_gnupg2=gnupg2_check)
+            # None (legacy, --no-gnupg2-check): drop only without %check
+            new_text, notes = convert.convert(
+                text, rec, drop_gnupg2=gnupg2_check if GNUPG2_CHECK else None)
             if gnupg2_check:
                 keep_text, _ = convert.convert(text, rec, drop_gnupg2=False)
                 open(os.path.join(d, pkg + '.opv-unbumped.spec'), 'w').write(new_text)
@@ -571,13 +581,14 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
 
 
 def main():
-    global KEEP, GNUPG2_CHECK
+    global KEEP, GNUPG2_CHECK, FULL_BUILD_MAX_MB
     ap = argparse.ArgumentParser()
     ap.add_argument('--chroot', default='fedora-rawhide-x86_64')
     ap.add_argument('--eln', action='store_true',
                     help='also test in fedora-eln-x86_64 when the spec has rhel conditionals')
     ap.add_argument('--jobs', type=int, default=1)
     ap.add_argument('--keep', action='store_true', help='keep mock chroots for debugging')
+    ap.add_argument('--full-build-max-mb', type=float, default=FULL_BUILD_MAX_MB)
     ap.add_argument('--no-gnupg2-check', action='store_true',
                     help='keep "BR: gnupg2" in specs with %%check instead of proving with a '
                          'full build that it can go')
@@ -596,6 +607,7 @@ def main():
     a = ap.parse_args()
     KEEP = a.keep
     GNUPG2_CHECK = not a.no_gnupg2_check
+    FULL_BUILD_MAX_MB = a.full_build_max_mb
     inv = state.load_inventory(a.inventory)
     os.makedirs(WORK, exist_ok=True)
 
