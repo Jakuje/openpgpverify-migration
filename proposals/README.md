@@ -1,6 +1,6 @@
 # Proposals
 
-Generated 2026-10-26T14:23Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
+Generated 2026-10-26T17:56Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
 
 - **PR**: `0001-*.patch` is the commit a PR would carry (`git am` applies it to dist-git at the tested commit); `PR.md` is the PR title and description.
 - **draft PR**: the same, but it includes a keyring refresh that hasn't been reviewed yet.
@@ -351,7 +351,7 @@ Generated 2026-10-26T14:23Z by `scripts/render_proposals.py` from the Phase 1 st
 | [anymeal](anymeal/) | PR |  |
 | [apache-commons-text](apache-commons-text/) | bug | unparseable-cert |
 | [apache-commons-vfs](apache-commons-vfs/) | bug | unparseable-cert |
-| [babeltrace](babeltrace/) | bug | sha1-cert |
+| [babeltrace](babeltrace/) | draft PR | keyring refresh proposed |
 | [bino](bino/) | PR |  |
 | [bmake](bmake/) | bug | sha1-cert |
 | [browserpass](browserpass/) | PR |  |
@@ -369,16 +369,16 @@ Generated 2026-10-26T14:23Z by `scripts/render_proposals.py` from the Phase 1 st
 | [exim](exim/) | PR |  |
 | [fail2ban](fail2ban/) | bug | sha1-cert |
 | [fcft](fcft/) | PR |  |
-| [fcitx5-chinese-addons](fcitx5-chinese-addons/) | bug | sha1-cert |
-| [fcitx5-table-other](fcitx5-table-other/) | bug | sha1-cert |
+| [fcitx5-chinese-addons](fcitx5-chinese-addons/) | draft PR | keyring refresh proposed |
+| [fcitx5-table-other](fcitx5-table-other/) | draft PR | keyring refresh proposed |
 | fedrq | skipped | open PR exists: https://src.fedoraproject.org/rpms/fedrq/pull-request/3 |
 | [foot](foot/) | PR |  |
 | [freetalk](freetalk/) | PR |  |
 | [growlight](growlight/) | PR |  |
-| [guile-gnutls](guile-gnutls/) | bug | expired |
+| [guile-gnutls](guile-gnutls/) | draft PR | keyring refresh proposed |
 | [haruna](haruna/) | PR |  |
 | [haunt](haunt/) | PR |  |
-| [i3](i3/) | bug | expired |
+| [i3](i3/) | draft PR | keyring refresh proposed |
 | [iec16022](iec16022/) | bug | sha1-sig |
 | [isync](isync/) | bug | expired |
 | [jigdo](jigdo/) | PR |  |
@@ -387,22 +387,22 @@ Generated 2026-10-26T14:23Z by `scripts/render_proposals.py` from the Phase 1 st
 | [libbsd](libbsd/) | PR |  |
 | [libchipcard](libchipcard/) | PR |  |
 | [libeatmydata](libeatmydata/) | PR |  |
-| [libgsasl](libgsasl/) | bug | binding-after-signature |
+| [libgsasl](libgsasl/) | draft PR | keyring refresh proposed |
 | [libmd](libmd/) | PR |  |
 | [libnice](libnice/) | bug | sha1-sig |
 | [lld15](lld15/) | PR |  |
-| [lld18](lld18/) | bug | expired |
+| [lld18](lld18/) | draft PR | keyring refresh proposed |
 | [lxi-tools](lxi-tools/) | bug | sha1-cert |
 | [maildrop](maildrop/) | bug | sha1-cert |
 | [maven-doxia](maven-doxia/) | PR |  |
 | [maven-doxia-sitetools](maven-doxia-sitetools/) | PR |  |
-| [maven-reporting-impl](maven-reporting-impl/) | bug | expired |
+| [maven-reporting-impl](maven-reporting-impl/) | draft PR | keyring refresh proposed |
 | [mimedefang](mimedefang/) | PR |  |
-| [mingw-libidn2](mingw-libidn2/) | bug | expired |
+| [mingw-libidn2](mingw-libidn2/) | draft PR | keyring refresh proposed |
 | [mingw-libssh2](mingw-libssh2/) | PR |  |
-| [mingw-nettle](mingw-nettle/) | bug | expired |
+| [mingw-nettle](mingw-nettle/) | draft PR | keyring refresh proposed |
 | [mingw-objfw](mingw-objfw/) | PR |  |
-| [mingw-pcre](mingw-pcre/) | bug | sha1-cert |
+| [mingw-pcre](mingw-pcre/) | draft PR | keyring refresh proposed |
 | [mpd](mpd/) | bug | sha1-cert |
 | [mpop](mpop/) | PR |  |
 | [msmtp](msmtp/) | PR |  |
@@ -410,12 +410,12 @@ Generated 2026-10-26T14:23Z by `scripts/render_proposals.py` from the Phase 1 st
 | [musl](musl/) | bug | sha1-sig |
 | [ncmpc](ncmpc/) | bug | sha1-cert |
 | [nettle3.10](nettle3.10/) | PR |  |
-| [newsboat](newsboat/) | bug | expired |
+| [newsboat](newsboat/) | draft PR | keyring refresh proposed |
 | [nghttp3](nghttp3/) | bug | sha1-cert |
 | [ngtcp2](ngtcp2/) | bug | sha1-cert |
 | [nilfs-utils](nilfs-utils/) | PR |  |
 | [normalize](normalize/) | bug | v3-sig |
-| [ntpsec](ntpsec/) | bug | expired |
+| [ntpsec](ntpsec/) | draft PR | keyring refresh proposed |
 | [objfw](objfw/) | PR |  |
 | [openbgpd](openbgpd/) | PR |  |
 | [openconnect](openconnect/) | bug | sha1-cert |
@@ -448,12 +448,12 @@ Generated 2026-10-26T14:23Z by `scripts/render_proposals.py` from the Phase 1 st
 | [reprotest](reprotest/) | PR |  |
 | [river](river/) | PR |  |
 | [river-classic](river-classic/) | PR |  |
-| [rpki-client](rpki-client/) | bug | expired |
+| [rpki-client](rpki-client/) | draft PR | keyring refresh proposed |
 | [rpminspect](rpminspect/) | PR |  |
 | [rush](rush/) | PR |  |
 | [rxvt-unicode](rxvt-unicode/) | PR |  |
 | [shigofumi](shigofumi/) | PR |  |
-| [skribilo](skribilo/) | bug | expired |
+| [skribilo](skribilo/) | draft PR | keyring refresh proposed |
 | [sngrep](sngrep/) | PR |  |
 | [spread-sheet-widget](spread-sheet-widget/) | bug | expired |
 | [swappy](swappy/) | PR |  |
@@ -466,32 +466,32 @@ Generated 2026-10-26T14:23Z by `scripts/render_proposals.py` from the Phase 1 st
 | [tth](tth/) | PR |  |
 | [unrtf](unrtf/) | bug | sha1-sig |
 | [volk](volk/) | bug | expired |
-| [weechat](weechat/) | bug | sha1-cert |
+| [weechat](weechat/) | draft PR | keyring refresh proposed |
 | [weldr-client](weldr-client/) | PR |  |
 | [wl-mirror](wl-mirror/) | PR |  |
-| [wlroots](wlroots/) | bug | expired |
+| [wlroots](wlroots/) | draft PR | keyring refresh proposed |
 | [wlroots0.18](wlroots0.18/) | PR |  |
-| [wlroots0.19](wlroots0.19/) | bug | expired |
+| [wlroots0.19](wlroots0.19/) | draft PR | keyring refresh proposed |
 | [xalan-c](xalan-c/) | PR |  |
-| [xcb-imdkit](xcb-imdkit/) | bug | sha1-cert |
+| [xcb-imdkit](xcb-imdkit/) | draft PR | keyring refresh proposed |
 | [xcb-util-errors](xcb-util-errors/) | bug | binding-after-signature |
 | [xforms](xforms/) | bug | sha1-sig |
 | [AusweisApp2](AusweisApp2/) | PR |  |
 | [bcachefs-tools](bcachefs-tools/) | PR |  |
 | [bind9-next](bind9-next/) | PR |  |
-| [borgbackup](borgbackup/) | bug | expired |
+| [borgbackup](borgbackup/) | draft PR | keyring refresh proposed |
 | [botan3](botan3/) | bug | sha1-cert |
-| [btrfs-progs](btrfs-progs/) | bug | expired |
+| [btrfs-progs](btrfs-progs/) | draft PR | keyring refresh proposed |
 | [budgie-desktop](budgie-desktop/) | PR |  |
-| [cgit](cgit/) | bug | expired |
+| [cgit](cgit/) | draft PR | keyring refresh proposed |
 | [cryptopp](cryptopp/) | PR |  |
-| [csdiff](csdiff/) | bug | expired |
+| [csdiff](csdiff/) | draft PR | keyring refresh proposed |
 | [dhcp](dhcp/) | bug | sha1-sig |
 | [electron-cash](electron-cash/) | bug | weak-key |
 | [electrum](electrum/) | PR |  |
-| [fcitx5](fcitx5/) | bug | sha1-cert |
-| [fcitx5-table-extra](fcitx5-table-extra/) | bug | sha1-cert |
-| [fcitx5-zhuyin](fcitx5-zhuyin/) | bug | sha1-cert |
+| [fcitx5](fcitx5/) | draft PR | keyring refresh proposed |
+| [fcitx5-table-extra](fcitx5-table-extra/) | draft PR | keyring refresh proposed |
+| [fcitx5-zhuyin](fcitx5-zhuyin/) | draft PR | keyring refresh proposed |
 | [ffmpeg](ffmpeg/) | bug | sha1-cert |
 | [fish](fish/) | PR |  |
 | [flashrom](flashrom/) | bug | weak-key |
@@ -505,15 +505,15 @@ Generated 2026-10-26T14:23Z by `scripts/render_proposals.py` from the Phase 1 st
 | [john](john/) | bug | sha1-sig |
 | [kdsoap](kdsoap/) | bug | sha1-cert |
 | [keepass](keepass/) | PR |  |
-| [keepassxc](keepassxc/) | bug | expired |
+| [keepassxc](keepassxc/) | draft PR | keyring refresh proposed |
 | [libextractor](libextractor/) | bug | unparseable-cert |
 | [libmodsecurity](libmodsecurity/) | PR |  |
-| [mat2](mat2/) | bug | expired |
+| [mat2](mat2/) | draft PR | keyring refresh proposed |
 | [mingw-SDL3](mingw-SDL3/) | PR |  |
 | [mkvtoolnix](mkvtoolnix/) | PR |  |
 | [mod_perl](mod_perl/) | PR |  |
 | [notcurses](notcurses/) | PR |  |
-| [oath-toolkit](oath-toolkit/) | bug | expired |
+| [oath-toolkit](oath-toolkit/) | draft PR | keyring refresh proposed |
 | [pari](pari/) | bug | sha1-cert |
 | [pari-galpol](pari-galpol/) | bug | sha1-cert |
 | [pari-nftables](pari-nftables/) | bug | sha1-sig |
@@ -521,7 +521,7 @@ Generated 2026-10-26T14:23Z by `scripts/render_proposals.py` from the Phase 1 st
 | [poke](poke/) | PR |  |
 | [pspp](pspp/) | PR |  |
 | [qbittorrent](qbittorrent/) | PR |  |
-| [quodlibet](quodlibet/) | bug | expired |
+| [quodlibet](quodlibet/) | draft PR | keyring refresh proposed |
 | [qvr](qvr/) | PR |  |
 | [rabbitmq-server](rabbitmq-server/) | PR |  |
 | [rkward](rkward/) | PR |  |
@@ -529,7 +529,7 @@ Generated 2026-10-26T14:23Z by `scripts/render_proposals.py` from the Phase 1 st
 | [roundcubemail](roundcubemail/) | PR |  |
 | [spamassassin](spamassassin/) | bug | sha1-cert |
 | [strongswan](strongswan/) | bug | sha1-cert |
-| [sway](sway/) | bug | expired |
+| [sway](sway/) | draft PR | keyring refresh proposed |
 | [tor](tor/) | bug | concatenated-armor |
 | [trafficserver](trafficserver/) | PR |  |
 | [unrealircd](unrealircd/) | bug | sha1-cert |
@@ -539,7 +539,7 @@ Generated 2026-10-26T14:23Z by `scripts/render_proposals.py` from the Phase 1 st
 | [asahi-installer](asahi-installer/) | PR |  |
 | [budgie-backgrounds](budgie-backgrounds/) | PR |  |
 | [clang15](clang15/) | PR |  |
-| [clang18](clang18/) | bug | expired |
+| [clang18](clang18/) | draft PR | keyring refresh proposed |
 | [feather](feather/) | PR |  |
 | [fop](fop/) | bug | sha1-cert |
 | [forgejo](forgejo/) | PR |  |
@@ -549,15 +549,15 @@ Generated 2026-10-26T14:23Z by `scripts/render_proposals.py` from the Phase 1 st
 | [inkscape](inkscape/) | bug | weak-key |
 | [kitty](kitty/) | PR |  |
 | [libclc22](libclc22/) | PR |  |
-| [libime](libime/) | bug | sha1-cert |
-| [llvm14](llvm14/) | bug | sha1-cert |
+| [libime](libime/) | draft PR | keyring refresh proposed |
+| [llvm14](llvm14/) | draft PR | keyring refresh proposed |
 | [llvm15](llvm15/) | PR |  |
-| [llvm18](llvm18/) | bug | expired |
+| [llvm18](llvm18/) | draft PR | keyring refresh proposed |
 | [llvm19](llvm19/) | PR |  |
-| [llvm20](llvm20/) | bug | expired |
+| [llvm20](llvm20/) | draft PR | keyring refresh proposed |
 | [llvm21](llvm21/) | PR |  |
 | [opam](opam/) | bug | expired |
 | [pari-elldata](pari-elldata/) | bug | sha1-cert |
 | [pari-seadata](pari-seadata/) | bug | sha1-sig |
 | [passwordsafe](passwordsafe/) | PR |  |
-| [webkitgtk](webkitgtk/) | bug | expired |
+| [webkitgtk](webkitgtk/) | draft PR | keyring refresh proposed |
