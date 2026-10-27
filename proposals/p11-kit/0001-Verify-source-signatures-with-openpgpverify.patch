@@ -1,6 +1,6 @@
-From e262f8fde26668988dd238e45c7a747f54778eec Mon Sep 17 00:00:00 2001
+From 75b79b150848eaa3c2b4d39057f3b62a0e2b3994 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:05 +0100
+Date: Tue, 27 Oct 2026 12:08:52 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -8,18 +8,30 @@ uses Sequoia sqv, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh p11-kit-release-keyring.gpg from keyservers/WKD: same
-certificate(s), with self-signatures our copy was missing.
+certificate(s), with self-signatures our copy was missing; the commands
+are in the spec comment.
 
 Assisted-by: Claude Opus 5.5
 ---
- p11-kit.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ p11-kit.spec | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/p11-kit.spec b/p11-kit.spec
-index bbc8f07..ede86c9 100644
+index bbc8f07..37424fe 100644
 --- a/p11-kit.spec
 +++ b/p11-kit.spec
-@@ -33,6 +33,7 @@ BuildRequires:  pkgconfig(glib-2.0)
+@@ -15,6 +15,10 @@ License:        BSD-3-Clause
+ URL:            http://p11-glue.freedesktop.org/p11-kit.html
+ Source0:        https://github.com/p11-glue/p11-kit/releases/download/%{version}/p11-kit-%{version}.tar.xz
+ Source1:        https://github.com/p11-glue/p11-kit/releases/download/%{version}/p11-kit-%{version}.tar.xz.sig
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 5D46CB0F763405A7053556F47A75A648B3F9220C 462225C3B46F34879FC8496CD605848ED7E69871 | sq keyring filter --experimental --cert 5D46CB0F763405A7053556F47A75A648B3F9220C --cert 462225C3B46F34879FC8496CD605848ED7E69871 --output update.pgp
++#   sq keyring merge p11-kit-release-keyring.gpg update.pgp | sq packet dearmor --output p11-kit-release-keyring.gpg.new
++#   mv p11-kit-release-keyring.gpg.new p11-kit-release-keyring.gpg
+ Source2:        https://p11-glue.github.io/p11-glue/p11-kit/p11-kit-release-keyring.gpg
+ Source3:        trust-extract-compat
+ Source4:        p11-kit-client.service
+@@ -33,6 +37,7 @@ BuildRequires:  pkgconfig(glib-2.0)
  BuildRequires:  pkgconfig(systemd)
  BuildRequires:  gnupg2
  BuildRequires:  /usr/bin/xsltproc
@@ -27,7 +39,7 @@ index bbc8f07..ede86c9 100644
  
  %if %{with mingw}
  BuildRequires:  ninja-build
-@@ -137,7 +138,7 @@ way that they're discoverable.  This library is cross-compiled for MinGW.
+@@ -137,7 +142,7 @@ way that they're discoverable.  This library is cross-compiled for MinGW.
  
  
  %prep

@@ -12,18 +12,27 @@ Phase 1 reason: `sha1-cert`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 2263 → 17527 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 \
+  | sq keyring filter --experimental --cert 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 --output update.pgp
+sq keyring merge dj3498u4hyyarh35rkjfnghbjxug6b19 update.pgp | sq packet dearmor --output dj3498u4hyyarh35rkjfnghbjxug6b19.new
+mv dj3498u4hyyarh35rkjfnghbjxug6b19.new dj3498u4hyyarh35rkjfnghbjxug6b19
+```
+
 ```diff
 --- dist-git/dj3498u4hyyarh35rkjfnghbjxug6b19
 +++ refreshed/dj3498u4hyyarh35rkjfnghbjxug6b19
 @@ -1,11 +1,12 @@
        Fingerprint: 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48
--                   Invalid: No binding signature at time 2026-10-22T13:08:24Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T10:52:11Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +  Expiration time: 2027-04-12 16:35:43 UTC (creation time + 11years 10days 43m 25s)
 +        Key flags: certification, signing
             Subkey: 3842522FEB127E044BC92BEA10D018335A0B5D8E
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-22T13:08:24Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T10:52:11Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +  Expiration time: 2027-04-12 16:35:24 UTC (creation time + 11years 10days 43m 6s)
 +        Key flags: transport encryption, data-at-rest encryption
 +           UserID: Simon Ser <contact@emersion.fr>

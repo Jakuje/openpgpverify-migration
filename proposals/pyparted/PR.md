@@ -15,7 +15,7 @@ Why `sqv`:
 
 - the `gpg --verify` call with its own keyring and trust database is replaced by `%{openpgpverify}` with the same keyring, signature and data. sqv does not use a trust database, so `trustdb.gpg` (Source3) is no longer needed; it is left in place here and can be removed together with the file
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `keyring.gpg` (see below)
+- refreshed keyring `keyring.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
 - Release bumped (`17%{?dist}` → `18%{?dist}`) with a changelog entry
 
 ### Testing
@@ -34,6 +34,16 @@ Tested on 2026-10-26 at dist-git commit `f00b886f17ce` with sequoia-sqv 1.5.0-2.
 `%openpgpverify` cannot read the keyring in dist-git: it is a GnuPG keybox, which `gpg` reads but sqv does not, so it is exported to a plain OpenPGP keyring. The same certificate, looked up by fingerprint (hkps://keyserver.ubuntu.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
 
 - `08F7C8B3C621950C138F766162977BB9C841B965`
+
+The refresh, as run (the spec comment above the `Source` line has the same commands without the one-time keybox export, for the next refresh):
+
+```
+gpg --homedir "$(mktemp -d)" --batch --no-default-keyring --keyring ./keyring.gpg --export --output keyring.gpg.pgp
+sq --home=none network search --output - 08F7C8B3C621950C138F766162977BB9C841B965 \
+  | sq keyring filter --experimental --cert 08F7C8B3C621950C138F766162977BB9C841B965 --output update.pgp
+sq keyring merge keyring.gpg.pgp update.pgp | sq packet dearmor --output keyring.gpg.new
+mv keyring.gpg.new keyring.gpg
+```
 
 What changed in the certificate (`sq inspect`):
 

@@ -12,6 +12,15 @@ Phase 1 reason: `expired`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 50739 → 79579 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - BF5A669F2272CF4324C1FDA8CFB4C2166397D0D2 \
+  | sq keyring filter --experimental --cert BF5A669F2272CF4324C1FDA8CFB4C2166397D0D2 --output update.pgp
+sq keyring merge --output keepassxc_master_signing_key.asc.new keepassxc_master_signing_key.asc update.pgp
+mv keepassxc_master_signing_key.asc.new keepassxc_master_signing_key.asc
+```
+
 ```diff
 --- dist-git/keepassxc_master_signing_key.asc
 +++ refreshed/keepassxc_master_signing_key.asc

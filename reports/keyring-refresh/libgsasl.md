@@ -12,6 +12,15 @@ Phase 1 reason: `binding-after-signature`
 - found via: hkps://keys.mailvelope.com, hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD; hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 80039 → 90563 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - 9AA9BDB11BB1B99A21285A330664A76954265E8C \
+  | sq keyring filter --experimental --cert 9AA9BDB11BB1B99A21285A330664A76954265E8C --output update.pgp
+sq keyring merge 54265e8c.txt update.pgp | sq packet dearmor --output 54265e8c.txt.new
+mv 54265e8c.txt.new 54265e8c.txt
+```
+
 ```diff
 --- dist-git/54265e8c.txt
 +++ refreshed/54265e8c.txt

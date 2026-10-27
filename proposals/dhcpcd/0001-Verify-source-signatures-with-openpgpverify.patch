@@ -1,6 +1,6 @@
-From d15f252b8472a2b832c3345af6c02653a18a52f3 Mon Sep 17 00:00:00 2001
+From cdc9b2861574f545f687d7aeaab5232f24f10be2 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:03 +0100
+Date: Tue, 27 Oct 2026 12:08:51 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,19 +8,31 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh rsmarples.gpg from keyservers/WKD: same certificate(s), with
-self-signatures our copy was missing.
+self-signatures our copy was missing; the commands are in the spec
+comment.
 
 Assisted-by: Claude Opus 5.5
 ---
- dhcpcd.spec   |   3 +-
+ dhcpcd.spec   |   7 ++-
  rsmarples.gpg | 142 ++++++++++++++++++++++++++++++++------------------
- 2 files changed, 94 insertions(+), 51 deletions(-)
+ 2 files changed, 98 insertions(+), 51 deletions(-)
 
 diff --git a/dhcpcd.spec b/dhcpcd.spec
-index 5b803d4..ebc79a0 100644
+index 5b803d4..7ab36c1 100644
 --- a/dhcpcd.spec
 +++ b/dhcpcd.spec
-@@ -31,6 +31,7 @@ BuildRequires: systemd-devel
+@@ -10,6 +10,10 @@ URL: http://roy.marples.name/projects/%{name}/
+ VCS: git:%{forgeurl0}
+ Source0: %{forgeurl0}/releases/download/v%{version}/%{name}-%{version}.tar.xz
+ Source1: %{forgeurl0}/releases/download/v%{version}/%{name}-%{version}.tar.xz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - A785ED2755955D9E93EA59F6597F97EA9AD45549 | sq keyring filter --experimental --cert A785ED2755955D9E93EA59F6597F97EA9AD45549 --output update.pgp
++#   sq keyring merge --output rsmarples.gpg.new rsmarples.gpg update.pgp
++#   mv rsmarples.gpg.new rsmarples.gpg
+ Source2: https://github.com/rsmarples.gpg
+ Source3: %{name}.service
+ Source4: %{name}@.service
+@@ -31,6 +35,7 @@ BuildRequires: systemd-devel
  BuildRequires: ypbind
  %endif
  BuildRequires: make
@@ -28,7 +40,7 @@ index 5b803d4..ebc79a0 100644
  %if 0%{?fedora} || 0%{?rhel} > 8
  BuildRequires: gnupg2
  %endif
-@@ -42,7 +43,7 @@ through NDP, DHCPv4 and DHCPv6 protocols.
+@@ -42,7 +47,7 @@ through NDP, DHCPv4 and DHCPv6 protocols.
  
  %prep
  %if 0%{?fedora} || 0%{?rhel} > 8

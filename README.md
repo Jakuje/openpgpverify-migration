@@ -167,7 +167,12 @@ rpm stops depending on gpg.
      format and re-runs sqv on the host. Writes `work/PKG/refresh/FILE` and
      `REVIEW.md` (a before/after `sq inspect` diff). A GnuPG keybox, which
      sqv cannot read, is first exported to a plain OpenPGP keyring with gpg
-     (data only, on the host) and always counts as changed. Results: `proposed`,
+     (data only, on the host) and always counts as changed. The refresh is a
+     fixed recipe of shell commands (`sq network search` | `sq keyring filter
+     --cert FPR`, `sq keyring merge` with the old keyring, `sq packet dearmor`
+     for binary keyrings), run literally and recorded; the PR quotes them, and
+     once approved, phase1.py puts them in the comment above the keyring's
+     `Source` line, replacing older gpg/curl fetch commands. Results: `proposed`,
      `no-update`, `not-found`, `still-fails`.
    - `show PKG`, then `approve PKG [--note]` or `reject PKG --note`. Only
      `proposed` can be approved, and the reviewer and time are recorded.

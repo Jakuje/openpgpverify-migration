@@ -1,6 +1,6 @@
-From 64356414b9be58bffeda7a5647a366e4b89b45fc Mon Sep 17 00:00:00 2001
+From 3e4bb2ef431cbd744e1ff299e280d733b62a1322 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:02 +0100
+Date: Tue, 27 Oct 2026 12:08:51 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,19 +8,33 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh gpgkey-aide.gpg from keyservers/WKD: same certificate(s), with
-self-signatures our copy was missing.
+self-signatures our copy was missing; the commands are in the spec
+comment.
 
 Assisted-by: Claude Opus 5.5
 ---
- aide.spec       |   3 ++-
+ aide.spec       |   9 ++++++---
  gpgkey-aide.gpg | Bin 5160 -> 59219 bytes
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/aide.spec b/aide.spec
-index 1d57c3e..efe5311 100644
+index 1d57c3e..9fc837b 100644
 --- a/aide.spec
 +++ b/aide.spec
-@@ -36,6 +36,7 @@ BuildRequires:  systemd-rpm-macros
+@@ -7,8 +7,10 @@ License:        GPL-2.0-or-later
+ 
+ Source0:        %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz
+ Source1:        %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz.asc
+-# gpg2 --recv-keys 2BBBD30FAAB29B3253BCFBA6F6947DAB68E7B931
+-# gpg2 --export --export-options export-minimal 2BBBD30FAAB29B3253BCFBA6F6947DAB68E7B931 >gpgkey-aide.gpg
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 2BBBD30FAAB29B3253BCFBA6F6947DAB68E7B931 | sq keyring filter --experimental --cert 2BBBD30FAAB29B3253BCFBA6F6947DAB68E7B931 --output update.pgp
++#   sq keyring merge gpgkey-aide.gpg update.pgp | sq packet dearmor --output gpgkey-aide.gpg.new
++#   mv gpgkey-aide.gpg.new gpgkey-aide.gpg
+ Source2:        gpgkey-aide.gpg
+ Source3:        aide.conf
+ Source4:        README.quickstart
+@@ -36,6 +38,7 @@ BuildRequires:  systemd-rpm-macros
  BuildRequires:  gnupg2
  # For being able to run 'make check'
  BuildRequires:  check-devel
@@ -28,7 +42,7 @@ index 1d57c3e..efe5311 100644
  
  
  Requires:       logrotate
-@@ -45,7 +46,7 @@ AIDE (Advanced Intrusion Detection Environment) is a file integrity
+@@ -45,7 +48,7 @@ AIDE (Advanced Intrusion Detection Environment) is a file integrity
  checker and intrusion detection program.
  
  %prep

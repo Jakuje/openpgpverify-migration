@@ -16,7 +16,7 @@ Why `sqv`:
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
 - dropped `BuildRequires:  gnupg2`, only needed for `%gpgverify`
-- refreshed keyring `757FAB7CED1814AE15B4836E5FB027474203454C.gpg` (see below)
+- refreshed keyring `757FAB7CED1814AE15B4836E5FB027474203454C.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
 
 ### Testing
 
@@ -36,6 +36,15 @@ Tested on 2026-10-22 at dist-git commit `17e03463680a` with sequoia-sqv 1.5.0-2.
 - `0392335A78083894A4301C43236E8A58C6DB4512`
 - `69100FFB90E87A320DF8643CBEC39009E8321A61`
 - `757FAB7CED1814AE15B4836E5FB027474203454C`
+
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - 0392335A78083894A4301C43236E8A58C6DB4512 69100FFB90E87A320DF8643CBEC39009E8321A61 757FAB7CED1814AE15B4836E5FB027474203454C \
+  | sq keyring filter --experimental --cert 0392335A78083894A4301C43236E8A58C6DB4512 --cert 69100FFB90E87A320DF8643CBEC39009E8321A61 --cert 757FAB7CED1814AE15B4836E5FB027474203454C --output update.pgp
+sq keyring merge --output 757FAB7CED1814AE15B4836E5FB027474203454C.gpg.new 757FAB7CED1814AE15B4836E5FB027474203454C.gpg update.pgp
+mv 757FAB7CED1814AE15B4836E5FB027474203454C.gpg.new 757FAB7CED1814AE15B4836E5FB027474203454C.gpg
+```
 
 What changed in the certificate (`sq inspect`):
 

@@ -15,7 +15,7 @@ Why `sqv`:
 
 - the direct `gpgv2` call is replaced by `%{openpgpverify}` with the same keyring, signature and data
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `talloc.keyring` (see below)
+- refreshed keyring `talloc.keyring` (see below); the comment above its `Source` line now shows the commands for refreshing it
 
 ### Testing
 
@@ -34,6 +34,15 @@ Tested on 2026-10-26 at dist-git commit `41b7fe1706b3` with sequoia-sqv 1.5.0-2.
 
 - `9147A339719518EE9011BCB54793916113084025`
 
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - 9147A339719518EE9011BCB54793916113084025 \
+  | sq keyring filter --experimental --cert 9147A339719518EE9011BCB54793916113084025 --output update.pgp
+sq keyring merge talloc.keyring update.pgp | sq packet dearmor --output talloc.keyring.new
+mv talloc.keyring.new talloc.keyring
+```
+
 What changed in the certificate (`sq inspect`):
 
 ```diff
@@ -41,7 +50,7 @@ What changed in the certificate (`sq inspect`):
 +++ refreshed/talloc.keyring
 @@ -1,6 +1,11 @@
        Fingerprint: 9147A339719518EE9011BCB54793916113084025
--                   Invalid: No binding signature at time 2026-10-26T20:10:08Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T10:57:56Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +  Expiration time: 2027-12-13 12:18:24 UTC (creation time + 16years 10months 30days 6h 51m 33s)
 +        Key flags: certification, signing
 +           Subkey: 541FB94987D491A3C201D8B1B1DD08BF65F64DAB

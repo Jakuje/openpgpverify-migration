@@ -121,6 +121,52 @@ def rewrite_raw(text, rec):
     return '\n'.join(lines)
 
 
+SOURCE_TAG = re.compile(r'^Source(\d*)\s*:\s*(\S+)', re.I)
+# A command in a comment that fetched or exported the key ("# gpg2 --recv-keys ...",
+# "#   $ curl ... | gpg --dearmor > key.gpg").
+KEY_CMD = re.compile(r'^#\s*(\$\s*)?(gpg2?|gpgv2?|sq|curl|wget|gpg-wks-client)\s')
+
+
+def refresh_comment(text, pkg, name, cmds):
+    """Put the keyring refresh commands CMDS in the comment above the Source
+    line of keyring file NAME, replacing commands that fetched or exported the
+    key before (descriptive comment lines stay). Returns (text, note)."""
+    lines = text.split('\n')
+    # Simple one-word %global/%define values, as used in keyring file names.
+    macros = dict(re.findall(r'(?m)^%(?:global|define)\s+(\w+)\s+([^\s%]+)\s*$', text))
+    macros['name'] = pkg
+    src = None
+    for i, line in enumerate(lines):
+        m = SOURCE_TAG.match(line)
+        if m:
+            value = re.sub(r'%\{\??(\w+)\}|%(\w+)\b',
+                           lambda x: macros.get(x.group(1) or x.group(2), x.group(0)),
+                           m.group(2))
+            if value.rsplit('/', 1)[-1] == name:
+                src = i
+                break
+    if src is None:
+        return text, 'no Source line for %s; refresh commands only in the PR' % name
+    top = src
+    while top > 0 and lines[top - 1].startswith('#'):
+        top -= 1
+    block = lines[top:src]
+    keep, at, cont = [], None, False
+    for line in block:
+        if KEY_CMD.match(line) or cont:
+            at = len(keep) if at is None else at
+            cont = line.rstrip().endswith('\\')
+            continue
+        keep.append(line)
+    new = ['# Refreshed from keyservers/WKD (same keys, newer signatures):']
+    for c in cmds:
+        new.append('#   ' + re.sub(r' \\\n\s*', ' ', c).replace('%', '%%'))
+    if at is None:
+        at = len(keep)
+    lines[top:src] = keep[:at] + new + keep[at:]
+    return '\n'.join(lines), None
+
+
 def convert(text, rec, drop_gnupg2=None):
     """drop_gnupg2: None drops "BR: gnupg2" only for gnupg2_action "remove"
     (no %check); True also for "review" (has %check), False never. With True

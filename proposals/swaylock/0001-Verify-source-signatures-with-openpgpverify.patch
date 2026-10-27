@@ -1,6 +1,6 @@
-From 22904058b3f05d900c902edad9883c63fbb398a7 Mon Sep 17 00:00:00 2001
+From 0183af733417cfd3f19c46127144528e166f25e4 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:19 +0100
+Date: Tue, 27 Oct 2026 12:08:58 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,13 +8,14 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh gpgkey-E88F5E48.asc from keyservers/WKD: same certificate(s),
-with self-signatures our copy was missing.
+with self-signatures our copy was missing; the commands are in the spec
+comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  gpgkey-E88F5E48.asc | 396 +++++++++++++++++++++++++++++++++++++++-----
- swaylock.spec       |   4 +-
- 2 files changed, 359 insertions(+), 41 deletions(-)
+ swaylock.spec       |   9 +-
+ 2 files changed, 363 insertions(+), 42 deletions(-)
 
 diff --git a/gpgkey-E88F5E48.asc b/gpgkey-E88F5E48.asc
 index 80d3640..3af1165 100644
@@ -428,10 +429,18 @@ index 80d3640..3af1165 100644
 +=XTEI
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/swaylock.spec b/swaylock.spec
-index 1ddcf3d..97b7d60 100644
+index 1ddcf3d..1e72d97 100644
 --- a/swaylock.spec
 +++ b/swaylock.spec
-@@ -11,7 +11,7 @@ Source1:    %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz.sig
+@@ -7,11 +7,14 @@ License:    MIT
+ URL:        https://github.com/swaywm/swaylock
+ Source0:    %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz
+ Source1:    %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz.sig
+-# gpg2 --export --armor --export-options export-minimal 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 >gpgkey-E88F5E48.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 | sq keyring filter --experimental --cert 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 --output update.pgp
++#   sq keyring merge --output gpgkey-E88F5E48.asc.new gpgkey-E88F5E48.asc update.pgp
++#   mv gpgkey-E88F5E48.asc.new gpgkey-E88F5E48.asc
  Source2:    gpgkey-E88F5E48.asc
  
  BuildRequires:  gcc
@@ -440,7 +449,7 @@ index 1ddcf3d..97b7d60 100644
  BuildRequires:  meson >= 0.59.0
  BuildRequires:  pam-devel
  BuildRequires:  pkgconfig(cairo)
-@@ -26,7 +26,7 @@ BuildRequires:  scdoc
+@@ -26,7 +29,7 @@ BuildRequires:  scdoc
  swaylock is a screen locking utility for Wayland compositors.
  
  %prep

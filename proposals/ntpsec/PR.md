@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `ntpsec.gpg.pub.asc` (see below)
+- refreshed keyring `ntpsec.gpg.pub.asc` (see below); the comment above its `Source` line now shows the commands for refreshing it
 - Release bumped (`1%{?dist}` → `2%{?dist}`) with a changelog entry
 
 ### Testing
@@ -35,6 +35,15 @@ Tested on 2026-10-23 at dist-git commit `4d9ab763e0d2` with sequoia-sqv 1.5.0-2.
 
 - `DA3FDF774CC70FA64729EC4505D9B371477C7528`
 - `E57235D22764129FA4F2F4D17F52608ED0E49D76`
+
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - DA3FDF774CC70FA64729EC4505D9B371477C7528 E57235D22764129FA4F2F4D17F52608ED0E49D76 \
+  | sq keyring filter --experimental --cert DA3FDF774CC70FA64729EC4505D9B371477C7528 --cert E57235D22764129FA4F2F4D17F52608ED0E49D76 --output update.pgp
+sq keyring merge --output ntpsec.gpg.pub.asc.new ntpsec.gpg.pub.asc update.pgp
+mv ntpsec.gpg.pub.asc.new ntpsec.gpg.pub.asc
+```
 
 What changed in the certificate (`sq inspect`):
 

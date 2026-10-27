@@ -1,6 +1,6 @@
-From 4c5e7847212b60a5ac703dc0dcd3370660cdbcaa Mon Sep 17 00:00:00 2001
+From 14739800720a13ab83fe0038765ac452fbc5cea6 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:29 +0100
+Date: Tue, 27 Oct 2026 12:09:02 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,14 +8,15 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh ntpsec.gpg.pub.asc from keyservers/WKD: same certificate(s),
-with self-signatures our copy was missing.
+with self-signatures our copy was missing; the commands are in the spec
+comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  ntpsec.gpg.pub.asc | 316 ++++++++++++++++++++++++++++-----------------
- ntpsec.spec        |   8 +-
- 2 files changed, 201 insertions(+), 123 deletions(-)
+ ntpsec.spec        |  12 +-
+ 2 files changed, 205 insertions(+), 123 deletions(-)
 
 diff --git a/ntpsec.gpg.pub.asc b/ntpsec.gpg.pub.asc
 index 8d3661e..476bbb3 100644
@@ -349,10 +350,10 @@ index 8d3661e..476bbb3 100644
 +=KrYV
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/ntpsec.spec b/ntpsec.spec
-index 3e1584f..9c806bf 100644
+index 3e1584f..5844789 100644
 --- a/ntpsec.spec
 +++ b/ntpsec.spec
-@@ -1,6 +1,6 @@
+@@ -1,12 +1,16 @@
  Name:           ntpsec
  Version:        1.2.6
 -Release:        1%{?dist}
@@ -360,7 +361,17 @@ index 3e1584f..9c806bf 100644
  Summary:        NTP daemon and utilities
  
  License:        NTP AND BSD-2-Clause AND BSD-3-Clause AND BSD-4-Clause AND ISC AND Apache-2.0 AND Beerware
-@@ -22,6 +22,7 @@ BuildRequires:  python3-devel
+ URL:            https://www.ntpsec.org/
+ Source0:        https://ftp.ntpsec.org/pub/releases/ntpsec-%{version}.tar.gz
+ Source1:        https://ftp.ntpsec.org/pub/releases/ntpsec-%{version}.tar.gz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - DA3FDF774CC70FA64729EC4505D9B371477C7528 E57235D22764129FA4F2F4D17F52608ED0E49D76 | sq keyring filter --experimental --cert DA3FDF774CC70FA64729EC4505D9B371477C7528 --cert E57235D22764129FA4F2F4D17F52608ED0E49D76 --output update.pgp
++#   sq keyring merge --output ntpsec.gpg.pub.asc.new ntpsec.gpg.pub.asc update.pgp
++#   mv ntpsec.gpg.pub.asc.new ntpsec.gpg.pub.asc
+ Source2:        https://ftp.ntpsec.org/pub/releases/ntpsec.gpg.pub.asc
+ Source3:        ntp.conf
+ 
+@@ -22,6 +26,7 @@ BuildRequires:  python3-devel
  BuildRequires:  rubygem-asciidoctor
  BuildRequires:  systemd
  BuildRequires:  waf
@@ -368,7 +379,7 @@ index 3e1584f..9c806bf 100644
  
  %{?systemd_requires}
  
-@@ -55,7 +56,7 @@ NTPsec is a more secure and improved implementation of the Network Time
+@@ -55,7 +60,7 @@ NTPsec is a more secure and improved implementation of the Network Time
  Protocol derived from the original NTP project.
  
  %prep
@@ -377,7 +388,7 @@ index 3e1584f..9c806bf 100644
  %autosetup -p1
  
  # Fix egg info to use a shorter version which will work as an rpm provide
-@@ -209,6 +210,9 @@ sed -i.bak -E '/^restrict/s/no(e?peer|trap)//g' %{_sysconfdir}/ntp.conf
+@@ -209,6 +214,9 @@ sed -i.bak -E '/^restrict/s/no(e?peer|trap)//g' %{_sysconfdir}/ntp.conf
  %{_sysusersdir}/ntpsec.conf
  
  %changelog

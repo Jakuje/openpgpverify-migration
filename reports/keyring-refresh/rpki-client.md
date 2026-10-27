@@ -12,6 +12,15 @@ Phase 1 reason: `expired`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 1817 → 4126 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - B5B6416FEA6DDA05EA562A9FCB987F2783972FF9 \
+  | sq keyring filter --experimental --cert B5B6416FEA6DDA05EA562A9FCB987F2783972FF9 --output update.pgp
+sq keyring merge --output B5B6416FEA6DDA05EA562A9FCB987F2783972FF9.new B5B6416FEA6DDA05EA562A9FCB987F2783972FF9 update.pgp
+mv B5B6416FEA6DDA05EA562A9FCB987F2783972FF9.new B5B6416FEA6DDA05EA562A9FCB987F2783972FF9
+```
+
 ```diff
 --- dist-git/B5B6416FEA6DDA05EA562A9FCB987F2783972FF9
 +++ refreshed/B5B6416FEA6DDA05EA562A9FCB987F2783972FF9

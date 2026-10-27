@@ -1,6 +1,6 @@
-From d26acfe086d8d66e0e7c3f523304e7cd23c293aa Mon Sep 17 00:00:00 2001
+From ac1c64f45ca39446ed23baee47b734451bd4ce5c Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:11 +0100
+Date: Tue, 27 Oct 2026 12:08:55 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,13 +9,13 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg from
 keyservers/WKD: same certificate(s), with self-signatures our copy was
-missing.
+missing; the commands are in the spec comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  ...4E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg | Bin 2475 -> 226516 bytes
- i3lock.spec                                   |   4 ++--
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ i3lock.spec                                   |   8 ++++++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg b/gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg
 index 1f96857268d6a213340fe4ed850574b88b763183..55ff6ba7ff071b318c4e04c0345d867d794f4533 100644
@@ -4252,10 +4252,21 @@ zcmccel6SQ*^Gqh*jm*4Ej9aEZabwhG?qmv|p5w`AyPesGQ3@oQIgtq@8Z!OeWG1Wa
 e_0yO@qLT%gtU!X3{g|w#*H2>-+w8;6!UO;bDHtLE
 
 diff --git a/i3lock.spec b/i3lock.spec
-index a46c1c5..f48b803 100644
+index a46c1c5..d7545b1 100644
 --- a/i3lock.spec
 +++ b/i3lock.spec
-@@ -30,7 +30,7 @@ BuildRequires:  libev-devel
+@@ -7,6 +7,10 @@ URL:            https://i3wm.org/%{name}
+ Source0:        %{URL}/%{name}-%{version}.tar.xz
+ Source1:        %{URL}/%{name}-%{version}.tar.xz.asc
+ # Michael Stapelberg's GPG key:
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D | sq keyring filter --experimental --cert 424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D --output update.pgp
++#   sq keyring merge gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg update.pgp | sq packet dearmor --output gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg.new
++#   mv gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg.new gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg
+ Source2:        gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg
+ 
+ BuildRequires:  gcc
+@@ -30,7 +34,7 @@ BuildRequires:  libev-devel
  BuildRequires:  pam-devel
  
  # gpg verification
@@ -4264,7 +4275,7 @@ index a46c1c5..f48b803 100644
  BuildRequires:  make
  
  %description
-@@ -53,7 +53,7 @@ Many little improvements have been made to i3lock over time:
+@@ -53,7 +57,7 @@ Many little improvements have been made to i3lock over time:
    uses the bsd_auth(3) framework.
  
  %prep

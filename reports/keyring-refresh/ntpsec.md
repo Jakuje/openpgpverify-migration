@@ -9,8 +9,17 @@ Phase 1 reason: `expired`
 ## ntpsec.gpg.pub.asc
 
 - certificates: DA3FDF774CC70FA64729EC4505D9B371477C7528, E57235D22764129FA4F2F4D17F52608ED0E49D76
-- found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
+- found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 8501 → 13295 bytes
+
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - DA3FDF774CC70FA64729EC4505D9B371477C7528 E57235D22764129FA4F2F4D17F52608ED0E49D76 \
+  | sq keyring filter --experimental --cert DA3FDF774CC70FA64729EC4505D9B371477C7528 --cert E57235D22764129FA4F2F4D17F52608ED0E49D76 --output update.pgp
+sq keyring merge --output ntpsec.gpg.pub.asc.new ntpsec.gpg.pub.asc update.pgp
+mv ntpsec.gpg.pub.asc.new ntpsec.gpg.pub.asc
+```
 
 ```diff
 --- dist-git/ntpsec.gpg.pub.asc

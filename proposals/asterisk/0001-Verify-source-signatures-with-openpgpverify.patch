@@ -1,6 +1,6 @@
-From 97954562a26bfb14588c4d8dd1c41ba867eff3a2 Mon Sep 17 00:00:00 2001
+From 90129e2902b352ab067226b5a63026e49403b9b0 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:42 +0100
+Date: Tue, 27 Oct 2026 12:09:07 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -8,15 +8,16 @@ uses Sequoia sqv, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh asterisk-gpgkeys.gpg from keyservers/WKD: same certificate(s),
-with self-signatures our copy was missing. The GnuPG keybox becomes a
-plain OpenPGP keyring, which sqv can read.
+with self-signatures our copy was missing; the commands are in the spec
+comment. The GnuPG keybox becomes a plain OpenPGP keyring, which sqv can
+read.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  asterisk-gpgkeys.gpg | Bin 23332 -> 41901 bytes
- asterisk.spec        |   8 ++++++--
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ asterisk.spec        |  22 ++++++++++------------
+ 2 files changed, 10 insertions(+), 12 deletions(-)
 
 diff --git a/asterisk-gpgkeys.gpg b/asterisk-gpgkeys.gpg
 index c4b898993f07d98b53192bfb3b48507a2204facb..5cca7da59506c3102a357a5c79e2441a1a8d674b 100644
@@ -424,7 +425,7 @@ zyt$qU>jVIQn(6<D$8hreG2A}ly2}IBXE!Dz$I4|GhtW-Xo^U7ZUP>mzI+8J)J5gi6
 kF;*i+kS(1ACSs1OP0Oj(RX0NWX41R1$Nu!}NoxoBFNu=63IG5A
 
 diff --git a/asterisk.spec b/asterisk.spec
-index 4c5e389..132d7fd 100644
+index 4c5e389..b1ed8de 100644
 --- a/asterisk.spec
 +++ b/asterisk.spec
 @@ -57,7 +57,7 @@
@@ -436,7 +437,28 @@ index 4c5e389..132d7fd 100644
  # Automatically converted from old format: GPLv2 - review is highly recommended.
  License:          GPL-2.0-only
  URL:              http://www.asterisk.org/
-@@ -259,6 +259,7 @@ Provides:         bundled(jansson) = %{jansson_version}
+@@ -69,16 +69,10 @@ Source5:          asterisk.service
+ Source6:          asterisk-tmpfiles
+ # GPG keyring with Asterisk developer signatures
+ # Created by running:
+-#gpg2 --no-default-keyring --keyring ./asterisk-gpgkeys.gpg \
+-#--keyserver=hkp://pool.sks-keyservers.net --recv-keys \
+-#0x21A91EB1F012252993E9BF4A368AB332B59975F3 \
+-#0x80CEBC345EC9FF529B4B7B808438CBA18D0CAA72 \
+-#0xCDBEE4CC699E200EB4D46BB79E76E3A42341CE04 \
+-#0x639D932D5170532F8C200CCD9C59F000777DCC45 \
+-#0x551F29104B2106080C6C2851073B0C1FC9B2E352 \
+-#0x57E769BC37906C091E7F641F6CB44E557BD982D8 \
+-#0x0F77FB5D216A02390B4C51DB7C2C8A8BCB3F61BD \
+-#0xF2FC93DB7587BD1FB49E045A5D984BE337191CE7
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - F2FC93DB7587BD1FB49E045A5D984BE337191CE7 0F77FB5D216A02390B4C51DB7C2C8A8BCB3F61BD 57E769BC37906C091E7F641F6CB44E557BD982D8 551F29104B2106080C6C2851073B0C1FC9B2E352 639D932D5170532F8C200CCD9C59F000777DCC45 CDBEE4CC699E200EB4D46BB79E76E3A42341CE04 80CEBC345EC9FF529B4B7B808438CBA18D0CAA72 21A91EB1F012252993E9BF4A368AB332B59975F3 | sq keyring filter --experimental --cert F2FC93DB7587BD1FB49E045A5D984BE337191CE7 --cert 0F77FB5D216A02390B4C51DB7C2C8A8BCB3F61BD --cert 57E769BC37906C091E7F641F6CB44E557BD982D8 --cert 551F29104B2106080C6C2851073B0C1FC9B2E352 --cert 639D932D5170532F8C200CCD9C59F000777DCC45 --cert CDBEE4CC699E200EB4D46BB79E76E3A42341CE04 --cert 80CEBC345EC9FF529B4B7B808438CBA18D0CAA72 --cert 21A91EB1F012252993E9BF4A368AB332B59975F3 --output update.pgp
++#   sq keyring merge asterisk-gpgkeys.gpg update.pgp | sq packet dearmor --output asterisk-gpgkeys.gpg.new
++#   mv asterisk-gpgkeys.gpg.new asterisk-gpgkeys.gpg
+ Source7:          asterisk-gpgkeys.gpg
+ 
+ # Now building Asterisk with bundled pjproject, because they apply custom patches to it
+@@ -259,6 +253,7 @@ Provides:         bundled(jansson) = %{jansson_version}
  # for gpg to be able to verify the signature
  BuildRequires:    libgcrypt
  BuildRequires:    make
@@ -444,7 +466,7 @@ index 4c5e389..132d7fd 100644
  
  
  Requires(post):   systemd-units
-@@ -622,7 +623,7 @@ Jabber/XMPP resources for Asterisk.
+@@ -622,7 +617,7 @@ Jabber/XMPP resources for Asterisk.
  %if 0%{?fedora} || 0%{?rhel} >=8
  # only verifying on Fedora and RHEL >=8 due to version of gpg
  rpm -q libgcrypt
@@ -453,7 +475,7 @@ index 4c5e389..132d7fd 100644
  %endif
  %setup -q -n asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}
  
-@@ -1646,6 +1647,9 @@ fi
+@@ -1646,6 +1641,9 @@ fi
  %endif
  
  %changelog

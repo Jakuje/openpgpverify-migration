@@ -12,17 +12,26 @@ Phase 1 reason: `sha1-cert`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD
 - size: 3432 → 18452 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D \
+  | sq keyring filter --experimental --cert 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D --output update.pgp
+sq keyring merge uid_wrapper.keyring update.pgp | sq packet dearmor --output uid_wrapper.keyring.new
+mv uid_wrapper.keyring.new uid_wrapper.keyring
+```
+
 ```diff
 --- dist-git/uid_wrapper.keyring
 +++ refreshed/uid_wrapper.keyring
 @@ -1,17 +1,14 @@
        Fingerprint: 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D
--                   Invalid: No binding signature at time 2026-10-12T12:12:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T11:06:46Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: certification, signing
             Subkey: 9D04ADDA7B3A38E6F9E74DE1668803FBFBA5A04A
                     Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
                     because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-12T12:12:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T11:06:46Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance: SHA1 is not considered secure
             UserID: Andreas Schneider <asn@cryptomilk.org>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance

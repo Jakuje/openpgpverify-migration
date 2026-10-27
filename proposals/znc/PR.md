@@ -15,7 +15,7 @@ Why `sqv`:
 
 - the GnuPG verification (temporary home, dearmored key, `gpgv2`, cleanup) is replaced by one `%{openpgpverify}` call with the same key, signature and data; sqv reads the armored key directly and uses no home directory
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `gpgkey-5AE420CC0209989E.asc` (see below)
+- refreshed keyring `gpgkey-5AE420CC0209989E.asc` (see below); the comment above its `Source` line now shows the commands for refreshing it
 - Release bumped (`1%{?dist}` → `2%{?dist}`) with a changelog entry
 
 ### Testing
@@ -35,6 +35,15 @@ Tested on 2026-10-26 at dist-git commit `cae0b85cca65` with sequoia-sqv 1.5.0-2.
 
 - `D5823CACB477191CAC0075555AE420CC0209989E`
 
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - D5823CACB477191CAC0075555AE420CC0209989E \
+  | sq keyring filter --experimental --cert D5823CACB477191CAC0075555AE420CC0209989E --output update.pgp
+sq keyring merge --output gpgkey-5AE420CC0209989E.asc.new gpgkey-5AE420CC0209989E.asc update.pgp
+mv gpgkey-5AE420CC0209989E.asc.new gpgkey-5AE420CC0209989E.asc
+```
+
 What changed in the certificate (`sq inspect`):
 
 ```diff
@@ -42,13 +51,13 @@ What changed in the certificate (`sq inspect`):
 +++ refreshed/gpgkey-5AE420CC0209989E.asc
 @@ -1,21 +1,19 @@
        Fingerprint: D5823CACB477191CAC0075555AE420CC0209989E
--                   Invalid: No binding signature at time 2026-10-26T20:14:28Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T11:07:40Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +  Expiration time: 2030-02-17 23:55:54 UTC (creation time + 18years 3months 9days 12h 24m 10s)
 +        Key flags: certification, signing
             Subkey: A1951C9AE193C618F082AE7F17611B1A40BDEDED
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-26T20:14:28Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T11:07:40Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +  Expiration time: 2030-02-17 23:55:36 UTC (creation time + 18years 3months 9days 12h 23m 52s)
 +        Key flags: transport encryption, data-at-rest encryption
             UserID: Alexey Sokolov (ZNC) <alexey+znc@asokolov.org>
@@ -57,7 +66,7 @@ What changed in the certificate (`sq inspect`):
 +           UserID: Alexey Sokolov <alexey+gentoo@asokolov.org>
             UserID: Alexey Sokolov <alexey@alexeysokolov.co.cc>
                     Revoked:
--                   Invalid: No binding signature at time 2026-10-26T20:14:28Z
+-                   Invalid: No binding signature at time 2026-10-27T11:07:40Z
 -           UserID: Alexey Sokolov <alexey@asokolov.org>
                     Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
                     because: SHA1 is not considered secure

@@ -556,6 +556,18 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
                            'review; propose and review again' % f['file'])
                 return upd
         upd['keyring_refresh_applied'] = sorted(overlay)
+        # Record how the keyring was refreshed in the spec, next to its Source.
+        text = open(new_spec).read()
+        for f in kr['files']:
+            if f.get('changed') and f.get('spec_commands'):
+                text, note = convert.refresh_comment(text, pkg, os.path.basename(f['file']),
+                                                     f['spec_commands'])
+                if note:
+                    upd.setdefault('convert_notes', []).append(note)
+        with open(new_spec, 'w') as fh:
+            fh.write(text)
+        subprocess.run(['diff', '-u', spec_path, new_spec], stdout=open(
+            os.path.join(d, 'conversion.diff'), 'w'))
     sections = {c['section'] for c in rec['calls'] + rec['raw_verify']}
     stage = '-bp' if sections <= {'prep'} else '-bc' if sections <= {'prep', 'conf', 'build'} else '-bi'
     upd['stage'] = stage

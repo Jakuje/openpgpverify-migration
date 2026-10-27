@@ -12,18 +12,27 @@ Phase 1 reason: `sha1-cert`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 2908 → 15139 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - 7F49314A26E0DE78427680E05F1B2A0789F12B11 \
+  | sq keyring filter --experimental --cert 7F49314A26E0DE78427680E05F1B2A0789F12B11 --output update.pgp
+sq keyring merge gpgkey-7F49314A26E0DE78427680E05F1B2A0789F12B11.gpg update.pgp | sq packet dearmor --output gpgkey-7F49314A26E0DE78427680E05F1B2A0789F12B11.gpg.new
+mv gpgkey-7F49314A26E0DE78427680E05F1B2A0789F12B11.gpg.new gpgkey-7F49314A26E0DE78427680E05F1B2A0789F12B11.gpg
+```
+
 ```diff
 --- dist-git/gpgkey-7F49314A26E0DE78427680E05F1B2A0789F12B11.gpg
 +++ refreshed/gpgkey-7F49314A26E0DE78427680E05F1B2A0789F12B11.gpg
 @@ -1,14 +1,14 @@
        Fingerprint: 7F49314A26E0DE78427680E05F1B2A0789F12B11
--                   Invalid: No binding signature at time 2026-10-12T11:54:56Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T10:50:05Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +  Expiration time: 2027-06-05 15:41:30 UTC (creation time + 14years 4months 25days 17h 42m 42s)
 +        Key flags: certification, signing
             Subkey: 71238FB42DD1DB7F477BC7728531CBEE0802DE0C
                     Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
                     because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-12T11:54:56Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T10:50:05Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance: SHA1 is not considered secure
             UserID: Jérémie Galarneau <jeremie.galarneau@efficios.com>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance

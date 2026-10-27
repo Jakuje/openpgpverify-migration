@@ -16,7 +16,7 @@ Why `sqv`:
 - the direct `gpgv2` call is replaced by `%{openpgpverify}` with the same keyring, signature and data
 - `%gpgverify` → `%openpgpverify` for the existing macro call
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `samba-pubkey_AA99442FB680B620.gpg` (see below)
+- refreshed keyring `samba-pubkey_AA99442FB680B620.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
 
 ### Testing
 
@@ -34,6 +34,15 @@ Tested on 2026-10-26 at dist-git commit `0e3f8ac9c02a` with sequoia-sqv 1.5.0-2.
 `%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `gpgv2` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
 
 - `81F5E2832BD2545A1897B713AA99442FB680B620`
+
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - 81F5E2832BD2545A1897B713AA99442FB680B620 \
+  | sq keyring filter --experimental --cert 81F5E2832BD2545A1897B713AA99442FB680B620 --output update.pgp
+sq keyring merge samba-pubkey_AA99442FB680B620.gpg update.pgp | sq packet dearmor --output samba-pubkey_AA99442FB680B620.gpg.new
+mv samba-pubkey_AA99442FB680B620.gpg.new samba-pubkey_AA99442FB680B620.gpg
+```
 
 What changed in the certificate (`sq inspect`):
 

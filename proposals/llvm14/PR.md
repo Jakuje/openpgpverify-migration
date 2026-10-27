@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `tstellar-gpg-key.asc` (see below)
+- refreshed keyring `tstellar-gpg-key.asc` (see below); the comment above its `Source` line now shows the commands for refreshing it
 - Release bumped (`15%{?dist}` → `16%{?dist}`) with a changelog entry
 
 ### Testing
@@ -35,6 +35,15 @@ Tested on 2026-10-26 at dist-git commit `24d7b953e613` with sequoia-sqv 1.5.0-2.
 
 - `474E22316ABF4785A88C6E8EA2C794A986419D8A`
 
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - 474E22316ABF4785A88C6E8EA2C794A986419D8A \
+  | sq keyring filter --experimental --cert 474E22316ABF4785A88C6E8EA2C794A986419D8A --output update.pgp
+sq keyring merge tstellar-gpg-key.asc update.pgp | sq packet dearmor --output tstellar-gpg-key.asc.new
+mv tstellar-gpg-key.asc.new tstellar-gpg-key.asc
+```
+
 What changed in the certificate (`sq inspect`):
 
 ```diff
@@ -42,14 +51,14 @@ What changed in the certificate (`sq inspect`):
 +++ refreshed/tstellar-gpg-key.asc
 @@ -1,11 +1,11 @@
        Fingerprint: 474E22316ABF4785A88C6E8EA2C794A986419D8A
--                   Invalid: No binding signature at time 2026-10-26T17:47:01Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T10:59:09Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: The primary key is not live: Expired on 2026-05-06T21:16:35Z
 +  Expiration time: 2026-05-06 21:16:35 UTC (creation time + 8years 3days 17h 50m 46s)
 +        Key flags: certification, signing
             Subkey: 6717A17756AD71AA42B7E6660AE0D586997F0D1F
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-26T17:47:01Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T10:59:09Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: The certificate is not live: The primary key is not live, because Expired on 2026-05-06T21:16:35Z
 +  Expiration time: 2026-05-06 22:13:22 UTC (creation time + 8years 3days 18h 47m 33s)
 +        Key flags: transport encryption, data-at-rest encryption

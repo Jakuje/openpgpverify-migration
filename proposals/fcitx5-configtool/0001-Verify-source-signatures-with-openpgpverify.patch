@@ -1,6 +1,6 @@
-From b2439ff3eb128dc9b69117d92dbe266806e66298 Mon Sep 17 00:00:00 2001
+From a229854bdbdd40d1af2798d2f8e1267dc4061204 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:09 +0100
+Date: Tue, 27 Oct 2026 12:08:54 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,13 +8,14 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh 0x8E8B898CBF2412F9 from keyservers/WKD: same certificate(s),
-with self-signatures our copy was missing.
+with self-signatures our copy was missing; the commands are in the spec
+comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  0x8E8B898CBF2412F9     | 282 +++++++++++++++++++++++++----------------
- fcitx5-configtool.spec |   4 +-
- 2 files changed, 174 insertions(+), 112 deletions(-)
+ fcitx5-configtool.spec |   8 +-
+ 2 files changed, 178 insertions(+), 112 deletions(-)
 
 diff --git a/0x8E8B898CBF2412F9 b/0x8E8B898CBF2412F9
 index d9449d8..43b0e60 100644
@@ -306,11 +307,17 @@ index d9449d8..43b0e60 100644
 +=8BEE
 +-----END PGP PUBLIC KEY BLOCK-----
 diff --git a/fcitx5-configtool.spec b/fcitx5-configtool.spec
-index 726f26e..cc8d3eb 100644
+index 726f26e..ddab9fc 100644
 --- a/fcitx5-configtool.spec
 +++ b/fcitx5-configtool.spec
-@@ -12,7 +12,7 @@ Source:         https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.
+@@ -10,9 +10,13 @@ License:        GPL-2.0-or-later
+ URL:            https://github.com/fcitx/fcitx5-configtool
+ Source:         https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.tar.zst
  Source1:        https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.tar.zst.sig
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9 | sq keyring filter --experimental --cert 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9 --output update.pgp
++#   sq keyring merge --output 0x8E8B898CBF2412F9.new 0x8E8B898CBF2412F9 update.pgp
++#   mv 0x8E8B898CBF2412F9.new 0x8E8B898CBF2412F9
  Source2:        https://pgp.key-server.io/download/0x8E8B898CBF2412F9
  
 -BuildRequires:  gnupg2
@@ -318,7 +325,7 @@ index 726f26e..cc8d3eb 100644
  BuildRequires:  cmake
  BuildRequires:  desktop-file-utils
  BuildRequires:  extra-cmake-modules
-@@ -76,7 +76,7 @@ Requires:       fcitx5-migrator%{?_isa} = %{version}-%{release}
+@@ -76,7 +80,7 @@ Requires:       fcitx5-migrator%{?_isa} = %{version}-%{release}
  Development files for fcitx5-migrator
  
  %prep

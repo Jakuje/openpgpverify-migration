@@ -1,6 +1,6 @@
-From 43099c9ad9d05af05cd1780b098ce7bc98aaad61 Mon Sep 17 00:00:00 2001
+From 1916c6ec696c22f185739f1805e91cf5e77d7e20 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:03 +0100
+Date: Tue, 27 Oct 2026 12:08:51 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,13 +9,13 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh gpgkey-1F42418905D8206AA754CCDC29EE58B996865171.gpg from
 keyservers/WKD: same certificate(s), with self-signatures our copy was
-missing.
+missing; the commands are in the spec comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  ...42418905D8206AA754CCDC29EE58B996865171.gpg | Bin 58697 -> 68975 bytes
- ipcalc.spec                                   |   3 ++-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ ipcalc.spec                                   |   7 ++++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/gpgkey-1F42418905D8206AA754CCDC29EE58B996865171.gpg b/gpgkey-1F42418905D8206AA754CCDC29EE58B996865171.gpg
 index b1ee43c60379c783e5f3457c480d6a7ecc2447c5..a0ea1fd77be9d3838108c880677742ba8c16a204 100644
@@ -251,10 +251,20 @@ zo$3EAbN#<;-D6B=a_*_+EEE6Z&IJZD*eZ2-`if98gLTTJm``C&SrCsNF34+qy=YX2
 N;n72Ts8C_2*gq55CprKC
 
 diff --git a/ipcalc.spec b/ipcalc.spec
-index d020e56..a70b789 100644
+index d020e56..d70b261 100644
 --- a/ipcalc.spec
 +++ b/ipcalc.spec
-@@ -12,6 +12,7 @@ BuildRequires: gcc, libmaxminddb-devel, meson, rubygem-ronn-ng
+@@ -6,12 +6,17 @@ License: GPL-2.0-or-later
+ URL: https://gitlab.com/ipcalc/ipcalc
+ Source0: https://gitlab.com/api/v4/projects/ipcalc%%2Fipcalc/packages/generic/ipcalc/%{version}/ipcalc-%{version}.tar.xz
+ Source1: https://gitlab.com/api/v4/projects/ipcalc%%2Fipcalc/packages/generic/ipcalc/%{version}/ipcalc-%{version}.tar.xz.sig
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 1F42418905D8206AA754CCDC29EE58B996865171 | sq keyring filter --experimental --cert 1F42418905D8206AA754CCDC29EE58B996865171 --output update.pgp
++#   sq keyring merge gpgkey-1F42418905D8206AA754CCDC29EE58B996865171.gpg update.pgp | sq packet dearmor --output gpgkey-1F42418905D8206AA754CCDC29EE58B996865171.gpg.new
++#   mv gpgkey-1F42418905D8206AA754CCDC29EE58B996865171.gpg.new gpgkey-1F42418905D8206AA754CCDC29EE58B996865171.gpg
+ Source2: gpgkey-1F42418905D8206AA754CCDC29EE58B996865171.gpg
+ 
+ BuildRequires: gcc, libmaxminddb-devel, meson, rubygem-ronn-ng
  BuildRequires: gnupg2
  # for the test suite (JsonEscapeHostname)
  BuildRequires: jq
@@ -262,7 +272,7 @@ index d020e56..a70b789 100644
  Recommends:    libmaxminddb, geolite2-city, geolite2-country, geolite2-asn
  
  # Explicitly conflict with older initscript packages that ship ipcalc
-@@ -28,7 +29,7 @@ parsing in scripts, generate random private addresses, resolve an IP address,
+@@ -28,7 +33,7 @@ parsing in scripts, generate random private addresses, resolve an IP address,
  or check the validity of an address.
  
  %prep

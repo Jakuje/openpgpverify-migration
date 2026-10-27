@@ -9,8 +9,17 @@ Phase 1 reason: `expired`
 ## 757FAB7CED1814AE15B4836E5FB027474203454C.gpg
 
 - certificates: 0392335A78083894A4301C43236E8A58C6DB4512, 69100FFB90E87A320DF8643CBEC39009E8321A61, 757FAB7CED1814AE15B4836E5FB027474203454C
-- found via: hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
+- found via: hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 29671 → 42386 bytes
+
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - 0392335A78083894A4301C43236E8A58C6DB4512 69100FFB90E87A320DF8643CBEC39009E8321A61 757FAB7CED1814AE15B4836E5FB027474203454C \
+  | sq keyring filter --experimental --cert 0392335A78083894A4301C43236E8A58C6DB4512 --cert 69100FFB90E87A320DF8643CBEC39009E8321A61 --cert 757FAB7CED1814AE15B4836E5FB027474203454C --output update.pgp
+sq keyring merge --output 757FAB7CED1814AE15B4836E5FB027474203454C.gpg.new 757FAB7CED1814AE15B4836E5FB027474203454C.gpg update.pgp
+mv 757FAB7CED1814AE15B4836E5FB027474203454C.gpg.new 757FAB7CED1814AE15B4836E5FB027474203454C.gpg
+```
 
 ```diff
 --- dist-git/757FAB7CED1814AE15B4836E5FB027474203454C.gpg

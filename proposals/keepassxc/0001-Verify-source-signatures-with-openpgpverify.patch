@@ -1,6 +1,6 @@
-From f5c1eae72cf0b0a88d44a0ed381f86e2e6d5bab4 Mon Sep 17 00:00:00 2001
+From 80855d738c2f48239296503af6c1f2ac7efcc627 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:37 +0100
+Date: Tue, 27 Oct 2026 12:09:05 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,20 +8,21 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh keepassxc_master_signing_key.asc from keyservers/WKD: same
-certificate(s), with self-signatures our copy was missing.
+certificate(s), with self-signatures our copy was missing; the commands
+are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- keepassxc.spec                   |    8 +-
+ keepassxc.spec                   |   12 +-
  keepassxc_master_signing_key.asc | 1916 ++++++++++++++++++------------
- 2 files changed, 1186 insertions(+), 738 deletions(-)
+ 2 files changed, 1190 insertions(+), 738 deletions(-)
 
 diff --git a/keepassxc.spec b/keepassxc.spec
-index 767b2a0..1361cb8 100644
+index 767b2a0..4658483 100644
 --- a/keepassxc.spec
 +++ b/keepassxc.spec
-@@ -2,7 +2,7 @@
+@@ -2,12 +2,16 @@
  
  Name:           keepassxc
  Version:        2.8.0
@@ -30,7 +31,16 @@ index 767b2a0..1361cb8 100644
  Summary:        Cross-platform password manager
  License:        GPL-2.0-or-later AND BSD-2-Clause AND MIT AND CC0-1.0 AND Apache-2.0 AND LGPL-2.0-only AND LGPL-2.1-only
  URL:            https://keepassxc.org/
-@@ -54,6 +54,7 @@ BuildRequires:  zlib-devel
+ Source0:        https://github.com/keepassxreboot/keepassxc/releases/download/%{version}/keepassxc-%{version}-src.tar.xz
+ Source1:        https://github.com/keepassxreboot/keepassxc/releases/download/%{version}/keepassxc-%{version}-src.tar.xz.sig
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - BF5A669F2272CF4324C1FDA8CFB4C2166397D0D2 | sq keyring filter --experimental --cert BF5A669F2272CF4324C1FDA8CFB4C2166397D0D2 --output update.pgp
++#   sq keyring merge --output keepassxc_master_signing_key.asc.new keepassxc_master_signing_key.asc update.pgp
++#   mv keepassxc_master_signing_key.asc.new keepassxc_master_signing_key.asc
+ Source2:        https://keepassxc.org/keepassxc_master_signing_key.asc
+ 
+ # https://fedoraproject.org/wiki/Changes/EncourageI686LeafRemoval
+@@ -54,6 +58,7 @@ BuildRequires:  zlib-devel
  BuildRequires:  rubygem-asciidoctor
  # Required for GPG signature verification
  BuildRequires:  gnupg2
@@ -38,7 +48,7 @@ index 767b2a0..1361cb8 100644
  
  # enforces on the user system, Qt version to be the same one used to build KeepassXC
  # This avoids "not a bug" bugreports like this one
-@@ -104,7 +105,7 @@ information can be considered as quite safe.
+@@ -104,7 +109,7 @@ information can be considered as quite safe.
  
  
  %prep
@@ -47,7 +57,7 @@ index 767b2a0..1361cb8 100644
  
  %autosetup -n %{name}-%{version}
  
-@@ -170,6 +171,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/org.%{nam
+@@ -170,6 +175,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/org.%{nam
  %{_mandir}/man1/%{name}.1*
  
  %changelog

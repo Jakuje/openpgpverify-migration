@@ -1,6 +1,6 @@
-From 5cddba1fe7b98faf10fade4eefca8fd9f1a4355e Mon Sep 17 00:00:00 2001
+From eccceb6e8cb1cad876509f88a80a0deb548ac44f Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:06 +0100
+Date: Tue, 27 Oct 2026 12:08:52 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -8,15 +8,15 @@ uses Sequoia sqv, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh keyring.gpg from keyservers/WKD: same certificate(s), with self-
-signatures our copy was missing. The GnuPG keybox becomes a plain
-OpenPGP keyring, which sqv can read.
+signatures our copy was missing; the commands are in the spec comment.
+The GnuPG keybox becomes a plain OpenPGP keyring, which sqv can read.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  keyring.gpg   | Bin 4556 -> 8104 bytes
- pyparted.spec |   8 ++++++--
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ pyparted.spec |  12 ++++++++++--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/keyring.gpg b/keyring.gpg
 index 10fab63c2af6ac1ffb5794a3b49ce0ce41847aed..db936ac896e3b06ea0592f1c22c42bab794da41b 100644
@@ -103,10 +103,10 @@ zSz#*N?8oGXY?>gG!sPpW9Fr$-2w^G)TYrp0mx&u@{Z1y{%}LU{Oq`ueW-Jnn91IGR
 leMF@<PnH#Bl7Xply=xY0@n)&BK&!T%x67;iODF!6002q$T$um>
 
 diff --git a/pyparted.spec b/pyparted.spec
-index ad79d71..19726ed 100644
+index ad79d71..5e828ed 100644
 --- a/pyparted.spec
 +++ b/pyparted.spec
-@@ -2,7 +2,7 @@ Summary:       Python module for GNU parted
+@@ -2,12 +2,16 @@ Summary:       Python module for GNU parted
  Name:          pyparted
  Epoch:         1
  Version:       3.13.0
@@ -115,7 +115,16 @@ index ad79d71..19726ed 100644
  License:       GPL-2.0-or-later
  URL:           https://github.com/dcantrell/pyparted
  
-@@ -19,6 +19,7 @@ BuildRequires: e2fsprogs
+ Source0:       https://github.com/dcantrell/pyparted/releases/download/v%{version}/%{name}-%{version}.tar.gz
+ Source1:       https://github.com/dcantrell/pyparted/releases/download/v%{version}/%{name}-%{version}.tar.gz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 08F7C8B3C621950C138F766162977BB9C841B965 | sq keyring filter --experimental --cert 08F7C8B3C621950C138F766162977BB9C841B965 --output update.pgp
++#   sq keyring merge keyring.gpg update.pgp | sq packet dearmor --output keyring.gpg.new
++#   mv keyring.gpg.new keyring.gpg
+ Source2:       keyring.gpg
+ Source3:       trustdb.gpg
+ 
+@@ -19,6 +23,7 @@ BuildRequires: e2fsprogs
  BuildRequires: gnupg2
  BuildRequires: python3-devel
  BuildRequires: python3-setuptools
@@ -123,7 +132,7 @@ index ad79d71..19726ed 100644
  
  %description
  Python module for the parted library.  It is used for manipulating
-@@ -33,7 +34,7 @@ partition tables. This package provides Python 3 bindings for parted.
+@@ -33,7 +38,7 @@ partition tables. This package provides Python 3 bindings for parted.
  
  %prep
  # Verify source archive signature
@@ -132,7 +141,7 @@ index ad79d71..19726ed 100644
  
  %autosetup
  
-@@ -54,6 +55,9 @@ make test
+@@ -54,6 +59,9 @@ make test
  %{python3_sitearch}/%{name}-%{version}-*.egg-info
  
  %changelog

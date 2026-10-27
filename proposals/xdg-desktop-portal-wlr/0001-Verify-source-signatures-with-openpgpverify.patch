@@ -1,6 +1,6 @@
-From 2f2b4b1342fe2616a13913a2c100f45f24c599e1 Mon Sep 17 00:00:00 2001
+From ab5f28459f35e45ca9a824eee62da831010ed7de Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:20 +0100
+Date: Tue, 27 Oct 2026 12:08:58 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,14 +8,15 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh gpgkey-0FDE7BE0E88F5E48.gpg from keyservers/WKD: same
-certificate(s), with self-signatures our copy was missing.
+certificate(s), with self-signatures our copy was missing; the commands
+are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  gpgkey-0FDE7BE0E88F5E48.gpg | Bin 2263 -> 17527 bytes
- xdg-desktop-portal-wlr.spec |   9 ++++++---
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ xdg-desktop-portal-wlr.spec |  13 ++++++++++---
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/gpgkey-0FDE7BE0E88F5E48.gpg b/gpgkey-0FDE7BE0E88F5E48.gpg
 index c8c4240f016527562ab1d7da936084f6b784143d..e8519f60be404443d3a0c5237e4ce0e54930ca3a 100644
@@ -299,10 +300,10 @@ delta 27
 jcmey~!FXM8gCNu7r@XP77l}(TZQi75%CtGrQi=%xo7xG)
 
 diff --git a/xdg-desktop-portal-wlr.spec b/xdg-desktop-portal-wlr.spec
-index 2abad2b..5f785bb 100644
+index 2abad2b..cfe55f0 100644
 --- a/xdg-desktop-portal-wlr.spec
 +++ b/xdg-desktop-portal-wlr.spec
-@@ -1,6 +1,6 @@
+@@ -1,19 +1,23 @@
  Name:           xdg-desktop-portal-wlr
  Version:        0.8.4
 -Release:        1%{?dist}
@@ -310,7 +311,16 @@ index 2abad2b..5f785bb 100644
  Summary:        xdg-desktop-portal backend for wlroots
  
  License:        MIT
-@@ -13,7 +13,7 @@ Source2:        https://emersion.fr/.well-known/openpgpkey/hu/dj3498u4hyyarh35rk
+ URL:            https://github.com/emersion/%{name}
+ Source0:        %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz
+ Source1:        %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz.sig
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 | sq keyring filter --experimental --cert 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 --output update.pgp
++#   sq keyring merge gpgkey-0FDE7BE0E88F5E48.gpg update.pgp | sq packet dearmor --output gpgkey-0FDE7BE0E88F5E48.gpg.new
++#   mv gpgkey-0FDE7BE0E88F5E48.gpg.new gpgkey-0FDE7BE0E88F5E48.gpg
+ Source2:        https://emersion.fr/.well-known/openpgpkey/hu/dj3498u4hyyarh35rkjfnghbjxug6b19#/gpgkey-0FDE7BE0E88F5E48.gpg
+ # Generic portals.conf(5) for any wlroots-based compositor.
+ # Can be loaded by setting XDG_CURRENT_DESKTOP=<compositor>:wlroots
  Source3:        wlroots-portals.conf
  
  BuildRequires:  gcc
@@ -319,7 +329,7 @@ index 2abad2b..5f785bb 100644
  BuildRequires:  meson
  BuildRequires:  systemd-rpm-macros
  
-@@ -48,7 +48,7 @@ remote-desktop xdg-desktop-portal interfaces for wlroots based compositors.
+@@ -48,7 +52,7 @@ remote-desktop xdg-desktop-portal interfaces for wlroots based compositors.
  
  
  %prep
@@ -328,7 +338,7 @@ index 2abad2b..5f785bb 100644
  %autosetup -p1
  
  
-@@ -83,6 +83,9 @@ install -D -pv -m644 %{SOURCE3} \
+@@ -83,6 +87,9 @@ install -D -pv -m644 %{SOURCE3} \
  
  
  %changelog

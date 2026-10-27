@@ -1,6 +1,6 @@
-From 56ae3e23de90fa859b6a8e788615a2da7a0cf090 Mon Sep 17 00:00:00 2001
+From f76abfe8b136449cda8f1fc91edef290896eb812 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:26 +0100
+Date: Tue, 27 Oct 2026 12:09:00 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,13 +9,13 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg from
 keyservers/WKD: same certificate(s), with self-signatures our copy was
-missing.
+missing; the commands are in the spec comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  ...4E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg | Bin 2475 -> 226516 bytes
- i3.spec                                       |   3 ++-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ i3.spec                                       |   7 ++++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg b/gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg
 index 1f96857268d6a213340fe4ed850574b88b763183..55ff6ba7ff071b318c4e04c0345d867d794f4533 100644
@@ -4252,10 +4252,21 @@ zcmccel6SQ*^Gqh*jm*4Ej9aEZabwhG?qmv|p5w`AyPesGQ3@oQIgtq@8Z!OeWG1Wa
 e_0yO@qLT%gtU!X3{g|w#*H2>-+w8;6!UO;bDHtLE
 
 diff --git a/i3.spec b/i3.spec
-index 7226630..21769ee 100644
+index 7226630..f52a8f6 100644
 --- a/i3.spec
 +++ b/i3.spec
-@@ -81,6 +81,7 @@ BuildRequires:  xorg-x11-drv-dummy
+@@ -7,6 +7,10 @@ URL:            https://i3wm.org
+ Source0:        %{URL}/downloads/%{name}-%{version}.tar.xz
+ Source1:        %{URL}/downloads/%{name}-%{version}.tar.xz.asc
+ # Michael Stapelberg's GPG key:
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D | sq keyring filter --experimental --cert 424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D --output update.pgp
++#   sq keyring merge gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg update.pgp | sq packet dearmor --output gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg.new
++#   mv gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg.new gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg
+ Source2:        gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg
+ Source3:        %{name}-logo.svg
+ Source4:        fedora-i3-config
+@@ -81,6 +85,7 @@ BuildRequires:  xorg-x11-drv-dummy
  
  # gpg verification
  BuildRequires:  gnupg2
@@ -4263,7 +4274,7 @@ index 7226630..21769ee 100644
  
  Requires:       xorg-x11-fonts-misc
  # packages autostarted by the config
-@@ -151,7 +152,7 @@ Requires:       %{name} = %{version}-%{release}
+@@ -151,7 +156,7 @@ Requires:       %{name} = %{version}-%{release}
  Header files for %{name}.
  
  %prep

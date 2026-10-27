@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8` (see below)
+- refreshed keyring `A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8` (see below); the comment above its `Source` line now shows the commands for refreshing it
 
 ### Testing
 
@@ -34,6 +34,15 @@ Tested on 2026-10-23 at dist-git commit `1fd667897e8c` with sequoia-sqv 1.5.0-2.
 
 - `A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8`
 
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8 \
+  | sq keyring filter --experimental --cert A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8 --output update.pgp
+sq keyring merge --output A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8.new A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8 update.pgp
+mv A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8.new A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8
+```
+
 What changed in the certificate (`sq inspect`):
 
 ```diff
@@ -41,12 +50,12 @@ What changed in the certificate (`sq inspect`):
 +++ refreshed/A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8
 @@ -1,11 +1,7 @@
        Fingerprint: A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8
--                   Invalid: No binding signature at time 2026-10-26T17:55:56Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T11:06:57Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: certification, signing
             Subkey: 0040FDC77F9F7350F84E043D0EB86EAD06B322DF
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-26T17:55:56Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T11:06:57Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: transport encryption, data-at-rest encryption
             UserID: WeeChat (signing key) <webmaster@weechat.org>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance

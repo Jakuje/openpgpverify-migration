@@ -1,6 +1,6 @@
-From e1bb639ab79cef65b09cf63bed3b81b833337f80 Mon Sep 17 00:00:00 2001
+From 7167bd228d17ca492328edc50a13a32dcd2b1448 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:06 +0100
+Date: Tue, 27 Oct 2026 12:08:53 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -8,19 +8,20 @@ uses Sequoia sqv, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh victortoso-E37A484F.keyring from keyservers/WKD: same
-certificate(s), with self-signatures our copy was missing.
+certificate(s), with self-signatures our copy was missing; the commands
+are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- usbredir.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ usbredir.spec | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/usbredir.spec b/usbredir.spec
-index 0ef0bb2..f937f48 100644
+index 0ef0bb2..f0327b1 100644
 --- a/usbredir.spec
 +++ b/usbredir.spec
-@@ -1,6 +1,6 @@
+@@ -1,11 +1,15 @@
  Name:           usbredir
  Version:        0.15.0
 -Release:        4%{?dist}
@@ -28,7 +29,16 @@ index 0ef0bb2..f937f48 100644
  Summary:        USB network redirection protocol libraries
  License:        LGPL-2.1-or-later
  URL:            https://www.spice-space.org/usbredir.html
-@@ -13,6 +13,7 @@ BuildRequires:  glib2-devel
+ Source0:        http://spice-space.org/download/%{name}/%{name}-%{version}.tar.xz
+ Source1:        http://spice-space.org/download/%{name}/%{name}-%{version}.tar.xz.sig
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 206D3B352F566F3B0E6572E997D9123DE37A484F | sq keyring filter --experimental --cert 206D3B352F566F3B0E6572E997D9123DE37A484F --output update.pgp
++#   sq keyring merge victortoso-E37A484F.keyring update.pgp | sq packet dearmor --output victortoso-E37A484F.keyring.new
++#   mv victortoso-E37A484F.keyring.new victortoso-E37A484F.keyring
+ Source2:        victortoso-E37A484F.keyring
+ BuildRequires:  gnupg2
+ BuildRequires:  gcc g++
+@@ -13,6 +17,7 @@ BuildRequires:  glib2-devel
  BuildRequires:  libusb1-devel >= 1.0.9
  BuildRequires:  git-core
  BuildRequires:  meson
@@ -36,7 +46,7 @@ index 0ef0bb2..f937f48 100644
  
  %description
  The usbredir libraries allow USB devices to be used on remote and/or virtual
-@@ -49,7 +50,7 @@ Includes usbredirect that uses libusbredirhost to export an USB device for use
+@@ -49,7 +54,7 @@ Includes usbredirect that uses libusbredirhost to export an USB device for use
  in another (virtual) machine
  
  %prep
@@ -45,7 +55,7 @@ index 0ef0bb2..f937f48 100644
  %autosetup -S git_am
  
  
-@@ -88,6 +89,9 @@ gpgv2 --quiet --keyring %{SOURCE2} %{SOURCE1} %{SOURCE0}
+@@ -88,6 +93,9 @@ gpgv2 --quiet --keyring %{SOURCE2} %{SOURCE1} %{SOURCE0}
  
  
  %changelog

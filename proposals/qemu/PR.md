@@ -15,7 +15,7 @@ Why `sqv`:
 
 - the direct `gpgv2` call is replaced by `%{openpgpverify}` with the same keyring, signature and data
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `gpgkey-CEACC9E15534EBABB82D3FA03353C9CEF108B584.gpg` (see below)
+- refreshed keyring `gpgkey-CEACC9E15534EBABB82D3FA03353C9CEF108B584.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
 
 ### Testing
 
@@ -34,6 +34,15 @@ Tested on 2026-10-26 at dist-git commit `81d8c3689b0a` with sequoia-sqv 1.5.0-2.
 
 - `CEACC9E15534EBABB82D3FA03353C9CEF108B584`
 
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - CEACC9E15534EBABB82D3FA03353C9CEF108B584 \
+  | sq keyring filter --experimental --cert CEACC9E15534EBABB82D3FA03353C9CEF108B584 --output update.pgp
+sq keyring merge gpgkey-CEACC9E15534EBABB82D3FA03353C9CEF108B584.gpg update.pgp | sq packet dearmor --output gpgkey-CEACC9E15534EBABB82D3FA03353C9CEF108B584.gpg.new
+mv gpgkey-CEACC9E15534EBABB82D3FA03353C9CEF108B584.gpg.new gpgkey-CEACC9E15534EBABB82D3FA03353C9CEF108B584.gpg
+```
+
 What changed in the certificate (`sq inspect`):
 
 ```diff
@@ -41,13 +50,13 @@ What changed in the certificate (`sq inspect`):
 +++ refreshed/gpgkey-CEACC9E15534EBABB82D3FA03353C9CEF108B584.gpg
 @@ -1,17 +1,21 @@
        Fingerprint: CEACC9E15534EBABB82D3FA03353C9CEF108B584
--                   Invalid: No binding signature at time 2026-10-26T20:13:27Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T11:04:25Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +  Expiration time: 2031-05-26 21:02:33 UTC (creation time + 17years 7months 6days 22h 58m 2s)
 +        Key flags: certification, signing
             Subkey: B771E2672C6A23D7CC3CD7643B0B7D75D7AC684E
                     Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
                     because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-26T20:13:27Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T11:04:25Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance: SHA1 is not considered secure
             UserID: Michael Roth <flukshun@gmail.com>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance

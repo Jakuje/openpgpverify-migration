@@ -1,6 +1,6 @@
-From ec854b03ca06d8da6e94bb9f494b052d136d2e31 Mon Sep 17 00:00:00 2001
+From 49a47765cb08de24ce375bbed5e2626f780216fa Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:08 +0100
+Date: Tue, 27 Oct 2026 12:08:53 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,17 +8,18 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh gpgkey-E88F5E48.gpg from keyservers/WKD: same certificate(s),
-with self-signatures our copy was missing.
+with self-signatures our copy was missing; the commands are in the spec
+comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- cage.spec           |   9 +-
+ cage.spec           |  13 +-
  gpgkey-E88F5E48.gpg | 594 ++++++++++++++++++++++++++------------------
- 2 files changed, 362 insertions(+), 241 deletions(-)
+ 2 files changed, 366 insertions(+), 241 deletions(-)
 
 diff --git a/cage.spec b/cage.spec
-index 5409533..4a30527 100644
+index 5409533..716ec90 100644
 --- a/cage.spec
 +++ b/cage.spec
 @@ -2,7 +2,7 @@
@@ -30,7 +31,14 @@ index 5409533..4a30527 100644
  Summary:		A Wayland kiosk
  
  License:		MIT
-@@ -13,7 +13,7 @@ Source1:		%{forgeurl}/releases/download/v%{version}/%{name}-%{version}.tar.gz.si
+@@ -10,10 +10,14 @@ URL:			https://www.hjdskes.nl/projects/cage
+ Source0:		%{forgeurl}/releases/download/v%{version}/%{name}-%{version}.tar.gz
+ Source1:		%{forgeurl}/releases/download/v%{version}/%{name}-%{version}.tar.gz.sig
+ # https://keys.openpgp.org/search?q=34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 | sq keyring filter --experimental --cert 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 --output update.pgp
++#   sq keyring merge --output gpgkey-E88F5E48.gpg.new gpgkey-E88F5E48.gpg update.pgp
++#   mv gpgkey-E88F5E48.gpg.new gpgkey-E88F5E48.gpg
  Source2:		gpgkey-E88F5E48.gpg
  
  BuildRequires:	gcc
@@ -39,7 +47,7 @@ index 5409533..4a30527 100644
  BuildRequires:	meson
  BuildRequires:	pkgconfig(scdoc)
  BuildRequires:	pkgconfig(wlroots-0.20)
-@@ -30,7 +30,7 @@ project page and the Wiki.
+@@ -30,7 +34,7 @@ project page and the Wiki.
  
  
  %prep
@@ -48,7 +56,7 @@ index 5409533..4a30527 100644
  %autosetup
  
  
-@@ -51,6 +51,9 @@ project page and the Wiki.
+@@ -51,6 +55,9 @@ project page and the Wiki.
  
  
  %changelog

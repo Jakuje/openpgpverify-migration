@@ -15,7 +15,7 @@ Why `sqv`:
 
 - the GnuPG verification (import the key into a temporary `GNUPGHOME`, then `gpg2 --verify`) is replaced by one `%{openpgpverify}` call with the same key, signature and data; `GPG_CHECK` still switches it
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `kresd-keyblock.asc` (see below)
+- refreshed keyring `kresd-keyblock.asc` (see below); the comment above its `Source` line now shows the commands for refreshing it
 - Release bumped (`1%{?dist}` → `2%{?dist}`) with a changelog entry
 
 ### Testing
@@ -35,6 +35,15 @@ Tested on 2026-10-26 at dist-git commit `0d4bf2c20be1` with sequoia-sqv 1.5.0-2.
 
 - `3057EE9A448F362D74205A779AB120DA0A76F6DE`
 - `B6006460B60A80E782062449E747DF1F9575A3AA`
+
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - 3057EE9A448F362D74205A779AB120DA0A76F6DE B6006460B60A80E782062449E747DF1F9575A3AA \
+  | sq keyring filter --experimental --cert 3057EE9A448F362D74205A779AB120DA0A76F6DE --cert B6006460B60A80E782062449E747DF1F9575A3AA --output update.pgp
+sq keyring merge --output kresd-keyblock.asc.new kresd-keyblock.asc update.pgp
+mv kresd-keyblock.asc.new kresd-keyblock.asc
+```
 
 What changed in the certificate (`sq inspect`):
 

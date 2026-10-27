@@ -1,6 +1,6 @@
-From 91b0fd1b1cc0d3b793d319afe910b6c6151f81df Mon Sep 17 00:00:00 2001
+From ab149a0feddf32cd657c9d210e15839a451360bb Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:43 +0100
+Date: Tue, 27 Oct 2026 12:09:07 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -8,17 +8,18 @@ uses Sequoia sqv, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh kresd-keyblock.asc from keyservers/WKD: same certificate(s),
-with self-signatures our copy was missing.
+with self-signatures our copy was missing; the commands are in the spec
+comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- knot-resolver.spec |  11 +-
+ knot-resolver.spec |  15 +-
  kresd-keyblock.asc | 447 +++++++++++++++++++++++++++++++++------------
- 2 files changed, 340 insertions(+), 118 deletions(-)
+ 2 files changed, 344 insertions(+), 118 deletions(-)
 
 diff --git a/knot-resolver.spec b/knot-resolver.spec
-index 9b49ee5..d5b0e4c 100644
+index 9b49ee5..fd093ca 100644
 --- a/knot-resolver.spec
 +++ b/knot-resolver.spec
 @@ -7,7 +7,7 @@
@@ -30,7 +31,18 @@ index 9b49ee5..d5b0e4c 100644
  Summary:        Caching full DNS Resolver
  
  License:        GPL-3.0-or-later
-@@ -42,6 +42,7 @@ BuildRequires:  pkgconfig(libuv)
+@@ -23,6 +23,10 @@ Source1:        https://secure.nic.cz/files/%{name}/%{name}-%{version}.tar.xz.as
+ # Export with --armor using command from https://fedoraproject.org/wiki/PackagingDrafts:GPGSignatures
+ # Don't forget to update %%prep section when adding/removing keys
+ # This key is from: https://secure.nic.cz/files/knot-resolver/kresd-keyblock.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 3057EE9A448F362D74205A779AB120DA0A76F6DE B6006460B60A80E782062449E747DF1F9575A3AA | sq keyring filter --experimental --cert 3057EE9A448F362D74205A779AB120DA0A76F6DE --cert B6006460B60A80E782062449E747DF1F9575A3AA --output update.pgp
++#   sq keyring merge --output kresd-keyblock.asc.new kresd-keyblock.asc update.pgp
++#   mv kresd-keyblock.asc.new kresd-keyblock.asc
+ Source100:      kresd-keyblock.asc
+ BuildRequires:  gnupg2
+ %endif
+@@ -42,6 +46,7 @@ BuildRequires:  pkgconfig(libuv)
  BuildRequires:  pkgconfig(luajit) >= 2.0
  BuildRequires:  pkgconfig(jemalloc)
  BuildRequires:  systemd-rpm-macros
@@ -38,7 +50,7 @@ index 9b49ee5..d5b0e4c 100644
  
  Requires:       systemd
  Requires(post): systemd
-@@ -152,10 +153,7 @@ native C implementation, which doesn't require this package.
+@@ -152,10 +157,7 @@ native C implementation, which doesn't require this package.
  
  %prep
  %if 0%{GPG_CHECK}
@@ -50,7 +62,7 @@ index 9b49ee5..d5b0e4c 100644
  %endif
  %setup -q -n %{name}-%{version}
  
-@@ -374,6 +372,9 @@ fi
+@@ -374,6 +376,9 @@ fi
  %endif
  
  %changelog

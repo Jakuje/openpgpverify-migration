@@ -12,6 +12,15 @@ Phase 1 reason: `expired`
 - found via: hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 3147 → 6998 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - 992A96E075056E79CD8214F9873DB37572A37B36 \
+  | sq keyring filter --experimental --cert 992A96E075056E79CD8214F9873DB37572A37B36 --output update.pgp
+sq keyring merge --output kdudka.pgp.new kdudka.pgp update.pgp
+mv kdudka.pgp.new kdudka.pgp
+```
+
 ```diff
 --- dist-git/kdudka.pgp
 +++ refreshed/kdudka.pgp

@@ -1,6 +1,6 @@
-From a00e6e9403e6f460051b2a72ec58ae0578aba238 Mon Sep 17 00:00:00 2001
+From ba9878ae0ae93a9e2a0be547057739ce71da5c24 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:09 +0100
+Date: Tue, 27 Oct 2026 12:08:54 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,19 +8,27 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh gpgkey-0FDE7BE0E88F5E48.gpg from keyservers/WKD: same
-certificate(s), with self-signatures our copy was missing.
+certificate(s), with self-signatures our copy was missing; the commands
+are in the spec comment.
 
 Assisted-by: Claude Opus 5.5
 ---
- drm_info.spec               |   4 ++--
+ drm_info.spec               |   8 ++++++--
  gpgkey-0FDE7BE0E88F5E48.gpg | Bin 7501 -> 17527 bytes
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/drm_info.spec b/drm_info.spec
-index 24a5b3a..3274010 100644
+index 24a5b3a..ec1c669 100644
 --- a/drm_info.spec
 +++ b/drm_info.spec
-@@ -12,7 +12,7 @@ Source1:        %{url}/-/releases/v%{version}/downloads/%{name}-%{version}.tar.g
+@@ -9,10 +9,14 @@ URL:            https://gitlab.freedesktop.org/emersion/drm_info
+ Source0:        %{url}/-/releases/v%{version}/downloads/%{name}-%{version}.tar.gz
+ Source1:        %{url}/-/releases/v%{version}/downloads/%{name}-%{version}.tar.gz.sig
+ # 0FDE7BE0E88F5E48: emersion <contact@emersion.fr>
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 | sq keyring filter --experimental --cert 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 --output update.pgp
++#   sq keyring merge gpgkey-0FDE7BE0E88F5E48.gpg update.pgp | sq packet dearmor --output gpgkey-0FDE7BE0E88F5E48.gpg.new
++#   mv gpgkey-0FDE7BE0E88F5E48.gpg.new gpgkey-0FDE7BE0E88F5E48.gpg
  Source2:        https://emersion.fr/.well-known/openpgpkey/hu/dj3498u4hyyarh35rkjfnghbjxug6b19#/gpgkey-0FDE7BE0E88F5E48.gpg
  
  BuildRequires:  gcc
@@ -29,7 +37,7 @@ index 24a5b3a..3274010 100644
  BuildRequires:  meson >= 0.56.0
  BuildRequires:  pkgconfig(json-c)
  BuildRequires:  pkgconfig(libdisplay-info)
-@@ -26,7 +26,7 @@ BuildRequires:  python3-devel
+@@ -26,7 +30,7 @@ BuildRequires:  python3-devel
  
  
  %prep

@@ -1,6 +1,6 @@
-From 456345c2b7ace168f98e2627ef1734ea43ea7a07 Mon Sep 17 00:00:00 2001
+From f868995ba936722077e2f60cac7c5441225d1b02 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:03 +0100
+Date: Tue, 27 Oct 2026 12:08:51 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,20 +8,21 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh dickey@invisible-island.net-rsa3072.asc from keyservers/WKD:
-same certificate(s), with self-signatures our copy was missing.
+same certificate(s), with self-signatures our copy was missing; the
+commands are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- dialog.spec                             |  10 +-
+ dialog.spec                             |  14 +-
  dickey@invisible-island.net-rsa3072.asc | 225 ++++++++++++++++++++----
- 2 files changed, 200 insertions(+), 35 deletions(-)
+ 2 files changed, 204 insertions(+), 35 deletions(-)
 
 diff --git a/dialog.spec b/dialog.spec
-index 368c633..9a47f96 100644
+index 368c633..ec8a2ee 100644
 --- a/dialog.spec
 +++ b/dialog.spec
-@@ -2,13 +2,14 @@ Summary: A utility for creating TTY dialog boxes
+@@ -2,13 +2,18 @@ Summary: A utility for creating TTY dialog boxes
  Name: dialog
  %global dialogsubversion 20250116
  Version: 1.3
@@ -31,6 +32,10 @@ index 368c633..9a47f96 100644
  URL: https://invisible-island.net/dialog/dialog.html
  Source0: https://invisible-mirror.net/archives/dialog/dialog-%{version}-%{dialogsubversion}.tgz
  Source1: https://invisible-mirror.net/archives/dialog/dialog-%{version}-%{dialogsubversion}.tgz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 19882D92DDA4C400C22C0D56CC2AF4472167BE03 | sq keyring filter --experimental --cert 19882D92DDA4C400C22C0D56CC2AF4472167BE03 --output update.pgp
++#   sq keyring merge --output dickey@invisible-island.net-rsa3072.asc.new dickey@invisible-island.net-rsa3072.asc update.pgp
++#   mv dickey@invisible-island.net-rsa3072.asc.new dickey@invisible-island.net-rsa3072.asc
  Source2: https://invisible-island.net/public/dickey@invisible-island.net-rsa3072.asc
 -BuildRequires: ncurses-devel gcc gettext findutils libtool gnupg2
 +BuildRequires: ncurses-devel gcc gettext findutils libtool
@@ -38,7 +43,7 @@ index 368c633..9a47f96 100644
  BuildRequires: make
  Patch2: dialog-multilib.patch
  Patch3: dialog-libs.patch
-@@ -33,7 +34,7 @@ contains the files needed for developing applications, which use the
+@@ -33,7 +38,7 @@ contains the files needed for developing applications, which use the
  dialog library.
  
  %prep
@@ -47,7 +52,7 @@ index 368c633..9a47f96 100644
  %setup -q -n dialog-%{version}-%{dialogsubversion}
  %patch -P2 -p1 -b .multilib
  %patch -P3 -p1 -b .libs
-@@ -80,6 +81,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libdialog.{,l}a
+@@ -80,6 +85,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libdialog.{,l}a
  %{_mandir}/man3/dialog.*
  
  %changelog

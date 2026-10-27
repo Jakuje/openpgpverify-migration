@@ -12,6 +12,15 @@ Phase 1 reason: `expired`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 7501 → 17527 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 \
+  | sq keyring filter --experimental --cert 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 --output update.pgp
+sq keyring merge emersion-gpg-key.asc update.pgp | sq packet dearmor --output emersion-gpg-key.asc.new
+mv emersion-gpg-key.asc.new emersion-gpg-key.asc
+```
+
 ```diff
 --- dist-git/emersion-gpg-key.asc
 +++ refreshed/emersion-gpg-key.asc

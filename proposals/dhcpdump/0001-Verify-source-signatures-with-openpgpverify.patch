@@ -1,6 +1,6 @@
-From 4c763d61940cc4f79d6567f6171846e1e0c4d960 Mon Sep 17 00:00:00 2001
+From a43522d928759398e606854b6813be2f01535d4c Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:09 +0100
+Date: Tue, 27 Oct 2026 12:08:54 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,20 +8,21 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh signing-key.asc from keyservers/WKD: same certificate(s), with
-self-signatures our copy was missing.
+self-signatures our copy was missing; the commands are in the spec
+comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- dhcpdump.spec   |   9 +-
+ dhcpdump.spec   |  13 +-
  signing-key.asc | 946 ++++++++++++++++++++++++++++++++++++++++--------
- 2 files changed, 801 insertions(+), 154 deletions(-)
+ 2 files changed, 805 insertions(+), 154 deletions(-)
 
 diff --git a/dhcpdump.spec b/dhcpdump.spec
-index aa550de..840fb2b 100644
+index aa550de..51a89f1 100644
 --- a/dhcpdump.spec
 +++ b/dhcpdump.spec
-@@ -1,6 +1,6 @@
+@@ -1,17 +1,21 @@
  Name:           dhcpdump
  Version:        2.00
 -Release:        1%{?dist}
@@ -29,7 +30,14 @@ index aa550de..840fb2b 100644
  Summary:        Parse DHCP packets
  
  License:        BSD-2-Clause
-@@ -11,7 +11,7 @@ Source2:        https://raw.githubusercontent.com/bbonev/%{name}/v%{version}/deb
+ URL:            https://github.com/bbonev/%{name}
+ Source0:        https://github.com/bbonev/%{name}/releases/download/v%{version}/%{name}-%{version}.tar.xz
+ Source1:        https://github.com/bbonev/%{name}/releases/download/v%{version}/%{name}-%{version}.tar.xz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - BA60BC20F37E59444D6D25001365720913D2F22D | sq keyring filter --experimental --cert BA60BC20F37E59444D6D25001365720913D2F22D --output update.pgp
++#   sq keyring merge --output signing-key.asc.new signing-key.asc update.pgp
++#   mv signing-key.asc.new signing-key.asc
+ Source2:        https://raw.githubusercontent.com/bbonev/%{name}/v%{version}/debian/upstream/signing-key.asc
  
  
  BuildRequires:  gcc
@@ -38,7 +46,7 @@ index aa550de..840fb2b 100644
  BuildRequires:  make
  BuildRequires:  perl-podlators
  BuildRequires:  pkgconfig(libpcap)
-@@ -25,7 +25,7 @@ Version 2.00 introduces a TUI to see packets grouped by session.
+@@ -25,7 +29,7 @@ Version 2.00 introduces a TUI to see packets grouped by session.
  %global _hardened_build 1
  
  %prep
@@ -47,7 +55,7 @@ index aa550de..840fb2b 100644
  %autosetup
  
  
-@@ -43,6 +43,9 @@ install -D -p -m 644 -t %{buildroot}%{_mandir}/man8/ %{name}.8
+@@ -43,6 +47,9 @@ install -D -p -m 644 -t %{buildroot}%{_mandir}/man8/ %{name}.8
  
  
  %changelog

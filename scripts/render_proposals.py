@@ -157,6 +157,15 @@ def make_commit(pkg, s, refresh_files):
         raise RuntimeError('cannot prepare a clone at %s' % s['spec_commit'])
     # Exactly the spec Phase 1 tested (incl. the Release bump done in the chroot).
     shutil.copy(os.path.join(d, pkg + '.opv.spec'), os.path.join(pr, pkg + '.spec'))
+    if refresh_files and not s.get('keyring_refresh_applied'):
+        # Draft: phase1.py adds this comment once the refresh is approved.
+        spec = os.path.join(pr, pkg + '.spec')
+        text = open(spec).read()
+        for f in refresh_files:
+            if f.get('spec_commands'):
+                text = convert.refresh_comment(text, pkg, os.path.basename(f['file']),
+                                               f['spec_commands'])[0]
+        open(spec, 'w').write(text)
     extra = []
     if s.get('raw_rewritten'):
         lead = ('Replace the direct GnuPG verification with %openpgpverify, which\n'
@@ -169,7 +178,8 @@ def make_commit(pkg, s, refresh_files):
     for f in refresh_files:
         shutil.copy(os.path.join(d, 'refresh', f['file']), os.path.join(pr, f['file']))
         extra.append('Refresh %s from keyservers/WKD: same certificate(s), with '
-                     'self-signatures our copy was missing.%s' % (
+                     'self-signatures our copy was missing; the commands are in the '
+                     'spec comment.%s' % (
                          f['file'], ' The GnuPG keybox becomes a plain OpenPGP keyring, '
                          'which sqv can read.' if f.get('keybox') else ''))
     if s.get('release_bumped'):
@@ -217,7 +227,11 @@ def render_pr(pkg, s, draft):
         changes.append('- dropped `%s`, only needed for %s' %
                        (br, 'the GnuPG verification' if raw else '`%gpgverify`'))
     for f in files:
-        changes.append('- refreshed keyring `%s` (see below)' % f['file'])
+        commented = re.search(r'(?m)^\+#   mv %s\.new ' % re.escape(os.path.basename(f['file'])),
+                              diff)
+        changes.append('- refreshed keyring `%s` (see below)%s' % (
+            f['file'], '; the comment above its `Source` line now shows the commands for '
+            'refreshing it' if commented else ''))
     rel = re.findall(r'(?m)^([-+])Release:\s*(.*)$', diff)
     if rel:
         changes.append('- Release bumped (`%s` → `%s`) with a changelog entry' %
@@ -247,7 +261,7 @@ def render_pr(pkg, s, draft):
                    'by fingerprint (%s), has self-signatures our copy is missing (a renewed '
                    'expiry, modern hashes or the older binding history), so this PR updates '
                    'the keyring. No key was added or removed. Please check the fingerprint '
-                   'against upstream:\n\n%s\n\nWhat changed in the certificate (`sq '
+                   'against upstream:\n\n%s\n\n%sWhat changed in the certificate (`sq '
                    'inspect`):\n\n```diff\n%s```\n'
                    % (('`%%openpgpverify` cannot read the keyring in dist-git: it is a GnuPG '
                        'keybox, which %s reads but sqv does not, so it is exported to a '
@@ -256,6 +270,12 @@ def render_pr(pkg, s, draft):
                        '(%s), while %s ignores that. ' % (reason, old_tool)),
                       '; '.join(sorted({v for f in files for v in f['found_via']})),
                       '\n'.join('- `%s`' % fp for f in files for fp in f['fingerprints']),
+                      ''.join('The refresh, as run (the spec comment above the `Source` line '
+                              'has the same commands%s, for the next refresh):\n\n```\n%s\n'
+                              '```\n\n' % (' without the one-time keybox export'
+                                             if f.get('keybox') else '',
+                                             '\n'.join(f['commands']))
+                              for f in files if f.get('commands')),
                       ''.join(diffs)))
     notes = ['- Rawhide only. Whether to merge it into other branches is up to you; '
              'openpgpverify is available in Fedora 43 and later, EPEL 9 and EPEL 10' +

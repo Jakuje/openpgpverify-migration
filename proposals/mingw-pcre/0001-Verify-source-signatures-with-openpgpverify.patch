@@ -1,6 +1,6 @@
-From e0e605348d7ce8ccc9402ae0546e195b161aff58 Mon Sep 17 00:00:00 2001
+From 67b72667b9060b48c193a7ef45ee9ca25fa7f4e8 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:28 +0100
+Date: Tue, 27 Oct 2026 12:09:01 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,19 +8,19 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh Public-Key from keyservers/WKD: same certificate(s), with self-
-signatures our copy was missing.
+signatures our copy was missing; the commands are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- mingw-pcre.spec | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ mingw-pcre.spec | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/mingw-pcre.spec b/mingw-pcre.spec
-index 131807f..b8ad993 100644
+index 131807f..3d5e0de 100644
 --- a/mingw-pcre.spec
 +++ b/mingw-pcre.spec
-@@ -7,7 +7,7 @@
+@@ -7,13 +7,17 @@
  Name:		mingw-%{name1}
  Version:	8.45
  %global myversion %{version}%{?rcversion:-%rcversion}
@@ -29,7 +29,17 @@ index 131807f..b8ad993 100644
  Summary:	MinGW Windows pcre library
  
  License:	BSD-3-Clause
-@@ -38,7 +38,7 @@ BuildArch:	noarch
+ URL:		http://www.pcre.org/
+ Source0:        https://ftp.pcre.org/pub/%{name1}/%{?rcversion:Testing/}%{name1}-%{myversion}.tar.bz2
+ Source1:        https://ftp.pcre.org/pub/%{name1}/%{?rcversion:Testing/}%{name1}-%{myversion}.tar.bz2.sig
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 45F68D54BBE23FB3039B46E59766E084FB0F43D8 | sq keyring filter --experimental --cert 45F68D54BBE23FB3039B46E59766E084FB0F43D8 --output update.pgp
++#   sq keyring merge Public-Key update.pgp | sq packet dearmor --output Public-Key.new
++#   mv Public-Key.new Public-Key
+ Source2:        https://ftp.pcre.org/pub/pcre/Public-Key
+ 
+ # Refused by upstream, bug #675477
+@@ -38,7 +42,7 @@ BuildArch:	noarch
  BuildRequires:  make
  BuildRequires:  git
  BuildRequires:	redhat-rpm-config
@@ -38,7 +48,7 @@ index 131807f..b8ad993 100644
  BuildRequires:  autoconf
  BuildRequires:  automake
  BuildRequires:  libtool
-@@ -113,7 +113,7 @@ Static version of the mingw64-pcre library.
+@@ -113,7 +117,7 @@ Static version of the mingw64-pcre library.
  
  
  %prep
@@ -47,7 +57,7 @@ index 131807f..b8ad993 100644
  %autosetup -S git_am -n pcre-%{version}
  autoreconf -vif
  
-@@ -207,6 +207,9 @@ find $RPM_BUILD_ROOT -name "*.la" -delete
+@@ -207,6 +211,9 @@ find $RPM_BUILD_ROOT -name "*.la" -delete
  
  
  %changelog

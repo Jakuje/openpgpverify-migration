@@ -12,6 +12,15 @@ Phase 1 reason: `expired`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD
 - size: 4274 → 18320 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - 9E885C0302F9BB9167529C2D5CBA11E6ADC7BCD1 \
+  | sq keyring filter --experimental --cert 9E885C0302F9BB9167529C2D5CBA11E6ADC7BCD1 --output update.pgp
+sq keyring merge gpgkey-6690D8BC.gpg update.pgp | sq packet dearmor --output gpgkey-6690D8BC.gpg.new
+mv gpgkey-6690D8BC.gpg.new gpgkey-6690D8BC.gpg
+```
+
 ```diff
 --- dist-git/gpgkey-6690D8BC.gpg
 +++ refreshed/gpgkey-6690D8BC.gpg

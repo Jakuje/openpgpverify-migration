@@ -1,6 +1,6 @@
-From ad2c8e1c531d0994a13b8fdf4bcdab4811855aeb Mon Sep 17 00:00:00 2001
+From 8e5727b0a34377ee2189cd290a2f541396caeec5 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:04 +0100
+Date: Tue, 27 Oct 2026 12:08:52 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -9,13 +9,13 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh gpgkey-B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE.gpg from
 keyservers/WKD: same certificate(s), with self-signatures our copy was
-missing.
+missing; the commands are in the spec comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  ...D2BD1375BECB784CF4F8C4D73CF638C53C06BE.gpg | Bin 911 -> 12355 bytes
- libtasn1.spec                                 |   3 ++-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ libtasn1.spec                                 |   7 ++++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/gpgkey-B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE.gpg b/gpgkey-B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE.gpg
 index 56e9a575c0c7da44ac7eb5b21f6dea933a0c27f0..b2695886c304f64352751c018e0844e1bf4c161f 100644
@@ -190,10 +190,21 @@ zW94N1P~6A>lGc(2Nmt66Fm-&Lyg^oJ@+=ju$&PBxlh3HSG47cBS<{lKqi*s#U0twY
 HUv>Qer`aUe
 
 diff --git a/libtasn1.spec b/libtasn1.spec
-index d490934..6745b44 100644
+index d490934..0aa6a91 100644
 --- a/libtasn1.spec
 +++ b/libtasn1.spec
-@@ -22,6 +22,7 @@ BuildRequires:	valgrind-devel
+@@ -10,6 +10,10 @@ Source0:	http://ftp.gnu.org/gnu/libtasn1/%name-%version.tar.gz
+ Source1:	http://ftp.gnu.org/gnu/libtasn1/%name-%version.tar.gz.sig
+ #Source2:	gpgkey-1F42418905D8206AA754CCDC29EE58B996865171.gpg
+ #Source2:	gpgkey-99415CE1905D0E55A9F88026860B7FBB32F8119D.gpg
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE | sq keyring filter --experimental --cert B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE --output update.pgp
++#   sq keyring merge gpgkey-B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE.gpg update.pgp | sq packet dearmor --output gpgkey-B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE.gpg.new
++#   mv gpgkey-B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE.gpg.new gpgkey-B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE.gpg
+ Source2:        gpgkey-B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE.gpg
+ Patch1:		libtasn1-3.4-rpath.patch
+ 
+@@ -22,6 +26,7 @@ BuildRequires:	valgrind-devel
  %endif
  BuildRequires:  make
  BuildRequires:  gtk-doc
@@ -201,7 +212,7 @@ index d490934..6745b44 100644
  # Wildcard bundling exception https://fedorahosted.org/fpc/ticket/174
  Provides: bundled(gnulib) = 20260101
  
-@@ -55,7 +56,7 @@ data.
+@@ -55,7 +60,7 @@ data.
  
  
  %prep

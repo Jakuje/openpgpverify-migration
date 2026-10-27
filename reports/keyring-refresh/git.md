@@ -12,6 +12,15 @@ Phase 1 reason: `sha1-cert`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 9171 → 68809 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - 96E07AF25771955980DAD10020D04E5A713660A7 \
+  | sq keyring filter --experimental --cert 96E07AF25771955980DAD10020D04E5A713660A7 --output update.pgp
+sq keyring merge --output gpgkey-junio.asc.new gpgkey-junio.asc update.pgp
+mv gpgkey-junio.asc.new gpgkey-junio.asc
+```
+
 ```diff
 --- dist-git/gpgkey-junio.asc
 +++ refreshed/gpgkey-junio.asc

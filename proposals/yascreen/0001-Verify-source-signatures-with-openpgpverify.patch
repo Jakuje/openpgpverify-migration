@@ -1,6 +1,6 @@
-From 44c12be7dca6e17d4d8a378c077b4a6d523cbf0f Mon Sep 17 00:00:00 2001
+From eec38893775cf0cd3660c77c3057de2f9250a3cc Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:21 +0100
+Date: Tue, 27 Oct 2026 12:08:58 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,14 +8,15 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh signing-key.asc from keyservers/WKD: same certificate(s), with
-self-signatures our copy was missing.
+self-signatures our copy was missing; the commands are in the spec
+comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  signing-key.asc | 983 +++++++++++++++++++++++++++++++++++++++---------
- yascreen.spec   |   9 +-
- 2 files changed, 801 insertions(+), 191 deletions(-)
+ yascreen.spec   |  13 +-
+ 2 files changed, 805 insertions(+), 191 deletions(-)
 
 diff --git a/signing-key.asc b/signing-key.asc
 index 7e49274..a88c562 100644
@@ -1016,10 +1017,10 @@ index 7e49274..a88c562 100644
 +=59sq
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/yascreen.spec b/yascreen.spec
-index cae21f0..ad365f1 100644
+index cae21f0..7477f5e 100644
 --- a/yascreen.spec
 +++ b/yascreen.spec
-@@ -1,6 +1,6 @@
+@@ -1,16 +1,20 @@
  Name:           yascreen
  Version:        2.14
 -Release:        1%{?dist}
@@ -1027,7 +1028,13 @@ index cae21f0..ad365f1 100644
  Summary:        Yet Another Screen Library (lib(n)curses alternative)
  
  License:        LGPL-3.0-only
-@@ -10,7 +10,7 @@ Source1:        %{url}releases/download/v%{version}/yascreen-%{version}.tar.xz.a
+ URL:            https://github.com/bbonev/yascreen/
+ Source0:        %{url}releases/download/v%{version}/yascreen-%{version}.tar.xz
+ Source1:        %{url}releases/download/v%{version}/yascreen-%{version}.tar.xz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - BA60BC20F37E59444D6D25001365720913D2F22D | sq keyring filter --experimental --cert BA60BC20F37E59444D6D25001365720913D2F22D --output update.pgp
++#   sq keyring merge --output signing-key.asc.new signing-key.asc update.pgp
++#   mv signing-key.asc.new signing-key.asc
  Source2:        https://raw.githubusercontent.com/bbonev/yascreen/master/debian/upstream/signing-key.asc
  
  BuildRequires:  gcc
@@ -1036,7 +1043,7 @@ index cae21f0..ad365f1 100644
  BuildRequires:  make
  
  %description
-@@ -47,7 +47,7 @@ compile applications or shared objects that use yascreen.
+@@ -47,7 +51,7 @@ compile applications or shared objects that use yascreen.
  %global _hardened_build 1
  
  %prep
@@ -1045,7 +1052,7 @@ index cae21f0..ad365f1 100644
  %autosetup
  
  %build
-@@ -74,6 +74,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libyascreen.a
+@@ -74,6 +78,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libyascreen.a
  %{_includedir}/yascreen.h
  
  %changelog

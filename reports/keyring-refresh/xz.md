@@ -12,6 +12,15 @@ Phase 1 reason: `expired`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD; hkps://keyserver.ubuntu.com
 - size: 3151 → 21603 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - 3690C240CE51B4670D30AD1C38EE757D69184620 \
+  | sq keyring filter --experimental --cert 3690C240CE51B4670D30AD1C38EE757D69184620 --output update.pgp
+sq keyring merge --output lasse_collin_pubkey.txt.new lasse_collin_pubkey.txt update.pgp
+mv lasse_collin_pubkey.txt.new lasse_collin_pubkey.txt
+```
+
 ```diff
 --- dist-git/lasse_collin_pubkey.txt
 +++ refreshed/lasse_collin_pubkey.txt

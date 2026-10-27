@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `kdudka.pgp` (see below)
+- refreshed keyring `kdudka.pgp` (see below); the comment above its `Source` line now shows the commands for refreshing it
 - Release bumped (`2%{?dist}` → `3%{?dist}`) with a changelog entry
 
 ### Testing
@@ -34,6 +34,15 @@ Tested on 2026-10-22 at dist-git commit `53df7e7aa682` with sequoia-sqv 1.5.0-2.
 `%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
 
 - `992A96E075056E79CD8214F9873DB37572A37B36`
+
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - 992A96E075056E79CD8214F9873DB37572A37B36 \
+  | sq keyring filter --experimental --cert 992A96E075056E79CD8214F9873DB37572A37B36 --output update.pgp
+sq keyring merge --output kdudka.pgp.new kdudka.pgp update.pgp
+mv kdudka.pgp.new kdudka.pgp
+```
 
 What changed in the certificate (`sq inspect`):
 

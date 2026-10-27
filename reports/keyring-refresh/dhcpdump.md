@@ -12,6 +12,15 @@ Phase 1 reason: `expired`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 10463 → 52311 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - BA60BC20F37E59444D6D25001365720913D2F22D \
+  | sq keyring filter --experimental --cert BA60BC20F37E59444D6D25001365720913D2F22D --output update.pgp
+sq keyring merge --output signing-key.asc.new signing-key.asc update.pgp
+mv signing-key.asc.new signing-key.asc
+```
+
 ```diff
 --- dist-git/signing-key.asc
 +++ refreshed/signing-key.asc

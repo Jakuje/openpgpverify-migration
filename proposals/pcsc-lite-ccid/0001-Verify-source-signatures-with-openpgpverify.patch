@@ -1,6 +1,6 @@
-From f36453ba37fa92b2ce81e7a7ab2fcca609f69565 Mon Sep 17 00:00:00 2001
+From 0ed1b3825501a583a4a5797be13c3bc894558587 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:00 +0100
+Date: Tue, 27 Oct 2026 12:08:50 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -9,13 +9,13 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg from
 keyservers/WKD: same certificate(s), with self-signatures our copy was
-missing.
+missing; the commands are in the spec comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  ...E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg | Bin 14174 -> 24687 bytes
- pcsc-lite-ccid.spec                           |   3 ++-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ pcsc-lite-ccid.spec                           |   7 ++++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg b/gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg
 index d3cd6318aa80c3d94e019231597ca5c10886f36e..0fcfba423ddce2e88c86aed4c2c7cdea314f82b8 100644
@@ -232,10 +232,21 @@ z`Q4tof=QZ*m6P$IaRZ~~W}zTW#?3*&EKJNhnRquxhVn9rbu!7bNH8)naI!M_O#S_q
 ONt%ZN6b2$uJWK$xlW)QR
 
 diff --git a/pcsc-lite-ccid.spec b/pcsc-lite-ccid.spec
-index 5b23a64..bcd048e 100644
+index 5b23a64..f23e740 100644
 --- a/pcsc-lite-ccid.spec
 +++ b/pcsc-lite-ccid.spec
-@@ -24,6 +24,7 @@ BuildRequires:  flex
+@@ -10,6 +10,10 @@ License:        BSD-3-Clause AND GPL-2.0-or-later AND LGPL-2.1-or-later
+ URL:            https://ccid.apdu.fr/files
+ Source0:        https://ccid.apdu.fr/files/ccid-%{version}.tar.xz
+ Source1:        https://ccid.apdu.fr/files/ccid-%{version}.tar.xz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E | sq keyring filter --experimental --cert F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E --output update.pgp
++#   sq keyring merge gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg update.pgp | sq packet dearmor --output gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg.new
++#   mv gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg.new gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg
+ Source2:        gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg
+ Patch0:         ccid-1.4.26-omnikey-3121.patch
+ 
+@@ -24,6 +28,7 @@ BuildRequires:  flex
  BuildRequires:  zlib-devel
  # for udev.pc dependency
  BuildRequires:  systemd
@@ -243,7 +254,7 @@ index 5b23a64..bcd048e 100644
  Requires(post): systemd
  Requires(postun): systemd
  Requires:       pcsc-lite%{?_isa} >= %{pcsc_lite_ver}
-@@ -40,7 +41,7 @@ PC/SC Lite daemon.
+@@ -40,7 +45,7 @@ PC/SC Lite daemon.
  
  
  %prep

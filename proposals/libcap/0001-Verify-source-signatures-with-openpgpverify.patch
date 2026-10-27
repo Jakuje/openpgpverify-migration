@@ -1,6 +1,6 @@
-From 729ab2396f9e8ccc2c47de56909e96ac5d2b7a8b Mon Sep 17 00:00:00 2001
+From da8ca073a9bddb6d7f183697567b79b33185cbc6 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:04 +0100
+Date: Tue, 27 Oct 2026 12:08:52 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,14 +8,15 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh 29EE848AE2CCF3F4.asc from keyservers/WKD: same certificate(s),
-with self-signatures our copy was missing.
+with self-signatures our copy was missing; the commands are in the spec
+comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  29EE848AE2CCF3F4.asc | Bin 6479 -> 6923 bytes
- libcap.spec          |   8 ++++++--
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ libcap.spec          |  12 ++++++++++--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/29EE848AE2CCF3F4.asc b/29EE848AE2CCF3F4.asc
 index 6d95430dd717820f77f3d87d5577fd9c176e3f2b..4411fa738d610b42f46f39da2e3c1c492b8edd72 100644
@@ -249,10 +250,10 @@ z86dGWs%G?3ngv|v&13`zv*zrOySYgk(RlOl!O!%@wf$PTu%uV(Tkyq9-mm?P>8;*4
 bNVV0oUjO(9@DC!4@P9c0yutlHe1QK1{XsN5
 
 diff --git a/libcap.spec b/libcap.spec
-index 6466e99..8ebc9ed 100644
+index 6466e99..c65f452 100644
 --- a/libcap.spec
 +++ b/libcap.spec
-@@ -1,6 +1,6 @@
+@@ -1,18 +1,23 @@
  Name: libcap
  Version: 2.78
 -Release: 2%{?dist}
@@ -260,7 +261,16 @@ index 6466e99..8ebc9ed 100644
  Summary: Library for getting and setting POSIX.1e capabilities
  URL: https://sites.google.com/site/fullycapable/
  License: BSD-3-Clause OR GPL-2.0-only
-@@ -13,6 +13,7 @@ BuildRequires: pam-devel gcc
+ 
+ Source0: https://mirrors.edge.kernel.org/pub/linux/libs/security/linux-privs/libcap2/%{name}-%{version}.tar.gz
+ Source1: https://mirrors.edge.kernel.org/pub/linux/libs/security/linux-privs/libcap2/%{name}-%{version}.tar.sign
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 38A644698C69787344E954CE29EE848AE2CCF3F4 | sq keyring filter --experimental --cert 38A644698C69787344E954CE29EE848AE2CCF3F4 --output update.pgp
++#   sq keyring merge 29EE848AE2CCF3F4.asc update.pgp | sq packet dearmor --output 29EE848AE2CCF3F4.asc.new
++#   mv 29EE848AE2CCF3F4.asc.new 29EE848AE2CCF3F4.asc
+ Source2: https://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git/plain/keys/29EE848AE2CCF3F4.asc
+ 
+ BuildRequires: pam-devel gcc
  BuildRequires: make
  BuildRequires: glibc-static
  BuildRequires: gnupg2
@@ -268,7 +278,7 @@ index 6466e99..8ebc9ed 100644
  
  %ifarch %{golang_arches}
  BuildRequires: golang >= 1.22
-@@ -64,7 +65,7 @@ the capability status of processes and threads.
+@@ -64,7 +69,7 @@ the capability status of processes and threads.
  %endif
  
  %prep
@@ -277,7 +287,7 @@ index 6466e99..8ebc9ed 100644
  %autosetup -p1
  
  
-@@ -121,6 +122,9 @@ chmod +x %{buildroot}/%{_libdir}/*.so.*
+@@ -121,6 +126,9 @@ chmod +x %{buildroot}/%{_libdir}/*.so.*
  %endif
  
  %changelog

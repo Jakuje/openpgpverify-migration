@@ -1,6 +1,6 @@
-From fd4baa4ffbd33a324b3a541fa44b9a8e1a304b5c Mon Sep 17 00:00:00 2001
+From 724dace8e491a801a3361341719dc37cc1b45bb8 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:10 +0100
+Date: Tue, 27 Oct 2026 12:08:54 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,13 +8,14 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh 0x8E8B898CBF2412F9 from keyservers/WKD: same certificate(s),
-with self-signatures our copy was missing.
+with self-signatures our copy was missing; the commands are in the spec
+comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  0x8E8B898CBF2412F9 | 282 +++++++++++++++++++++++++++------------------
- fcitx5-lua.spec    |   3 +-
- 2 files changed, 174 insertions(+), 111 deletions(-)
+ fcitx5-lua.spec    |   7 +-
+ 2 files changed, 178 insertions(+), 111 deletions(-)
 
 diff --git a/0x8E8B898CBF2412F9 b/0x8E8B898CBF2412F9
 index d9449d8..43b0e60 100644
@@ -306,10 +307,21 @@ index d9449d8..43b0e60 100644
 +=8BEE
 +-----END PGP PUBLIC KEY BLOCK-----
 diff --git a/fcitx5-lua.spec b/fcitx5-lua.spec
-index d6edda8..8f1175f 100644
+index d6edda8..09d0809 100644
 --- a/fcitx5-lua.spec
 +++ b/fcitx5-lua.spec
-@@ -23,6 +23,7 @@ BuildRequires:  pkgconfig(Fcitx5Module)
+@@ -9,6 +9,10 @@ License:        LicenseRef-Callaway-LGPLv2+
+ URL:            https://github.com/fcitx/fcitx5-lua
+ Source:         https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.tar.zst
+ Source1:        https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.tar.zst.sig
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9 | sq keyring filter --experimental --cert 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9 --output update.pgp
++#   sq keyring merge --output 0x8E8B898CBF2412F9.new 0x8E8B898CBF2412F9 update.pgp
++#   mv 0x8E8B898CBF2412F9.new 0x8E8B898CBF2412F9
+ Source2:        https://pgp.key-server.io/download/0x8E8B898CBF2412F9
+ 
+ BuildRequires:  gnupg2
+@@ -23,6 +27,7 @@ BuildRequires:  pkgconfig(Fcitx5Module)
  BuildRequires:  /usr/bin/appstream-util
  # to make testing happy
  BuildRequires:  fcitx5
@@ -317,7 +329,7 @@ index d6edda8..8f1175f 100644
  Requires:       fcitx5-data
  
  %description
-@@ -37,7 +38,7 @@ Requires:       fcitx5-devel
+@@ -37,7 +42,7 @@ Requires:       fcitx5-devel
  Devel files for fcitx5-lua
  
  %prep

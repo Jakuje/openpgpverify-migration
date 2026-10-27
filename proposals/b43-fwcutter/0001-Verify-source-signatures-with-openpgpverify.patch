@@ -1,6 +1,6 @@
-From fa1c38d659f400a2be4309294b26b0a2ec57dee5 Mon Sep 17 00:00:00 2001
+From 97c51d8fe016148e9b09be07b1bf8b4b021a4880 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:07 +0100
+Date: Tue, 27 Oct 2026 12:08:53 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,13 +9,13 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh 757FAB7CED1814AE15B4836E5FB027474203454C.gpg from
 keyservers/WKD: same certificate(s), with self-signatures our copy was
-missing.
+missing; the commands are in the spec comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  757FAB7CED1814AE15B4836E5FB027474203454C.gpg | 961 +++++++++++--------
- b43-fwcutter.spec                            |   4 +-
- 2 files changed, 580 insertions(+), 385 deletions(-)
+ b43-fwcutter.spec                            |  10 +-
+ 2 files changed, 584 insertions(+), 387 deletions(-)
 
 diff --git a/757FAB7CED1814AE15B4836E5FB027474203454C.gpg b/757FAB7CED1814AE15B4836E5FB027474203454C.gpg
 index a985550..0c63042 100644
@@ -1048,10 +1048,19 @@ index a985550..0c63042 100644
 +=pcdu
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/b43-fwcutter.spec b/b43-fwcutter.spec
-index 7485b46..a730aee 100644
+index 7485b46..8797b7b 100644
 --- a/b43-fwcutter.spec
 +++ b/b43-fwcutter.spec
-@@ -11,7 +11,7 @@ Source1:        https://bues.ch/b43/fwcutter/%{name}-%{version}.tar.xz.asc
+@@ -6,12 +6,14 @@ License:        BSD-2-Clause
+ URL:            https://bues.ch/b43/fwcutter/
+ Source0:        https://bues.ch/b43/fwcutter/%{name}-%{version}.tar.xz
+ Source1:        https://bues.ch/b43/fwcutter/%{name}-%{version}.tar.xz.asc
+-# gpg --no-default-keyring --keyring ./keyring.gpg --keyserver keyserver.ubuntu.com --recv-key 757FAB7CED1814AE15B4836E5FB027474203454C
+-# gpg --no-default-keyring --keyring ./keyring.gpg  --output 757FAB7CED1814AE15B4836E5FB027474203454C.gpg --export --armor
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 0392335A78083894A4301C43236E8A58C6DB4512 69100FFB90E87A320DF8643CBEC39009E8321A61 757FAB7CED1814AE15B4836E5FB027474203454C | sq keyring filter --experimental --cert 0392335A78083894A4301C43236E8A58C6DB4512 --cert 69100FFB90E87A320DF8643CBEC39009E8321A61 --cert 757FAB7CED1814AE15B4836E5FB027474203454C --output update.pgp
++#   sq keyring merge --output 757FAB7CED1814AE15B4836E5FB027474203454C.gpg.new 757FAB7CED1814AE15B4836E5FB027474203454C.gpg update.pgp
++#   mv 757FAB7CED1814AE15B4836E5FB027474203454C.gpg.new 757FAB7CED1814AE15B4836E5FB027474203454C.gpg
  Source2:        757FAB7CED1814AE15B4836E5FB027474203454C.gpg
  Source100:      README.too
  BuildRequires:  gcc
@@ -1060,7 +1069,7 @@ index 7485b46..a730aee 100644
  BuildRequires:  make
  
  %description
-@@ -22,7 +22,7 @@ See the README.too file shipped in the package's documentation for
+@@ -22,7 +24,7 @@ See the README.too file shipped in the package's documentation for
  instructions on using this tool.
  
  %prep

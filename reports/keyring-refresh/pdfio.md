@@ -12,6 +12,15 @@ Phase 1 reason: `expired`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 3151 → 5552 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - 9086C3CDC66C3F563CF8F405BE67C75EC81F3244 \
+  | sq keyring filter --experimental --cert 9086C3CDC66C3F563CF8F405BE67C75EC81F3244 --output update.pgp
+sq keyring merge --output msweet-pub.gpg.new msweet-pub.gpg update.pgp
+mv msweet-pub.gpg.new msweet-pub.gpg
+```
+
 ```diff
 --- dist-git/msweet-pub.gpg
 +++ refreshed/msweet-pub.gpg

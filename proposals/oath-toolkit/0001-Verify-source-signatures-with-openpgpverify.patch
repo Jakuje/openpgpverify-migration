@@ -1,6 +1,6 @@
-From ceaaa85a86e2cf0003c44d41805667083a7812c7 Mon Sep 17 00:00:00 2001
+From cd650f4471990cea50f09ea3c5ec1fd14456291f Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:38 +0100
+Date: Tue, 27 Oct 2026 12:09:05 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,14 +8,14 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh keyring.asc from keyservers/WKD: same certificate(s), with self-
-signatures our copy was missing.
+signatures our copy was missing; the commands are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  keyring.asc       | 277 ++++++++++++++++++++++++++++++++++++++++++----
- oath-toolkit.spec |   9 +-
- 2 files changed, 264 insertions(+), 22 deletions(-)
+ oath-toolkit.spec |  15 ++-
+ 2 files changed, 268 insertions(+), 24 deletions(-)
 
 diff --git a/keyring.asc b/keyring.asc
 index fcb2e44..53b5be2 100644
@@ -304,7 +304,7 @@ index fcb2e44..53b5be2 100644
 +=n758
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/oath-toolkit.spec b/oath-toolkit.spec
-index 48104fa..853430b 100644
+index 48104fa..a194ec9 100644
 --- a/oath-toolkit.spec
 +++ b/oath-toolkit.spec
 @@ -1,6 +1,6 @@
@@ -315,7 +315,7 @@ index 48104fa..853430b 100644
  # Automatically converted from old format: GPLv3+ - review is highly recommended.
  License:       GPL-3.0-or-later
  Summary:       One-time password components
-@@ -13,7 +13,7 @@ BuildRequires: xmlsec1-devel
+@@ -13,11 +13,13 @@ BuildRequires: xmlsec1-devel
  BuildRequires: xmlsec1-openssl-devel
  BuildRequires: autoconf
  BuildRequires: automake
@@ -323,8 +323,16 @@ index 48104fa..853430b 100644
 +BuildRequires: openpgpverify
  Source0:       https://download.savannah.nongnu.org/releases/%{name}/%{name}-%{version}.tar.gz
  Source1:       https://download.savannah.nongnu.org/releases/%{name}/%{name}-%{version}.tar.gz.sig
- # gpg2 --recv-keys EDA21E94B565716F
-@@ -116,7 +116,7 @@ Requires: pam
+-# gpg2 --recv-keys EDA21E94B565716F
+-# gpg2 --armor --export D73CF638C53C06BE > keyring.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE | sq keyring filter --experimental --cert B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE --output update.pgp
++#   sq keyring merge --output keyring.asc.new keyring.asc update.pgp
++#   mv keyring.asc.new keyring.asc
+ Source2:       keyring.asc
+ URL:           https://www.nongnu.org/oath-toolkit/
+ Patch:        oath-toolkit-2.6.14-lockfile.patch
+@@ -116,7 +118,7 @@ Requires: pam
  A PAM module for pluggable login authentication for OATH.
  
  %prep
@@ -333,7 +341,7 @@ index 48104fa..853430b 100644
  %autosetup -p1
  
  %build
-@@ -189,6 +189,9 @@ mkdir -p -m 0600 %{buildroot}%{_sysconfdir}/liboath
+@@ -189,6 +191,9 @@ mkdir -p -m 0600 %{buildroot}%{_sysconfdir}/liboath
  %{_libdir}/security/pam_oath.so
  
  %changelog

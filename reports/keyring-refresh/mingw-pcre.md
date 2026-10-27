@@ -12,17 +12,26 @@ Phase 1 reason: `sha1-cert`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 2201 → 24270 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - 45F68D54BBE23FB3039B46E59766E084FB0F43D8 \
+  | sq keyring filter --experimental --cert 45F68D54BBE23FB3039B46E59766E084FB0F43D8 --output update.pgp
+sq keyring merge Public-Key update.pgp | sq packet dearmor --output Public-Key.new
+mv Public-Key.new Public-Key
+```
+
 ```diff
 --- dist-git/Public-Key
 +++ refreshed/Public-Key
 @@ -1,14 +1,21 @@
        Fingerprint: 45F68D54BBE23FB3039B46E59766E084FB0F43D8
--                   Invalid: No binding signature at time 2026-10-26T17:50:38Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T11:00:39Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: certification, signing
             Subkey: 5B4A38D79D4DBC571BCEB95D243A73A0ECFA4A69
                     Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
                     because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-26T17:50:38Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T11:00:39Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance: SHA1 is not considered secure
 +           UserID: Philip Hazel <Philip.Hazel@gmail.com>
             UserID: Philip Hazel <ph10@cam.ac.uk>

@@ -16,7 +16,7 @@ Why `sqv`:
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
 - dropped `BuildRequires:  gnupg2`, only needed for `%gpgverify`
-- refreshed keyring `gpgkey-F2B41200C54EFB30380C1756C565D5F9D76D583B.gpg` (see below)
+- refreshed keyring `gpgkey-F2B41200C54EFB30380C1756C565D5F9D76D583B.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
 - Release bumped (`3%{?dist}` → `4%{?dist}`) with a changelog entry
 
 ### Testing
@@ -35,6 +35,15 @@ Tested on 2026-10-26 at dist-git commit `35030463c68f` with sequoia-sqv 1.5.0-2.
 `%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
 
 - `F2B41200C54EFB30380C1756C565D5F9D76D583B`
+
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - F2B41200C54EFB30380C1756C565D5F9D76D583B \
+  | sq keyring filter --experimental --cert F2B41200C54EFB30380C1756C565D5F9D76D583B --output update.pgp
+sq keyring merge gpgkey-F2B41200C54EFB30380C1756C565D5F9D76D583B.gpg update.pgp | sq packet dearmor --output gpgkey-F2B41200C54EFB30380C1756C565D5F9D76D583B.gpg.new
+mv gpgkey-F2B41200C54EFB30380C1756C565D5F9D76D583B.gpg.new gpgkey-F2B41200C54EFB30380C1756C565D5F9D76D583B.gpg
+```
 
 What changed in the certificate (`sq inspect`):
 

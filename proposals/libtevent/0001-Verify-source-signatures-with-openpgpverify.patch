@@ -1,6 +1,6 @@
-From b0f7cd171a4a8695cb5d92b6322cb6ca289475fc Mon Sep 17 00:00:00 2001
+From 05e723cb5725f9c4a97dcb215245f38a4fdc0ed6 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:04 +0100
+Date: Tue, 27 Oct 2026 12:08:52 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -8,20 +8,33 @@ uses Sequoia sqv, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh tevent.keyring from keyservers/WKD: same certificate(s), with
-self-signatures our copy was missing. The GnuPG keybox becomes a plain
-OpenPGP keyring, which sqv can read.
+self-signatures our copy was missing; the commands are in the spec
+comment. The GnuPG keybox becomes a plain OpenPGP keyring, which sqv can
+read.
 
 Assisted-by: Claude Opus 5.5
 ---
- libtevent.spec |   3 ++-
+ libtevent.spec |   8 ++++++--
  tevent.keyring | Bin 1509 -> 10801 bytes
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/libtevent.spec b/libtevent.spec
-index b1f9ce2..74de102 100644
+index b1f9ce2..23720ae 100644
 --- a/libtevent.spec
 +++ b/libtevent.spec
-@@ -23,6 +23,7 @@ BuildRequires: libxslt
+@@ -8,7 +8,10 @@ License:        LGPL-3.0-or-later
+ URL:            http://tevent.samba.org/
+ Source0:        http://samba.org/ftp/tevent/tevent-%{version}.tar.gz
+ Source1:        http://samba.org/ftp/tevent/tevent-%{version}.tar.asc
+-# gpg2 --no-default-keyring --keyring ./tevent.keyring --recv-keys 9147A339719518EE9011BCB54793916113084025
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 9147A339719518EE9011BCB54793916113084025 | sq keyring filter --experimental --cert 9147A339719518EE9011BCB54793916113084025 --output update.pgp
++#   sq keyring merge tevent.keyring update.pgp | sq packet dearmor --output tevent.keyring.new
++#   mv tevent.keyring.new tevent.keyring
+ Source2:        tevent.keyring
+ 
+ # Patches
+@@ -23,6 +26,7 @@ BuildRequires: libxslt
  BuildRequires: make
  BuildRequires: python3-devel
  BuildRequires: python3-talloc-devel >= %{talloc_version}
@@ -29,7 +42,7 @@ index b1f9ce2..74de102 100644
  
  Provides: bundled(libreplace)
  Obsoletes: python2-tevent < 0.10.0-1
-@@ -54,7 +55,7 @@ Requires: libtevent%{?_isa} = %{version}-%{release}
+@@ -54,7 +58,7 @@ Requires: libtevent%{?_isa} = %{version}-%{release}
  Python 3 bindings for libtevent
  
  %prep

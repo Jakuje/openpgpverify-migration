@@ -1,6 +1,6 @@
-From 25c598bec3bdb317abbb454bc771e0134ac523a2 Mon Sep 17 00:00:00 2001
+From 3184407dda01d927b941c0c7be73f480dc23eae9 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:07 +0100
+Date: Tue, 27 Oct 2026 12:08:53 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,13 +8,14 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh dickey@invisible-island.net-rsa3072.asc from keyservers/WKD:
-same certificate(s), with self-signatures our copy was missing.
+same certificate(s), with self-signatures our copy was missing; the
+commands are in the spec comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  dickey@invisible-island.net-rsa3072.asc | 269 +++++++++++++++++-------
- xterm.spec                              |   4 +-
- 2 files changed, 194 insertions(+), 79 deletions(-)
+ xterm.spec                              |   8 +-
+ 2 files changed, 198 insertions(+), 79 deletions(-)
 
 diff --git a/dickey@invisible-island.net-rsa3072.asc b/dickey@invisible-island.net-rsa3072.asc
 index a44002a..cafcef9 100644
@@ -302,10 +303,10 @@ index a44002a..cafcef9 100644
 +=p/hP
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/xterm.spec b/xterm.spec
-index 1f148f7..8e39452 100644
+index 1f148f7..deb1eed 100644
 --- a/xterm.spec
 +++ b/xterm.spec
-@@ -10,7 +10,7 @@ BuildRequires: make
+@@ -10,11 +10,15 @@ BuildRequires: make
  BuildRequires: gcc pkgconfig ncurses-devel libutempter-devel
  BuildRequires: libXft-devel libXaw-devel libXext-devel desktop-file-utils
  BuildRequires: libxkbfile-devel pcre2-devel pkgconfig(libpcre2-posix)
@@ -314,7 +315,15 @@ index 1f148f7..8e39452 100644
  Recommends: xorg-x11-fonts-misc
  
  Source0: https://invisible-island.net/archives/xterm/%{name}-%{version}.tgz
-@@ -37,7 +37,7 @@ Prints a shell command for setting the appropriate environment variables to
+ Source1: https://invisible-island.net/archives/xterm/%{name}-%{version}.tgz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 19882D92DDA4C400C22C0D56CC2AF4472167BE03 | sq keyring filter --experimental --cert 19882D92DDA4C400C22C0D56CC2AF4472167BE03 --output update.pgp
++#   sq keyring merge --output dickey@invisible-island.net-rsa3072.asc.new dickey@invisible-island.net-rsa3072.asc update.pgp
++#   mv dickey@invisible-island.net-rsa3072.asc.new dickey@invisible-island.net-rsa3072.asc
+ Source2: https://invisible-island.net/public/dickey@invisible-island.net-rsa3072.asc
+ Source3: https://invisible-island.net/archives/xterm/16colors.txt
+ 
+@@ -37,7 +41,7 @@ Prints a shell command for setting the appropriate environment variables to
  indicate the current size of the window from which the command is run.
  
  %prep

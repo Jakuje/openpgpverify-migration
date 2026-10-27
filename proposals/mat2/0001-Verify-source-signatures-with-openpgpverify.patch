@@ -1,6 +1,6 @@
-From 6f24384ffa8289eb6931b669d9f101bccbb8160f Mon Sep 17 00:00:00 2001
+From ae0c9357241670a2f82318ece79e7f55aafc122c Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:37 +0100
+Date: Tue, 27 Oct 2026 12:09:05 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,13 +9,13 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh gpgkey-9FCDEE9E1A381F311EA62A7404D041E8171901CC.gpg from
 keyservers/WKD: same certificate(s), with self-signatures our copy was
-missing.
+missing; the commands are in the spec comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  ...CDEE9E1A381F311EA62A7404D041E8171901CC.gpg | Bin 3458 -> 21737 bytes
- mat2.spec                                     |   3 ++-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ mat2.spec                                     |   7 ++++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/gpgkey-9FCDEE9E1A381F311EA62A7404D041E8171901CC.gpg b/gpgkey-9FCDEE9E1A381F311EA62A7404D041E8171901CC.gpg
 index 50992ccefd12fc240f6cea2f7bd03e898e71a5db..4f37cb2a256e7e451b8ac615db37f40ab19ca4f9 100644
@@ -363,10 +363,21 @@ z+{q-rSw~SGq*Rc}n7Nb5VRE0U7T3O_^-PkC3|yQ7n?v|`n3#7m@otv);boHPWKw03
 eVB})pXJrcAd~^YmG!H8$XBuMzSn1s$9wq>E*dajx
 
 diff --git a/mat2.spec b/mat2.spec
-index 3091a68..2953f55 100644
+index 3091a68..333ee45 100644
 --- a/mat2.spec
 +++ b/mat2.spec
-@@ -39,6 +39,7 @@ BuildRequires:  poppler-glib
+@@ -12,6 +12,10 @@ URL:            https://github.com/jvoisin/mat2
+ VCS:            git:%{url}.git
+ Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
+ Source1:        %{url}/releases/download/%{version}/%{version}.tar.gz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 9FCDEE9E1A381F311EA62A7404D041E8171901CC | sq keyring filter --experimental --cert 9FCDEE9E1A381F311EA62A7404D041E8171901CC --output update.pgp
++#   sq keyring merge gpgkey-9FCDEE9E1A381F311EA62A7404D041E8171901CC.gpg update.pgp | sq packet dearmor --output gpgkey-9FCDEE9E1A381F311EA62A7404D041E8171901CC.gpg.new
++#   mv gpgkey-9FCDEE9E1A381F311EA62A7404D041E8171901CC.gpg.new gpgkey-9FCDEE9E1A381F311EA62A7404D041E8171901CC.gpg
+ Source2:        gpgkey-9FCDEE9E1A381F311EA62A7404D041E8171901CC.gpg
+ # Skip two tests that fail on Fedora.  At least one is, and possibly both are,
+ # related to the glycin changes in Fedora 43+.  One JPEG test fails because
+@@ -39,6 +43,7 @@ BuildRequires:  poppler-glib
  # Test dependencies
  BuildRequires:  ffmpeg-free
  BuildRequires:  perl-Image-ExifTool
@@ -374,7 +385,7 @@ index 3091a68..2953f55 100644
  
  Requires:       python3-%{modname} = %{version}-%{release}
  
-@@ -106,7 +107,7 @@ Requires:       python3-%{modname} = %{version}-%{release}
+@@ -106,7 +111,7 @@ Requires:       python3-%{modname} = %{version}-%{release}
  Dolphin integration for %{name}.
  
  %prep

@@ -1,6 +1,6 @@
-From 166c726cc4d1b833bd4dddba6469760be2f81513 Mon Sep 17 00:00:00 2001
+From f786d7e548e98209cff36bed3c366f4dc1acd602 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:28 +0100
+Date: Tue, 27 Oct 2026 12:09:01 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,14 +8,15 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE from keyservers/WKD:
-same certificate(s), with self-signatures our copy was missing.
+same certificate(s), with self-signatures our copy was missing; the
+commands are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE | 340 +++++++++++++++++------
- mingw-libidn2.spec                       |   9 +-
- 2 files changed, 260 insertions(+), 89 deletions(-)
+ mingw-libidn2.spec                       |  13 +-
+ 2 files changed, 264 insertions(+), 89 deletions(-)
 
 diff --git a/B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE b/B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE
 index e28c60c..14acac7 100644
@@ -371,10 +372,10 @@ index e28c60c..14acac7 100644
 +=vZ4G
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/mingw-libidn2.spec b/mingw-libidn2.spec
-index 6e98cf7..1084ebd 100644
+index 6e98cf7..01a9bb1 100644
 --- a/mingw-libidn2.spec
 +++ b/mingw-libidn2.spec
-@@ -3,7 +3,7 @@
+@@ -3,12 +3,16 @@
  Summary:        MinGW Windows Internationalized Domain Name 2008 support library
  Name:           mingw-libidn2
  Version:        2.3.8
@@ -383,7 +384,16 @@ index 6e98cf7..1084ebd 100644
  License:        (GPL-2.0-or-later OR LGPL-3.0-or-later) AND GPL-3.0-or-later
  URL:            https://www.gnu.org/software/libidn/#libidn2
  
-@@ -21,7 +21,7 @@ BuildRequires:  mingw64-filesystem >= 95
+ Source0:        https://ftp.gnu.org/gnu/libidn/libidn2-%{version}.tar.gz
+ Source1:        https://ftp.gnu.org/gnu/libidn/libidn2-%{version}.tar.gz.sig
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE | sq keyring filter --experimental --cert B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE --output update.pgp
++#   sq keyring merge --output B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE.new B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE update.pgp
++#   mv B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE.new B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE
+ Source2:        https://keys.openpgp.org/vks/v1/by-fingerprint/B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE
+ 
+ BuildArch:      noarch
+@@ -21,7 +25,7 @@ BuildRequires:  mingw64-filesystem >= 95
  BuildRequires:  mingw64-gcc
  BuildRequires:  mingw64-binutils
  
@@ -392,7 +402,7 @@ index 6e98cf7..1084ebd 100644
  BuildRequires:  gcc
  BuildRequires:  make
  BuildRequires:  pkgconfig
-@@ -73,7 +73,7 @@ Static version of the MinGW Windows IDN 2008 library.
+@@ -73,7 +77,7 @@ Static version of the MinGW Windows IDN 2008 library.
  %?mingw_debug_package
  
  %prep
@@ -401,7 +411,7 @@ index 6e98cf7..1084ebd 100644
  %setup -q -n libidn2-%{version}
  
  %build
-@@ -128,6 +128,9 @@ find $RPM_BUILD_ROOT -name "*.la" -delete
+@@ -128,6 +132,9 @@ find $RPM_BUILD_ROOT -name "*.la" -delete
  %{mingw64_libdir}/libidn2.a
  
  %changelog

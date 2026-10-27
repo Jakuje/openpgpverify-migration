@@ -42,11 +42,11 @@ REFRESHABLE = {'expired', 'sha1-cert', 'binding-after-signature', 'policy', 'unk
 FLOOD_LIMIT = 256 * 1024     # bytes; larger certificates need a closer look
 
 
-def sh(cmd, timeout=180):
+def sh(cmd, timeout=180, cwd=None):
     """Run a command; on timeout kill its whole process group (fedpkg starts
     downloaders that would otherwise keep the pipes open and block forever)."""
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
-                         start_new_session=True)
+                         start_new_session=True, cwd=cwd)
     try:
         out, err = p.communicate(timeout=timeout)
     except subprocess.TimeoutExpired:
@@ -116,65 +116,76 @@ def is_keybox(path):
     return len(head) == 12 and head[8:12] == b'KBXf'
 
 
-def export_keybox(src, dst, tmp):
-    """Export the certificates of a keybox into a binary OpenPGP keyring."""
-    home = os.path.join(tmp, 'gnupg-home')
-    os.makedirs(home, mode=0o700, exist_ok=True)
-    p = sh(['gpg', '--homedir', home, '--batch', '--no-default-keyring',
-            '--keyring', os.path.abspath(src), '--export', '--output', dst])
-    return p.returncode == 0 and os.path.exists(dst) and os.path.getsize(dst) > 0
+def recipe(name, fprs, keybox, armored):
+    """The shell commands that refresh keyring file NAME in the current
+    directory. refresh_file() runs exactly these, and the PR and the spec
+    comment quote them, so anyone can repeat the refresh."""
+    cmds = []
+    base = name
+    if keybox:
+        # gpgv reads GnuPG keyboxes, sqv does not: export to a plain keyring first.
+        base = name + '.pgp'
+        cmds.append('gpg --homedir "$(mktemp -d)" --batch --no-default-keyring '
+                    '--keyring ./%s --export --output %s' % (name, base))
+    certs = ' '.join('--cert %s' % f for f in fprs)
+    cmds.append('sq --home=none network search --output - %s \\\n'
+                '  | sq keyring filter --experimental %s --output update.pgp'
+                % (' '.join(fprs), certs))
+    if armored:
+        cmds.append('sq keyring merge --output %s.new %s update.pgp' % (name, base))
+    else:
+        cmds.append('sq keyring merge %s update.pgp | sq packet dearmor --output %s.new'
+                    % (base, name))
+    cmds.append('mv %s.new %s' % (name, name))
+    return cmds
 
 
 def refresh_file(src, dst, tmp):
-    """Refresh one keyring file. Returns a dict describing the result."""
+    """Refresh one keyring file by running recipe() in a scratch directory.
+    Returns a dict describing the result."""
+    name = os.path.basename(src)
     keybox = is_keybox(src)
-    orig = src
-    if keybox:
-        conv = os.path.join(tmp, 'from-keybox.pgp')
-        if not export_keybox(src, conv, tmp):
-            return dict(fingerprints=[], changed=False, found_via=[],
-                        size_old=os.path.getsize(src), error='keybox export failed')
-        src = conv
-    fprs = fingerprints(src)
-    info = dict(fingerprints=fprs, changed=False, found_via=[], size_old=os.path.getsize(orig),
+    run = os.path.join(tmp, 'run-' + name)
+    os.makedirs(run)
+    shutil.copy(src, os.path.join(run, name))
+    info = dict(fingerprints=[], changed=False, found_via=[], size_old=os.path.getsize(src),
                 keybox=keybox)
+    base = src
+    if keybox:
+        export = recipe(name, [], True, False)[0]
+        if sh(['bash', '-o', 'pipefail', '-c', export], cwd=run).returncode:
+            info['error'] = 'keybox export failed'
+            return info
+        base = os.path.join(tmp, 'from-keybox.pgp')
+        shutil.copy(os.path.join(run, name + '.pgp'), base)
+    fprs = fingerprints(base)
+    info['fingerprints'] = fprs
     if not fprs:
-        info['error'] = 'no certificates found in keyring (keybox or malformed?)'
-        return info
-    fetched = []
-    for fpr in fprs:
-        raw = os.path.join(tmp, fpr + '.search.pgp')
-        p = sh(['sq', '--home=none', '--batch', 'network', 'search', '--output', raw, fpr],
-               timeout=300)
-        info['found_via'] += sorted(set(re.findall(r'found via: (.*)', p.stdout + p.stderr)))
-        if not os.path.exists(raw):
-            continue
-        # Keep only the certificate we asked for, never anything else: split
-        # the result into one file per certificate and pick the exact match.
-        parts = os.path.join(tmp, 'parts-' + fpr)
-        os.makedirs(parts)
-        sh(['sq', 'keyring', 'split', '--prefix', os.path.join(parts, 'c-'), raw])
-        for f in sorted(os.listdir(parts)):
-            if fingerprints(os.path.join(parts, f)) == [fpr]:
-                fetched.append(os.path.join(parts, f))
-                break
-    if not fetched and keybox:
-        # Nothing newer, but the converted keyring alone may be enough.
-        fetched = [src]
-    elif not fetched:
-        info['error'] = 'no updates found on keyservers/WKD'
-        return info
-    merged = os.path.join(tmp, 'merged.pgp')
-    p = sh(['sq', '--home=none', 'keyring', 'merge', '--output', merged, src] + fetched)
-    if p.returncode or sorted(fingerprints(merged)) != sorted(fprs):
-        info['error'] = 'merge failed or changed the set of certificates'
+        info['error'] = 'no certificates found in keyring (malformed?)'
         return info
     armored = open(src, 'rb').read(64).lstrip().startswith(b'-----BEGIN PGP')
-    if armored:
-        shutil.copy(merged, dst)
-    elif sh(['sq', 'packet', 'dearmor', '--output', dst, merged]).returncode:
-        info['error'] = 'dearmor failed'
+    cmds = recipe(name, fprs, keybox, armored)
+    info['commands'] = cmds
+    # For the spec comment: the next refresh starts from the plain keyring.
+    info['spec_commands'] = recipe(name, fprs, False, armored)
+    for c in cmds[1 if keybox else 0:]:
+        p = sh(['bash', '-o', 'pipefail', '-c', c], cwd=run, timeout=600)
+        info['found_via'] += sorted(set(re.findall(r'found via: (.*)', p.stdout + p.stderr)))
+        if p.returncode:
+            if 'network search' in c and not keybox:
+                info['error'] = 'no updates found on keyservers/WKD'
+                return info
+            if 'network search' in c:
+                # Nothing newer, but the exported keyring alone may be enough.
+                open(os.path.join(run, 'update.pgp'), 'wb').close()
+                continue
+            info['error'] = 'refresh command failed: %s: %s' % (c, (p.stderr or '').strip()[-300:])
+            return info
+    out = os.path.join(run, name)
+    if sorted(fingerprints(out)) != sorted(fprs):
+        info['error'] = 'merge changed the set of certificates'
         return info
+    shutil.copy(out, dst)
     info['size_new'] = os.path.getsize(dst)
     # The approval is bound to exactly this file (checked by phase1.py).
     info['sha256_new'] = hashlib.sha256(open(dst, 'rb').read()).hexdigest()
@@ -222,6 +233,9 @@ def propose(pkg, rec):
                    '- certificates: %s' % ', '.join(info['fingerprints']),
                    '- found via: %s' % ('; '.join(info['found_via']) or '-'),
                    '- size: %s → %s bytes' % (info['size_old'], info.get('size_new', '-'))]
+        if info.get('commands'):
+            review += ['', 'Commands (run in a copy of dist-git):', '', '```'] + \
+                info['commands'] + ['```']
         for key in ('error', 'warning'):
             if info.get(key):
                 review.append('- **%s: %s**' % (key, info[key]))

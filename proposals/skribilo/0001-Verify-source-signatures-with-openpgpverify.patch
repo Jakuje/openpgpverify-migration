@@ -1,6 +1,6 @@
-From 2228df23ddeb257a86224a8eb6d8d2758359e3db Mon Sep 17 00:00:00 2001
+From faec764a5a22a87f55910cbb2f538255a3d2ced7 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:33 +0100
+Date: Tue, 27 Oct 2026 12:09:03 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,14 +8,15 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh arunisaac.pub from keyservers/WKD: same certificate(s), with
-self-signatures our copy was missing.
+self-signatures our copy was missing; the commands are in the spec
+comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  arunisaac.pub | 257 +++++++++++++++++++++++++++++++++++++-------------
- skribilo.spec |   8 +-
- 2 files changed, 195 insertions(+), 70 deletions(-)
+ skribilo.spec |  12 ++-
+ 2 files changed, 199 insertions(+), 70 deletions(-)
 
 diff --git a/arunisaac.pub b/arunisaac.pub
 index f793ba6..cadf966 100644
@@ -287,7 +288,7 @@ index f793ba6..cadf966 100644
 +=hgaK
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/skribilo.spec b/skribilo.spec
-index b9013eb..d81f988 100644
+index b9013eb..5ca8bb3 100644
 --- a/skribilo.spec
 +++ b/skribilo.spec
 @@ -5,7 +5,7 @@
@@ -299,7 +300,18 @@ index b9013eb..d81f988 100644
  Summary:      A free document production tool
  
  License:      GPL-3.0-or-later
-@@ -29,6 +29,7 @@ BuildRequires:  texlive-collection-context
+@@ -13,6 +13,10 @@ URL:          https://www.nongnu.org/%{name}
+ Source0:      https://download.savannah.nongnu.org/releases/%{name}/%{name}-%{version}.tar.gz
+ Source1:      https://download.savannah.nongnu.org/releases/%{name}/%{name}-%{version}.tar.gz.sig
+ # https://systemreboot.net/about/arunisaac.pub
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 7F730343F2F09F3C77BF79D32E25EE8B61802BB3 | sq keyring filter --experimental --cert 7F730343F2F09F3C77BF79D32E25EE8B61802BB3 --output update.pgp
++#   sq keyring merge --output arunisaac.pub.new arunisaac.pub update.pgp
++#   mv arunisaac.pub.new arunisaac.pub
+ Source2:      arunisaac.pub
+ 
+ BuildRequires:  emacs
+@@ -29,6 +33,7 @@ BuildRequires:  texlive-collection-context
  BuildRequires:  glibc-common
  # needed to check signing
  BuildRequires:  gnupg2
@@ -307,7 +319,7 @@ index b9013eb..d81f988 100644
  Requires:       guile30
  Requires:       lomt-junction-fonts
  Requires:       linux-libertine-biolinum-fonts
-@@ -66,7 +67,7 @@ Configuration files for writing Skribilo documents using
+@@ -66,7 +71,7 @@ Configuration files for writing Skribilo documents using
  Emacs.
  
  %prep
@@ -316,7 +328,7 @@ index b9013eb..d81f988 100644
  %autosetup
  
  iconv -f ISO-8859-1 -t UTF-8 ChangeLog.Skribe > ChangeLog.Skribe.tmp
-@@ -195,6 +196,9 @@ make check
+@@ -195,6 +200,9 @@ make check
  %{_datadir}/emacs/site-lisp/skribe.el
  
  %changelog

@@ -1,6 +1,6 @@
-From 22cb688e66bc629b4faa69395ba92c86d32350f3 Mon Sep 17 00:00:00 2001
+From 76cbe6f7dfa40577f8fe5f681ad1dfc6cd311b72 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:06 +0100
+Date: Tue, 27 Oct 2026 12:08:52 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -8,13 +8,14 @@ uses Sequoia sqv, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh samba-pubkey_AA99442FB680B620.gpg from keyservers/WKD: same
-certificate(s), with self-signatures our copy was missing.
+certificate(s), with self-signatures our copy was missing; the commands
+are in the spec comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  samba-pubkey_AA99442FB680B620.gpg | Bin 2290 -> 7105 bytes
- samba.spec                        |   3 ++-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ samba.spec                        |   7 ++++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/samba-pubkey_AA99442FB680B620.gpg b/samba-pubkey_AA99442FB680B620.gpg
 index c901409c92a9ccaa3f29dca796283d35ba462c4c..8ff4ddcaed113880af62f9f236fcdec123463fa5 100644
@@ -114,10 +115,21 @@ zcmX?T{z;H|CKK;QW?m-7Et3VAteHERLN>4F4q;;6$;7+4l8={(vy;h&MS_uwL2dFz
 LZu!ltB*mEkpGghR
 
 diff --git a/samba.spec b/samba.spec
-index e8c998f..0745b11 100644
+index e8c998f..19a4c09 100644
 --- a/samba.spec
 +++ b/samba.spec
-@@ -395,6 +395,7 @@ BuildRequires: cepces-certmonger >= 0.3.8
+@@ -226,6 +226,10 @@ URL:            https://www.samba.org
+ # This is a xz recompressed file of https://ftp.samba.org/pub/samba/samba-%%{version}%%{pre_release}.tar.gz
+ Source0:        https://ftp.samba.org/pub/samba/samba-%{version}%{pre_release}.tar.gz#/samba-%{version}%{pre_release}.tar.xz
+ Source1:        https://ftp.samba.org/pub/samba/samba-%{version}%{pre_release}.tar.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 81F5E2832BD2545A1897B713AA99442FB680B620 | sq keyring filter --experimental --cert 81F5E2832BD2545A1897B713AA99442FB680B620 --output update.pgp
++#   sq keyring merge samba-pubkey_AA99442FB680B620.gpg update.pgp | sq packet dearmor --output samba-pubkey_AA99442FB680B620.gpg.new
++#   mv samba-pubkey_AA99442FB680B620.gpg.new samba-pubkey_AA99442FB680B620.gpg
+ Source2:        samba-pubkey_AA99442FB680B620.gpg
+ 
+ # Red Hat specific replacement-files
+@@ -395,6 +399,7 @@ BuildRequires: cepces-certmonger >= 0.3.8
  BuildRequires: perl(ExtUtils::MakeMaker)
  BuildRequires: perl(FindBin)
  BuildRequires: perl(Parse::Yapp)
@@ -125,7 +137,7 @@ index e8c998f..0745b11 100644
  
  %if %{without includelibs}
  BuildRequires: libtalloc-devel >= %{talloc_version}
-@@ -1362,7 +1363,7 @@ Python bindings for the LDB library
+@@ -1362,7 +1367,7 @@ Python bindings for the LDB library
  
  %prep
  %if 0%{?fedora} || 0%{?rhel} >= 9

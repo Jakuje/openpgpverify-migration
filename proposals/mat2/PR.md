@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `gpgkey-9FCDEE9E1A381F311EA62A7404D041E8171901CC.gpg` (see below)
+- refreshed keyring `gpgkey-9FCDEE9E1A381F311EA62A7404D041E8171901CC.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
 
 ### Testing
 
@@ -33,6 +33,15 @@ Tested on 2026-10-26 at dist-git commit `70d9a038b8ed` with sequoia-sqv 1.5.0-2.
 `%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.mailvelope.com, hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
 
 - `9FCDEE9E1A381F311EA62A7404D041E8171901CC`
+
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - 9FCDEE9E1A381F311EA62A7404D041E8171901CC \
+  | sq keyring filter --experimental --cert 9FCDEE9E1A381F311EA62A7404D041E8171901CC --output update.pgp
+sq keyring merge gpgkey-9FCDEE9E1A381F311EA62A7404D041E8171901CC.gpg update.pgp | sq packet dearmor --output gpgkey-9FCDEE9E1A381F311EA62A7404D041E8171901CC.gpg.new
+mv gpgkey-9FCDEE9E1A381F311EA62A7404D041E8171901CC.gpg.new gpgkey-9FCDEE9E1A381F311EA62A7404D041E8171901CC.gpg
+```
 
 What changed in the certificate (`sq inspect`):
 
@@ -53,7 +62,7 @@ What changed in the certificate (`sq inspect`):
             UserID: Julien (jvoisin) Voisin <julien.voisin@dustri.org>
             UserID: Julien (jvoisin) Voisin <jvoisin@openmailbox.net>
                     Revoked:
--                   Invalid: No binding signature at time 2026-10-26T17:48:02Z
+-                   Invalid: No binding signature at time 2026-10-27T10:59:29Z
             UserID: Julien (jvoisin) Voisin <jvoisin@riseup.net>
  self-signatures CertificationRevocation: 2016-08-17
 -self-signatures PositiveCertification: 2015-07-25, 2015-08-02

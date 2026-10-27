@@ -16,7 +16,7 @@ Why `sqv`:
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
 - dropped `BuildRequires:  gpgverify`, only needed for `%gpgverify`
-- refreshed keyring `KEYS` (see below)
+- refreshed keyring `KEYS` (see below); the comment above its `Source` line now shows the commands for refreshing it
 - Release bumped (`7%{?dist}` → `8%{?dist}`) with a changelog entry
 
 ### Testing
@@ -113,6 +113,15 @@ Tested on 2026-10-22 at dist-git commit `bd4d37fa0422` with sequoia-sqv 1.5.0-2.
 - `347C77169CDF57191103E81E4A0BCD23ADE37005`
 - `B91AB7D2121DC6B0A61AA182D7742D58455ECC7C`
 
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - 849FB4F1AF3D17CDE4DE5E710704ADDF1D821345 AE9E53FC28FF2AB1012273D0BF1518E0160788A2 341EE4BF9F5CFFFF954201660A3939A4C560DD8B FB11D4BB7B244678337AAD8BC7BF26D0BB617866 744A72C49D4B7C81F736956580CE7E5DC9725F3B C739CE4075D9F0F0DED13A7D39BE51A1084C9113 DA5DDD55E69DE580FE985E76E136088A1824BDC1 F4C53F3061834D885726D258AC2D56EAF0E309FF 063F1F7ADAF125DDE45DAC76CC6CA38F5249885E 9B6FC4B4C0025619D73119AE298E4C7A93CC521B 03E1A98442361AFAD93F4BDF3B5B9D09699A35EB 791641FC7EA94BEC25327F363402A74A27CD9F92 B920D295BF0E61CB4CF0896C33CD6733AF5EC452 B59B67FD7904984367F931800818D9D68FB67BAC 998AF0E2B935996F5CEBD56B9B1FDA9F3C062231 8FE7A0B24B77E888EF5A5CE8ABC8EE39BB550746 935FAB6496C76F2361F2ECC3FA383AABE50BC813 13E97013BB5FAEE485B351F30A335AF8B3A2D3B1 1A4E7F0CF4DAC878B6284F552B7876099C0EFF85 34D924503BAF25291978F7C54F9BDB78DB596386 6E13156C0EE653F0B984663AB95BBD3FA43C4492 D8966C2957783E291CC42226E181870DC625BAFB 853939BE1AA9AC7C1F55B990D2A765937BA507E8 190D5A957FF22273E601F7A7C92C5FEC70161C62 F254B35617DC255D9344BCFA873A8E86B4372146 429E6335123A642267EF0CDB8F0FABD30F353251 7350B3B066E17ED725435E940B7B8BED064C851C 1BB590FA3FD9E469D01C2FE2C2D879C8B0874707 8537C08B6339A662D3B13D0F8FE7CB51365A46EF 54EE8E5039C6E53941F4ED2BA3F9CCC081C4177D 9FFED7A118D45A44E4A1E47130E6F80434A72A7F 42F9D2F7818D068F1460F4A8E8579C183571506F 364303B88A05E219E49E5C25A8AD2A7E9A25CE21 6C4982557FD21F69E64E08863B58205B9D7013A9 82F833963889D7ED06F1E4DC6525FD70CC303655 C1DD8D2231911E96B7E31D867CADB77239332BA6 BA926F64CA647B6D853A38672E2010F8A7FF4A41 A0629D8FAC2B502AE61DF7C03E9B8F917F3ACFC4 C827C931B458D061C4570B6B8C0AEE41CDA187E9 042B29E928995B9DB963C636C7CA19B7B620D787 CFAB13BBD123CD35FB42063A99A03029DDFA199E 794C7B5399626BC7233FB941CF277F2D2CF0CC82 47063E8BA7A6450E4A52E7AE466CAED6E0747D50 B99C757B262859B4ABADD09D698DF224589628E0 9C1FC83FF3B877CDE53B337C525875B36BFC416A DA7A1BB85B19E4FB05073431205C8673DC742C7C 31FAE244A81D64507B47182E1B2718089CE964B8 B02137D875D833D9B23392ECAE5A7FB608A0221C 503BFAAE645286D11EC18181F704B943ED330E1B 7C9CFAF9C409737872FE044AF397D776F65C0178 6BDACA2C0493CCA133B372D09C4F7E9D98B1CC53 C413F9B587070392431F3F41EC61DFCD9B758417 C345986F0FD384669C5919E6A5F094FD3961DF05 6A814B1F869C2BBEAB7CB7271A2A1C94BDE89688 D0D78111AEDCC6CAE1799420CEBA9A9B905C7874 3C52836F134ED0C6983F73F200ECB4C4ED5885AC 522CA055B326A636D833EF6A0551FD3684FCBBB7 B6470EDC6EA51DA6B59B4A3DEE2EBD8956CACE56 906E5E684729C006267DDD4B105DE36038D8C6C5 B9780824E07F1C42456595F176C898A0C6C9B113 C870735180244047DA600FDEC171A58398EEC284 D53C5C58A3E173D18AEDF6E993450DF2DF9A3FA3 FA77DCFEF2EE6EB2DEBEDD2C012579464D01C06A EC8B014445289C26B7BD7A533632F7404A7EFFAF BBE7232D7991050B54C8EA0ADC08637CA615D22C 32118CF76C9EC5D918E54967CA80D1F0EB6CA4BA 82C9EC0E52C47A936A849E0113D979595E6D01E1 0CCD663FA4BA70A5053A9C8E631E278529B5CB5F 84789D24DF77A32433CE1F079EB80E92EB2135B1 1083EA117629CBDBF77FD6060E593F2ED433A5AD EA23DB1360D9029481E7F2EFECDFEA3CB4493B94 2BE13D052E9AA567D657D9791FD507154FB9BA39 29BEA2A645F2D6CED7FB12E02B172E3E156466E8 88BE34F94BDB2B5357044E2E3A387D43964143E3 DC98224C6421A7A5BB87F346ED2378CD09A08CDE B6D7E70520C14104A03DDEBAF202CB82961C9460 347C77169CDF57191103E81E4A0BCD23ADE37005 B91AB7D2121DC6B0A61AA182D7742D58455ECC7C \
+  | sq keyring filter --experimental --cert 849FB4F1AF3D17CDE4DE5E710704ADDF1D821345 --cert AE9E53FC28FF2AB1012273D0BF1518E0160788A2 --cert 341EE4BF9F5CFFFF954201660A3939A4C560DD8B --cert FB11D4BB7B244678337AAD8BC7BF26D0BB617866 --cert 744A72C49D4B7C81F736956580CE7E5DC9725F3B --cert C739CE4075D9F0F0DED13A7D39BE51A1084C9113 --cert DA5DDD55E69DE580FE985E76E136088A1824BDC1 --cert F4C53F3061834D885726D258AC2D56EAF0E309FF --cert 063F1F7ADAF125DDE45DAC76CC6CA38F5249885E --cert 9B6FC4B4C0025619D73119AE298E4C7A93CC521B --cert 03E1A98442361AFAD93F4BDF3B5B9D09699A35EB --cert 791641FC7EA94BEC25327F363402A74A27CD9F92 --cert B920D295BF0E61CB4CF0896C33CD6733AF5EC452 --cert B59B67FD7904984367F931800818D9D68FB67BAC --cert 998AF0E2B935996F5CEBD56B9B1FDA9F3C062231 --cert 8FE7A0B24B77E888EF5A5CE8ABC8EE39BB550746 --cert 935FAB6496C76F2361F2ECC3FA383AABE50BC813 --cert 13E97013BB5FAEE485B351F30A335AF8B3A2D3B1 --cert 1A4E7F0CF4DAC878B6284F552B7876099C0EFF85 --cert 34D924503BAF25291978F7C54F9BDB78DB596386 --cert 6E13156C0EE653F0B984663AB95BBD3FA43C4492 --cert D8966C2957783E291CC42226E181870DC625BAFB --cert 853939BE1AA9AC7C1F55B990D2A765937BA507E8 --cert 190D5A957FF22273E601F7A7C92C5FEC70161C62 --cert F254B35617DC255D9344BCFA873A8E86B4372146 --cert 429E6335123A642267EF0CDB8F0FABD30F353251 --cert 7350B3B066E17ED725435E940B7B8BED064C851C --cert 1BB590FA3FD9E469D01C2FE2C2D879C8B0874707 --cert 8537C08B6339A662D3B13D0F8FE7CB51365A46EF --cert 54EE8E5039C6E53941F4ED2BA3F9CCC081C4177D --cert 9FFED7A118D45A44E4A1E47130E6F80434A72A7F --cert 42F9D2F7818D068F1460F4A8E8579C183571506F --cert 364303B88A05E219E49E5C25A8AD2A7E9A25CE21 --cert 6C4982557FD21F69E64E08863B58205B9D7013A9 --cert 82F833963889D7ED06F1E4DC6525FD70CC303655 --cert C1DD8D2231911E96B7E31D867CADB77239332BA6 --cert BA926F64CA647B6D853A38672E2010F8A7FF4A41 --cert A0629D8FAC2B502AE61DF7C03E9B8F917F3ACFC4 --cert C827C931B458D061C4570B6B8C0AEE41CDA187E9 --cert 042B29E928995B9DB963C636C7CA19B7B620D787 --cert CFAB13BBD123CD35FB42063A99A03029DDFA199E --cert 794C7B5399626BC7233FB941CF277F2D2CF0CC82 --cert 47063E8BA7A6450E4A52E7AE466CAED6E0747D50 --cert B99C757B262859B4ABADD09D698DF224589628E0 --cert 9C1FC83FF3B877CDE53B337C525875B36BFC416A --cert DA7A1BB85B19E4FB05073431205C8673DC742C7C --cert 31FAE244A81D64507B47182E1B2718089CE964B8 --cert B02137D875D833D9B23392ECAE5A7FB608A0221C --cert 503BFAAE645286D11EC18181F704B943ED330E1B --cert 7C9CFAF9C409737872FE044AF397D776F65C0178 --cert 6BDACA2C0493CCA133B372D09C4F7E9D98B1CC53 --cert C413F9B587070392431F3F41EC61DFCD9B758417 --cert C345986F0FD384669C5919E6A5F094FD3961DF05 --cert 6A814B1F869C2BBEAB7CB7271A2A1C94BDE89688 --cert D0D78111AEDCC6CAE1799420CEBA9A9B905C7874 --cert 3C52836F134ED0C6983F73F200ECB4C4ED5885AC --cert 522CA055B326A636D833EF6A0551FD3684FCBBB7 --cert B6470EDC6EA51DA6B59B4A3DEE2EBD8956CACE56 --cert 906E5E684729C006267DDD4B105DE36038D8C6C5 --cert B9780824E07F1C42456595F176C898A0C6C9B113 --cert C870735180244047DA600FDEC171A58398EEC284 --cert D53C5C58A3E173D18AEDF6E993450DF2DF9A3FA3 --cert FA77DCFEF2EE6EB2DEBEDD2C012579464D01C06A --cert EC8B014445289C26B7BD7A533632F7404A7EFFAF --cert BBE7232D7991050B54C8EA0ADC08637CA615D22C --cert 32118CF76C9EC5D918E54967CA80D1F0EB6CA4BA --cert 82C9EC0E52C47A936A849E0113D979595E6D01E1 --cert 0CCD663FA4BA70A5053A9C8E631E278529B5CB5F --cert 84789D24DF77A32433CE1F079EB80E92EB2135B1 --cert 1083EA117629CBDBF77FD6060E593F2ED433A5AD --cert EA23DB1360D9029481E7F2EFECDFEA3CB4493B94 --cert 2BE13D052E9AA567D657D9791FD507154FB9BA39 --cert 29BEA2A645F2D6CED7FB12E02B172E3E156466E8 --cert 88BE34F94BDB2B5357044E2E3A387D43964143E3 --cert DC98224C6421A7A5BB87F346ED2378CD09A08CDE --cert B6D7E70520C14104A03DDEBAF202CB82961C9460 --cert 347C77169CDF57191103E81E4A0BCD23ADE37005 --cert B91AB7D2121DC6B0A61AA182D7742D58455ECC7C --output update.pgp
+sq keyring merge KEYS update.pgp | sq packet dearmor --output KEYS.new
+mv KEYS.new KEYS
+```
+
 What changed in the certificate (`sq inspect`):
 
 ```diff
@@ -143,12 +152,12 @@ What changed in the certificate (`sq inspect`):
 -        Key flags: transport encryption, data-at-rest encryption
 -           UserID: Karl Heinz Marbaise (Apache Key) <khmarbaise@apache.org>
        Fingerprint: 341EE4BF9F5CFFFF954201660A3939A4C560DD8B
-                    Invalid: No binding signature at time 2026-10-23T08:18:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+                    Invalid: No binding signature at time 2026-10-27T10:59:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
             Subkey: 9F6F4BE85055C27E51B773275614E7F3CAD6BDC5
 @@ -58,6 +49,12 @@
                     Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
                     because: SHA1 is not considered secure
-                    Invalid: primary key: No binding signature at time 2026-10-23T08:18:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+                    Invalid: primary key: No binding signature at time 2026-10-27T10:59:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +           UserID: Brett Porter (DevZuz Email Key) <brett.porter@devzuz.com>
 +                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
 +                   because: SHA1 is not considered secure
@@ -162,25 +171,25 @@ What changed in the certificate (`sq inspect`):
                     Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
                     because: SHA1 is not considered secure
        Fingerprint: 9B6FC4B4C0025619D73119AE298E4C7A93CC521B
--                   Invalid: No binding signature at time 2026-10-23T08:18:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T10:59:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: Policy rejected asymmetric algorithm: DSA1024 is not considered secure
             Subkey: F67F8403E275CC9A0B93EC06027938C56DC661B6
                     Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
                     because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-23T08:18:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T10:59:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: primary key: Policy rejected asymmetric algorithm, because DSA1024 is not considered secure
             UserID: Arnaud Heritier (aheritier) <aheritier@apache.org>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
        Fingerprint: 03E1A98442361AFAD93F4BDF3B5B9D09699A35EB
--                   Invalid: No binding signature at time 2026-10-23T08:18:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T10:59:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: Policy rejected asymmetric algorithm: DSA1024 is not considered secure
 +           Subkey: 97B7F1EC8072E27940A2E10844966B1E0849841D
 +                   Invalid: primary key: Policy rejected asymmetric algorithm, because DSA1024 is not considered secure
             Subkey: 9D139EB8EA778A66B4E8B4B35DFEF3B2B5B9AD88
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-23T08:18:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T10:59:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: primary key: Policy rejected asymmetric algorithm, because DSA1024 is not considered secure
             UserID: Arnaud Heritier (CODE SIGNING KEY) <aheritier@apache.org>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
@@ -194,7 +203,7 @@ What changed in the certificate (`sq inspect`):
 +           UserID: Arnaud Heritier (CODE SIGNING KEY) <arnaud@aheritier.net>
 +           UserID: Arnaud Héritier (CODE SIGNING KEY) <arnaud.heritier@doctolib.com>
        Fingerprint: 791641FC7EA94BEC25327F363402A74A27CD9F92
-                    Invalid: No binding signature at time 2026-10-23T08:18:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+                    Invalid: No binding signature at time 2026-10-27T10:59:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
             Subkey: FB9B62A190B7469810D7209A3ED9650052DCFC6D
 @@ -153,6 +154,9 @@
             UserID: J. Daniel Kulp <dkulp@apache.org>
@@ -204,19 +213,19 @@ What changed in the certificate (`sq inspect`):
 +                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
 +                   because: SHA1 is not considered secure
        Fingerprint: 935FAB6496C76F2361F2ECC3FA383AABE50BC813
-                    Invalid: No binding signature at time 2026-10-23T08:18:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+                    Invalid: No binding signature at time 2026-10-27T10:59:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
             Subkey: 412477910C218AD34595FCFD31D3322886B5AB5B
 @@ -199,17 +203,26 @@
                     Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
                     because: SHA1 is not considered secure
        Fingerprint: 6E13156C0EE653F0B984663AB95BBD3FA43C4492
--                   Invalid: No binding signature at time 2026-10-23T08:18:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T10:59:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Revoked:
 +                   Invalid: Policy rejected asymmetric algorithm: DSA1024 is not considered secure
             Subkey: 7AB8E0688A9783F647467E8D520FC47ED23D6048
                     Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
                     because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-23T08:18:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T10:59:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: primary key: Policy rejected asymmetric algorithm, because DSA1024 is not considered secure
             UserID: Carlos Sanchez <carlos.sanchez@mergere.com>
                     Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
@@ -233,7 +242,7 @@ What changed in the certificate (`sq inspect`):
 +                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
 +                   because: SHA1 is not considered secure
        Fingerprint: D8966C2957783E291CC42226E181870DC625BAFB
-                    Invalid: No binding signature at time 2026-10-23T08:18:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+                    Invalid: No binding signature at time 2026-10-27T10:59:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
             Subkey: B723410F0FE1863F8E05356EAEDCE7646F9E6A5F
 @@ -246,6 +259,9 @@
             UserID: Olivier Lamy <olamy@apache.org>
@@ -243,12 +252,12 @@ What changed in the certificate (`sq inspect`):
 +                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
 +                   because: SHA1 is not considered secure
        Fingerprint: 429E6335123A642267EF0CDB8F0FABD30F353251
-                    Invalid: No binding signature at time 2026-10-23T08:18:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+                    Invalid: No binding signature at time 2026-10-27T10:59:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
             Subkey: 6F93E4CF7760CEAAD0378F851B4B61DD218046C8
 @@ -297,6 +313,9 @@
                     Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
                     because: SHA1 is not considered secure
-                    Invalid: primary key: No binding signature at time 2026-10-23T08:18:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+                    Invalid: primary key: No binding signature at time 2026-10-27T10:59:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +           UserID: John Casey (Apache Maven Committer, PMC Member) <jdcasey@apache.org>
 +                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
 +                   because: SHA1 is not considered secure
@@ -259,12 +268,12 @@ What changed in the certificate (`sq inspect`):
                     Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
                     because: SHA1 is not considered secure
        Fingerprint: 042B29E928995B9DB963C636C7CA19B7B620D787
--                   Invalid: No binding signature at time 2026-10-23T08:18:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T10:59:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: Policy rejected asymmetric algorithm: DSA1024 is not considered secure
             Subkey: E520FE9C1266056D0B41F15D7679164AA2590985
                     Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
                     because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-23T08:18:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T10:59:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: primary key: Policy rejected asymmetric algorithm, because DSA1024 is not considered secure
             UserID: Stephen Connolly <stephenc@apache.org>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
@@ -283,26 +292,26 @@ What changed in the certificate (`sq inspect`):
             UserID: Kristian Rosenvold <krosenvold@apache.org>
 +           UserID: keybase.io/krosenvold <krosenvold@keybase.io>
        Fingerprint: B99C757B262859B4ABADD09D698DF224589628E0
-                    Invalid: No binding signature at time 2026-10-23T08:18:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+                    Invalid: No binding signature at time 2026-10-27T10:59:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
             Subkey: A5E31994E7C939EF6DD301F942AC8E888C26E6C7
 @@ -406,14 +425,16 @@
                     Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
                     because: SHA1 is not considered secure
        Fingerprint: 9C1FC83FF3B877CDE53B337C525875B36BFC416A
--                   Invalid: No binding signature at time 2026-10-23T08:18:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T10:59:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Revoked:
 +                   Invalid: Policy rejected asymmetric algorithm: DSA1024 is not considered secure
             Subkey: 46F6305FFB3582760FB3B54619C460C4AD11985E
                     Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
                     because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-23T08:18:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T10:59:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: primary key: Policy rejected asymmetric algorithm, because DSA1024 is not considered secure
             UserID: Brian Demers <Brian.Demers@gmail.com>
                     Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
                     because: SHA1 is not considered secure
 +           UserID: Brian Demers <bdemers@apache.org>
        Fingerprint: DA7A1BB85B19E4FB05073431205C8673DC742C7C
-                    Invalid: No binding signature at time 2026-10-23T08:18:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+                    Invalid: No binding signature at time 2026-10-27T10:59:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
             Subkey: 1041C443FFBB28D6DD2A012AAD9CEBA0521B1945
 @@ -467,14 +488,13 @@
                     Invalid: primary key: Policy rejected asymmetric algorithm, because DSA2048 is not considered secure
@@ -321,7 +330,7 @@ What changed in the certificate (`sq inspect`):
 +           UserID: Michael Osipov <michaelo@FreeBSD.org>
             UserID: Michael Osipov <michaelo@apache.org>
        Fingerprint: D0D78111AEDCC6CAE1799420CEBA9A9B905C7874
-                    Invalid: No binding signature at time 2026-10-23T08:18:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+                    Invalid: No binding signature at time 2026-10-27T10:59:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 @@ -539,21 +559,19 @@
                     Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
                     because: SHA1 is not considered secure
@@ -369,7 +378,7 @@ What changed in the certificate (`sq inspect`):
          Key flags: certification, signing
             UserID: Benjamin Marwell <bmarwell@apache.org>
        Fingerprint: EA23DB1360D9029481E7F2EFECDFEA3CB4493B94
--                   Invalid: No binding signature at time 2026-10-23T08:18:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T10:59:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: Policy rejected asymmetric algorithm: DSA1024 is not considered secure
 +           Subkey: 0181A4828FA27B6BE6F1F5A68611CD28F472E006
 +                   Invalid: primary key: Policy rejected asymmetric algorithm, because DSA1024 is not considered secure
@@ -380,38 +389,38 @@ What changed in the certificate (`sq inspect`):
             Subkey: 6C609AC0221ACA191AFCA09C3BD211F725778C36
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-23T08:18:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T10:59:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: primary key: Policy rejected asymmetric algorithm, because DSA1024 is not considered secure
             UserID: Guillaume Nodet <gnodet@apache.org>
                     Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
                     because: SHA1 is not considered secure
 +           UserID: Guillaume Nodet <gnodet@gmail.com>
        Fingerprint: 2BE13D052E9AA567D657D9791FD507154FB9BA39
-                    Invalid: No binding signature at time 2026-10-23T08:18:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+                    Invalid: No binding signature at time 2026-10-27T10:59:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
             Subkey: F3D15B8FF9902805DE4BE6B18DC6F3D0ABDBD017
 @@ -650,26 +671,13 @@
             Subkey: 4CE30E0F503B75F7B0D27169937F1470B7330556
          Key flags: transport encryption, data-at-rest encryption
             UserID: Guillaume Nodet (CODE SIGNING KEY) <gnodet@gmail.com>
 -      Fingerprint: EA23DB1360D9029481E7F2EFECDFEA3CB4493B94
--                   Invalid: No binding signature at time 2026-10-23T08:18:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T10:59:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 -           Subkey: 073F7A9345756F3B40CDB99E6C70A3B7599C5736
--                   Invalid: primary key: No binding signature at time 2026-10-23T08:18:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T10:59:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 -           Subkey: 6C609AC0221ACA191AFCA09C3BD211F725778C36
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-23T08:18:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T10:59:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 -           UserID: Guillaume Nodet <gnodet@apache.org>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
        Fingerprint: B6D7E70520C14104A03DDEBAF202CB82961C9460
--                   Invalid: No binding signature at time 2026-10-23T08:18:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T10:59:42Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: Policy rejected asymmetric algorithm: DSA1024 is not considered secure
             Subkey: 2CBA2303B1087FED64021D522FCAF8C739B0D39A
--                   Invalid: primary key: No binding signature at time 2026-10-23T08:18:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T10:59:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: primary key: Policy rejected asymmetric algorithm, because DSA1024 is not considered secure
             Subkey: 4DB3EAC62DF69C3B57A34F9755AA83B92293ECCD
--                   Invalid: primary key: No binding signature at time 2026-10-23T08:18:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T10:59:42Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: primary key: Policy rejected asymmetric algorithm, because DSA1024 is not considered secure
             UserID: Henning P. Schmiedehausen (CODE SIGNING KEY) <henning@apache.org>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance

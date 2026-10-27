@@ -1,6 +1,6 @@
-From 0524bca92ee64c404dde427a5f11f94e37badf0b Mon Sep 17 00:00:00 2001
+From 555f14881886335811e9544223801f4693a4308e Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:13 +0100
+Date: Tue, 27 Oct 2026 12:08:55 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -8,16 +8,17 @@ uses Sequoia sqv, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh victortoso-E37A484F.keyring from keyservers/WKD: same
-certificate(s), with self-signatures our copy was missing.
+certificate(s), with self-signatures our copy was missing; the commands
+are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- mingw-usbredir.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ mingw-usbredir.spec | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/mingw-usbredir.spec b/mingw-usbredir.spec
-index 0a92f12..50ce687 100644
+index 0a92f12..bbd74ef 100644
 --- a/mingw-usbredir.spec
 +++ b/mingw-usbredir.spec
 @@ -2,7 +2,7 @@
@@ -29,7 +30,18 @@ index 0a92f12..50ce687 100644
  Summary:        MinGW USB network redirection protocol libraries
  
  # Automatically converted from old format: LGPLv2+ - review is highly recommended.
-@@ -25,6 +25,7 @@ BuildRequires:  mingw64-glib2
+@@ -10,6 +10,10 @@ License:        LicenseRef-Callaway-LGPLv2+
+ URL:            http://spice-space.org/page/UsbRedir
+ Source0:        http://spice-space.org/download/usbredir/usbredir-%{version}.tar.xz
+ Source1:        http://spice-space.org/download/usbredir/usbredir-%{version}.tar.xz.sig
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 206D3B352F566F3B0E6572E997D9123DE37A484F | sq keyring filter --experimental --cert 206D3B352F566F3B0E6572E997D9123DE37A484F --output update.pgp
++#   sq keyring merge victortoso-E37A484F.keyring update.pgp | sq packet dearmor --output victortoso-E37A484F.keyring.new
++#   mv victortoso-E37A484F.keyring.new victortoso-E37A484F.keyring
+ Source2:        victortoso-E37A484F.keyring
+ Patch0001:      0001-Fix-Wincompatible-pointer-types-on-mingw32.patch
+ 
+@@ -25,6 +29,7 @@ BuildRequires:  mingw64-glib2
  BuildRequires:  git-core
  BuildRequires:  meson
  BuildRequires:  gnupg2
@@ -37,7 +49,7 @@ index 0a92f12..50ce687 100644
  
  %description
  The usbredir libraries allow USB devices to be used on remote and/or virtual
-@@ -76,7 +77,7 @@ applications that use usbredir with MinGW.
+@@ -76,7 +81,7 @@ applications that use usbredir with MinGW.
  
  
  %prep
@@ -46,7 +58,7 @@ index 0a92f12..50ce687 100644
  %autosetup -S git_am -p1 -n usbredir-%{version}
  
  %build
-@@ -135,6 +136,9 @@ find $RPM_BUILD_ROOT -name "*.la" -delete
+@@ -135,6 +140,9 @@ find $RPM_BUILD_ROOT -name "*.la" -delete
  
  
  %changelog

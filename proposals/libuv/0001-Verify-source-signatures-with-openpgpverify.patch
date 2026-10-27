@@ -1,6 +1,6 @@
-From 21fd430f50e0e11a98f92df2f0a3c8197011f4a2 Mon Sep 17 00:00:00 2001
+From dc54df50b12c5259ad0d600ff00d09835957f44c Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:04 +0100
+Date: Tue, 27 Oct 2026 12:08:52 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -8,13 +8,13 @@ uses Sequoia sqv, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh keysuv.gpg from keyservers/WKD: same certificate(s), with self-
-signatures our copy was missing.
+signatures our copy was missing; the commands are in the spec comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  keysuv.gpg | Bin 23079 -> 42607 bytes
- libuv.spec |   3 ++-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ libuv.spec |  14 ++++++--------
+ 2 files changed, 6 insertions(+), 8 deletions(-)
 
 diff --git a/keysuv.gpg b/keysuv.gpg
 index 839df2cc071c2a0791c91905b40548500b86b364..b79e338d5cae43c7d945268ff52180efa6561cd0 100644
@@ -409,10 +409,28 @@ z>o)VwoJklY`9!XV_%uK6=X9y892=l9nx{dvRtfVvH-vk|MJgUg;|4S_uxL;PMXP~K
 l1APKhSE|6&kuHxuo`|Dwr=8UUSW`+$c)Tp;S(rJu;18Z_jL!f7
 
 diff --git a/libuv.spec b/libuv.spec
-index 3a16c19..3cee7d1 100644
+index 3a16c19..5175e1b 100644
 --- a/libuv.spec
 +++ b/libuv.spec
-@@ -39,6 +39,7 @@ BuildRequires:  gnupg2
+@@ -22,13 +22,10 @@ URL:            http://libuv.org/
+ Source0:        http://dist.libuv.org/dist/v%{version}/libuv-v%{version}.tar.gz
+ Source1:        https://dist.libuv.org/dist/v%{version}/%{name}-v%{version}.tar.gz.sign
+ # mkdir temp
+-# gpg --no-default-keyring --keyring temp/keyring.gpg --keyserver keyserver.ubuntu.com \
+-#  --recv-keys D77B1E34243FBAF05F8E9CC34F55C8C846AB89B9  \
+-#  FDF519364458319FA8233DC9410E5553AE9BC059 94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
+-#  57353E0DBDAAA7E839B66A1AFF47D5E4AD8B4FDC AEAD0A4B686767751A0E4AEF34A25FB128246514 \
+-#  CFBB9CA9A5BEAFD70E2B3C5A79A67C55A3679C8B C82FA3AE1CBEDC6BE46B9360C43CEC45C17AB93C \
+-#  612F0EAD9401622379DF4402F28C3C8DA33C03BE \
+-#  && gpg --no-default-keyring --keyring temp/keyring.gpg --output temp/keysuv.gpg --export
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 612F0EAD9401622379DF4402F28C3C8DA33C03BE C82FA3AE1CBEDC6BE46B9360C43CEC45C17AB93C CFBB9CA9A5BEAFD70E2B3C5A79A67C55A3679C8B AEAD0A4B686767751A0E4AEF34A25FB128246514 57353E0DBDAAA7E839B66A1AFF47D5E4AD8B4FDC 94AE36675C464D64BAFA68DD7434390BDBE9B9C5 FDF519364458319FA8233DC9410E5553AE9BC059 D77B1E34243FBAF05F8E9CC34F55C8C846AB89B9 | sq keyring filter --experimental --cert 612F0EAD9401622379DF4402F28C3C8DA33C03BE --cert C82FA3AE1CBEDC6BE46B9360C43CEC45C17AB93C --cert CFBB9CA9A5BEAFD70E2B3C5A79A67C55A3679C8B --cert AEAD0A4B686767751A0E4AEF34A25FB128246514 --cert 57353E0DBDAAA7E839B66A1AFF47D5E4AD8B4FDC --cert 94AE36675C464D64BAFA68DD7434390BDBE9B9C5 --cert FDF519364458319FA8233DC9410E5553AE9BC059 --cert D77B1E34243FBAF05F8E9CC34F55C8C846AB89B9 --output update.pgp
++#   sq keyring merge keysuv.gpg update.pgp | sq packet dearmor --output keysuv.gpg.new
++#   mv keysuv.gpg.new keysuv.gpg
+ # cp temp/keysuv.gpg .
+ Source2:        keysuv.gpg
+ Source3:        libuv.abignore
+@@ -39,6 +36,7 @@ BuildRequires:  gnupg2
  # Documentation
  BuildRequires:  make
  BuildRequires:  python3-sphinx
@@ -420,7 +438,7 @@ index 3a16c19..3cee7d1 100644
  
  
  %description
-@@ -64,7 +65,7 @@ Static library (.a) version of libuv.
+@@ -64,7 +62,7 @@ Static library (.a) version of libuv.
  
  
  %prep

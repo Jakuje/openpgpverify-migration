@@ -1,6 +1,6 @@
-From f89f93404137c0004c0d37688bbb5c382a522cc4 Mon Sep 17 00:00:00 2001
+From 0039469c87316b7f5a3ab094763d26c26cb6fea3 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:05 +0100
+Date: Tue, 27 Oct 2026 12:08:52 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,13 +8,14 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh pam_wrapper.keyring from keyservers/WKD: same certificate(s),
-with self-signatures our copy was missing.
+with self-signatures our copy was missing; the commands are in the spec
+comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  pam_wrapper.keyring | Bin 3432 -> 18452 bytes
- pam_wrapper.spec    |   4 ++--
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ pam_wrapper.spec    |   8 ++++++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/pam_wrapper.keyring b/pam_wrapper.keyring
 index 411bf36750f0fc4a8856034415e39c7116559ee4..ff839dee56c422ff2e104ff84c1098a5c2e4ee4f 100644
@@ -295,10 +296,17 @@ zcmbO-f$@bD^Gqh*jm*4Ej9VrPGO06nGTChIXR%>o+M+mFR!W?=I59UVQ7^wJ-L8|#
 oa`OazOOQetDP?95ce0En6Z1|c-px;)d6}3yndCQrb(LoV05;PY$p8QV
 
 diff --git a/pam_wrapper.spec b/pam_wrapper.spec
-index 7105441..e6a345c 100644
+index 7105441..12bf70b 100644
 --- a/pam_wrapper.spec
 +++ b/pam_wrapper.spec
-@@ -11,7 +11,7 @@ Source1:        https://ftp.samba.org/pub/cwrap/%{name}-%{version}.tar.gz.asc
+@@ -8,10 +8,14 @@ Url:            http://cwrap.org/
+ 
+ Source0:        https://ftp.samba.org/pub/cwrap/%{name}-%{version}.tar.gz
+ Source1:        https://ftp.samba.org/pub/cwrap/%{name}-%{version}.tar.gz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D | sq keyring filter --experimental --cert 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D --output update.pgp
++#   sq keyring merge pam_wrapper.keyring update.pgp | sq packet dearmor --output pam_wrapper.keyring.new
++#   mv pam_wrapper.keyring.new pam_wrapper.keyring
  Source2:        pam_wrapper.keyring
  
  BuildRequires:  gcc
@@ -307,7 +315,7 @@ index 7105441..e6a345c 100644
  BuildRequires:  cmake
  BuildRequires:  libcmocka-devel
  BuildRequires:  python3-devel
-@@ -83,7 +83,7 @@ Python module to quickly write tests in Python.
+@@ -83,7 +87,7 @@ Python module to quickly write tests in Python.
  
  
  %prep

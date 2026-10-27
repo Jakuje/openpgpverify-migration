@@ -12,6 +12,15 @@ Phase 1 reason: `expired`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD
 - size: 4634 → 12551 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - 7F730343F2F09F3C77BF79D32E25EE8B61802BB3 \
+  | sq keyring filter --experimental --cert 7F730343F2F09F3C77BF79D32E25EE8B61802BB3 --output update.pgp
+sq keyring merge --output arunisaac.pub.new arunisaac.pub update.pgp
+mv arunisaac.pub.new arunisaac.pub
+```
+
 ```diff
 --- dist-git/arunisaac.pub
 +++ refreshed/arunisaac.pub

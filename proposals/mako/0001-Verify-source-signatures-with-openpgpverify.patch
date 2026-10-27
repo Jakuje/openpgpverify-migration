@@ -1,6 +1,6 @@
-From 1202aaff1e94e0830b44aa5eef995cb866243946 Mon Sep 17 00:00:00 2001
+From df99415b9815dfe6677f8a475b901560436e21d5 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:12 +0100
+Date: Tue, 27 Oct 2026 12:08:55 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,14 +8,15 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh gpgkey-0FDE7BE0E88F5E48.gpg from keyservers/WKD: same
-certificate(s), with self-signatures our copy was missing.
+certificate(s), with self-signatures our copy was missing; the commands
+are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  gpgkey-0FDE7BE0E88F5E48.gpg | Bin 8249 -> 18875 bytes
- mako.spec                   |   9 ++++++---
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ mako.spec                   |  13 ++++++++++---
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/gpgkey-0FDE7BE0E88F5E48.gpg b/gpgkey-0FDE7BE0E88F5E48.gpg
 index 3530f3229196c6dd248e9ce5be9473a8990d4b63..f58902fc34bf2eb1926588b29aa062f03db0cea4 100644
@@ -220,7 +221,7 @@ z#VN2kLzxF86FPanr1fSdMJX_6bG{r{BS_R{bFhpgM3i4NlxgxNO+V&NCf~^`bv!rw
 uXhnf!d^fMu@nvG($;7+)ryegz#AY(1v(n}#4q)SKCUY7pZBDb1Vgdj|i7rL}
 
 diff --git a/mako.spec b/mako.spec
-index 81b7e17..72ebe2a 100644
+index 81b7e17..3de3b2f 100644
 --- a/mako.spec
 +++ b/mako.spec
 @@ -1,6 +1,6 @@
@@ -231,7 +232,16 @@ index 81b7e17..72ebe2a 100644
  Summary:    Lightweight Wayland notification daemon
  Provides:   desktop-notification-daemon
  
-@@ -14,7 +14,7 @@ Source2:    https://emersion.fr/.well-known/openpgpkey/hu/dj3498u4hyyarh35rkjfng
+@@ -9,12 +9,16 @@ URL:        https://github.com/emersion/%{name}
+ Source0:    %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz
+ Source1:    %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz.sig
+ # 0FDE7BE0E88F5E48: emersion <contact@emersion.fr>
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 | sq keyring filter --experimental --cert 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 --output update.pgp
++#   sq keyring merge gpgkey-0FDE7BE0E88F5E48.gpg update.pgp | sq packet dearmor --output gpgkey-0FDE7BE0E88F5E48.gpg.new
++#   mv gpgkey-0FDE7BE0E88F5E48.gpg.new gpgkey-0FDE7BE0E88F5E48.gpg
+ Source2:    https://emersion.fr/.well-known/openpgpkey/hu/dj3498u4hyyarh35rkjfnghbjxug6b19#/gpgkey-0FDE7BE0E88F5E48.gpg
+ 
  Patch0: add-systemd-service-dbus.patch
  
  BuildRequires:  gcc
@@ -240,7 +250,7 @@ index 81b7e17..72ebe2a 100644
  BuildRequires:  meson >= 0.60.0
  BuildRequires:  systemd-rpm-macros
  BuildRequires:  pkgconfig(cairo)
-@@ -39,7 +39,7 @@ mako is a lightweight notification daemon for Wayland compositors that support
+@@ -39,7 +43,7 @@ mako is a lightweight notification daemon for Wayland compositors that support
  the layer-shell protocol.
  
  %prep
@@ -249,7 +259,7 @@ index 81b7e17..72ebe2a 100644
  %autosetup -p1
  
  %build
-@@ -78,6 +78,9 @@ install -m0644 -Dt %{buildroot}%{_userunitdir}/ contrib/systemd/mako.service
+@@ -78,6 +82,9 @@ install -m0644 -Dt %{buildroot}%{_userunitdir}/ contrib/systemd/mako.service
  %{zsh_completions_dir}/_mako*
  
  %changelog

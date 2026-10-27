@@ -15,7 +15,7 @@ Why `sqv`:
 
 - the direct `gpgv2` call is replaced by `%{openpgpverify}` with the same keyring, signature and data
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `tdb.keyring` (see below)
+- refreshed keyring `tdb.keyring` (see below); the comment above its `Source` line now shows the commands for refreshing it
 
 ### Testing
 
@@ -34,6 +34,16 @@ Tested on 2026-10-26 at dist-git commit `c3820c24e687` with sequoia-sqv 1.5.0-2.
 
 - `9147A339719518EE9011BCB54793916113084025`
 
+The refresh, as run (the spec comment above the `Source` line has the same commands without the one-time keybox export, for the next refresh):
+
+```
+gpg --homedir "$(mktemp -d)" --batch --no-default-keyring --keyring ./tdb.keyring --export --output tdb.keyring.pgp
+sq --home=none network search --output - 9147A339719518EE9011BCB54793916113084025 \
+  | sq keyring filter --experimental --cert 9147A339719518EE9011BCB54793916113084025 --output update.pgp
+sq keyring merge tdb.keyring.pgp update.pgp | sq packet dearmor --output tdb.keyring.new
+mv tdb.keyring.new tdb.keyring
+```
+
 What changed in the certificate (`sq inspect`):
 
 ```diff
@@ -41,13 +51,13 @@ What changed in the certificate (`sq inspect`):
 +++ refreshed/tdb.keyring
 @@ -1,11 +1,11 @@
        Fingerprint: 9147A339719518EE9011BCB54793916113084025
--                   Invalid: No binding signature at time 2026-10-26T20:15:17Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T10:58:31Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +  Expiration time: 2027-12-13 12:18:24 UTC (creation time + 16years 10months 30days 6h 51m 33s)
 +        Key flags: certification, signing
             Subkey: 541FB94987D491A3C201D8B1B1DD08BF65F64DAB
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-26T20:15:17Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T10:58:31Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +  Expiration time: 2027-12-13 12:18:38 UTC (creation time + 16years 10months 30days 6h 51m 47s)
 +        Key flags: transport encryption, data-at-rest encryption
             UserID: Samba Library Distribution Key <samba-bugs@samba.org>

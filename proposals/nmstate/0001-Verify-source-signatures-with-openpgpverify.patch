@@ -1,6 +1,6 @@
-From f118f1d6bb175a4c97ba8422711f57e4a76a017f Mon Sep 17 00:00:00 2001
+From f78e6b9e9d1021dd42691aa02cf04d3a17c9f5eb Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:05 +0100
+Date: Tue, 27 Oct 2026 12:08:52 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which

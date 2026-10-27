@@ -1,6 +1,6 @@
-From 84670129a2f0fb1e6e69eb5e636819ac3aed8072 Mon Sep 17 00:00:00 2001
+From d6c4fa061a3aad5d03d6f15215735bdee21c5901 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:42 +0100
+Date: Tue, 27 Oct 2026 12:09:07 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,13 +8,14 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh webkitgtk-keys.gpg from keyservers/WKD: same certificate(s),
-with self-signatures our copy was missing.
+with self-signatures our copy was missing; the commands are in the spec
+comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  webkitgtk-keys.gpg | Bin 4178 -> 13549 bytes
- webkitgtk.spec     |   3 ++-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ webkitgtk.spec     |   9 ++++++---
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/webkitgtk-keys.gpg b/webkitgtk-keys.gpg
 index 1852062e1fe3110f69dfb1614d590804949f1d1a..b28f16fb0f1e2544c979b2a1a28065f8a0e1a843 100644
@@ -188,10 +189,23 @@ zvmyx%0t1NxJhO2PJOTrm0iv_852679w3EXZEdhv=@fSXm&Jq@rOBpT!w3Aa2KLLo7
 plM;UexdaWfv@Z<=6^Ka$7!d*h2?YX3L;eK<8w>yn2@sRFG&bG!Bwqjk
 
 diff --git a/webkitgtk.spec b/webkitgtk.spec
-index 92a650c..604d384 100644
+index 92a650c..733a26f 100644
 --- a/webkitgtk.spec
 +++ b/webkitgtk.spec
-@@ -160,6 +160,7 @@ BuildRequires:  pkgconfig(wayland-egl)
+@@ -83,8 +83,10 @@ URL:            https://www.webkitgtk.org/
+ Source0:        https://webkitgtk.org/releases/webkitgtk-%{version}.tar.xz
+ Source1:        https://webkitgtk.org/releases/webkitgtk-%{version}.tar.xz.asc
+ # Use the keys from https://webkitgtk.org/verifying.html
+-# $ gpg --import aperez.key carlosgc.key
+-# $ gpg --export --export-options export-minimal 013A0127AC9C65B34FFA62526C1009B693975393 5AA3BC334FD7E3369E7C77B291C559DBE4C9123B > webkitgtk-keys.gpg
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 013A0127AC9C65B34FFA62526C1009B693975393 5AA3BC334FD7E3369E7C77B291C559DBE4C9123B | sq keyring filter --experimental --cert 013A0127AC9C65B34FFA62526C1009B693975393 --cert 5AA3BC334FD7E3369E7C77B291C559DBE4C9123B --output update.pgp
++#   sq keyring merge webkitgtk-keys.gpg update.pgp | sq packet dearmor --output webkitgtk-keys.gpg.new
++#   mv webkitgtk-keys.gpg.new webkitgtk-keys.gpg
+ Source2:        webkitgtk-keys.gpg
+ 
+ # https://bugs.webkit.org/show_bug.cgi?id=312677
+@@ -160,6 +162,7 @@ BuildRequires:  pkgconfig(wayland-egl)
  BuildRequires:  pkgconfig(wayland-protocols)
  BuildRequires:  pkgconfig(wayland-server)
  BuildRequires:  pkgconfig(xt)
@@ -199,7 +213,7 @@ index 92a650c..604d384 100644
  
  %description
  WebKitGTK is the port of the WebKit web rendering engine to the
-@@ -301,7 +302,7 @@ The javascriptcoregtk4.1-devel package contains libraries, build data, and heade
+@@ -301,7 +304,7 @@ The javascriptcoregtk4.1-devel package contains libraries, build data, and heade
  files for developing applications that use JavaScript engine from webkit2gtk-4.1.
  
  %prep

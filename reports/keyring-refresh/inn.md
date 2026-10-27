@@ -12,6 +12,15 @@ Phase 1 reason: `expired`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 6548 → 245097 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - E784364E8DDE7BB370FBD9EAD15D313882004173 \
+  | sq keyring filter --experimental --cert E784364E8DDE7BB370FBD9EAD15D313882004173 --output update.pgp
+sq keyring merge 0xD73934B49674CF5CCD9AC2787D80315C5736DE75.gpg update.pgp | sq packet dearmor --output 0xD73934B49674CF5CCD9AC2787D80315C5736DE75.gpg.new
+mv 0xD73934B49674CF5CCD9AC2787D80315C5736DE75.gpg.new 0xD73934B49674CF5CCD9AC2787D80315C5736DE75.gpg
+```
+
 ```diff
 --- dist-git/0xD73934B49674CF5CCD9AC2787D80315C5736DE75.gpg
 +++ refreshed/0xD73934B49674CF5CCD9AC2787D80315C5736DE75.gpg
@@ -34,7 +43,7 @@ Phase 1 reason: `expired`
             UserID: Russ Allbery <eagle@eyrie.org>
             UserID: Russ Allbery <eagle@windlord.stanford.edu>
                     Revoked:
--                   Invalid: No binding signature at time 2026-10-26T20:09:23Z
+-                   Invalid: No binding signature at time 2026-10-27T10:55:23Z
             UserID: Russ Allbery <rra@cpan.org>
             UserID: Russ Allbery <rra@cs.stanford.edu>
             UserID: Russ Allbery <rra@debian.org>

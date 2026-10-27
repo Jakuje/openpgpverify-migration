@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `socket_wrapper.keyring` (see below)
+- refreshed keyring `socket_wrapper.keyring` (see below); the comment above its `Source` line now shows the commands for refreshing it
 
 ### Testing
 
@@ -34,6 +34,15 @@ Tested on 2026-10-12 at dist-git commit `b18d82b8fede` with sequoia-sqv 1.5.0-2.
 
 - `8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D`
 
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D \
+  | sq keyring filter --experimental --cert 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D --output update.pgp
+sq keyring merge socket_wrapper.keyring update.pgp | sq packet dearmor --output socket_wrapper.keyring.new
+mv socket_wrapper.keyring.new socket_wrapper.keyring
+```
+
 What changed in the certificate (`sq inspect`):
 
 ```diff
@@ -41,12 +50,12 @@ What changed in the certificate (`sq inspect`):
 +++ refreshed/socket_wrapper.keyring
 @@ -1,17 +1,14 @@
        Fingerprint: 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D
--                   Invalid: No binding signature at time 2026-10-12T12:11:38Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T11:06:12Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: certification, signing
             Subkey: 9D04ADDA7B3A38E6F9E74DE1668803FBFBA5A04A
                     Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
                     because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-12T12:11:38Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T11:06:12Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance: SHA1 is not considered secure
             UserID: Andreas Schneider <asn@cryptomilk.org>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance

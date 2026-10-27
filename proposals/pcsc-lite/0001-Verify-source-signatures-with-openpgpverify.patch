@@ -1,6 +1,6 @@
-From 8c1fc220b304ed557b79189b51012d2e619d25fb Mon Sep 17 00:00:00 2001
+From d3c57cd609c1f4ff510357543a408d3d32b26f10 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:05 +0100
+Date: Tue, 27 Oct 2026 12:08:52 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,13 +9,13 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg from
 keyservers/WKD: same certificate(s), with self-signatures our copy was
-missing.
+missing; the commands are in the spec comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  ...E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg | Bin 14174 -> 24687 bytes
- pcsc-lite.spec                                |   4 ++--
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ pcsc-lite.spec                                |   8 ++++++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg b/gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg
 index d3cd6318aa80c3d94e019231597ca5c10886f36e..0fcfba423ddce2e88c86aed4c2c7cdea314f82b8 100644
@@ -232,10 +232,21 @@ z`Q4tof=QZ*m6P$IaRZ~~W}zTW#?3*&EKJNhnRquxhVn9rbu!7bNH8)naI!M_O#S_q
 ONt%ZN6b2$uJWK$xlW)QR
 
 diff --git a/pcsc-lite.spec b/pcsc-lite.spec
-index 3b89fc0..8e466b3 100644
+index 3b89fc0..facd923 100644
 --- a/pcsc-lite.spec
 +++ b/pcsc-lite.spec
-@@ -26,7 +26,7 @@ BuildRequires:  perl-podlators
+@@ -14,6 +14,10 @@ License:        BSD-3-Clause AND BSD-2-Clause AND GPL-3.0-or-later
+ URL:            https://pcsclite.apdu.fr/
+ Source0:        https://pcsclite.apdu.fr/files/%{name}-%{version}.tar.xz
+ Source1:        https://pcsclite.apdu.fr/files/%{name}-%{version}.tar.xz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E | sq keyring filter --experimental --cert F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E --output update.pgp
++#   sq keyring merge gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg update.pgp | sq packet dearmor --output gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg.new
++#   mv gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg.new gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg
+ Source2:        gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg
+ 
+ BuildRequires:  doxygen
+@@ -26,7 +30,7 @@ BuildRequires:  perl-podlators
  BuildRequires:  polkit-devel
  %endif
  BuildRequires:  gettext-devel
@@ -244,7 +255,7 @@ index 3b89fc0..8e466b3 100644
  BuildRequires:  meson
  BuildRequires:  gcc
  BuildRequires:  python3-devel
-@@ -79,7 +79,7 @@ Requires:       %{name}-libs = %{version}-%{release}
+@@ -79,7 +83,7 @@ Requires:       %{name}-libs = %{version}-%{release}
  
  
  %prep

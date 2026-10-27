@@ -1,6 +1,6 @@
-From d8170a76afa983c29ca50cac5fe1edcf40164a28 Mon Sep 17 00:00:00 2001
+From dde0542cb5bf5782669c3c127ee6fc85ec188f9d Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:34 +0100
+Date: Tue, 27 Oct 2026 12:09:03 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,14 +8,15 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh gpgkey-0FDE7BE0E88F5E48.gpg from keyservers/WKD: same
-certificate(s), with self-signatures our copy was missing.
+certificate(s), with self-signatures our copy was missing; the commands
+are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  gpgkey-0FDE7BE0E88F5E48.gpg | Bin 8249 -> 18875 bytes
- wlroots.spec                |   8 ++++++--
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ wlroots.spec                |  12 ++++++++++--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/gpgkey-0FDE7BE0E88F5E48.gpg b/gpgkey-0FDE7BE0E88F5E48.gpg
 index 3530f3229196c6dd248e9ce5be9473a8990d4b63..f58902fc34bf2eb1926588b29aa062f03db0cea4 100644
@@ -220,7 +221,7 @@ z#VN2kLzxF86FPanr1fSdMJX_6bG{r{BS_R{bFhpgM3i4NlxgxNO+V&NCf~^`bv!rw
 uXhnf!d^fMu@nvG($;7+)ryegz#AY(1v(n}#4q)SKCUY7pZBDb1Vgdj|i7rL}
 
 diff --git a/wlroots.spec b/wlroots.spec
-index 0ce3b16..746edcb 100644
+index 0ce3b16..18f939b 100644
 --- a/wlroots.spec
 +++ b/wlroots.spec
 @@ -5,7 +5,7 @@
@@ -232,7 +233,18 @@ index 0ce3b16..746edcb 100644
  Summary:        A modular Wayland compositor library
  
  %global tag     %{gsub %{version} ~ -}
-@@ -81,6 +81,7 @@ BuildRequires:  pkgconfig(xcb-xfixes) >= 1.15
+@@ -30,6 +30,10 @@ URL:            https://gitlab.freedesktop.org/wlroots/wlroots
+ Source0:        %{url}/-/releases/%{tag}/downloads/%{name}-%{tag}.tar.gz
+ Source1:        %{url}/-/releases/%{tag}/downloads/%{name}-%{tag}.tar.gz.sig
+ # 0FDE7BE0E88F5E48: emersion <contact@emersion.fr>
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 | sq keyring filter --experimental --cert 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 --output update.pgp
++#   sq keyring merge gpgkey-0FDE7BE0E88F5E48.gpg update.pgp | sq packet dearmor --output gpgkey-0FDE7BE0E88F5E48.gpg.new
++#   mv gpgkey-0FDE7BE0E88F5E48.gpg.new gpgkey-0FDE7BE0E88F5E48.gpg
+ Source2:        https://emersion.fr/.well-known/openpgpkey/hu/dj3498u4hyyarh35rkjfnghbjxug6b19#/gpgkey-0FDE7BE0E88F5E48.gpg
+ 
+ # this file is a modification of examples/meson.build so as to:
+@@ -81,6 +85,7 @@ BuildRequires:  pkgconfig(xcb-xfixes) >= 1.15
  BuildRequires:  pkgconfig(xcb-xinput)
  BuildRequires:  pkgconfig(xkbcommon) >= 1.8.0
  BuildRequires:  pkgconfig(xwayland)
@@ -240,7 +252,7 @@ index 0ce3b16..746edcb 100644
  # libliftoff does not bump soname on API changes
  Requires:       libliftoff%{?_isa} >= %{liftoff_ver}
  
-@@ -103,7 +104,7 @@ Development files for %{name}.
+@@ -103,7 +108,7 @@ Development files for %{name}.
  
  
  %prep
@@ -249,7 +261,7 @@ index 0ce3b16..746edcb 100644
  %autosetup -N -n %{name}-%{tag}
  # apply unconditional patches (0..99)
  %autopatch -p1 -M99
-@@ -143,6 +144,9 @@ install -pm0644 -D '%{SOURCE3}' '%{buildroot}/%{_pkgdocdir}/examples/meson.build
+@@ -143,6 +148,9 @@ install -pm0644 -D '%{SOURCE3}' '%{buildroot}/%{_pkgdocdir}/examples/meson.build
  
  
  %changelog

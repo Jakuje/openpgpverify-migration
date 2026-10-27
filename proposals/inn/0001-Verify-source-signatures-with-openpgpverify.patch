@@ -1,6 +1,6 @@
-From 646aa6ec0cda45097b2fb707a01701baa20dfa3c Mon Sep 17 00:00:00 2001
+From f47cdd3847b7844f8ec970231de9b90afeaaedd3 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:43 +0100
+Date: Tue, 27 Oct 2026 12:09:07 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -9,14 +9,14 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh 0xD73934B49674CF5CCD9AC2787D80315C5736DE75.gpg from
 keyservers/WKD: same certificate(s), with self-signatures our copy was
-missing.
+missing; the commands are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  ...3934B49674CF5CCD9AC2787D80315C5736DE75.gpg | Bin 6548 -> 245097 bytes
- inn.spec                                      |   9 ++++++---
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ inn.spec                                      |  15 ++++++++++-----
+ 2 files changed, 10 insertions(+), 5 deletions(-)
 
 diff --git a/0xD73934B49674CF5CCD9AC2787D80315C5736DE75.gpg b/0xD73934B49674CF5CCD9AC2787D80315C5736DE75.gpg
 index 54da6d4483f17902427a2ee3d0574ed83c859587..d61a5d87a4304ab8895a5043ddb2abd167bbdedb 100644
@@ -4393,7 +4393,7 @@ z8N<x8{h=+hJR=vUz{OZYizWug;_ZI1%q&dIJDGU5uU*8<%f#HtWHWv55@x0Cb5=7;
 GF#!NsNI=8@
 
 diff --git a/inn.spec b/inn.spec
-index 613548d..4468594 100644
+index 613548d..b49213e 100644
 --- a/inn.spec
 +++ b/inn.spec
 @@ -3,7 +3,7 @@
@@ -4405,7 +4405,20 @@ index 613548d..4468594 100644
  # most files are under ISC, except:
  # contrib/analyze-traffic.in: public-domain
  # contrib/mm_ckpasswd: GPL-2.0-or-later
-@@ -72,7 +72,7 @@ BuildRequires: sqlite-devel
+@@ -29,8 +29,10 @@ URL: https://www.eyrie.org/~eagle/software/inn/
+ Source0: https://downloads.isc.org/isc/inn/inn-%{version}.tar.gz
+ Source1: https://downloads.isc.org/isc/inn/inn-%{version}.tar.gz.asc
+ Source2: inn-default-distributions
+-# gpg2 --recv-key 0xD73934B49674CF5CCD9AC2787D80315C5736DE75
+-# gpg2 --export --export-options export-minimal 0xD73934B49674CF5CCD9AC2787D80315C5736DE75
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - E784364E8DDE7BB370FBD9EAD15D313882004173 | sq keyring filter --experimental --cert E784364E8DDE7BB370FBD9EAD15D313882004173 --output update.pgp
++#   sq keyring merge 0xD73934B49674CF5CCD9AC2787D80315C5736DE75.gpg update.pgp | sq packet dearmor --output 0xD73934B49674CF5CCD9AC2787D80315C5736DE75.gpg.new
++#   mv 0xD73934B49674CF5CCD9AC2787D80315C5736DE75.gpg.new 0xD73934B49674CF5CCD9AC2787D80315C5736DE75.gpg
+ Source3: 0xD73934B49674CF5CCD9AC2787D80315C5736DE75.gpg
+ Source10: http://www.eyrie.org/~eagle/faqs/inn.html#/inn-faq-%{version}.html
+ Source20: innd.service
+@@ -72,7 +74,7 @@ BuildRequires: sqlite-devel
  BuildRequires: systemd-rpm-macros
  BuildRequires: wget
  BuildRequires: zlib-devel
@@ -4414,7 +4427,7 @@ index 613548d..4468594 100644
  BuildRequires: make
  %if 0%{?fedora} || 0%{?rhel} >= 8
  Recommends: perl(GD)
-@@ -134,7 +134,7 @@ Summary: Libraries provided by INN
+@@ -134,7 +136,7 @@ Summary: Libraries provided by INN
  This package contains dynamic libraries provided by INN project
  
  %prep
@@ -4423,7 +4436,7 @@ index 613548d..4468594 100644
  %autosetup -p1
  
  # Create a sysusers.d config file
-@@ -578,6 +578,9 @@ fi
+@@ -578,6 +580,9 @@ fi
  %{_sysusersdir}/inn.conf
  
  %changelog

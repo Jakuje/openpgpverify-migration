@@ -1,6 +1,6 @@
-From 2bf846de630da6b53d2bf1c1416823e9bf650f36 Mon Sep 17 00:00:00 2001
+From 07804024756572b89290e18910dfae980d33ae18 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:04 +0100
+Date: Tue, 27 Oct 2026 12:08:52 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,14 +8,15 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh gpgkey-0FDE7BE0E88F5E48.gpg from keyservers/WKD: same
-certificate(s), with self-signatures our copy was missing.
+certificate(s), with self-signatures our copy was missing; the commands
+are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  gpgkey-0FDE7BE0E88F5E48.gpg | Bin 7501 -> 17527 bytes
- libdisplay-info.spec        |   8 ++++++--
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ libdisplay-info.spec        |  12 ++++++++++--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/gpgkey-0FDE7BE0E88F5E48.gpg b/gpgkey-0FDE7BE0E88F5E48.gpg
 index cc3b6a06af86e73144a2da89ca2f6616fcdd9dcb..e8519f60be404443d3a0c5237e4ce0e54930ca3a 100644
@@ -209,7 +210,7 @@ z1vBg>%PZ?Mb8!l6&QRt7tDU@G(t0zKB2;6(99Sbr)Mj(Aj3h(}$m~x-QcTP{nRqvE
 Z)#L?<+DtxZqO>{D60Ff?^Fb3ECIB%2D)ayV
 
 diff --git a/libdisplay-info.spec b/libdisplay-info.spec
-index 7dc0742..d9e47a9 100644
+index 7dc0742..a6b80a1 100644
 --- a/libdisplay-info.spec
 +++ b/libdisplay-info.spec
 @@ -4,7 +4,7 @@
@@ -221,7 +222,17 @@ index 7dc0742..d9e47a9 100644
  Summary:        EDID and DisplayID library
  
  # Main license: MIT
-@@ -20,6 +20,7 @@ BuildRequires:  gcc
+@@ -14,12 +14,17 @@ URL:            https://gitlab.freedesktop.org/emersion/libdisplay-info
+ Source0:        %{url}/-/releases/%{version}/downloads/%{name}-%{version}.tar.xz
+ Source1:        %{url}/-/releases/%{version}/downloads/%{name}-%{version}.tar.xz.sig
+ # 0FDE7BE0E88F5E48: emersion <contact@emersion.fr>
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 | sq keyring filter --experimental --cert 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 --output update.pgp
++#   sq keyring merge gpgkey-0FDE7BE0E88F5E48.gpg update.pgp | sq packet dearmor --output gpgkey-0FDE7BE0E88F5E48.gpg.new
++#   mv gpgkey-0FDE7BE0E88F5E48.gpg.new gpgkey-0FDE7BE0E88F5E48.gpg
+ Source2:        https://emersion.fr/.well-known/openpgpkey/hu/dj3498u4hyyarh35rkjfnghbjxug6b19#/gpgkey-0FDE7BE0E88F5E48.gpg
+ 
+ BuildRequires:  gcc
  BuildRequires:  gnupg2
  BuildRequires:  meson >= 0.57
  BuildRequires:  pkgconfig(hwdata)
@@ -229,7 +240,7 @@ index 7dc0742..d9e47a9 100644
  
  %description
  %{summary}.
-@@ -41,7 +42,7 @@ developing applications that use %{name}.
+@@ -41,7 +46,7 @@ developing applications that use %{name}.
  
  
  %prep
@@ -238,7 +249,7 @@ index 7dc0742..d9e47a9 100644
  %autosetup
  
  
-@@ -74,6 +75,9 @@ developing applications that use %{name}.
+@@ -74,6 +79,9 @@ developing applications that use %{name}.
  
  
  %changelog

@@ -1,6 +1,6 @@
-From c3a70bc8e240a21b723b3ab164bf85d3a8798dfe Mon Sep 17 00:00:00 2001
+From 5572c6d5e12775e198fc37b98c3802f1fb073154 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:13 +0100
+Date: Tue, 27 Oct 2026 12:08:55 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,13 +8,14 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh cmocka.keyring from keyservers/WKD: same certificate(s), with
-self-signatures our copy was missing.
+self-signatures our copy was missing; the commands are in the spec
+comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  cmocka.keyring    | Bin 3432 -> 18452 bytes
- mingw-cmocka.spec |   4 ++--
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ mingw-cmocka.spec |   8 ++++++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/cmocka.keyring b/cmocka.keyring
 index 411bf36750f0fc4a8856034415e39c7116559ee4..ff839dee56c422ff2e104ff84c1098a5c2e4ee4f 100644
@@ -295,10 +296,19 @@ zcmbO-f$@bD^Gqh*jm*4Ej9VrPGO06nGTChIXR%>o+M+mFR!W?=I59UVQ7^wJ-L8|#
 oa`OazOOQetDP?95ce0En6Z1|c-px;)d6}3yndCQrb(LoV05;PY$p8QV
 
 diff --git a/mingw-cmocka.spec b/mingw-cmocka.spec
-index b87c78b..17aed3b 100644
+index b87c78b..0287776 100644
 --- a/mingw-cmocka.spec
 +++ b/mingw-cmocka.spec
-@@ -16,7 +16,7 @@ Source2:        cmocka.keyring
+@@ -11,12 +11,16 @@ URL:            http://www.cmocka.org/
+ 
+ Source0:        https://cmocka.org/files/1.1/cmocka-%{version}.tar.xz
+ Source1:        https://cmocka.org/files/1.1/cmocka-%{version}.tar.xz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D | sq keyring filter --experimental --cert 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D --output update.pgp
++#   sq keyring merge cmocka.keyring update.pgp | sq packet dearmor --output cmocka.keyring.new
++#   mv cmocka.keyring.new cmocka.keyring
+ Source2:        cmocka.keyring
+ 
  BuildArch:      noarch
  
  BuildRequires:  make
@@ -307,7 +317,7 @@ index b87c78b..17aed3b 100644
  BuildRequires:  mingw32-filesystem >= 95
  BuildRequires:  mingw32-gcc
  BuildRequires:  mingw32-gcc-c++
-@@ -73,7 +73,7 @@ Static version of the MinGW Windows cmocka library.
+@@ -73,7 +77,7 @@ Static version of the MinGW Windows cmocka library.
  
  
  %prep

@@ -12,6 +12,15 @@ Phase 1 reason: `expired`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com; hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 8009 → 22362 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - 3057EE9A448F362D74205A779AB120DA0A76F6DE B6006460B60A80E782062449E747DF1F9575A3AA \
+  | sq keyring filter --experimental --cert 3057EE9A448F362D74205A779AB120DA0A76F6DE --cert B6006460B60A80E782062449E747DF1F9575A3AA --output update.pgp
+sq keyring merge --output kresd-keyblock.asc.new kresd-keyblock.asc update.pgp
+mv kresd-keyblock.asc.new kresd-keyblock.asc
+```
+
 ```diff
 --- dist-git/kresd-keyblock.asc
 +++ refreshed/kresd-keyblock.asc

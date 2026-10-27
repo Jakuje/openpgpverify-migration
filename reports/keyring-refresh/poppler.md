@@ -12,6 +12,15 @@ Phase 1 reason: `expired`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 26912 → 28338 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7 \
+  | sq keyring filter --experimental --cert CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7 --output update.pgp
+sq keyring merge --output armored-keys.asc.new armored-keys.asc update.pgp
+mv armored-keys.asc.new armored-keys.asc
+```
+
 ```diff
 --- dist-git/armored-keys.asc
 +++ refreshed/armored-keys.asc

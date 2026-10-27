@@ -1,6 +1,6 @@
-From 96731fea91b73171436461a21988f3e5f0eeebc7 Mon Sep 17 00:00:00 2001
+From 40a411d2c6f1bbc727ac0731847dc07be62fad91 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:19 +0100
+Date: Tue, 27 Oct 2026 12:08:57 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,13 +8,14 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 from keyservers/WKD:
-same certificate(s), with self-signatures our copy was missing.
+same certificate(s), with self-signatures our copy was missing; the
+commands are in the spec comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 | 555 +++++++++++++++--------
- swaybg.spec                              |   4 +-
- 2 files changed, 358 insertions(+), 201 deletions(-)
+ swaybg.spec                              |   8 +-
+ 2 files changed, 362 insertions(+), 201 deletions(-)
 
 diff --git a/34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 b/34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48
 index 2c17bcc..3af1165 100644
@@ -586,10 +587,19 @@ index 2c17bcc..3af1165 100644
 +=XTEI
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/swaybg.spec b/swaybg.spec
-index a318e4e..4e78069 100644
+index a318e4e..88631e5 100644
 --- a/swaybg.spec
 +++ b/swaybg.spec
-@@ -12,7 +12,7 @@ Source2:    https://keys.openpgp.org/vks/v1/by-fingerprint/34FF9526CFEF0E97A340E
+@@ -7,12 +7,16 @@ License:    MIT
+ URL:        https://github.com/swaywm/swaybg
+ Source0:    %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz
+ Source1:    %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz.sig
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 | sq keyring filter --experimental --cert 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 --output update.pgp
++#   sq keyring merge --output 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48.new 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 update.pgp
++#   mv 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48.new 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48
+ Source2:    https://keys.openpgp.org/vks/v1/by-fingerprint/34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48
+ 
  # Swaybg was part of sway before sway 1.1
  Conflicts:  sway < 1.1
  
@@ -598,7 +608,7 @@ index a318e4e..4e78069 100644
  BuildRequires:  gcc
  BuildRequires:  meson >= 0.59.0
  BuildRequires:  pkgconfig(cairo)
-@@ -27,7 +27,7 @@ BuildRequires:  scdoc
+@@ -27,7 +31,7 @@ BuildRequires:  scdoc
  %{summary}.
  
  %prep

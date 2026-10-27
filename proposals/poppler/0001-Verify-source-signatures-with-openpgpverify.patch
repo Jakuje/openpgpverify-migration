@@ -1,6 +1,6 @@
-From 44d07f30528d89d368fa703582bf4a975bb2e034 Mon Sep 17 00:00:00 2001
+From 403fe6ff00a7ce3b5c51ef50551b0beb1c15b2db Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:05 +0100
+Date: Tue, 27 Oct 2026 12:08:52 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,13 +8,14 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh armored-keys.asc from keyservers/WKD: same certificate(s), with
-self-signatures our copy was missing.
+self-signatures our copy was missing; the commands are in the spec
+comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  armored-keys.asc | 639 ++++++++++++++++++++++++-----------------------
- poppler.spec     |   5 +-
- 2 files changed, 333 insertions(+), 311 deletions(-)
+ poppler.spec     |   9 +-
+ 2 files changed, 337 insertions(+), 311 deletions(-)
 
 diff --git a/armored-keys.asc b/armored-keys.asc
 index 85382d4..a73c370 100644
@@ -684,10 +685,21 @@ index 85382d4..a73c370 100644
 +=wd7s
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/poppler.spec b/poppler.spec
-index 8561c7a..a47135b 100644
+index 8561c7a..183abe5 100644
 --- a/poppler.spec
 +++ b/poppler.spec
-@@ -74,8 +74,9 @@ BuildRequires: cmake(Qt6Widgets)
+@@ -23,6 +23,10 @@ URL:     https://poppler.freedesktop.org/
+ Source0: https://poppler.freedesktop.org/poppler-%{version}.tar.xz
+ Source1: https://poppler.freedesktop.org/poppler-%{version}.tar.xz.sig
+ # https://pgp.surfnet.nl/pks/lookup?op=get&search=0xCA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7 | sq keyring filter --experimental --cert CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7 --output update.pgp
++#   sq keyring merge --output armored-keys.asc.new armored-keys.asc update.pgp
++#   mv armored-keys.asc.new armored-keys.asc
+ Source2: armored-keys.asc
+ # git archive --prefix test/
+ Source3: %{name}-test-%{test_date}-%{test_sha}.tar.xz
+@@ -74,8 +78,9 @@ BuildRequires: cmake(Qt6Widgets)
  BuildRequires: cmake(Qt6Xml)
  %endif
  BuildRequires: boost-devel
@@ -698,7 +710,7 @@ index 8561c7a..a47135b 100644
  
  Requires: poppler-data
  
-@@ -177,7 +178,7 @@ Command line tools for manipulating PDF files and converting them to
+@@ -177,7 +182,7 @@ Command line tools for manipulating PDF files and converting them to
  other formats.
  
  %prep

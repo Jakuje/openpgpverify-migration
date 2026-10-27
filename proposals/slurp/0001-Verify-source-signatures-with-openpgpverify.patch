@@ -1,6 +1,6 @@
-From 511481657acec519e5f2381c67894cf7b68d34d1 Mon Sep 17 00:00:00 2001
+From b204ffeeff11555db4390b2ef84244f0d8d492bd Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:18 +0100
+Date: Tue, 27 Oct 2026 12:08:57 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,14 +8,15 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh dj3498u4hyyarh35rkjfnghbjxug6b19 from keyservers/WKD: same
-certificate(s), with self-signatures our copy was missing.
+certificate(s), with self-signatures our copy was missing; the commands
+are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  dj3498u4hyyarh35rkjfnghbjxug6b19 | Bin 2263 -> 17527 bytes
- slurp.spec                       |   9 ++++++---
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ slurp.spec                       |  13 ++++++++++---
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/dj3498u4hyyarh35rkjfnghbjxug6b19 b/dj3498u4hyyarh35rkjfnghbjxug6b19
 index 3981a367ef3a5cacc7b955946f93ec18decedfa6..e8519f60be404443d3a0c5237e4ce0e54930ca3a 100644
@@ -299,10 +300,10 @@ delta 27
 jcmey~!FXM8gCNu7r@X404@m|wZQi6Q#<aQ7+L8$XoWBYP
 
 diff --git a/slurp.spec b/slurp.spec
-index 5dbfa12..3229205 100644
+index 5dbfa12..7c7ea70 100644
 --- a/slurp.spec
 +++ b/slurp.spec
-@@ -1,6 +1,6 @@
+@@ -1,12 +1,16 @@
  Name:		slurp
  Version:	1.5.0
 -Release:	7%{?dist}
@@ -310,7 +311,17 @@ index 5dbfa12..3229205 100644
  Summary:	Select a region in Sway
  
  License:	MIT
-@@ -17,14 +17,14 @@ BuildRequires:	pkgconfig(xkbcommon)
+ URL:		https://github.com/emersion/slurp
+ Source0:	%{url}/releases/download/v%{version}/slurp-%{version}.tar.gz
+ Source1:	%{url}/releases/download/v%{version}/slurp-%{version}.tar.gz.sig
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 | sq keyring filter --experimental --cert 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 --output update.pgp
++#   sq keyring merge dj3498u4hyyarh35rkjfnghbjxug6b19 update.pgp | sq packet dearmor --output dj3498u4hyyarh35rkjfnghbjxug6b19.new
++#   mv dj3498u4hyyarh35rkjfnghbjxug6b19.new dj3498u4hyyarh35rkjfnghbjxug6b19
+ Source2:	https://emersion.fr/.well-known/openpgpkey/hu/dj3498u4hyyarh35rkjfnghbjxug6b19
+ 
+ BuildRequires:	pkgconfig(wayland-client)
+@@ -17,14 +21,14 @@ BuildRequires:	pkgconfig(xkbcommon)
  BuildRequires:	scdoc
  BuildRequires:	meson
  BuildRequires:	gcc
@@ -327,7 +338,7 @@ index 5dbfa12..3229205 100644
  %autosetup
  
  %build
-@@ -40,6 +40,9 @@ and prints it to the standard output.
+@@ -40,6 +44,9 @@ and prints it to the standard output.
  %{_mandir}/man1/slurp.1*
  
  %changelog

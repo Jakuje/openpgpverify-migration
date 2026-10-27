@@ -1,6 +1,6 @@
-From 31480a648bd394a47037823948acdf16c3899d03 Mon Sep 17 00:00:00 2001
+From 9c43219c4ed3c0342201e674ce779d016d490825 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:34 +0100
+Date: Tue, 27 Oct 2026 12:09:03 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,13 +8,14 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh gpgkey-0FDE7BE0E88F5E48.gpg from keyservers/WKD: same
-certificate(s), with self-signatures our copy was missing.
+certificate(s), with self-signatures our copy was missing; the commands
+are in the spec comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  gpgkey-0FDE7BE0E88F5E48.gpg | Bin 8249 -> 18875 bytes
- wlroots0.19.spec            |   3 ++-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ wlroots0.19.spec            |   7 ++++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/gpgkey-0FDE7BE0E88F5E48.gpg b/gpgkey-0FDE7BE0E88F5E48.gpg
 index 3530f3229196c6dd248e9ce5be9473a8990d4b63..f58902fc34bf2eb1926588b29aa062f03db0cea4 100644
@@ -219,10 +220,21 @@ z#VN2kLzxF86FPanr1fSdMJX_6bG{r{BS_R{bFhpgM3i4NlxgxNO+V&NCf~^`bv!rw
 uXhnf!d^fMu@nvG($;7+)ryegz#AY(1v(n}#4q)SKCUY7pZBDb1Vgdj|i7rL}
 
 diff --git a/wlroots0.19.spec b/wlroots0.19.spec
-index ba31495..09d660e 100644
+index ba31495..4a489b4 100644
 --- a/wlroots0.19.spec
 +++ b/wlroots0.19.spec
-@@ -75,6 +75,7 @@ BuildRequires:  pkgconfig(xcb-xfixes)
+@@ -29,6 +29,10 @@ URL:            https://gitlab.freedesktop.org/wlroots/wlroots
+ Source0:        %{url}/-/releases/%{version}/downloads/wlroots-%{version}.tar.gz
+ Source1:        %{url}/-/releases/%{version}/downloads/wlroots-%{version}.tar.gz.sig
+ # 0FDE7BE0E88F5E48: emersion <contact@emersion.fr>
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 | sq keyring filter --experimental --cert 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 --output update.pgp
++#   sq keyring merge gpgkey-0FDE7BE0E88F5E48.gpg update.pgp | sq packet dearmor --output gpgkey-0FDE7BE0E88F5E48.gpg.new
++#   mv gpgkey-0FDE7BE0E88F5E48.gpg.new gpgkey-0FDE7BE0E88F5E48.gpg
+ Source2:        https://emersion.fr/.well-known/openpgpkey/hu/dj3498u4hyyarh35rkjfnghbjxug6b19#/gpgkey-0FDE7BE0E88F5E48.gpg
+ 
+ # Upstream patches
+@@ -75,6 +79,7 @@ BuildRequires:  pkgconfig(xcb-xfixes)
  BuildRequires:  pkgconfig(xcb-xinput)
  BuildRequires:  pkgconfig(xkbcommon)
  BuildRequires:  pkgconfig(xwayland)
@@ -230,7 +242,7 @@ index ba31495..09d660e 100644
  # libliftoff does not bump soname on API changes
  Requires:       libliftoff%{?_isa} >= %{liftoff_ver}
  
-@@ -93,7 +94,7 @@ Development files for %{name}.
+@@ -93,7 +98,7 @@ Development files for %{name}.
  
  
  %prep

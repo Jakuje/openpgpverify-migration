@@ -1,6 +1,6 @@
-From ab348ba0524ec14e99cdec1aad8982aa0ce07eba Mon Sep 17 00:00:00 2001
+From 2674d8cd81eb1381d6d89d38039722b1fde58657 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:11 +0100
+Date: Tue, 27 Oct 2026 12:08:55 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,14 +8,15 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh gpgkey-0FDE7BE0E88F5E48.gpg from keyservers/WKD: same
-certificate(s), with self-signatures our copy was missing.
+certificate(s), with self-signatures our copy was missing; the commands
+are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  gpgkey-0FDE7BE0E88F5E48.gpg | Bin 8249 -> 18875 bytes
- kanshi.spec                 |   9 ++++++---
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ kanshi.spec                 |  13 ++++++++++---
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/gpgkey-0FDE7BE0E88F5E48.gpg b/gpgkey-0FDE7BE0E88F5E48.gpg
 index 3530f3229196c6dd248e9ce5be9473a8990d4b63..f58902fc34bf2eb1926588b29aa062f03db0cea4 100644
@@ -220,7 +221,7 @@ z#VN2kLzxF86FPanr1fSdMJX_6bG{r{BS_R{bFhpgM3i4NlxgxNO+V&NCf~^`bv!rw
 uXhnf!d^fMu@nvG($;7+)ryegz#AY(1v(n}#4q)SKCUY7pZBDb1Vgdj|i7rL}
 
 diff --git a/kanshi.spec b/kanshi.spec
-index 595525b..33d08ea 100644
+index 595525b..18a859e 100644
 --- a/kanshi.spec
 +++ b/kanshi.spec
 @@ -2,7 +2,7 @@
@@ -232,7 +233,15 @@ index 595525b..33d08ea 100644
  Summary:        Dynamic display configuration for Wayland
  
  # Overall project license: MIT
-@@ -20,7 +20,7 @@ Source2:        https://emersion.fr/.well-known/openpgpkey/hu/dj3498u4hyyarh35rk
+@@ -16,11 +16,15 @@ URL:            https://gitlab.freedesktop.org/emersion/kanshi
+ Source0:        %{url}/-/releases/v%{version}/downloads/%{name}-%{version}.tar.gz
+ Source1:        %{url}/-/releases/v%{version}/downloads/%{name}-%{version}.tar.gz.sig
+ # 0FDE7BE0E88F5E48: emersion <contact@emersion.fr>
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 | sq keyring filter --experimental --cert 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 --output update.pgp
++#   sq keyring merge gpgkey-0FDE7BE0E88F5E48.gpg update.pgp | sq packet dearmor --output gpgkey-0FDE7BE0E88F5E48.gpg.new
++#   mv gpgkey-0FDE7BE0E88F5E48.gpg.new gpgkey-0FDE7BE0E88F5E48.gpg
+ Source2:        https://emersion.fr/.well-known/openpgpkey/hu/dj3498u4hyyarh35rkjfnghbjxug6b19#/gpgkey-0FDE7BE0E88F5E48.gpg
  Source3:        %{name}.service
  
  BuildRequires:  gcc
@@ -241,7 +250,7 @@ index 595525b..33d08ea 100644
  BuildRequires:  meson >= 0.59.0
  BuildRequires:  systemd-rpm-macros
  
-@@ -42,7 +42,7 @@ on Wayland compositors supporting the wlr-output-management protocol.
+@@ -42,7 +46,7 @@ on Wayland compositors supporting the wlr-output-management protocol.
  
  
  %prep
@@ -250,7 +259,7 @@ index 595525b..33d08ea 100644
  %autosetup -p1
  
  
-@@ -74,6 +74,9 @@ install -D -m 0644 -pv %{SOURCE3} %{buildroot}%{_userunitdir}/%{name}.service
+@@ -74,6 +78,9 @@ install -D -m 0644 -pv %{SOURCE3} %{buildroot}%{_userunitdir}/%{name}.service
  
  
  %changelog

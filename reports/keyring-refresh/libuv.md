@@ -9,8 +9,17 @@ Phase 1 reason: `expired`
 ## keysuv.gpg
 
 - certificates: 612F0EAD9401622379DF4402F28C3C8DA33C03BE, C82FA3AE1CBEDC6BE46B9360C43CEC45C17AB93C, CFBB9CA9A5BEAFD70E2B3C5A79A67C55A3679C8B, AEAD0A4B686767751A0E4AEF34A25FB128246514, 57353E0DBDAAA7E839B66A1AFF47D5E4AD8B4FDC, 94AE36675C464D64BAFA68DD7434390BDBE9B9C5, FDF519364458319FA8233DC9410E5553AE9BC059, D77B1E34243FBAF05F8E9CC34F55C8C846AB89B9
-- found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
+- found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 23079 → 42607 bytes
+
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - 612F0EAD9401622379DF4402F28C3C8DA33C03BE C82FA3AE1CBEDC6BE46B9360C43CEC45C17AB93C CFBB9CA9A5BEAFD70E2B3C5A79A67C55A3679C8B AEAD0A4B686767751A0E4AEF34A25FB128246514 57353E0DBDAAA7E839B66A1AFF47D5E4AD8B4FDC 94AE36675C464D64BAFA68DD7434390BDBE9B9C5 FDF519364458319FA8233DC9410E5553AE9BC059 D77B1E34243FBAF05F8E9CC34F55C8C846AB89B9 \
+  | sq keyring filter --experimental --cert 612F0EAD9401622379DF4402F28C3C8DA33C03BE --cert C82FA3AE1CBEDC6BE46B9360C43CEC45C17AB93C --cert CFBB9CA9A5BEAFD70E2B3C5A79A67C55A3679C8B --cert AEAD0A4B686767751A0E4AEF34A25FB128246514 --cert 57353E0DBDAAA7E839B66A1AFF47D5E4AD8B4FDC --cert 94AE36675C464D64BAFA68DD7434390BDBE9B9C5 --cert FDF519364458319FA8233DC9410E5553AE9BC059 --cert D77B1E34243FBAF05F8E9CC34F55C8C846AB89B9 --output update.pgp
+sq keyring merge keysuv.gpg update.pgp | sq packet dearmor --output keysuv.gpg.new
+mv keysuv.gpg.new keysuv.gpg
+```
 
 ```diff
 --- dist-git/keysuv.gpg
@@ -28,15 +37,15 @@ Phase 1 reason: `expired`
          Key flags: transport encryption, data-at-rest encryption
             UserID: Santiago Gimeno (sgimeno) <santiago.gimeno@gmail.com>
        Fingerprint: C82FA3AE1CBEDC6BE46B9360C43CEC45C17AB93C
--                   Invalid: No binding signature at time 2026-10-26T20:11:41Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T10:59:05Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: certification, signing
             Subkey: C4960C6DAA2AEBC352F3E5B8E140F61BC5979DCC
--                   Invalid: primary key: No binding signature at time 2026-10-26T20:11:41Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T10:59:05Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: transport encryption, data-at-rest encryption
 +           UserID: Richard Lau <richard.lau@ibm.com>
             UserID: Richard Lau <riclau@uk.ibm.com>
                     Revoked:
--                   Invalid: No binding signature at time 2026-10-26T20:11:41Z
+-                   Invalid: No binding signature at time 2026-10-27T10:59:05Z
             UserID: Richard Lau <rlau@redhat.com>
                     Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
                     because: SHA1 is not considered secure

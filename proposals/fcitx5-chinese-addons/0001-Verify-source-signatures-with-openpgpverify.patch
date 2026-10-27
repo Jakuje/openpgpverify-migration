@@ -1,6 +1,6 @@
-From 433fc257a54c9afe052b248afea1b80acfd84e27 Mon Sep 17 00:00:00 2001
+From 5e069495898652196d9f0dd8c56c2fc0c732cea7 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:24 +0100
+Date: Tue, 27 Oct 2026 12:08:59 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,13 +8,14 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh 0x8E8B898CBF2412F9 from keyservers/WKD: same certificate(s),
-with self-signatures our copy was missing.
+with self-signatures our copy was missing; the commands are in the spec
+comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  0x8E8B898CBF2412F9         | 282 ++++++++++++++++++++++---------------
- fcitx5-chinese-addons.spec |   3 +-
- 2 files changed, 174 insertions(+), 111 deletions(-)
+ fcitx5-chinese-addons.spec |   7 +-
+ 2 files changed, 178 insertions(+), 111 deletions(-)
 
 diff --git a/0x8E8B898CBF2412F9 b/0x8E8B898CBF2412F9
 index d9449d8..43b0e60 100644
@@ -306,10 +307,21 @@ index d9449d8..43b0e60 100644
 +=8BEE
 +-----END PGP PUBLIC KEY BLOCK-----
 diff --git a/fcitx5-chinese-addons.spec b/fcitx5-chinese-addons.spec
-index 3600e1a..e09cc81 100644
+index 3600e1a..1e9ab71 100644
 --- a/fcitx5-chinese-addons.spec
 +++ b/fcitx5-chinese-addons.spec
-@@ -38,6 +38,7 @@ BuildRequires:  pkgconfig(opencc)
+@@ -15,6 +15,10 @@ License:        LicenseRef-Callaway-LGPLv2+
+ URL:            https://github.com/fcitx/fcitx5-chinese-addons
+ Source:         https://download.fcitx-im.org/fcitx5/fcitx5-chinese-addons/fcitx5-chinese-addons-%{version}_dict.tar.zst
+ Source1:        https://download.fcitx-im.org/fcitx5/fcitx5-chinese-addons/fcitx5-chinese-addons-%{version}_dict.tar.zst.sig
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9 | sq keyring filter --experimental --cert 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9 --output update.pgp
++#   sq keyring merge --output 0x8E8B898CBF2412F9.new 0x8E8B898CBF2412F9 update.pgp
++#   mv 0x8E8B898CBF2412F9.new 0x8E8B898CBF2412F9
+ Source2:        https://pgp.key-server.io/download/0x8E8B898CBF2412F9
+ 
+ BuildRequires:  gnupg2
+@@ -38,6 +42,7 @@ BuildRequires:  pkgconfig(opencc)
  BuildRequires:  pkgconfig(Fcitx5Core)
  BuildRequires:  pkgconfig(Fcitx5Module)
  BuildRequires:  /usr/bin/appstream-util
@@ -317,7 +329,7 @@ index 3600e1a..e09cc81 100644
  Requires:       hicolor-icon-theme
  Requires:       %{name}-data = %{version}-%{release}
  Requires:       fcitx5-lua
-@@ -70,7 +71,7 @@ Requires:       fcitx5-devel
+@@ -70,7 +75,7 @@ Requires:       fcitx5-devel
  devel files for fcitx5-chinese-addons
  
  %prep

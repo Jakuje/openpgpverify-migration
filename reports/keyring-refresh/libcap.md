@@ -12,6 +12,15 @@ Phase 1 reason: `sha1-cert`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD; hkps://keyserver.ubuntu.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 6479 → 6923 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - 38A644698C69787344E954CE29EE848AE2CCF3F4 \
+  | sq keyring filter --experimental --cert 38A644698C69787344E954CE29EE848AE2CCF3F4 --output update.pgp
+sq keyring merge 29EE848AE2CCF3F4.asc update.pgp | sq packet dearmor --output 29EE848AE2CCF3F4.asc.new
+mv 29EE848AE2CCF3F4.asc.new 29EE848AE2CCF3F4.asc
+```
+
 ```diff
 --- dist-git/29EE848AE2CCF3F4.asc
 +++ refreshed/29EE848AE2CCF3F4.asc

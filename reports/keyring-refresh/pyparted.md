@@ -13,6 +13,16 @@ Phase 1 reason: `keybox`
 - found via: hkps://keyserver.ubuntu.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 4556 → 8104 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+gpg --homedir "$(mktemp -d)" --batch --no-default-keyring --keyring ./keyring.gpg --export --output keyring.gpg.pgp
+sq --home=none network search --output - 08F7C8B3C621950C138F766162977BB9C841B965 \
+  | sq keyring filter --experimental --cert 08F7C8B3C621950C138F766162977BB9C841B965 --output update.pgp
+sq keyring merge keyring.gpg.pgp update.pgp | sq packet dearmor --output keyring.gpg.new
+mv keyring.gpg.new keyring.gpg
+```
+
 ```diff
 --- dist-git/keyring.gpg (exported from keybox)
 +++ refreshed/keyring.gpg

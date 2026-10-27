@@ -1,6 +1,6 @@
-From 271ed1310e69dee7bc53e9b97ae3377c9cadd382 Mon Sep 17 00:00:00 2001
+From 9005b08bcd9b304a454431631741b505e590f9a9 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:13 +0100
+Date: Tue, 27 Oct 2026 12:08:55 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,14 +8,14 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh kdudka.pgp from keyservers/WKD: same certificate(s), with self-
-signatures our copy was missing.
+signatures our copy was missing; the commands are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  kdudka.pgp   | 137 ++++++++++++++++++++++++++++++++++++---------------
- nss-pem.spec |   8 ++-
- 2 files changed, 104 insertions(+), 41 deletions(-)
+ nss-pem.spec |  14 ++++--
+ 2 files changed, 108 insertions(+), 43 deletions(-)
 
 diff --git a/kdudka.pgp b/kdudka.pgp
 index ee89e90..adb591c 100644
@@ -170,7 +170,7 @@ index ee89e90..adb591c 100644
 +=JK8P
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/nss-pem.spec b/nss-pem.spec
-index 13b2460..111732a 100644
+index 13b2460..c7caf8f 100644
 --- a/nss-pem.spec
 +++ b/nss-pem.spec
 @@ -2,7 +2,7 @@
@@ -182,7 +182,20 @@ index 13b2460..111732a 100644
  Summary:    PEM file reader for Network Security Services (NSS)
  
  # See README for details
-@@ -22,6 +22,7 @@ BuildRequires: gcc
+@@ -13,8 +13,10 @@ URL:        https://github.com/kdudka/nss-pem
+ Source0:    https://github.com/kdudka/nss-pem/releases/download/%{name}-%{version}/%{name}-%{version}.tar.xz
+ Source1:    https://github.com/kdudka/nss-pem/releases/download/%{name}-%{version}/%{name}-%{version}.tar.xz.asc
+ 
+-# gpg --keyserver pgp.mit.edu --recv-key 992A96E075056E79CD8214F9873DB37572A37B36
+-# gpg --output kdudka.pgp --armor --export kdudka@redhat.com
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 992A96E075056E79CD8214F9873DB37572A37B36 | sq keyring filter --experimental --cert 992A96E075056E79CD8214F9873DB37572A37B36 --output update.pgp
++#   sq keyring merge --output kdudka.pgp.new kdudka.pgp update.pgp
++#   mv kdudka.pgp.new kdudka.pgp
+ Source2:    kdudka.pgp
+ 
+ BuildRequires: cmake
+@@ -22,6 +24,7 @@ BuildRequires: gcc
  BuildRequires: gnupg2
  BuildRequires: make
  BuildRequires: nss-pkcs11-devel
@@ -190,7 +203,7 @@ index 13b2460..111732a 100644
  
  # require at least the version of nss that nss-pem was built against (#1428965)
  Requires: nss%{?_isa} >= %(nss-config --version 2>/dev/null || echo 0)
-@@ -31,7 +32,7 @@ PEM file reader for Network Security Services (NSS), implemented as a PKCS#11
+@@ -31,7 +34,7 @@ PEM file reader for Network Security Services (NSS), implemented as a PKCS#11
  module.
  
  %prep
@@ -199,7 +212,7 @@ index 13b2460..111732a 100644
  %setup -q
  
  %build
-@@ -49,6 +50,9 @@ module.
+@@ -49,6 +52,9 @@ module.
  %license COPYING.{GPL,MPL}
  
  %changelog

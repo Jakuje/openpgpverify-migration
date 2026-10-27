@@ -16,7 +16,7 @@ Why `sqv`:
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
 - dropped `BuildRequires:	gnupg2`, only needed for `%gpgverify`
-- refreshed keyring `dj3498u4hyyarh35rkjfnghbjxug6b19` (see below)
+- refreshed keyring `dj3498u4hyyarh35rkjfnghbjxug6b19` (see below); the comment above its `Source` line now shows the commands for refreshing it
 - Release bumped (`7%{?dist}` → `8%{?dist}`) with a changelog entry
 
 ### Testing
@@ -36,6 +36,15 @@ Tested on 2026-10-22 at dist-git commit `482f2e984135` with sequoia-sqv 1.5.0-2.
 
 - `34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48`
 
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 \
+  | sq keyring filter --experimental --cert 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 --output update.pgp
+sq keyring merge dj3498u4hyyarh35rkjfnghbjxug6b19 update.pgp | sq packet dearmor --output dj3498u4hyyarh35rkjfnghbjxug6b19.new
+mv dj3498u4hyyarh35rkjfnghbjxug6b19.new dj3498u4hyyarh35rkjfnghbjxug6b19
+```
+
 What changed in the certificate (`sq inspect`):
 
 ```diff
@@ -43,13 +52,13 @@ What changed in the certificate (`sq inspect`):
 +++ refreshed/dj3498u4hyyarh35rkjfnghbjxug6b19
 @@ -1,11 +1,12 @@
        Fingerprint: 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48
--                   Invalid: No binding signature at time 2026-10-23T08:15:16Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T11:05:38Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +  Expiration time: 2027-04-12 16:35:43 UTC (creation time + 11years 10days 43m 25s)
 +        Key flags: certification, signing
             Subkey: 3842522FEB127E044BC92BEA10D018335A0B5D8E
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-23T08:15:16Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T11:05:38Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +  Expiration time: 2027-04-12 16:35:24 UTC (creation time + 11years 10days 43m 6s)
 +        Key flags: transport encryption, data-at-rest encryption
 +           UserID: Simon Ser <contact@emersion.fr>

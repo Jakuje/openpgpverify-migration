@@ -1,6 +1,6 @@
-From 1a241ac03ffe0346d07e83386bafef33a645a892 Mon Sep 17 00:00:00 2001
+From 7c9460a0a97296da279665cbcb5edec09f9ec03e Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:32 +0100
+Date: Tue, 27 Oct 2026 12:09:03 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,14 +8,15 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh B5B6416FEA6DDA05EA562A9FCB987F2783972FF9 from keyservers/WKD:
-same certificate(s), with self-signatures our copy was missing.
+same certificate(s), with self-signatures our copy was missing; the
+commands are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  B5B6416FEA6DDA05EA562A9FCB987F2783972FF9 | 66 ++++++++++++++++++------
- rpki-client.spec                         |  9 ++--
- 2 files changed, 57 insertions(+), 18 deletions(-)
+ rpki-client.spec                         | 13 +++--
+ 2 files changed, 61 insertions(+), 18 deletions(-)
 
 diff --git a/B5B6416FEA6DDA05EA562A9FCB987F2783972FF9 b/B5B6416FEA6DDA05EA562A9FCB987F2783972FF9
 index 06ab48a..b944d37 100644
@@ -98,7 +99,7 @@ index 06ab48a..b944d37 100644
 +=5r+8
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/rpki-client.spec b/rpki-client.spec
-index 954c9d5..3ba75a7 100644
+index 954c9d5..2b1c25d 100644
 --- a/rpki-client.spec
 +++ b/rpki-client.spec
 @@ -9,7 +9,7 @@
@@ -110,7 +111,18 @@ index 954c9d5..3ba75a7 100644
  # rpki-client itself is ISC but uses other source codes, breakdown:
  # BSD-2-Clause: include/sys/tree.h and src/{http,output}.c
  # BSD-3-Clause: compat/{setproctitle,vis}.c and include/{sha2_openbsd,vis,sys/queue}.h and src/mkdir.c
-@@ -31,7 +31,6 @@ Source4:        %{name}.service
+@@ -21,6 +21,10 @@ URL:            https://www.rpki-client.org/
+ %if !0%{?with_snapshot}
+ Source0:        https://ftp.openbsd.org/pub/OpenBSD/rpki-client/%{name}-%{version}.tar.gz
+ Source1:        https://ftp.openbsd.org/pub/OpenBSD/rpki-client/%{name}-%{version}.tar.gz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - B5B6416FEA6DDA05EA562A9FCB987F2783972FF9 | sq keyring filter --experimental --cert B5B6416FEA6DDA05EA562A9FCB987F2783972FF9 --output update.pgp
++#   sq keyring merge --output B5B6416FEA6DDA05EA562A9FCB987F2783972FF9.new B5B6416FEA6DDA05EA562A9FCB987F2783972FF9 update.pgp
++#   mv B5B6416FEA6DDA05EA562A9FCB987F2783972FF9.new B5B6416FEA6DDA05EA562A9FCB987F2783972FF9
+ Source2:        https://keys.openpgp.org/vks/v1/by-fingerprint/B5B6416FEA6DDA05EA562A9FCB987F2783972FF9
+ %else
+ Source0:        https://github.com/rpki-client/rpki-client-portable/archive/%{portable_commit}/%{name}-portable-%{version}-%{portable_shortcommit}.tar.gz
+@@ -31,7 +35,6 @@ Source4:        %{name}.service
  Source5:        %{name}.timer
  Source6:        %{name}.service.el8
  %if !0%{?with_snapshot}
@@ -118,7 +130,7 @@ index 954c9d5..3ba75a7 100644
  %else
  BuildRequires:  autoconf
  BuildRequires:  automake
-@@ -45,6 +44,7 @@ BuildRequires:  expat-devel
+@@ -45,6 +48,7 @@ BuildRequires:  expat-devel
  BuildRequires:  rsync
  BuildRequires:  systemd-rpm-macros
  BuildRequires:  zlib-devel
@@ -126,7 +138,7 @@ index 954c9d5..3ba75a7 100644
  Requires:       rsync
  %{?systemd_requires}
  %{?sysusers_requires_compat}
-@@ -62,7 +62,7 @@ also as CSV or JSON objects for consumption by other routing stacks.
+@@ -62,7 +66,7 @@ also as CSV or JSON objects for consumption by other routing stacks.
  
  %prep
  %if !0%{?with_snapshot}
@@ -135,7 +147,7 @@ index 954c9d5..3ba75a7 100644
  %setup -q
  %else
  %setup -q -n %{name}-portable-%{portable_commit}
-@@ -111,6 +111,9 @@ install -D -p -m 0644 %{SOURCE5} $RPM_BUILD_ROOT%{_unitdir}/%{name}.timer
+@@ -111,6 +115,9 @@ install -D -p -m 0644 %{SOURCE5} $RPM_BUILD_ROOT%{_unitdir}/%{name}.timer
  %dir %attr(0755,%{name},%{name}) %{_localstatedir}/lib/%{name}/
  
  %changelog

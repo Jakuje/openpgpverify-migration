@@ -1,6 +1,6 @@
-From bc3daab9e303018678c1cac5eb27f07ee0e12864 Mon Sep 17 00:00:00 2001
+From c05956c3b8ed5f36eabef7a7af057ebe099be412 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:29 +0100
+Date: Tue, 27 Oct 2026 12:09:01 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,18 +8,30 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh newsboat.pgp from keyservers/WKD: same certificate(s), with
-self-signatures our copy was missing.
+self-signatures our copy was missing; the commands are in the spec
+comment.
 
 Assisted-by: Claude Opus 5.5
 ---
- newsboat.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ newsboat.spec | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/newsboat.spec b/newsboat.spec
-index c56ae04..f53ac02 100644
+index c56ae04..ab9b246 100644
 --- a/newsboat.spec
 +++ b/newsboat.spec
-@@ -35,6 +35,7 @@ BuildRequires: pkgconfig(stfl)
+@@ -10,6 +10,10 @@ License: MIT
+ URL:     https://www.newsboat.org
+ Source0: https://newsboat.org/releases/%{version}/%{name}-%{version}.tar.xz
+ Source1: https://newsboat.org/releases/%{version}/%{name}-%{version}.tar.xz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - B8B1756A0DDBF0760CE67CCF4ED6CD61932B9EBE | sq keyring filter --experimental --cert B8B1756A0DDBF0760CE67CCF4ED6CD61932B9EBE --output update.pgp
++#   sq keyring merge --output newsboat.pgp.new newsboat.pgp update.pgp
++#   mv newsboat.pgp.new newsboat.pgp
+ Source2: https://newsboat.org/newsboat.pgp
+ 
+ Patch:  0001-make-do-not-require-Cargo.lock.patch
+@@ -35,6 +39,7 @@ BuildRequires: pkgconfig(stfl)
  # Rust parts
  BuildRequires:  git-core
  BuildRequires:  rust-packaging
@@ -27,7 +39,7 @@ index c56ae04..f53ac02 100644
  
  Obsoletes: newsbeuter < 2.9-29
  
-@@ -44,7 +45,7 @@ Provides: podboat = %{version}-%{release}
+@@ -44,7 +49,7 @@ Provides: podboat = %{version}-%{release}
  Newsboat is a fork of Newsbeuter, an RSS/Atom feed reader for the text console.
  
  %prep

@@ -1,6 +1,6 @@
-From 94ce6326a139e8fef4d986c79cf0e73c5f1c9087 Mon Sep 17 00:00:00 2001
+From 75d7ab8f154d283b7b3101cb0389e53bd6bc8c90 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:33 +0100
+Date: Tue, 27 Oct 2026 12:09:03 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,13 +8,14 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8 from keyservers/WKD:
-same certificate(s), with self-signatures our copy was missing.
+same certificate(s), with self-signatures our copy was missing; the
+commands are in the spec comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8 | 100 +++++++++++++++--------
- weechat.spec                             |   3 +-
- 2 files changed, 66 insertions(+), 37 deletions(-)
+ weechat.spec                             |   7 +-
+ 2 files changed, 70 insertions(+), 37 deletions(-)
 
 diff --git a/A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8 b/A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8
 index 3302ef4..f3a2ac2 100644
@@ -126,10 +127,21 @@ index 3302ef4..f3a2ac2 100644
 +=LVC2
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/weechat.spec b/weechat.spec
-index 24c9868..aba3c62 100644
+index 24c9868..3a34c5c 100644
 --- a/weechat.spec
 +++ b/weechat.spec
-@@ -44,6 +44,7 @@ BuildRequires: tcl-devel
+@@ -10,6 +10,10 @@ License:   GPL-3.0-only
+ 
+ Source:    https://weechat.org/files/src/%{name}-%{version}.tar.xz
+ Source1:   https://weechat.org/files/src/%{name}-%{version}.tar.xz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8 | sq keyring filter --experimental --cert A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8 --output update.pgp
++#   sq keyring merge --output A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8.new A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8 update.pgp
++#   mv A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8.new A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8
+ Source2:   https://keys.openpgp.org/vks/v1/by-fingerprint/A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8
+ 
+ BuildRequires: asciidoctor
+@@ -44,6 +48,7 @@ BuildRequires: tcl-devel
  BuildRequires: uriparser-devel
  %endif
  BuildRequires: zlib-devel
@@ -137,7 +149,7 @@ index 24c9868..aba3c62 100644
  
  Requires:      hicolor-icon-theme
  
-@@ -72,7 +73,7 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
+@@ -72,7 +77,7 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
  This package provides the PHP plugin for weechat.
  
  %prep

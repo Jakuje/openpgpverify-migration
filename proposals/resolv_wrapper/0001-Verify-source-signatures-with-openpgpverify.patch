@@ -1,6 +1,6 @@
-From 70ac78dad2e1b2ac6fe07528b5ab8e981067739a Mon Sep 17 00:00:00 2001
+From 6ef489f66f7ef90d3c78384a2638f5e902430e56 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:06 +0100
+Date: Tue, 27 Oct 2026 12:08:52 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,14 +8,15 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh resolv_wrapper.keyring from keyservers/WKD: same certificate(s),
-with self-signatures our copy was missing.
+with self-signatures our copy was missing; the commands are in the spec
+comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  resolv_wrapper.keyring | Bin 3432 -> 18452 bytes
- resolv_wrapper.spec    |   8 ++++++--
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ resolv_wrapper.spec    |  12 ++++++++++--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/resolv_wrapper.keyring b/resolv_wrapper.keyring
 index 411bf36750f0fc4a8856034415e39c7116559ee4..ff839dee56c422ff2e104ff84c1098a5c2e4ee4f 100644
@@ -296,7 +297,7 @@ zcmbO-f$@bD^Gqh*jm*4Ej9VrPGO06nGTChIXR%>o+M+mFR!W?=I59UVQ7^wJ-L8|#
 oa`OazOOQetDP?95ce0En6Z1|c-px;)d6}3yndCQrb(LoV05;PY$p8QV
 
 diff --git a/resolv_wrapper.spec b/resolv_wrapper.spec
-index 0023246..219ba1a 100644
+index 0023246..72b8396 100644
 --- a/resolv_wrapper.spec
 +++ b/resolv_wrapper.spec
 @@ -1,6 +1,6 @@
@@ -307,7 +308,18 @@ index 0023246..219ba1a 100644
  
  Summary:        A wrapper for dns name resolving or dns faking
  License:        BSD-3-Clause
-@@ -17,6 +17,7 @@ BuildRequires:  gnupg2
+@@ -8,6 +8,10 @@ Url:            http://cwrap.org/
+ 
+ Source0:        https://ftp.samba.org/pub/cwrap/%{name}-%{version}.tar.gz
+ Source1:        https://ftp.samba.org/pub/cwrap/%{name}-%{version}.tar.gz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D | sq keyring filter --experimental --cert 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D --output update.pgp
++#   sq keyring merge resolv_wrapper.keyring update.pgp | sq packet dearmor --output resolv_wrapper.keyring.new
++#   mv resolv_wrapper.keyring.new resolv_wrapper.keyring
+ Source2:        resolv_wrapper.keyring
+ 
+ Patch0:         resolv_wrapper-fix-cmocka-1.1.6+-support.patch
+@@ -17,6 +21,7 @@ BuildRequires:  gnupg2
  BuildRequires:  cmake
  BuildRequires:  libcmocka-devel
  BuildRequires:  socket_wrapper
@@ -315,7 +327,7 @@ index 0023246..219ba1a 100644
  
  Recommends:     cmake
  Recommends:     pkgconfig
-@@ -37,7 +38,7 @@ This package doesn't have a devel package because this project is for
+@@ -37,7 +42,7 @@ This package doesn't have a devel package because this project is for
  development/testing.
  
  %prep
@@ -324,7 +336,7 @@ index 0023246..219ba1a 100644
  %autosetup -p1
  
  %build
-@@ -67,6 +68,9 @@ LD_PRELOAD=%{__cmake_builddir}/src/libpam_wrapper.so bash -c '>/dev/null'
+@@ -67,6 +72,9 @@ LD_PRELOAD=%{__cmake_builddir}/src/libpam_wrapper.so bash -c '>/dev/null'
  %{_mandir}/man1/resolv_wrapper.1*
  
  %changelog

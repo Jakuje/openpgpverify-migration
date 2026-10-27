@@ -1,6 +1,6 @@
-From 66e0fc0c18e45460744083fd9e34c146434f679e Mon Sep 17 00:00:00 2001
+From 9cc288fa6930bc551b4b976234564bcf1d3526f7 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:40 +0100
+Date: Tue, 27 Oct 2026 12:09:06 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,17 +8,18 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh release-keys.asc from keyservers/WKD: same certificate(s), with
-self-signatures our copy was missing.
+self-signatures our copy was missing; the commands are in the spec
+comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- clang18.spec     |  10 +-
+ clang18.spec     |  14 ++-
  release-keys.asc | 233 +++++++++++++++++++++++++++++++++--------------
- 2 files changed, 170 insertions(+), 73 deletions(-)
+ 2 files changed, 174 insertions(+), 73 deletions(-)
 
 diff --git a/clang18.spec b/clang18.spec
-index 4047021..70868ff 100644
+index 4047021..dd8b760 100644
 --- a/clang18.spec
 +++ b/clang18.spec
 @@ -75,7 +75,7 @@
@@ -30,7 +31,18 @@ index 4047021..70868ff 100644
  Summary:	A C language family front-end for LLVM
  
  License:	Apache-2.0 WITH LLVM-exception OR NCSA
-@@ -181,6 +181,7 @@ BuildRequires: perl(lib)
+@@ -90,6 +90,10 @@ Source0:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{clang_
+ Source3:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{clang_version}%{?rc_ver:-rc%{rc_ver}}/%{clang_srcdir}.tar.xz.sig
+ Source1:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{clang_version}%{?rc_ver:-rc%{rc_ver}}/%{clang_tools_srcdir}.tar.xz
+ Source2:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{clang_version}%{?rc_ver:-rc%{rc_ver}}/%{clang_tools_srcdir}.tar.xz.sig
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - D574BD5D1D0E98895E3BF90044F2485E45D59042 474E22316ABF4785A88C6E8EA2C794A986419D8A | sq keyring filter --experimental --cert D574BD5D1D0E98895E3BF90044F2485E45D59042 --cert 474E22316ABF4785A88C6E8EA2C794A986419D8A --output update.pgp
++#   sq keyring merge --output release-keys.asc.new release-keys.asc update.pgp
++#   mv release-keys.asc.new release-keys.asc
+ Source4:	release-keys.asc
+ %endif
+ %if %{without compat_build}
+@@ -181,6 +185,7 @@ BuildRequires: perl(lib)
  BuildRequires: perl(Term::ANSIColor)
  BuildRequires: perl(Text::ParseWords)
  BuildRequires: perl(Sys::Hostname)
@@ -38,7 +50,7 @@ index 4047021..70868ff 100644
  
  Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
  
-@@ -302,12 +303,12 @@ Requires:      python3
+@@ -302,12 +307,12 @@ Requires:      python3
  
  %prep
  %if %{without snapshot_build}
@@ -53,7 +65,7 @@ index 4047021..70868ff 100644
  %endif
  
  %setup -T -q -b 1 -n %{clang_tools_srcdir}
-@@ -731,6 +732,9 @@ LD_LIBRARY_PATH=%{buildroot}/%{install_libdir} %{__ninja} check-all -C %{__cmake
+@@ -731,6 +736,9 @@ LD_LIBRARY_PATH=%{buildroot}/%{install_libdir} %{__ninja} check-all -C %{__cmake
  
  %endif
  %changelog

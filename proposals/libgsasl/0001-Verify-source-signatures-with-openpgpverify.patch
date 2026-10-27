@@ -1,6 +1,6 @@
-From 22867350c620d5c3bd667b84f30eef89fbc3ecbc Mon Sep 17 00:00:00 2001
+From 2d9e12f17132f07a3af0a4975dd6eecd4d858576 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:27 +0100
+Date: Tue, 27 Oct 2026 12:09:01 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,14 +8,15 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh 54265e8c.txt from keyservers/WKD: same certificate(s), with
-self-signatures our copy was missing.
+self-signatures our copy was missing; the commands are in the spec
+comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  54265e8c.txt  | Bin 80039 -> 90563 bytes
- libgsasl.spec |  11 +++++++----
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ libgsasl.spec |  15 +++++++++++----
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
 diff --git a/54265e8c.txt b/54265e8c.txt
 index fb46179221f72a02a2a1501bb2e562758465cc12..e76c57d222fa8780e59d6322806398c6e63df899 100644
@@ -2701,10 +2702,10 @@ z$P`_O!?r4bYZaDy_q?b}gOFlR(x;HaEm496GdVIaJIWmJzgc<2fdBR95iQ|gj_mx)
 V@i{}~|D}uZzc|C@^?zOh{|8q2)@lF%
 
 diff --git a/libgsasl.spec b/libgsasl.spec
-index 2039b54..cba3aa8 100644
+index 2039b54..c814a7f 100644
 --- a/libgsasl.spec
 +++ b/libgsasl.spec
-@@ -1,6 +1,6 @@
+@@ -1,17 +1,21 @@
  Name:           libgsasl
  Version:        1.10.0
 -Release:        17%{?dist}
@@ -2712,7 +2713,13 @@ index 2039b54..cba3aa8 100644
  Summary:        GNU SASL library
  License:        LGPL-2.1-or-later
  URL:            https://www.gnu.org/software/gsasl/
-@@ -10,8 +10,8 @@ Source2:        https://josefsson.org/54265e8c.txt
+ Source0:        https://ftp.gnu.org/gnu/gsasl/%{name}-%{version}.tar.gz
+ Source1:        https://ftp.gnu.org/gnu/gsasl/%{name}-%{version}.tar.gz.sig
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 9AA9BDB11BB1B99A21285A330664A76954265E8C | sq keyring filter --experimental --cert 9AA9BDB11BB1B99A21285A330664A76954265E8C --output update.pgp
++#   sq keyring merge 54265e8c.txt update.pgp | sq packet dearmor --output 54265e8c.txt.new
++#   mv 54265e8c.txt.new 54265e8c.txt
+ Source2:        https://josefsson.org/54265e8c.txt
  Patch:          0001-GSSAPI-server-Boundary-check-gss_wrap-token-read-OOB.patch
  Patch:          0002-Fix-NULL-pointer-dereference-in-DIGEST-MD5-parser.patch
  BuildRequires:  gcc
@@ -2723,7 +2730,7 @@ index 2039b54..cba3aa8 100644
  BuildRequires:  krb5-devel
  BuildRequires:  libgcrypt-devel
  BuildRequires:  libidn-devel
-@@ -35,7 +35,7 @@ The %{name}-devel package contains libraries and header files for
+@@ -35,7 +39,7 @@ The %{name}-devel package contains libraries and header files for
  developing applications that use %{name}.
  
  %prep
@@ -2732,7 +2739,7 @@ index 2039b54..cba3aa8 100644
  %autosetup -p2
  
  %build
-@@ -61,6 +61,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
+@@ -61,6 +65,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
  %{_libdir}/pkgconfig/libgsasl.pc
  
  %changelog

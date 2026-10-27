@@ -15,7 +15,7 @@ Why `sqv`:
 
 - the direct `gpgv` call is replaced by `%{openpgpverify}` with the same keyring, signature and data
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `gpgkey-B56B8B9D9915AA8796EDC013DFFF2CDB19FC338D.gpg` (see below)
+- refreshed keyring `gpgkey-B56B8B9D9915AA8796EDC013DFFF2CDB19FC338D.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
 - Release bumped (`25%{?dist}` → `26%{?dist}`) with a changelog entry
 
 ### Testing
@@ -34,6 +34,15 @@ Tested on 2026-10-26 at dist-git commit `2eacf15e6373` with sequoia-sqv 1.5.0-2.
 `%openpgpverify` rejected the signature with the keyring in dist-git (SHA-1 data signature), while `gpgv` ignores that. The same certificate, looked up by fingerprint (hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
 
 - `B56B8B9D9915AA8796EDC013DFFF2CDB19FC338D`
+
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - B56B8B9D9915AA8796EDC013DFFF2CDB19FC338D \
+  | sq keyring filter --experimental --cert B56B8B9D9915AA8796EDC013DFFF2CDB19FC338D --output update.pgp
+sq keyring merge gpgkey-B56B8B9D9915AA8796EDC013DFFF2CDB19FC338D.gpg update.pgp | sq packet dearmor --output gpgkey-B56B8B9D9915AA8796EDC013DFFF2CDB19FC338D.gpg.new
+mv gpgkey-B56B8B9D9915AA8796EDC013DFFF2CDB19FC338D.gpg.new gpgkey-B56B8B9D9915AA8796EDC013DFFF2CDB19FC338D.gpg
+```
 
 What changed in the certificate (`sq inspect`):
 

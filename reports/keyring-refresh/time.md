@@ -12,6 +12,15 @@ Phase 1 reason: `binding-after-signature`
 - found via: hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 4529 → 15576 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - F576AAAC1B0FF849792D8CB129A794FD2272BC86 \
+  | sq keyring filter --experimental --cert F576AAAC1B0FF849792D8CB129A794FD2272BC86 --output update.pgp
+sq keyring merge gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg update.pgp | sq packet dearmor --output gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg.new
+mv gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg.new gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg
+```
+
 ```diff
 --- dist-git/gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg
 +++ refreshed/gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg
@@ -19,7 +28,7 @@ Phase 1 reason: `binding-after-signature`
          Key flags: transport encryption, data-at-rest encryption
             UserID: Assaf Gordon <agordon@wi.mit.edu>
                     Revoked:
--                   Invalid: No binding signature at time 2026-10-12T11:57:03Z
+-                   Invalid: No binding signature at time 2026-10-27T11:06:28Z
             UserID: Assaf Gordon <assafgordon@gmail.com>
  self-signatures CertificationRevocation: 2015-08-13
 -self-signatures PositiveCertification: 2020-02-24

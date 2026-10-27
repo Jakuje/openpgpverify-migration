@@ -1,6 +1,6 @@
-From fc275752fa8352c5c0fb2cf4b17bf492189720b7 Mon Sep 17 00:00:00 2001
+From db2b7e7d55d6db6933c7f1d517a4a4507c666046 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:27 +0100
+Date: Tue, 27 Oct 2026 12:09:01 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,17 +8,18 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh release-keys.asc from keyservers/WKD: same certificate(s), with
-self-signatures our copy was missing.
+self-signatures our copy was missing; the commands are in the spec
+comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- lld18.spec       |   8 +-
+ lld18.spec       |  12 ++-
  release-keys.asc | 233 +++++++++++++++++++++++++++++++++--------------
- 2 files changed, 169 insertions(+), 72 deletions(-)
+ 2 files changed, 173 insertions(+), 72 deletions(-)
 
 diff --git a/lld18.spec b/lld18.spec
-index b22e4e8..c8a3b49 100644
+index b22e4e8..34421f2 100644
 --- a/lld18.spec
 +++ b/lld18.spec
 @@ -49,7 +49,7 @@
@@ -30,7 +31,18 @@ index b22e4e8..c8a3b49 100644
  Summary:	The LLVM Linker
  
  License:	Apache-2.0 WITH LLVM-exception OR NCSA
-@@ -87,6 +87,7 @@ BuildRequires:	python3-lit
+@@ -60,6 +60,10 @@ Source0:	%{llvm_snapshot_source_prefix}lld-%{llvm_snapshot_yyyymmdd}.src.tar.xz
+ %else
+ Source0:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{maj_ver}.%{min_ver}.%{patch_ver}%{?rc_ver:-rc%{rc_ver}}/%{lld_srcdir}.tar.xz
+ Source1:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{maj_ver}.%{min_ver}.%{patch_ver}%{?rc_ver:-rc%{rc_ver}}/%{lld_srcdir}.tar.xz.sig
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - D574BD5D1D0E98895E3BF90044F2485E45D59042 474E22316ABF4785A88C6E8EA2C794A986419D8A | sq keyring filter --experimental --cert D574BD5D1D0E98895E3BF90044F2485E45D59042 --cert 474E22316ABF4785A88C6E8EA2C794A986419D8A --output update.pgp
++#   sq keyring merge --output release-keys.asc.new release-keys.asc update.pgp
++#   mv release-keys.asc.new release-keys.asc
+ Source2:	release-keys.asc
+ %endif
+ 
+@@ -87,6 +91,7 @@ BuildRequires:	python3-lit
  
  # For gpg source verification
  BuildRequires:	gnupg2
@@ -38,7 +50,7 @@ index b22e4e8..c8a3b49 100644
  
  Requires(post): /usr/sbin/update-alternatives
  Requires(preun): /usr/sbin/update-alternatives
-@@ -117,7 +118,7 @@ Shared libraries for LLD.
+@@ -117,7 +122,7 @@ Shared libraries for LLD.
  
  %prep
  %if %{without snapshot_build}
@@ -47,7 +59,7 @@ index b22e4e8..c8a3b49 100644
  %endif
  
  %autosetup -n %{lld_srcdir} -p2
-@@ -218,6 +219,9 @@ export LD_LIBRARY_PATH=%{buildroot}/%{install_libdir}
+@@ -218,6 +223,9 @@ export LD_LIBRARY_PATH=%{buildroot}/%{install_libdir}
  %{install_libdir}/liblld*.so.*
  
  %changelog

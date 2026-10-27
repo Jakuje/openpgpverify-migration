@@ -1,6 +1,6 @@
-From 4f753d2a2ef7d80611050e4038f1e4af6f3e890a Mon Sep 17 00:00:00 2001
+From b80a225ced31a762f158e5531a5f7f3a2e6c2534 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:02 +0100
+Date: Tue, 27 Oct 2026 12:08:51 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,14 +9,14 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg from
 keyservers/WKD: same certificate(s), with self-signatures our copy was
-missing.
+missing; the commands are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  ...76AAAC1B0FF849792D8CB129A794FD2272BC86.gpg | Bin 4529 -> 15576 bytes
- time.spec                                     |   8 ++++++--
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ time.spec                                     |  12 ++++++++++--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg b/gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg
 index c17e1624260aff4dd566355b6dd34e03aa523431..338fe9edf77711bd66aca709b7071015221fd332 100644
@@ -196,7 +196,7 @@ zcmcanxlx&UCKK;QW?m-7Et3VAl$bl2>^7S**@3tg+^Wo-OyQdoxWk#4cQWyAexuLJ
 v#N5ebv-yvq4MZeK0wlr`J-J9qZ}Uevc_uDS0nO!8{wfviY1@2KhJ^_LNEsZy
 
 diff --git a/time.spec b/time.spec
-index 6311579..d638d64 100644
+index 6311579..53c7c1e 100644
 --- a/time.spec
 +++ b/time.spec
 @@ -1,7 +1,7 @@
@@ -208,7 +208,18 @@ index 6311579..d638d64 100644
  # src/time.c:               GPL-3.0-or-later
  # COPYING:                  GPL-3.0 text
  # doc/time.texi:            GFDL-1.3-no-invariants-or-later
-@@ -79,6 +79,7 @@ BuildRequires:  gnupg2
+@@ -46,6 +46,10 @@ Url:        https://www.gnu.org/software/%{name}/
+ Source0:    https://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.gz
+ Source1:    https://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.gz.sig
+ # Obtained from a key server
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - F576AAAC1B0FF849792D8CB129A794FD2272BC86 | sq keyring filter --experimental --cert F576AAAC1B0FF849792D8CB129A794FD2272BC86 --output update.pgp
++#   sq keyring merge gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg update.pgp | sq packet dearmor --output gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg.new
++#   mv gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg.new gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg
+ Source2:    gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg
+ # Fix measuring time when a clock experiences a jump, bug #1004416,
+ # <http://lists.gnu.org/archive/html/bug-gnu-utils/2013-09/msg00003.html>
+@@ -79,6 +83,7 @@ BuildRequires:  gnupg2
  BuildRequires:  make
  BuildRequires:  sed
  BuildRequires:  texinfo
@@ -216,7 +227,7 @@ index 6311579..d638d64 100644
  
  %description
  The GNU time utility runs another program, collects information about
-@@ -86,7 +87,7 @@ the resources used by that program while it is running, and displays
+@@ -86,7 +91,7 @@ the resources used by that program while it is running, and displays
  the results.
  
  %prep
@@ -225,7 +236,7 @@ index 6311579..d638d64 100644
  %setup -q
  %patch -P0 -p1
  %patch -P1 -p1
-@@ -122,6 +123,9 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
+@@ -122,6 +127,9 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
  # time(1) manual page lives in man-pages package, bug #1612294.
  
  %changelog

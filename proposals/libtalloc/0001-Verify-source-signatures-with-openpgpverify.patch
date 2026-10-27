@@ -1,6 +1,6 @@
-From e0968c37e88b4c05b5f1fc365ba2b027bf6dc723 Mon Sep 17 00:00:00 2001
+From b3d186074963d2ea25c95498f39781d2d191d618 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:04 +0100
+Date: Tue, 27 Oct 2026 12:08:52 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -8,19 +8,31 @@ uses Sequoia sqv, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh talloc.keyring from keyservers/WKD: same certificate(s), with
-self-signatures our copy was missing.
+self-signatures our copy was missing; the commands are in the spec
+comment.
 
 Assisted-by: Claude Opus 5.5
 ---
- libtalloc.spec |   3 ++-
+ libtalloc.spec |   7 ++++++-
  talloc.keyring | Bin 646 -> 10801 bytes
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/libtalloc.spec b/libtalloc.spec
-index 400d3ae..d8c0a84 100644
+index 400d3ae..1a59bcc 100644
 --- a/libtalloc.spec
 +++ b/libtalloc.spec
-@@ -16,6 +16,7 @@ BuildRequires: docbook-style-xsl
+@@ -7,6 +7,10 @@ URL:             https://talloc.samba.org/
+ 
+ Source0:         https://www.samba.org/ftp/talloc/talloc-%{version}.tar.gz
+ Source1:         https://www.samba.org/ftp/talloc/talloc-%{version}.tar.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 9147A339719518EE9011BCB54793916113084025 | sq keyring filter --experimental --cert 9147A339719518EE9011BCB54793916113084025 --output update.pgp
++#   sq keyring merge talloc.keyring update.pgp | sq packet dearmor --output talloc.keyring.new
++#   mv talloc.keyring.new talloc.keyring
+ Source2:         https://download.samba.org/pub/samba/samba-pubkey.asc#/talloc.keyring
+ 
+ BuildRequires: make
+@@ -16,6 +20,7 @@ BuildRequires: docbook-style-xsl
  BuildRequires: python3-devel
  BuildRequires: doxygen
  BuildRequires: gnupg2
@@ -28,7 +40,7 @@ index 400d3ae..d8c0a84 100644
  
  Provides: bundled(libreplace)
  Obsoletes: python2-talloc < 2.2.0-1
-@@ -54,7 +55,7 @@ Development libraries for python3-talloc
+@@ -54,7 +59,7 @@ Development libraries for python3-talloc
  %autosetup -n talloc-%{version} -p1
  
  %build

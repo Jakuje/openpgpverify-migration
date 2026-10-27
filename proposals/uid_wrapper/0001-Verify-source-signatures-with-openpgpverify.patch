@@ -1,6 +1,6 @@
-From 1500835e1c071915e4fe4f01b11d1f4e5f82773a Mon Sep 17 00:00:00 2001
+From 5699ceb21937456f8339cbf43553e437d17b0bca Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:06 +0100
+Date: Tue, 27 Oct 2026 12:08:53 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,13 +8,14 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh uid_wrapper.keyring from keyservers/WKD: same certificate(s),
-with self-signatures our copy was missing.
+with self-signatures our copy was missing; the commands are in the spec
+comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  uid_wrapper.keyring | Bin 3432 -> 18452 bytes
- uid_wrapper.spec    |   3 ++-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ uid_wrapper.spec    |   7 ++++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/uid_wrapper.keyring b/uid_wrapper.keyring
 index 411bf36750f0fc4a8856034415e39c7116559ee4..ff839dee56c422ff2e104ff84c1098a5c2e4ee4f 100644
@@ -295,10 +296,20 @@ zcmbO-f$@bD^Gqh*jm*4Ej9VrPGO06nGTChIXR%>o+M+mFR!W?=I59UVQ7^wJ-L8|#
 oa`OazOOQetDP?95ce0En6Z1|c-px;)d6}3yndCQrb(LoV05;PY$p8QV
 
 diff --git a/uid_wrapper.spec b/uid_wrapper.spec
-index eb88e68..b5d6b88 100644
+index eb88e68..7d1cad0 100644
 --- a/uid_wrapper.spec
 +++ b/uid_wrapper.spec
-@@ -14,6 +14,7 @@ BuildRequires:  gcc
+@@ -8,12 +8,17 @@ Url:            http://cwrap.org/
+ 
+ Source0:        https://ftp.samba.org/pub/cwrap/%{name}-%{version}.tar.gz
+ Source1:        https://ftp.samba.org/pub/cwrap/%{name}-%{version}.tar.gz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D | sq keyring filter --experimental --cert 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D --output update.pgp
++#   sq keyring merge uid_wrapper.keyring update.pgp | sq packet dearmor --output uid_wrapper.keyring.new
++#   mv uid_wrapper.keyring.new uid_wrapper.keyring
+ Source2:        uid_wrapper.keyring
+ 
+ BuildRequires:  gcc
  BuildRequires:  cmake
  BuildRequires:  gnupg2
  BuildRequires:  libcmocka-devel >= 1.1.0
@@ -306,7 +317,7 @@ index eb88e68..b5d6b88 100644
  
  Recommends:     cmake
  Recommends:     pkgconfig
-@@ -33,7 +34,7 @@ This package doesn't have a devel package cause this project is for
+@@ -33,7 +38,7 @@ This package doesn't have a devel package cause this project is for
  development/testing.
  
  %prep

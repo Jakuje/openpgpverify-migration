@@ -1,6 +1,6 @@
-From fa014d34a05aa255560741065e7ef498e1b64bc4 Mon Sep 17 00:00:00 2001
+From 16373258969679221338edb7c2adef4a32e14a92 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:38 +0100
+Date: Tue, 27 Oct 2026 12:09:05 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,13 +8,14 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh E0AA0F031DBD80FFBA57B06D5A62D0CAB6264964 from keyservers/WKD:
-same certificate(s), with self-signatures our copy was missing.
+same certificate(s), with self-signatures our copy was missing; the
+commands are in the spec comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  E0AA0F031DBD80FFBA57B06D5A62D0CAB6264964 | 1240 +++++++++++++---------
- quodlibet.spec                           |    3 +-
- 2 files changed, 743 insertions(+), 500 deletions(-)
+ quodlibet.spec                           |    7 +-
+ 2 files changed, 747 insertions(+), 500 deletions(-)
 
 diff --git a/E0AA0F031DBD80FFBA57B06D5A62D0CAB6264964 b/E0AA0F031DBD80FFBA57B06D5A62D0CAB6264964
 index c3bd4cc..6f5f52f 100644
@@ -1274,10 +1275,21 @@ index c3bd4cc..6f5f52f 100644
 +=3fsW
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/quodlibet.spec b/quodlibet.spec
-index 51006d1..b1d96aa 100644
+index 51006d1..99d11d2 100644
 --- a/quodlibet.spec
 +++ b/quodlibet.spec
-@@ -52,6 +52,7 @@ BuildRequires:	python3-mutagen >= 1.14
+@@ -8,6 +8,10 @@ License:	GPL-2.0-or-later
+ URL:		https://quodlibet.readthedocs.org/en/latest/
+ Source0:	https://github.com/quodlibet/quodlibet/releases/download/release-%{version}/quodlibet-%{version}.tar.gz
+ Source1:	https://github.com/quodlibet/quodlibet/releases/download/release-%{version}/quodlibet-%{version}.tar.gz.sig
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 0EBF782C5D53F7E5FB02A66746BD761F7A49B0EC | sq keyring filter --experimental --cert 0EBF782C5D53F7E5FB02A66746BD761F7A49B0EC --output update.pgp
++#   sq keyring merge --output E0AA0F031DBD80FFBA57B06D5A62D0CAB6264964.new E0AA0F031DBD80FFBA57B06D5A62D0CAB6264964 update.pgp
++#   mv E0AA0F031DBD80FFBA57B06D5A62D0CAB6264964.new E0AA0F031DBD80FFBA57B06D5A62D0CAB6264964
+ Source2:	https://keys.openpgp.org/vks/v1/by-fingerprint/E0AA0F031DBD80FFBA57B06D5A62D0CAB6264964
+ Source3:	README.fedora
+ 
+@@ -52,6 +56,7 @@ BuildRequires:	python3-mutagen >= 1.14
  BuildRequires:	python3-pytest
  BuildRequires:	python3-pyvirtualdisplay
  BuildRequires:	xine-lib
@@ -1285,7 +1297,7 @@ index 51006d1..b1d96aa 100644
  
  Requires:	exfalso = %{version}-%{release}
  Requires:	gstreamer1
-@@ -102,7 +103,7 @@ This package installs %{summary}.
+@@ -102,7 +107,7 @@ This package installs %{summary}.
  
  
  %prep

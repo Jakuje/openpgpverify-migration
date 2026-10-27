@@ -12,6 +12,15 @@ Phase 1 reason: `expired`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 31405 → 33437 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - 343C2FF0FBEE5EC2EDBEF399F3599FF828C67298 \
+  | sq keyring filter --experimental --cert 343C2FF0FBEE5EC2EDBEF399F3599FF828C67298 --output update.pgp
+sq keyring merge --output nettle-release-keyring.gpg.new nettle-release-keyring.gpg update.pgp
+mv nettle-release-keyring.gpg.new nettle-release-keyring.gpg
+```
+
 ```diff
 --- dist-git/nettle-release-keyring.gpg
 +++ refreshed/nettle-release-keyring.gpg

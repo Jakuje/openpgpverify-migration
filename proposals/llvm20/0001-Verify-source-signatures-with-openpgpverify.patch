@@ -1,6 +1,6 @@
-From 6f7c32707c1b521579cf2a5576d05b148668194d Mon Sep 17 00:00:00 2001
+From f30cc11164a0595b80aa84da86b7de3bb086c56b Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:42 +0100
+Date: Tue, 27 Oct 2026 12:09:06 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,19 +8,31 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh release-keys.asc from keyservers/WKD: same certificate(s), with
-self-signatures our copy was missing.
+self-signatures our copy was missing; the commands are in the spec
+comment.
 
 Assisted-by: Claude Opus 5.5
 ---
- llvm20.spec      |   5 +-
+ llvm20.spec      |   9 +-
  release-keys.asc | 233 +++++++++++++++++++++++++++++++++--------------
- 2 files changed, 166 insertions(+), 72 deletions(-)
+ 2 files changed, 170 insertions(+), 72 deletions(-)
 
 diff --git a/llvm20.spec b/llvm20.spec
-index 96e887a..6b8dd1f 100644
+index 96e887a..e86f091 100644
 --- a/llvm20.spec
 +++ b/llvm20.spec
-@@ -591,6 +591,7 @@ BuildRequires:	graphviz
+@@ -348,6 +348,10 @@ Source0: https://github.com/llvm/llvm-project/archive/%{llvm_snapshot_git_revisi
+ Source0: https://github.com/llvm/llvm-project/releases/download/llvmorg-%{maj_ver}.%{min_ver}.%{patch_ver}%{?rc_ver:-%{rc_ver}}/%{src_tarball_dir}.tar.xz
+ Source1: https://github.com/llvm/llvm-project/releases/download/llvmorg-%{maj_ver}.%{min_ver}.%{patch_ver}%{?rc_ver:-%{rc_ver}}/%{src_tarball_dir}.tar.xz.sig
+ %endif
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - D574BD5D1D0E98895E3BF90044F2485E45D59042 474E22316ABF4785A88C6E8EA2C794A986419D8A | sq keyring filter --experimental --cert D574BD5D1D0E98895E3BF90044F2485E45D59042 --cert 474E22316ABF4785A88C6E8EA2C794A986419D8A --output update.pgp
++#   sq keyring merge --output release-keys.asc.new release-keys.asc update.pgp
++#   mv release-keys.asc.new release-keys.asc
+ Source6: release-keys.asc
+ 
+ %if %{without compat_build}
+@@ -591,6 +595,7 @@ BuildRequires:	graphviz
  
  # This is required because we need "ps" when running LLDB tests
  BuildRequires: procps-ng
@@ -28,7 +40,7 @@ index 96e887a..6b8dd1f 100644
  
  # For reproducible pyc file generation
  # See https://docs.fedoraproject.org/en-US/packaging-guidelines/Python_Appendix/#_byte_compilation_reproducibility
-@@ -1176,11 +1177,11 @@ Polly header files.
+@@ -1176,11 +1181,11 @@ Polly header files.
  %prep
  %if %{without snapshot_build}
  # llvm

@@ -1,6 +1,6 @@
-From 355eff9adc78c53a0aa0dc611e67ec6994849359 Mon Sep 17 00:00:00 2001
+From 44aa366464da2a51eb0237bbb16daf15d0f92b0e Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:07 +0100
+Date: Tue, 27 Oct 2026 12:08:53 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,18 +8,28 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh bemenu-pgp.txt from keyservers/WKD: same certificate(s), with
-self-signatures our copy was missing.
+self-signatures our copy was missing; the commands are in the spec
+comment.
 
 Assisted-by: Claude Opus 5.5
 ---
- bemenu.spec | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ bemenu.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/bemenu.spec b/bemenu.spec
-index dd98f2c..d87653d 100644
+index dd98f2c..1c0d871 100644
 --- a/bemenu.spec
 +++ b/bemenu.spec
-@@ -16,7 +16,7 @@ Source2:    https://cloudef.pw/bemenu-pgp.txt
+@@ -11,12 +11,16 @@ License:    GPL-3.0-or-later AND LGPL-3.0-or-later
+ URL:        https://github.com/Cloudef/bemenu
+ Source0:    %{url}/releases/download/%{version}/%{name}-%{version}.tar.gz
+ Source1:    %{url}/releases/download/%{version}/%{name}-%{version}.tar.gz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 16B6B7CACAF339DECE9F154729317348D687B86B | sq keyring filter --experimental --cert 16B6B7CACAF339DECE9F154729317348D687B86B --output update.pgp
++#   sq keyring merge --output bemenu-pgp.txt.new bemenu-pgp.txt update.pgp
++#   mv bemenu-pgp.txt.new bemenu-pgp.txt
+ Source2:    https://cloudef.pw/bemenu-pgp.txt
+ 
  Patch:      respect-env-build-flags.patch
  
  BuildRequires:  gcc
@@ -28,7 +38,7 @@ index dd98f2c..d87653d 100644
  BuildRequires:  make
  BuildRequires:  pkgconfig(cairo)
  BuildRequires:  pkgconfig(ncursesw)
-@@ -42,7 +42,7 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
+@@ -42,7 +46,7 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
  Development files for extending %{name}.
  
  %prep

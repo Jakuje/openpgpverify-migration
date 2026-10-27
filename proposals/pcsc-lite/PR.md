@@ -16,7 +16,7 @@ Why `sqv`:
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
 - dropped `BuildRequires:  gnupg2`, only needed for `%gpgverify`
-- refreshed keyring `gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg` (see below)
+- refreshed keyring `gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
 
 ### Testing
 
@@ -35,6 +35,15 @@ Tested on 2026-10-12 at dist-git commit `67d3c51d8c3d` with sequoia-sqv 1.5.0-2.
 
 - `F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E`
 
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E \
+  | sq keyring filter --experimental --cert F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E --output update.pgp
+sq keyring merge gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg update.pgp | sq packet dearmor --output gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg.new
+mv gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg.new gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg
+```
+
 What changed in the certificate (`sq inspect`):
 
 ```diff
@@ -42,21 +51,21 @@ What changed in the certificate (`sq inspect`):
 +++ refreshed/gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg
 @@ -1,18 +1,19 @@
        Fingerprint: F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E
--                   Invalid: No binding signature at time 2026-10-12T11:56:53Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T11:02:58Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: certification, signing
             Subkey: 1FB866BC68EFCC584B1A974B2533629C5982E499
--                   Invalid: primary key: No binding signature at time 2026-10-12T11:56:53Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T11:02:58Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: The subkey is not live: Expired on 2012-12-03T16:19:52Z
 +  Expiration time: 2012-12-03 16:19:52 UTC (creation time + 11months 30days 3h 50m 24s)
 +        Key flags: signing
-            Subkey: AF1912CE1D685FF5ACF7C26E36A241532F1BEFF0
--                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
--                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-12T11:56:53Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
-+        Key flags: transport encryption, data-at-rest encryption
 +           Subkey: 2C7657A42E6C6465E14CD591A782179B0F37B7F7
 +                   Invalid: The subkey is not live: Expired on 2016-02-19T14:14:14Z
 +  Expiration time: 2016-02-19 14:14:14 UTC (creation time + 1year 11months 29days 21h 50m 24s)
++        Key flags: transport encryption, data-at-rest encryption
+            Subkey: AF1912CE1D685FF5ACF7C26E36A241532F1BEFF0
+-                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
+-                   because: SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T11:02:58Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: transport encryption, data-at-rest encryption
             UserID: Ludovic Rousseau <ludovic.rousseau@free.fr>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance

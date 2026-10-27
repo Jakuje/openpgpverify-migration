@@ -16,7 +16,7 @@ Why `sqv`:
 - the direct `gpgv2` call is replaced by `%{openpgpverify}` with the same keyring, signature and data
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
 - dropped `BuildRequires: %{_bindir}/gpgv2`, only needed for the GnuPG verification
-- refreshed keyring `0xD73934B49674CF5CCD9AC2787D80315C5736DE75.gpg` (see below)
+- refreshed keyring `0xD73934B49674CF5CCD9AC2787D80315C5736DE75.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
 - Release bumped (`5%{?dist}` → `6%{?dist}`) with a changelog entry
 
 ### Testing
@@ -35,6 +35,15 @@ Tested on 2026-10-26 at dist-git commit `2ed441cc9b59` with sequoia-sqv 1.5.0-2.
 `%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `gpgv2` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
 
 - `E784364E8DDE7BB370FBD9EAD15D313882004173`
+
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - E784364E8DDE7BB370FBD9EAD15D313882004173 \
+  | sq keyring filter --experimental --cert E784364E8DDE7BB370FBD9EAD15D313882004173 --output update.pgp
+sq keyring merge 0xD73934B49674CF5CCD9AC2787D80315C5736DE75.gpg update.pgp | sq packet dearmor --output 0xD73934B49674CF5CCD9AC2787D80315C5736DE75.gpg.new
+mv 0xD73934B49674CF5CCD9AC2787D80315C5736DE75.gpg.new 0xD73934B49674CF5CCD9AC2787D80315C5736DE75.gpg
+```
 
 What changed in the certificate (`sq inspect`):
 
@@ -60,7 +69,7 @@ What changed in the certificate (`sq inspect`):
             UserID: Russ Allbery <eagle@eyrie.org>
             UserID: Russ Allbery <eagle@windlord.stanford.edu>
                     Revoked:
--                   Invalid: No binding signature at time 2026-10-26T20:09:23Z
+-                   Invalid: No binding signature at time 2026-10-27T10:55:23Z
             UserID: Russ Allbery <rra@cpan.org>
             UserID: Russ Allbery <rra@cs.stanford.edu>
             UserID: Russ Allbery <rra@debian.org>

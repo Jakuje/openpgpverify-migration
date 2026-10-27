@@ -1,6 +1,6 @@
-From c357d7220f571497db84d915953de8865048e0a5 Mon Sep 17 00:00:00 2001
+From 05c75738cc0fd5ccce6abadbce2ed9f453806139 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:10 +0100
+Date: Tue, 27 Oct 2026 12:08:54 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,13 +8,14 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh 0x8E8B898CBF2412F9 from keyservers/WKD: same certificate(s),
-with self-signatures our copy was missing.
+with self-signatures our copy was missing; the commands are in the spec
+comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  0x8E8B898CBF2412F9 | 282 +++++++++++++++++++++++++++------------------
- fcitx5-kkc.spec    |   4 +-
- 2 files changed, 174 insertions(+), 112 deletions(-)
+ fcitx5-kkc.spec    |   8 +-
+ 2 files changed, 178 insertions(+), 112 deletions(-)
 
 diff --git a/0x8E8B898CBF2412F9 b/0x8E8B898CBF2412F9
 index d9449d8..43b0e60 100644
@@ -306,11 +307,17 @@ index d9449d8..43b0e60 100644
 +=8BEE
 +-----END PGP PUBLIC KEY BLOCK-----
 diff --git a/fcitx5-kkc.spec b/fcitx5-kkc.spec
-index b2526ad..e2857dc 100644
+index b2526ad..3ed3e0b 100644
 --- a/fcitx5-kkc.spec
 +++ b/fcitx5-kkc.spec
-@@ -11,7 +11,7 @@ Source:         https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.
+@@ -9,9 +9,13 @@ License:        GPL-3.0-or-later
+ Url:            https://github.com/fcitx/fcitx5-kkc
+ Source:         https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.tar.zst
  Source1:        https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.tar.zst.sig
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9 | sq keyring filter --experimental --cert 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9 --output update.pgp
++#   sq keyring merge --output 0x8E8B898CBF2412F9.new 0x8E8B898CBF2412F9 update.pgp
++#   mv 0x8E8B898CBF2412F9.new 0x8E8B898CBF2412F9
  Source2:        https://pgp.key-server.io/download/0x8E8B898CBF2412F9
  
 -BuildRequires:  gnupg2
@@ -318,7 +325,7 @@ index b2526ad..e2857dc 100644
  BuildRequires:  cmake
  BuildRequires:  gcc-c++
  BuildRequires:  ninja-build
-@@ -36,7 +36,7 @@ Requires:       libkkc-data
+@@ -36,7 +40,7 @@ Requires:       libkkc-data
  This provides libkkc input method support for fcitx5. Released under GPL3+.
  
  %prep

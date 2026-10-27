@@ -15,7 +15,7 @@ Why `sqv`:
 
 - the direct `gpgv2` call is replaced by `%{openpgpverify}` with the same keyring, signature and data
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `p11-kit-release-keyring.gpg` (see below)
+- refreshed keyring `p11-kit-release-keyring.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
 
 ### Testing
 
@@ -35,6 +35,15 @@ Tested on 2026-10-26 at dist-git commit `4837e67608d7` with sequoia-sqv 1.5.0-2.
 - `5D46CB0F763405A7053556F47A75A648B3F9220C`
 - `462225C3B46F34879FC8496CD605848ED7E69871`
 
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - 5D46CB0F763405A7053556F47A75A648B3F9220C 462225C3B46F34879FC8496CD605848ED7E69871 \
+  | sq keyring filter --experimental --cert 5D46CB0F763405A7053556F47A75A648B3F9220C --cert 462225C3B46F34879FC8496CD605848ED7E69871 --output update.pgp
+sq keyring merge p11-kit-release-keyring.gpg update.pgp | sq packet dearmor --output p11-kit-release-keyring.gpg.new
+mv p11-kit-release-keyring.gpg.new p11-kit-release-keyring.gpg
+```
+
 What changed in the certificate (`sq inspect`):
 
 ```diff
@@ -53,13 +62,13 @@ What changed in the certificate (`sq inspect`):
          Key flags: transport encryption, data-at-rest encryption
             UserID: Zoltan Fridrich <zfridric@redhat.com>
        Fingerprint: 462225C3B46F34879FC8496CD605848ED7E69871
--                   Invalid: No binding signature at time 2026-10-26T20:12:18Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T11:01:51Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +  Expiration time: 2027-10-17 02:52:01 UTC (creation time + 18years 2months 24days 12h 45m 23s)
 +        Key flags: certification, signing
             Subkey: 2567E23B4A79AD4DC685099850AD4600C8C530D6
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-26T20:12:18Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T11:01:51Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: transport encryption, data-at-rest encryption
             UserID: Daiki Ueno <ueno@gnu.org>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance

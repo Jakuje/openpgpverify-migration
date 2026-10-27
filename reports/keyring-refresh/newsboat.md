@@ -12,6 +12,15 @@ Phase 1 reason: `expired`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 7173 → 15164 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - B8B1756A0DDBF0760CE67CCF4ED6CD61932B9EBE \
+  | sq keyring filter --experimental --cert B8B1756A0DDBF0760CE67CCF4ED6CD61932B9EBE --output update.pgp
+sq keyring merge --output newsboat.pgp.new newsboat.pgp update.pgp
+mv newsboat.pgp.new newsboat.pgp
+```
+
 ```diff
 --- dist-git/newsboat.pgp
 +++ refreshed/newsboat.pgp

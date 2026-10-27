@@ -9,8 +9,17 @@ Phase 1 reason: `expired`
 ## release-keys.asc
 
 - certificates: D574BD5D1D0E98895E3BF90044F2485E45D59042, 474E22316ABF4785A88C6E8EA2C794A986419D8A
-- found via: hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
+- found via: hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 6354 → 12612 bytes
+
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - D574BD5D1D0E98895E3BF90044F2485E45D59042 474E22316ABF4785A88C6E8EA2C794A986419D8A \
+  | sq keyring filter --experimental --cert D574BD5D1D0E98895E3BF90044F2485E45D59042 --cert 474E22316ABF4785A88C6E8EA2C794A986419D8A --output update.pgp
+sq keyring merge --output release-keys.asc.new release-keys.asc update.pgp
+mv release-keys.asc.new release-keys.asc
+```
 
 ```diff
 --- dist-git/release-keys.asc

@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `keepassxc_master_signing_key.asc` (see below)
+- refreshed keyring `keepassxc_master_signing_key.asc` (see below); the comment above its `Source` line now shows the commands for refreshing it
 - Release bumped (`3%{?dist}` → `4%{?dist}`) with a changelog entry
 
 ### Testing
@@ -34,6 +34,15 @@ Tested on 2026-10-26 at dist-git commit `4c2b501cbd61` with sequoia-sqv 1.5.0-2.
 `%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
 
 - `BF5A669F2272CF4324C1FDA8CFB4C2166397D0D2`
+
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - BF5A669F2272CF4324C1FDA8CFB4C2166397D0D2 \
+  | sq keyring filter --experimental --cert BF5A669F2272CF4324C1FDA8CFB4C2166397D0D2 --output update.pgp
+sq keyring merge --output keepassxc_master_signing_key.asc.new keepassxc_master_signing_key.asc update.pgp
+mv keepassxc_master_signing_key.asc.new keepassxc_master_signing_key.asc
+```
 
 What changed in the certificate (`sq inspect`):
 

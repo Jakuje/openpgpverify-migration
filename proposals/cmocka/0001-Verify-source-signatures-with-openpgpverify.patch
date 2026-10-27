@@ -1,6 +1,6 @@
-From 3df7f109ba302c5a1925770e49d7d36561a448b8 Mon Sep 17 00:00:00 2001
+From e26413a6f4ccf4f8ca7ee7e02186d949ef715c7e Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:02 +0100
+Date: Tue, 27 Oct 2026 12:08:51 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,13 +8,14 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh cmocka.keyring from keyservers/WKD: same certificate(s), with
-self-signatures our copy was missing.
+self-signatures our copy was missing; the commands are in the spec
+comment.
 
 Assisted-by: Claude Opus 5.5
 ---
  cmocka.keyring | Bin 3432 -> 18452 bytes
- cmocka.spec    |   4 ++--
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ cmocka.spec    |   8 ++++++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/cmocka.keyring b/cmocka.keyring
 index 411bf36750f0fc4a8856034415e39c7116559ee4..ff839dee56c422ff2e104ff84c1098a5c2e4ee4f 100644
@@ -295,10 +296,21 @@ zcmbO-f$@bD^Gqh*jm*4Ej9VrPGO06nGTChIXR%>o+M+mFR!W?=I59UVQ7^wJ-L8|#
 oa`OazOOQetDP?95ce0En6Z1|c-px;)d6}3yndCQrb(LoV05;PY$p8QV
 
 diff --git a/cmocka.spec b/cmocka.spec
-index 776b375..92ff0ae 100644
+index 776b375..239e3fd 100644
 --- a/cmocka.spec
 +++ b/cmocka.spec
-@@ -15,7 +15,7 @@ BuildRequires:  gcc
+@@ -8,6 +8,10 @@ URL:            https://cmocka.org
+ 
+ Source0:        https://cmocka.org/files/2.0/%{name}-%{version}.tar.xz
+ Source1:        https://cmocka.org/files/2.0/%{name}-%{version}.tar.xz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D | sq keyring filter --experimental --cert 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D --output update.pgp
++#   sq keyring merge cmocka.keyring update.pgp | sq packet dearmor --output cmocka.keyring.new
++#   mv cmocka.keyring.new cmocka.keyring
+ Source2:        cmocka.keyring
+ Source4:        https://github.com/jothepro/doxygen-awesome-css/archive/refs/tags/v2.4.1/doxygen-awesome-css-2.4.1.tar.gz
+ 
+@@ -15,7 +19,7 @@ BuildRequires:  gcc
  BuildRequires:  cmake
  BuildRequires:  doxygen
  BuildRequires:  glibc-devel
@@ -307,7 +319,7 @@ index 776b375..92ff0ae 100644
  
  Obsoletes:      libcmocka-static < %{version}
  
-@@ -100,7 +100,7 @@ This package provides the API documentation for the cmocka unit testing
+@@ -100,7 +104,7 @@ This package provides the API documentation for the cmocka unit testing
  framework.
  
  %prep

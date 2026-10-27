@@ -1,6 +1,6 @@
-From 40d8711d69f5443decb715e09b7bd8494d93f1a6 Mon Sep 17 00:00:00 2001
+From 31e68ef64ce90eb4cefb2e84866ddc93d2149b8d Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:35 +0100
+Date: Tue, 27 Oct 2026 12:09:04 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,20 +8,20 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh kdudka.pgp from keyservers/WKD: same certificate(s), with self-
-signatures our copy was missing.
+signatures our copy was missing; the commands are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- csdiff.spec |   8 ++-
+ csdiff.spec |  14 ++++--
  kdudka.pgp  | 137 +++++++++++++++++++++++++++++++++++++---------------
- 2 files changed, 104 insertions(+), 41 deletions(-)
+ 2 files changed, 108 insertions(+), 43 deletions(-)
 
 diff --git a/csdiff.spec b/csdiff.spec
-index 3c9290e..7316898 100644
+index 3c9290e..c777d7f 100644
 --- a/csdiff.spec
 +++ b/csdiff.spec
-@@ -20,7 +20,7 @@
+@@ -20,15 +20,17 @@
  
  Name:       csdiff
  Version:    3.5.7
@@ -30,7 +30,19 @@ index 3c9290e..7316898 100644
  Summary:    Non-interactive tools for processing code scan results in plain-text
  
  License:    GPL-3.0-or-later
-@@ -57,6 +57,7 @@ BuildRequires: gcc-c++
+ URL:        https://github.com/csutils/csdiff
+ Source0:    https://github.com/csutils/csdiff/releases/download/%{name}-%{version}/%{name}-%{version}.tar.xz
+ Source1:    https://github.com/csutils/csdiff/releases/download/%{name}-%{version}/%{name}-%{version}.tar.xz.asc
+-# gpg --keyserver pgp.mit.edu --recv-key 992A96E075056E79CD8214F9873DB37572A37B36
+-# gpg --output kdudka.pgp --armor --export kdudka@redhat.com
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 992A96E075056E79CD8214F9873DB37572A37B36 | sq keyring filter --experimental --cert 992A96E075056E79CD8214F9873DB37572A37B36 --output update.pgp
++#   sq keyring merge --output kdudka.pgp.new kdudka.pgp update.pgp
++#   mv kdudka.pgp.new kdudka.pgp
+ Source2:    kdudka.pgp
+ 
+ # the following upstream commit is needed to work with up2date csdiff/csgrep
+@@ -57,6 +59,7 @@ BuildRequires: gcc-c++
  BuildRequires: gnupg2
  BuildRequires: help2man
  BuildRequires: make
@@ -38,7 +50,7 @@ index 3c9290e..7316898 100644
  
  %if 0%{?rhel} == 7
  Provides: bundled(boost_json)
-@@ -115,7 +116,7 @@ code scan defect lists to find out added or fixed defects.
+@@ -115,7 +118,7 @@ code scan defect lists to find out added or fixed defects.
  %endif
  
  %prep
@@ -47,7 +59,7 @@ index 3c9290e..7316898 100644
  %autosetup
  
  %build
-@@ -197,6 +198,9 @@ make version.cc
+@@ -197,6 +200,9 @@ make version.cc
  %endif
  
  %changelog

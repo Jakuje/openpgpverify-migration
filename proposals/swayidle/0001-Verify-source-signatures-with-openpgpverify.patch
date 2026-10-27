@@ -1,6 +1,6 @@
-From b85fa80dad2c8824298def31b46143a15e48c22f Mon Sep 17 00:00:00 2001
+From d006c490d01118a054cc5b2677d28e0949059c9f Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:19 +0100
+Date: Tue, 27 Oct 2026 12:08:57 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,14 +8,15 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh gpgkey-0FDE7BE0E88F5E48.gpg from keyservers/WKD: same
-certificate(s), with self-signatures our copy was missing.
+certificate(s), with self-signatures our copy was missing; the commands
+are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  gpgkey-0FDE7BE0E88F5E48.gpg | Bin 8249 -> 18875 bytes
- swayidle.spec               |   8 ++++++--
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ swayidle.spec               |  12 ++++++++++--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/gpgkey-0FDE7BE0E88F5E48.gpg b/gpgkey-0FDE7BE0E88F5E48.gpg
 index 3530f3229196c6dd248e9ce5be9473a8990d4b63..f58902fc34bf2eb1926588b29aa062f03db0cea4 100644
@@ -220,7 +221,7 @@ z#VN2kLzxF86FPanr1fSdMJX_6bG{r{BS_R{bFhpgM3i4NlxgxNO+V&NCf~^`bv!rw
 uXhnf!d^fMu@nvG($;7+)ryegz#AY(1v(n}#4q)SKCUY7pZBDb1Vgdj|i7rL}
 
 diff --git a/swayidle.spec b/swayidle.spec
-index 7962f73..39885e3 100644
+index 7962f73..3db89f3 100644
 --- a/swayidle.spec
 +++ b/swayidle.spec
 @@ -1,6 +1,6 @@
@@ -231,7 +232,18 @@ index 7962f73..39885e3 100644
  Summary: An idle daemon for wayland compositors
  
  # Automatically converted from old format: MIT and LGPLv2+ - review is highly recommended.
-@@ -19,12 +19,13 @@ BuildRequires: pkgconfig(wayland-client)
+@@ -9,6 +9,10 @@ URL: https://github.com/swaywm/swayidle
+ Source0: %{url}/releases/download/%{version}/%{name}-%{version}.tar.gz
+ Source1: %{url}/releases/download/%{version}/%{name}-%{version}.tar.gz.sig
+ # 0FDE7BE0E88F5E48: emersion <contact@emersion.fr>
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 | sq keyring filter --experimental --cert 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 --output update.pgp
++#   sq keyring merge gpgkey-0FDE7BE0E88F5E48.gpg update.pgp | sq packet dearmor --output gpgkey-0FDE7BE0E88F5E48.gpg.new
++#   mv gpgkey-0FDE7BE0E88F5E48.gpg.new gpgkey-0FDE7BE0E88F5E48.gpg
+ Source2: https://emersion.fr/.well-known/openpgpkey/hu/dj3498u4hyyarh35rkjfnghbjxug6b19#/gpgkey-0FDE7BE0E88F5E48.gpg
+ 
+ BuildRequires: meson >= 0.59.0
+@@ -19,12 +23,13 @@ BuildRequires: pkgconfig(wayland-client)
  BuildRequires: pkgconfig(wayland-server)
  BuildRequires: pkgconfig(libsystemd)
  BuildRequires: scdoc
@@ -246,7 +258,7 @@ index 7962f73..39885e3 100644
  %autosetup -p1
  
  %build
-@@ -53,6 +54,9 @@ swayidle is an idle management daemon for Wayland compositors.
+@@ -53,6 +58,9 @@ swayidle is an idle management daemon for Wayland compositors.
  %{_mandir}/man1/%{name}.1.gz
  
  %changelog

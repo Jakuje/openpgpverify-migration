@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `arunisaac.pub` (see below)
+- refreshed keyring `arunisaac.pub` (see below); the comment above its `Source` line now shows the commands for refreshing it
 - Release bumped (`3%{?dist}` → `4%{?dist}`) with a changelog entry
 
 ### Testing
@@ -34,6 +34,15 @@ Tested on 2026-10-23 at dist-git commit `1eb78a8eb562` with sequoia-sqv 1.5.0-2.
 `%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
 
 - `7F730343F2F09F3C77BF79D32E25EE8B61802BB3`
+
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - 7F730343F2F09F3C77BF79D32E25EE8B61802BB3 \
+  | sq keyring filter --experimental --cert 7F730343F2F09F3C77BF79D32E25EE8B61802BB3 --output update.pgp
+sq keyring merge --output arunisaac.pub.new arunisaac.pub update.pgp
+mv arunisaac.pub.new arunisaac.pub
+```
 
 What changed in the certificate (`sq inspect`):
 

@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `webkitgtk-keys.gpg` (see below)
+- refreshed keyring `webkitgtk-keys.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
 
 ### Testing
 
@@ -34,6 +34,15 @@ Tested on 2026-10-26 at dist-git commit `a904230554c0` with sequoia-sqv 1.5.0-2.
 
 - `013A0127AC9C65B34FFA62526C1009B693975393`
 - `5AA3BC334FD7E3369E7C77B291C559DBE4C9123B`
+
+The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+
+```
+sq --home=none network search --output - 013A0127AC9C65B34FFA62526C1009B693975393 5AA3BC334FD7E3369E7C77B291C559DBE4C9123B \
+  | sq keyring filter --experimental --cert 013A0127AC9C65B34FFA62526C1009B693975393 --cert 5AA3BC334FD7E3369E7C77B291C559DBE4C9123B --output update.pgp
+sq keyring merge webkitgtk-keys.gpg update.pgp | sq packet dearmor --output webkitgtk-keys.gpg.new
+mv webkitgtk-keys.gpg.new webkitgtk-keys.gpg
+```
 
 What changed in the certificate (`sq inspect`):
 

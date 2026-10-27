@@ -1,6 +1,6 @@
-From a90694b9cc77186427d94153d6526edda7be26ee Mon Sep 17 00:00:00 2001
+From a7b84903c085751b6503992078a7b495cc759966 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:02 +0100
+Date: Tue, 27 Oct 2026 12:08:51 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,20 +9,20 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh gpgkey-7F49314A26E0DE78427680E05F1B2A0789F12B11.gpg from
 keyservers/WKD: same certificate(s), with self-signatures our copy was
-missing.
+missing; the commands are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- babeltrace2.spec                              |   8 ++++++--
+ babeltrace2.spec                              |  13 ++++++++++---
  ...49314A26E0DE78427680E05F1B2A0789F12B11.gpg | Bin 2908 -> 15139 bytes
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/babeltrace2.spec b/babeltrace2.spec
-index d4b14cb..7b0624f 100644
+index d4b14cb..b367f2e 100644
 --- a/babeltrace2.spec
 +++ b/babeltrace2.spec
-@@ -1,6 +1,6 @@
+@@ -1,12 +1,15 @@
  Name:           babeltrace2
  Version:        2.1.2
 -Release:        10%{?dist}
@@ -30,7 +30,17 @@ index d4b14cb..7b0624f 100644
  Summary:        A trace manipulation toolkit
  License:        MIT AND GPL-2.0-only
  URL:            https://www.efficios.com/babeltrace
-@@ -28,6 +28,7 @@ BuildRequires:  make
+ Source0:        https://www.efficios.com/files/babeltrace/babeltrace2-%{version}.tar.bz2
+ Source1:        https://www.efficios.com/files/babeltrace/babeltrace2-%{version}.tar.bz2.asc
+-# gpg2 --export --export-options export-minimal 7F49314A26E0DE78427680E05F1B2A0789F12B11 > gpgkey-7F49314A26E0DE78427680E05F1B2A0789F12B11.gpg
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 7F49314A26E0DE78427680E05F1B2A0789F12B11 | sq keyring filter --experimental --cert 7F49314A26E0DE78427680E05F1B2A0789F12B11 --output update.pgp
++#   sq keyring merge gpgkey-7F49314A26E0DE78427680E05F1B2A0789F12B11.gpg update.pgp | sq packet dearmor --output gpgkey-7F49314A26E0DE78427680E05F1B2A0789F12B11.gpg.new
++#   mv gpgkey-7F49314A26E0DE78427680E05F1B2A0789F12B11.gpg.new gpgkey-7F49314A26E0DE78427680E05F1B2A0789F12B11.gpg
+ Source2:        gpgkey-7F49314A26E0DE78427680E05F1B2A0789F12B11.gpg
+ 
+ Patch0:         0001-Fix-bt2.TraceCollectionMessageIterator-avoid-circula.patch
+@@ -28,6 +31,7 @@ BuildRequires:  make
  BuildRequires:  python3-devel >= 3.4
  BuildRequires:  python3-setuptools
  BuildRequires:  swig >= 3.0
@@ -38,7 +48,7 @@ index d4b14cb..7b0624f 100644
  
  Requires:       libbabeltrace2%{?_isa} = %{version}-%{release}
  
-@@ -68,7 +69,7 @@ The python3-bt2 package provides Python 3 bindings for libbabeltrace2.
+@@ -68,7 +72,7 @@ The python3-bt2 package provides Python 3 bindings for libbabeltrace2.
  
  
  %prep
@@ -47,7 +57,7 @@ index d4b14cb..7b0624f 100644
  %autosetup -p1
  
  %build
-@@ -126,6 +127,9 @@ rm -f %{buildroot}/%{_pkgdocdir}/std-ext-lib.md
+@@ -126,6 +130,9 @@ rm -f %{buildroot}/%{_pkgdocdir}/std-ext-lib.md
  
  
  %changelog

@@ -1,6 +1,6 @@
-From 921eeb1b996b6d0288ab839a19453d2fbbc9b47a Mon Sep 17 00:00:00 2001
+From fc7d8be3e55ecff3a0a043d65185158d5fb42631 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:05 +0100
+Date: Tue, 27 Oct 2026 12:08:52 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,14 +8,15 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh msweet-pub.gpg from keyservers/WKD: same certificate(s), with
-self-signatures our copy was missing.
+self-signatures our copy was missing; the commands are in the spec
+comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  msweet-pub.gpg | 115 ++++++++++++++++++++++++++++++++-----------------
- pdfio.spec     |   9 ++--
- 2 files changed, 82 insertions(+), 42 deletions(-)
+ pdfio.spec     |  13 ++++--
+ 2 files changed, 86 insertions(+), 42 deletions(-)
 
 diff --git a/msweet-pub.gpg b/msweet-pub.gpg
 index a95c4e1..fac9292 100644
@@ -148,7 +149,7 @@ index a95c4e1..fac9292 100644
 +=QNjA
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/pdfio.spec b/pdfio.spec
-index cdc340b..bb2d0f7 100644
+index cdc340b..9ade8a4 100644
 --- a/pdfio.spec
 +++ b/pdfio.spec
 @@ -2,7 +2,7 @@
@@ -160,7 +161,18 @@ index cdc340b..bb2d0f7 100644
  Summary: C library for PDF I/O
  # Apache 2.0 with exception - pdfio code
  # GPL-2.0-or-later - code128 font from examples
-@@ -25,7 +25,7 @@ BuildRequires: git-core
+@@ -14,6 +14,10 @@ URL: https://msweet.org/pdfio
+ Source0: https://github.com/michaelrsweet/pdfio/releases/download/v%{version}/%{name}-%{version}.tar.gz
+ Source1: https://github.com/michaelrsweet/pdfio/releases/download/v%{version}/%{name}-%{version}.tar.gz.sig
+ # Mike's public key from here https://www.msweet.org/pgp.html
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 9086C3CDC66C3F563CF8F405BE67C75EC81F3244 | sq keyring filter --experimental --cert 9086C3CDC66C3F563CF8F405BE67C75EC81F3244 --output update.pgp
++#   sq keyring merge --output msweet-pub.gpg.new msweet-pub.gpg update.pgp
++#   mv msweet-pub.gpg.new msweet-pub.gpg
+ Source2: msweet-pub.gpg
+ 
+ 
+@@ -25,7 +29,7 @@ BuildRequires: git-core
  # builds with gcc
  BuildRequires: gcc
  # for verifying the tarball signature
@@ -169,7 +181,7 @@ index cdc340b..bb2d0f7 100644
  # use make for Makefile
  BuildRequires: make
  # uses pkg-config in SPEC and in configure
-@@ -64,7 +64,7 @@ The package contains HTML documentation and man page for PDFIO library.
+@@ -64,7 +68,7 @@ The package contains HTML documentation and man page for PDFIO library.
  
  
  %prep
@@ -178,7 +190,7 @@ index cdc340b..bb2d0f7 100644
  %autosetup -S git
  
  
-@@ -130,6 +130,9 @@ make test
+@@ -130,6 +134,9 @@ make test
  
  
  %changelog

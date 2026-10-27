@@ -1,6 +1,6 @@
-From dddb08969b6844a1912a5a4b20a0502e01b05507 Mon Sep 17 00:00:00 2001
+From d3dcdeb916c8430fb27ef8809869d7d16afd99a1 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:06 +0100
+Date: Tue, 27 Oct 2026 12:08:52 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,16 +8,17 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh priv_wrapper.keyring from keyservers/WKD: same certificate(s),
-with self-signatures our copy was missing.
+with self-signatures our copy was missing; the commands are in the spec
+comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- priv_wrapper.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ priv_wrapper.spec | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/priv_wrapper.spec b/priv_wrapper.spec
-index be4c889..01a2f12 100644
+index be4c889..165409e 100644
 --- a/priv_wrapper.spec
 +++ b/priv_wrapper.spec
 @@ -1,6 +1,6 @@
@@ -28,7 +29,18 @@ index be4c889..01a2f12 100644
  
  Summary:        A library to disable resource limits and other privilege dropping
  License:        GPL-3.0-or-later
-@@ -16,6 +16,7 @@ BuildRequires:  gcc
+@@ -8,6 +8,10 @@ Url:            http://cwrap.org/
+ 
+ Source0:        https://ftp.samba.org/pub/cwrap/%{name}-%{version}.tar.gz
+ Source1:        https://ftp.samba.org/pub/cwrap/%{name}-%{version}.tar.gz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D | sq keyring filter --experimental --cert 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D --output update.pgp
++#   sq keyring merge priv_wrapper.keyring update.pgp | sq packet dearmor --output priv_wrapper.keyring.new
++#   mv priv_wrapper.keyring.new priv_wrapper.keyring
+ Source2:        priv_wrapper.keyring
+ 
+ Patch0:         priv_wrapper-fix-cmocka-1.1.6+-support.patch
+@@ -16,6 +20,7 @@ BuildRequires:  gcc
  BuildRequires:  cmake
  BuildRequires:  gnupg2
  BuildRequires:  libcmocka-devel >= 1.1.0
@@ -36,7 +48,7 @@ index be4c889..01a2f12 100644
  
  Recommends:     cmake
  Recommends:     pkgconfig
-@@ -36,7 +37,7 @@ This package does not have a devel package, because this project is for
+@@ -36,7 +41,7 @@ This package does not have a devel package, because this project is for
  development/testing.
  
  %prep
@@ -45,7 +57,7 @@ index be4c889..01a2f12 100644
  %autosetup -p1
  
  %build
-@@ -65,6 +66,9 @@ development/testing.
+@@ -65,6 +70,9 @@ development/testing.
  %{_mandir}/man1/priv_wrapper.1*
  
  %changelog

@@ -1,6 +1,6 @@
-From 5a51c710db36820f6b8dd46dd2fb1adbd9312be5 Mon Sep 17 00:00:00 2001
+From 27b7faa7c89cc929fcb1b213f4e764b8e917f8da Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:05 +0100
+Date: Tue, 27 Oct 2026 12:08:52 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,14 +8,15 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh dickey@invisible-island.net-rsa3072.asc from keyservers/WKD:
-same certificate(s), with self-signatures our copy was missing.
+same certificate(s), with self-signatures our copy was missing; the
+commands are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  dickey@invisible-island.net-rsa3072.asc | 225 ++++++++++++++++++++----
- ncurses.spec                            |  10 +-
- 2 files changed, 200 insertions(+), 35 deletions(-)
+ ncurses.spec                            |  14 +-
+ 2 files changed, 204 insertions(+), 35 deletions(-)
 
 diff --git a/dickey@invisible-island.net-rsa3072.asc b/dickey@invisible-island.net-rsa3072.asc
 index 33a8ce3..cafcef9 100644
@@ -258,10 +259,10 @@ index 33a8ce3..cafcef9 100644
 +=p/hP
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/ncurses.spec b/ncurses.spec
-index 701705c..6db85d4 100644
+index 701705c..9a0239c 100644
 --- a/ncurses.spec
 +++ b/ncurses.spec
-@@ -4,7 +4,7 @@
+@@ -4,17 +4,22 @@
  Summary: Ncurses support utilities
  Name: ncurses
  Version: 6.6
@@ -270,7 +271,13 @@ index 701705c..6db85d4 100644
  License: MIT-open-group
  URL: https://invisible-island.net/ncurses/ncurses.html
  Source0: https://invisible-mirror.net/archives/ncurses/ncurses-%{version}.tar.gz
-@@ -14,7 +14,8 @@ Source2: https://invisible-island.net/public/dickey@invisible-island.net-rsa3072
+ Source1: https://invisible-mirror.net/archives/ncurses/ncurses-%{version}.tar.gz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 19882D92DDA4C400C22C0D56CC2AF4472167BE03 | sq keyring filter --experimental --cert 19882D92DDA4C400C22C0D56CC2AF4472167BE03 --output update.pgp
++#   sq keyring merge --output dickey@invisible-island.net-rsa3072.asc.new dickey@invisible-island.net-rsa3072.asc update.pgp
++#   mv dickey@invisible-island.net-rsa3072.asc.new dickey@invisible-island.net-rsa3072.asc
+ Source2: https://invisible-island.net/public/dickey@invisible-island.net-rsa3072.asc
+ 
  Patch8: ncurses-config.patch
  Patch9: ncurses-libs.patch
  Patch11: ncurses-urxvt.patch
@@ -280,7 +287,7 @@ index 701705c..6db85d4 100644
  %{?with_gpm:BuildRequires: gpm-devel}
  
  Requires: %{name}-libs%{?_isa} = %{version}-%{release}
-@@ -106,7 +107,7 @@ Requires: %{name}-devel%{?_isa} = %{version}-%{release}
+@@ -106,7 +111,7 @@ Requires: %{name}-devel%{?_isa} = %{version}-%{release}
  The ncurses-static package includes static libraries of the ncurses library.
  
  %prep
@@ -289,7 +296,7 @@ index 701705c..6db85d4 100644
  
  %setup -q -n %{name}-%{version}
  
-@@ -285,6 +286,9 @@ xz NEWS
+@@ -285,6 +290,9 @@ xz NEWS
  %{_libdir}/lib*.a
  
  %changelog

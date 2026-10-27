@@ -1,6 +1,6 @@
-From 83ddc6be4ff076f81b05dda78bb89a18b7976991 Mon Sep 17 00:00:00 2001
+From 9696ff06449cec46ef347cb67f9046578bbf2653 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:41 +0100
+Date: Tue, 27 Oct 2026 12:09:06 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,17 +8,18 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh release-keys.asc from keyservers/WKD: same certificate(s), with
-self-signatures our copy was missing.
+self-signatures our copy was missing; the commands are in the spec
+comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- llvm18.spec      |  12 ++-
+ llvm18.spec      |  16 +++-
  release-keys.asc | 233 +++++++++++++++++++++++++++++++++--------------
- 2 files changed, 171 insertions(+), 74 deletions(-)
+ 2 files changed, 175 insertions(+), 74 deletions(-)
 
 diff --git a/llvm18.spec b/llvm18.spec
-index 1523f22..0e646aa 100644
+index 1523f22..57ca3a8 100644
 --- a/llvm18.spec
 +++ b/llvm18.spec
 @@ -93,7 +93,7 @@
@@ -30,7 +31,18 @@ index 1523f22..0e646aa 100644
  Summary:	The Low Level Virtual Machine
  
  License:	Apache-2.0 WITH LLVM-exception OR NCSA
-@@ -150,6 +150,7 @@ BuildRequires:	python3-setuptools
+@@ -110,6 +110,10 @@ Source2:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{maj_ve
+ Source3:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{maj_ver}.%{min_ver}.%{patch_ver}%{?rc_ver:-rc%{rc_ver}}/%{cmake_srcdir}.tar.xz.sig
+ Source4:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{maj_ver}.%{min_ver}.%{patch_ver}%{?rc_ver:-rc%{rc_ver}}/%{third_party_srcdir}.tar.xz
+ Source5:	https://github.com/llvm/llvm-project/releases/download/llvmorg-%{maj_ver}.%{min_ver}.%{patch_ver}%{?rc_ver:-rc%{rc_ver}}/%{third_party_srcdir}.tar.xz.sig
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - D574BD5D1D0E98895E3BF90044F2485E45D59042 474E22316ABF4785A88C6E8EA2C794A986419D8A | sq keyring filter --experimental --cert D574BD5D1D0E98895E3BF90044F2485E45D59042 --cert 474E22316ABF4785A88C6E8EA2C794A986419D8A --output update.pgp
++#   sq keyring merge --output release-keys.asc.new release-keys.asc update.pgp
++#   mv release-keys.asc.new release-keys.asc
+ Source6:	release-keys.asc
+ %endif
+ 
+@@ -150,6 +154,7 @@ BuildRequires:	python3-setuptools
  
  # For origin certification
  BuildRequires:	gnupg2
@@ -38,7 +50,7 @@ index 1523f22..0e646aa 100644
  
  
  Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
-@@ -238,9 +239,9 @@ Summary: LLVM's modified googletest sources
+@@ -238,9 +243,9 @@ Summary: LLVM's modified googletest sources
  LLVM's modified googletest sources.
  
  %prep
@@ -51,7 +63,7 @@ index 1523f22..0e646aa 100644
  %setup -T -q -b 2 -n %{cmake_srcdir}
  # TODO: It would be more elegant to set -DLLVM_COMMON_CMAKE_UTILS=%{_builddir}/%{cmake_srcdir},
  # but this is not a CACHED variable, so we can't actually set it externally :(
-@@ -595,6 +596,9 @@ fi
+@@ -595,6 +600,9 @@ fi
  
  
  %changelog

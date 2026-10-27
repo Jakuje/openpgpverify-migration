@@ -12,6 +12,15 @@ Phase 1 reason: `expired`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD
 - size: 2290 → 7105 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - 81F5E2832BD2545A1897B713AA99442FB680B620 \
+  | sq keyring filter --experimental --cert 81F5E2832BD2545A1897B713AA99442FB680B620 --output update.pgp
+sq keyring merge samba-pubkey_AA99442FB680B620.gpg update.pgp | sq packet dearmor --output samba-pubkey_AA99442FB680B620.gpg.new
+mv samba-pubkey_AA99442FB680B620.gpg.new samba-pubkey_AA99442FB680B620.gpg
+```
+
 ```diff
 --- dist-git/samba-pubkey_AA99442FB680B620.gpg
 +++ refreshed/samba-pubkey_AA99442FB680B620.gpg

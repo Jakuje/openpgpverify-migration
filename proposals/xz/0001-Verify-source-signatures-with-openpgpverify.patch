@@ -1,6 +1,6 @@
-From 98b49b9e205b74aaeb037beb746a7076888c6437 Mon Sep 17 00:00:00 2001
+From cf415993bb8ebda4e5373d0e82144866ee1952f1 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 26 Oct 2026 21:26:07 +0100
+Date: Tue, 27 Oct 2026 12:08:53 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -8,14 +8,15 @@ Sequoia sqv and takes the same options, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Refresh lasse_collin_pubkey.txt from keyservers/WKD: same
-certificate(s), with self-signatures our copy was missing.
+certificate(s), with self-signatures our copy was missing; the commands
+are in the spec comment.
 Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
  lasse_collin_pubkey.txt | 360 +++++++++++++++++++++++++++++++++++-----
- xz.spec                 |   8 +-
- 2 files changed, 328 insertions(+), 40 deletions(-)
+ xz.spec                 |  12 +-
+ 2 files changed, 332 insertions(+), 40 deletions(-)
 
 diff --git a/lasse_collin_pubkey.txt b/lasse_collin_pubkey.txt
 index 4a391c6..1669e2c 100644
@@ -394,7 +395,7 @@ index 4a391c6..1669e2c 100644
 +=Vz6f
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/xz.spec b/xz.spec
-index 6f750bb..894c5b9 100644
+index 6f750bb..1b9ddef 100644
 --- a/xz.spec
 +++ b/xz.spec
 @@ -5,7 +5,7 @@ Summary:	LZMA compression utilities
@@ -406,7 +407,18 @@ index 6f750bb..894c5b9 100644
  
  # liblzma - 0BSD
  # xz{,dec}, lzma{dec,info} - 0BSD
-@@ -37,6 +37,7 @@ BuildRequires:	gcc
+@@ -19,6 +19,10 @@ License:	0BSD AND GPL-2.0-or-later AND LicenseRef-Fedora-Public-Domain
+ # official upstream release
+ Source0:	https://github.com/tukaani-project/%{name}/releases/download/v%{version}/%{name}-%{version}.tar.gz
+ Source1:	https://github.com/tukaani-project/%{name}/releases/download/v%{version}/%{name}-%{version}.tar.gz.sig
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 3690C240CE51B4670D30AD1C38EE757D69184620 | sq keyring filter --experimental --cert 3690C240CE51B4670D30AD1C38EE757D69184620 --output update.pgp
++#   sq keyring merge --output lasse_collin_pubkey.txt.new lasse_collin_pubkey.txt update.pgp
++#   mv lasse_collin_pubkey.txt.new lasse_collin_pubkey.txt
+ Source2:	https://tukaani.org/misc/lasse_collin_pubkey.txt
+ 
+ Source100:	colorxzgrep.sh
+@@ -37,6 +41,7 @@ BuildRequires:	gcc
  BuildRequires:	gnupg2
  BuildRequires:	perl-interpreter
  BuildRequires:	autoconf automake libtool gettext-devel
@@ -414,7 +426,7 @@ index 6f750bb..894c5b9 100644
  
  
  %description
-@@ -91,7 +92,7 @@ commands that deal with the older LZMA format.
+@@ -91,7 +96,7 @@ commands that deal with the older LZMA format.
  
  
  %prep
@@ -423,7 +435,7 @@ index 6f750bb..894c5b9 100644
  %autosetup -p1
  autoreconf -fi
  
-@@ -184,6 +185,9 @@ LD_LIBRARY_PATH=$PWD/src/liblzma/.libs make check
+@@ -184,6 +189,9 @@ LD_LIBRARY_PATH=$PWD/src/liblzma/.libs make check
  
  
  %changelog
