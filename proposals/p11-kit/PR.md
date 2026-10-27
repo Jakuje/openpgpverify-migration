@@ -15,7 +15,7 @@ Why `sqv`:
 
 - the direct `gpgv2` call is replaced by `%{openpgpverify}` with the same keyring, signature and data
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `p11-kit-release-keyring.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- updated `p11-kit-release-keyring.gpg` to the current upstream copy from the URL in the spec (see below)
 
 ### Testing
 
@@ -28,28 +28,25 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 Tested on 2026-10-26 at dist-git commit `4837e67608d7` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
-### Keyring refresh
+### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `gpgv2` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `gpgv2` ignores that. Upstream has updated the key since: the copy at the URL the spec names for it has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte:
+
+```
+curl -fsSL -o p11-kit-release-keyring.gpg https://p11-glue.github.io/p11-glue/p11-kit/p11-kit-release-keyring.gpg
+```
+
+Fingerprints (unchanged):
 
 - `5D46CB0F763405A7053556F47A75A648B3F9220C`
 - `462225C3B46F34879FC8496CD605848ED7E69871`
-
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
-
-```
-sq --home=none network search --output - 5D46CB0F763405A7053556F47A75A648B3F9220C 462225C3B46F34879FC8496CD605848ED7E69871 \
-  | sq keyring filter --experimental --cert 5D46CB0F763405A7053556F47A75A648B3F9220C --cert 462225C3B46F34879FC8496CD605848ED7E69871 --output update.pgp
-sq keyring merge p11-kit-release-keyring.gpg update.pgp | sq packet dearmor --output p11-kit-release-keyring.gpg.new
-mv p11-kit-release-keyring.gpg.new p11-kit-release-keyring.gpg
-```
 
 What changed in the certificate (`sq inspect`):
 
 ```diff
 --- dist-git/p11-kit-release-keyring.gpg
-+++ refreshed/p11-kit-release-keyring.gpg
-@@ -1,25 +1,20 @@
++++ upstream/p11-kit-release-keyring.gpg
+@@ -1,25 +1,22 @@
        Fingerprint: 5D46CB0F763405A7053556F47A75A648B3F9220C
 -                   Invalid: The primary key is not live: Expired on 2023-12-23T11:16:51Z
 -  Expiration time: 2023-12-23 11:16:51 UTC (creation time + 1year 11months 29days 21h 50m 24s)
@@ -62,28 +59,27 @@ What changed in the certificate (`sq inspect`):
          Key flags: transport encryption, data-at-rest encryption
             UserID: Zoltan Fridrich <zfridric@redhat.com>
        Fingerprint: 462225C3B46F34879FC8496CD605848ED7E69871
--                   Invalid: No binding signature at time 2026-10-27T11:01:51Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
-+  Expiration time: 2027-10-17 02:52:01 UTC (creation time + 18years 2months 24days 12h 45m 23s)
+-                   Invalid: No binding signature at time 2026-10-27T11:31:32Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
++                   Invalid: The primary key is not live: Expired on 2026-06-29T08:24:20Z
++  Expiration time: 2026-06-29 08:24:20 UTC (creation time + 16years 11months 6days 7h 15m 18s)
 +        Key flags: certification, signing
             Subkey: 2567E23B4A79AD4DC685099850AD4600C8C530D6
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-27T11:01:51Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T11:31:32Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
++                   Invalid: The certificate is not live: The primary key is not live, because Expired on 2026-06-29T08:24:20Z
 +        Key flags: transport encryption, data-at-rest encryption
             UserID: Daiki Ueno <ueno@gnu.org>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
             UserID: Daiki Ueno <ueno@unixuser.org>
--                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
--                   because: SHA1 is not considered secure
+                    Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
+                    because: SHA1 is not considered secure
 -self-signatures PositiveCertification: 2009-07-23, 2018-09-26, 2021-12-23
 -self-signatures SubkeyBinding: 2010-02-04, 2021-12-23
--third-party GenericCertification: 8
-+self-signatures PositiveCertification: 2009-07-23, 2012-12-25, 2013-10-05, 2013-10-06, 2018-09-26, 2021-12-23, 2023-06-30, 2024-01-02, 2025-09-18, 2026-10-17
-+self-signatures SubkeyBinding: 2010-02-04, 2021-12-23, 2023-07-03, 2024-01-02
-+third-party CasualCertification: 1
-+third-party CertificationRevocation: 1
-+third-party GenericCertification: 11
++self-signatures PositiveCertification: 2009-07-23, 2018-09-26, 2021-12-23, 2023-06-30, 2025-09-18
++self-signatures SubkeyBinding: 2010-02-04, 2023-07-03, 2024-01-02
+ third-party GenericCertification: 8
  third-party PositiveCertification: 1
 ```
 

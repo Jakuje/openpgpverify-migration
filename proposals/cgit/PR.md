@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (2 calls; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `gpgkey-AB9942E6D4A4CFC3412620A749FC7012A5DE03AE.asc` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- updated `gpgkey-AB9942E6D4A4CFC3412620A749FC7012A5DE03AE.asc` to the current upstream copy from the URL in the spec (see below)
 - Release bumped (`5%{?dist}` → `6%{?dist}`) with a changelog entry
 
 ### Testing
@@ -29,27 +29,24 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 Tested on 2026-10-26 at dist-git commit `72263f147e2a` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
-### Keyring refresh
+### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. Upstream has updated the key since: the copy at the URL the spec names for it has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte:
+
+```
+curl -fsSL -o gpgkey-AB9942E6D4A4CFC3412620A749FC7012A5DE03AE.asc https://www.zx2c4.com/keys/AB9942E6D4A4CFC3412620A749FC7012A5DE03AE.asc
+```
+
+Fingerprints (unchanged):
 
 - `AB9942E6D4A4CFC3412620A749FC7012A5DE03AE`
-
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
-
-```
-sq --home=none network search --output - AB9942E6D4A4CFC3412620A749FC7012A5DE03AE \
-  | sq keyring filter --experimental --cert AB9942E6D4A4CFC3412620A749FC7012A5DE03AE --output update.pgp
-sq keyring merge --output gpgkey-AB9942E6D4A4CFC3412620A749FC7012A5DE03AE.asc.new gpgkey-AB9942E6D4A4CFC3412620A749FC7012A5DE03AE.asc update.pgp
-mv gpgkey-AB9942E6D4A4CFC3412620A749FC7012A5DE03AE.asc.new gpgkey-AB9942E6D4A4CFC3412620A749FC7012A5DE03AE.asc
-```
 
 What changed in the certificate (`sq inspect`):
 
 ```diff
 --- dist-git/gpgkey-AB9942E6D4A4CFC3412620A749FC7012A5DE03AE.asc
-+++ refreshed/gpgkey-AB9942E6D4A4CFC3412620A749FC7012A5DE03AE.asc
-@@ -1,14 +1,13 @@
++++ upstream/gpgkey-AB9942E6D4A4CFC3412620A749FC7012A5DE03AE.asc
+@@ -1,14 +1,9 @@
        Fingerprint: AB9942E6D4A4CFC3412620A749FC7012A5DE03AE
 -                   Invalid: The primary key is not live: Expired on 2022-02-11T13:41:11Z
 -  Expiration time: 2022-02-11 13:41:11 UTC (creation time + 11years 26days 20h 58m 15s)
@@ -65,12 +62,9 @@ What changed in the certificate (`sq inspect`):
 -self-signatures SubkeyBinding: 2021-02-11
 -third-party CasualCertification: 1
 -third-party GenericCertification: 19
-+self-signatures PositiveCertification: 2011-01-15, 2013-03-29, 2013-10-31, 2014-11-07, 2015-03-18, 2017-02-10, 2018-02-03, 2021-02-11, 2022-03-14, 2024-03-31
-+self-signatures SubkeyBinding: 2011-01-15, 2015-03-18, 2017-02-10, 2018-02-03, 2021-02-11, 2022-03-14, 2024-03-31
-+third-party CasualCertification: 3
-+third-party CertificationRevocation: 1
-+third-party GenericCertification: 28
- third-party PositiveCertification: 7
+-third-party PositiveCertification: 7
++self-signatures PositiveCertification: 2024-03-31
++self-signatures SubkeyBinding: 2024-03-31
 ```
 
 ### Notes

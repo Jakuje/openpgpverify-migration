@@ -1,6 +1,6 @@
 # Proposals
 
-Generated 2026-10-27T11:09Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
+Generated 2026-10-27T11:35Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
 
 - **PR**: `0001-*.patch` is the commit a PR would carry (`git am` applies it to dist-git at the tested commit); `PR.md` is the PR title and description.
 - **draft PR**: the same, but it includes a keyring refresh that hasn't been reviewed yet.
@@ -556,7 +556,7 @@ Generated 2026-10-27T11:09Z by `scripts/render_proposals.py` from the Phase 1 st
 | [llvm19](llvm19/) | PR |  |
 | [llvm20](llvm20/) | draft PR | keyring refresh proposed |
 | [llvm21](llvm21/) | PR |  |
-| [opam](opam/) | bug | expired |
+| [opam](opam/) | draft PR | keyring refresh proposed |
 | [pari-elldata](pari-elldata/) | bug | sha1-cert |
 | [pari-seadata](pari-seadata/) | bug | sha1-sig |
 | [passwordsafe](passwordsafe/) | PR |  |

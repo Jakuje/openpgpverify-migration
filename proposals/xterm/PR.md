@@ -16,7 +16,7 @@ Why `sqv`:
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
 - dropped `BuildRequires: gnupg2`, only needed for `%gpgverify`
-- refreshed keyring `dickey@invisible-island.net-rsa3072.asc` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- updated `dickey@invisible-island.net-rsa3072.asc` to the current upstream copy from the URL in the spec (see below)
 
 ### Testing
 
@@ -29,27 +29,24 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 Tested on 2026-10-12 at dist-git commit `a7068e007985` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
-### Keyring refresh
+### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. Upstream has updated the key since: the copy at the URL the spec names for it has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte:
+
+```
+curl -fsSL -o dickey@invisible-island.net-rsa3072.asc https://invisible-island.net/public/dickey@invisible-island.net-rsa3072.asc
+```
+
+Fingerprints (unchanged):
 
 - `19882D92DDA4C400C22C0D56CC2AF4472167BE03`
-
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
-
-```
-sq --home=none network search --output - 19882D92DDA4C400C22C0D56CC2AF4472167BE03 \
-  | sq keyring filter --experimental --cert 19882D92DDA4C400C22C0D56CC2AF4472167BE03 --output update.pgp
-sq keyring merge --output dickey@invisible-island.net-rsa3072.asc.new dickey@invisible-island.net-rsa3072.asc update.pgp
-mv dickey@invisible-island.net-rsa3072.asc.new dickey@invisible-island.net-rsa3072.asc
-```
 
 What changed in the certificate (`sq inspect`):
 
 ```diff
 --- dist-git/dickey@invisible-island.net-rsa3072.asc
-+++ refreshed/dickey@invisible-island.net-rsa3072.asc
-@@ -1,13 +1,12 @@
++++ upstream/dickey@invisible-island.net-rsa3072.asc
+@@ -1,13 +1,11 @@
        Fingerprint: 19882D92DDA4C400C22C0D56CC2AF4472167BE03
 -                   Invalid: The primary key is not live: Expired on 2026-01-18T23:06:45Z
 -  Expiration time: 2026-01-18 23:06:45 UTC (creation time + 4years 5months 19days 19h 10m 21s)
@@ -64,11 +61,9 @@ What changed in the certificate (`sq inspect`):
             UserID: Thomas E. Dickey (use for email) <dickey@his.com>
 -self-signatures PositiveCertification: 2023-12-10
 -self-signatures SubkeyBinding: 2023-12-10
--third-party GenericCertification: 1
-+self-signatures PositiveCertification: 2021-07-30, 2022-01-31, 2022-10-31, 2023-12-10, 2026-01-18
-+self-signatures SubkeyBinding: 2021-07-30, 2022-10-31, 2023-12-10, 2026-01-18
-+third-party CasualCertification: 1
-+third-party GenericCertification: 2
++self-signatures PositiveCertification: 2026-01-18
++self-signatures SubkeyBinding: 2026-01-18
+ third-party GenericCertification: 1
 ```
 
 ### Notes

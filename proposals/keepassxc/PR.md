@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `keepassxc_master_signing_key.asc` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- updated `keepassxc_master_signing_key.asc` to the current upstream copy from the URL in the spec (see below)
 - Release bumped (`3%{?dist}` → `4%{?dist}`) with a changelog entry
 
 ### Testing
@@ -29,27 +29,24 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 Tested on 2026-10-26 at dist-git commit `4c2b501cbd61` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
-### Keyring refresh
+### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. Upstream has updated the key since: the copy at the URL the spec names for it has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte:
+
+```
+curl -fsSL -o keepassxc_master_signing_key.asc https://keepassxc.org/keepassxc_master_signing_key.asc
+```
+
+Fingerprints (unchanged):
 
 - `BF5A669F2272CF4324C1FDA8CFB4C2166397D0D2`
-
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
-
-```
-sq --home=none network search --output - BF5A669F2272CF4324C1FDA8CFB4C2166397D0D2 \
-  | sq keyring filter --experimental --cert BF5A669F2272CF4324C1FDA8CFB4C2166397D0D2 --output update.pgp
-sq keyring merge --output keepassxc_master_signing_key.asc.new keepassxc_master_signing_key.asc update.pgp
-mv keepassxc_master_signing_key.asc.new keepassxc_master_signing_key.asc
-```
 
 What changed in the certificate (`sq inspect`):
 
 ```diff
 --- dist-git/keepassxc_master_signing_key.asc
-+++ refreshed/keepassxc_master_signing_key.asc
-@@ -1,22 +1,18 @@
++++ upstream/keepassxc_master_signing_key.asc
+@@ -1,22 +1,15 @@
        Fingerprint: BF5A669F2272CF4324C1FDA8CFB4C2166397D0D2
          Key flags: certification, signing
             Subkey: 71D4673D73C7F83C17DAE6A2D8538E98A26FD9C4
@@ -71,12 +68,11 @@ What changed in the certificate (`sq inspect`):
             UserID: KeePassXC Release <release@keepassxc.org>
  self-signatures PositiveCertification: 2017-01-03, 2019-01-08
 -self-signatures SubkeyBinding: 2019-01-08, 2020-12-05
-+self-signatures SubkeyBinding: 2017-01-03, 2019-01-08, 2020-12-05, 2023-12-10
++self-signatures SubkeyBinding: 2023-12-10
  self-signatures SubkeyRevocation: 2019-10-25
- third-party CasualCertification: 2
+-third-party CasualCertification: 2
 -third-party GenericCertification: 56
-+third-party GenericCertification: 85
- third-party PositiveCertification: 2
+-third-party PositiveCertification: 2
 ```
 
 ### Notes

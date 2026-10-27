@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `armored-keys.asc` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- updated `armored-keys.asc` to the current upstream copy from the URL in the spec (see below)
 
 ### Testing
 
@@ -28,26 +28,23 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 Tested on 2026-10-12 at dist-git commit `ab357b7d0ee5` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
-### Keyring refresh
+### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. Upstream has updated the key since: the copy at the URL the spec names for it has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte:
+
+```
+curl -fsSL -o armored-keys.asc https://pgp.surfnet.nl/pks/lookup?op=get&search=0xCA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7
+```
+
+Fingerprints (unchanged):
 
 - `CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7`
-
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
-
-```
-sq --home=none network search --output - CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7 \
-  | sq keyring filter --experimental --cert CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7 --output update.pgp
-sq keyring merge --output armored-keys.asc.new armored-keys.asc update.pgp
-mv armored-keys.asc.new armored-keys.asc
-```
 
 What changed in the certificate (`sq inspect`):
 
 ```diff
 --- dist-git/armored-keys.asc
-+++ refreshed/armored-keys.asc
++++ upstream/armored-keys.asc
 @@ -1,13 +1,12 @@
        Fingerprint: CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7
 -                   Invalid: The primary key is not live: Expired on 2023-08-19T21:59:58Z
@@ -62,8 +59,8 @@ What changed in the certificate (`sq inspect`):
             UserID: Albert Astals Cid <aacid@kde.org>
 -self-signatures PositiveCertification: 2016-09-05, 2018-05-16, 2018-07-31, 2019-08-14, 2020-07-28, 2021-08-01, 2022-08-18
 -self-signatures SubkeyBinding: 2016-09-05, 2018-07-31, 2019-08-14, 2020-07-28
-+self-signatures PositiveCertification: 2016-09-05, 2018-05-16, 2018-07-31, 2019-08-14, 2020-07-28, 2021-08-01, 2022-08-18, 2023-09-07, 2026-04-20
-+self-signatures SubkeyBinding: 2016-09-05, 2018-07-31, 2019-08-14, 2020-07-28, 2024-12-12, 2026-04-20
++self-signatures PositiveCertification: 2016-09-05, 2018-05-16, 2018-07-31, 2019-08-14, 2020-07-28, 2021-08-01, 2022-08-18, 2026-04-20
++self-signatures SubkeyBinding: 2016-09-05, 2018-07-31, 2019-08-14, 2020-07-28, 2026-04-20
 +third-party CasualCertification: 1
  third-party GenericCertification: 13
  third-party PositiveCertification: 1

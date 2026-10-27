@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- updated `A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8` to the current upstream copy from the URL in the spec (see below)
 
 ### Testing
 
@@ -28,34 +28,31 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 Tested on 2026-10-23 at dist-git commit `1fd667897e8c` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
-### Keyring refresh
+### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (SHA-1 key self-signatures), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (SHA-1 key self-signatures), while `%gpgverify` ignores that. Upstream has updated the key since: the copy at the URL the spec names for it has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte:
+
+```
+curl -fsSL -o A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8 https://keys.openpgp.org/vks/v1/by-fingerprint/A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8
+```
+
+Fingerprints (unchanged):
 
 - `A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8`
-
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
-
-```
-sq --home=none network search --output - A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8 \
-  | sq keyring filter --experimental --cert A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8 --output update.pgp
-sq keyring merge --output A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8.new A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8 update.pgp
-mv A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8.new A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8
-```
 
 What changed in the certificate (`sq inspect`):
 
 ```diff
 --- dist-git/A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8
-+++ refreshed/A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8
++++ upstream/A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8
 @@ -1,11 +1,7 @@
        Fingerprint: A9AB5AB778FA5C3522FD0378F82F4B16DEC408F8
--                   Invalid: No binding signature at time 2026-10-27T11:06:57Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-27T11:31:45Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: certification, signing
             Subkey: 0040FDC77F9F7350F84E043D0EB86EAD06B322DF
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-27T11:06:57Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-27T11:31:45Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: transport encryption, data-at-rest encryption
             UserID: WeeChat (signing key) <webmaster@weechat.org>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance

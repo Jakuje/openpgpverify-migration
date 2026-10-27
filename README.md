@@ -174,6 +174,13 @@ rpm stops depending on gpg.
      once approved, phase1.py puts them in the comment above the keyring's
      `Source` line, replacing older gpg/curl fetch commands. Results: `proposed`,
      `no-update`, `not-found`, `still-fails`.
+   - `propose-upstream [PKG...]` (default: all regressions) is the preferred,
+     less controversial variant: it downloads the keyring from the URL the spec
+     names for it (`Source:` URL or a URL in the comment above), and keeps it
+     only if it has exactly the same fingerprints, differs from dist-git and
+     makes sqv pass. The file is used byte for byte (`curl -o FILE URL`); the
+     keyserver proposal moves to `keyring_refresh_keyserver`. Reviews in
+     `reports/keyring-upstream/`, list in `announce/keyring-upstream.md`.
    - `show PKG`, then `approve PKG [--note]` or `reject PKG --note`. Only
      `proposed` can be approved, and the reviewer and time are recorded.
    - `phase1.py PKG` then uses approved keyrings in the new variant only

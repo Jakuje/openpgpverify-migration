@@ -1,15 +1,16 @@
-From e356cbe05d5189e0b57f2304e1f12b4ff82e86cb Mon Sep 17 00:00:00 2001
+From 1363fa472f30a12f2351fd43fa4bccba0109929b Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 27 Oct 2026 12:08:52 +0100
+Date: Tue, 27 Oct 2026 12:34:52 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
 uses Sequoia sqv, as part of the Fedora 45 Change
 https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
-Refresh tdb.keyring from keyservers/WKD: same certificate(s), with self-
-signatures our copy was missing; the commands are in the spec comment.
-The GnuPG keybox becomes a plain OpenPGP keyring, which sqv can read.
+Refresh tdb.keyring from keyservers/WKD: same certificate(s), with
+self-signatures our copy was missing; the commands are in the spec
+comment. The GnuPG keybox becomes a plain OpenPGP keyring, which sqv can
+read.
 
 Assisted-by: Claude Opus 5.5
 ---

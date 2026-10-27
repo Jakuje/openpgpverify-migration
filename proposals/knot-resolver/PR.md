@@ -15,7 +15,7 @@ Why `sqv`:
 
 - the GnuPG verification (import the key into a temporary `GNUPGHOME`, then `gpg2 --verify`) is replaced by one `%{openpgpverify}` call with the same key, signature and data; `GPG_CHECK` still switches it
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `kresd-keyblock.asc` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- updated `kresd-keyblock.asc` to the current upstream copy from the URL in the spec (see below)
 - Release bumped (`1%{?dist}` → `2%{?dist}`) with a changelog entry
 
 ### Testing
@@ -29,27 +29,24 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 Tested on 2026-10-26 at dist-git commit `0d4bf2c20be1` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
-### Keyring refresh
+### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `gpg2` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com; hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `gpg2` ignores that. Upstream has updated the key since: the copy at the URL the spec names for it has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte:
+
+```
+curl -fsSL -o kresd-keyblock.asc https://secure.nic.cz/files/knot-resolver/kresd-keyblock.asc
+```
+
+Fingerprints (unchanged):
 
 - `3057EE9A448F362D74205A779AB120DA0A76F6DE`
 - `B6006460B60A80E782062449E747DF1F9575A3AA`
-
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
-
-```
-sq --home=none network search --output - 3057EE9A448F362D74205A779AB120DA0A76F6DE B6006460B60A80E782062449E747DF1F9575A3AA \
-  | sq keyring filter --experimental --cert 3057EE9A448F362D74205A779AB120DA0A76F6DE --cert B6006460B60A80E782062449E747DF1F9575A3AA --output update.pgp
-sq keyring merge --output kresd-keyblock.asc.new kresd-keyblock.asc update.pgp
-mv kresd-keyblock.asc.new kresd-keyblock.asc
-```
 
 What changed in the certificate (`sq inspect`):
 
 ```diff
 --- dist-git/kresd-keyblock.asc
-+++ refreshed/kresd-keyblock.asc
++++ upstream/kresd-keyblock.asc
 @@ -1,10 +1,8 @@
        Fingerprint: 3057EE9A448F362D74205A779AB120DA0A76F6DE
 -                   Invalid: The primary key is not live: Expired on 2024-03-06T15:32:20Z
@@ -63,17 +60,14 @@ What changed in the certificate (`sq inspect`):
          Key flags: transport encryption, data-at-rest encryption
             UserID: Ales Mrazek <ales.mrazek@nic.cz>
        Fingerprint: B6006460B60A80E782062449E747DF1F9575A3AA
-@@ -16,5 +14,8 @@
+@@ -16,5 +14,5 @@
             UserID: Vladimír Čunát (personal) <v@cunat.cz>
             UserID: Vladimír Čunát (work) <vladimir.cunat@nic.cz>
             UserID: Vladimír Čunát <vcunat@gmail.com>
 -self-signatures PositiveCertification: 2021-10-13, 2022-03-07
 -self-signatures SubkeyBinding: 2021-10-13, 2022-03-07
 +self-signatures PositiveCertification: 2016-10-16, 2017-09-21, 2017-09-25, 2017-11-16, 2019-02-24, 2021-10-13, 2022-03-07, 2024-03-04, 2026-02-04
-+self-signatures SubkeyBinding: 2016-10-16, 2021-10-13, 2022-03-07, 2024-03-04, 2026-02-04
-+third-party CasualCertification: 1
-+third-party GenericCertification: 1
-+third-party PositiveCertification: 1
++self-signatures SubkeyBinding: 2021-10-13, 2022-03-07, 2024-03-04, 2026-02-04
 ```
 
 ### Notes

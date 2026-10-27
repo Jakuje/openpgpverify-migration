@@ -35,6 +35,7 @@ import subprocess
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import convert  # noqa: E402
 import phase1  # noqa: E402
 import state  # noqa: E402
 
@@ -196,6 +197,170 @@ def refresh_file(src, dst, tmp):
     return info
 
 
+def key_urls(text, pkg, name):
+    """URLs the spec gives for keyring file NAME: its Source URL and URLs in
+    the comment right above that Source line. Only simple macros are expanded
+    (name, version, one-word %global/%define); the spec is never evaluated."""
+    macros = dict(re.findall(r'(?m)^%(?:global|define)\s+(\w+)\s+([^\s%]+)\s*$', text))
+    macros['name'] = pkg
+    m = re.search(r'(?mi)^Version\s*:\s*([^\s%]+)\s*$', text)
+    if m:
+        macros['version'] = m.group(1)
+
+    def expand(v):
+        for _ in range(3):
+            v = re.sub(r'%\{\??(\w+)\}|%(\w+)\b',
+                       lambda x: macros.get(x.group(1) or x.group(2), x.group(0)), v)
+        return v
+    lines = text.split('\n')
+    for i, line in enumerate(lines):
+        m = convert.SOURCE_TAG.match(line)
+        if not m:
+            continue
+        value = expand(m.group(2))
+        if value.split('#/')[-1].rsplit('/', 1)[-1] != name:
+            continue
+        top = i
+        while top > 0 and lines[top - 1].startswith('#'):
+            top -= 1
+        urls = []
+        for u in re.findall(r'https?://[^\s<>"\']+', expand(' '.join(lines[top:i + 1]))):
+            u = u.split('#')[0].rstrip(').,;')
+            if '%' not in u and u not in urls:
+                urls.append(u)
+        return urls
+    return []
+
+
+def upstream_file(src, url, dst, tmp):
+    """Download URL; keep it only if it holds exactly the certificates of SRC."""
+    name = os.path.basename(src)
+    info = dict(url=url, size_old=os.path.getsize(src), method='upstream-url',
+                commands=['curl -fsSL -o %s %s' % (name, url)])
+    dl = os.path.join(tmp, 'download')
+    if os.path.exists(dl):
+        os.remove(dl)
+    p = sh(['curl', '-fsSL', '--proto', '=https,http', '--max-time', '120',
+            '--max-filesize', str(20 * 1024 * 1024), '-o', dl, url], timeout=180)
+    if p.returncode or not os.path.exists(dl):
+        info['error'] = 'download failed (curl rc %d)' % p.returncode
+        return info
+    old = src
+    if is_keybox(src):
+        run = os.path.join(tmp, 'kbx')
+        shutil.rmtree(run, ignore_errors=True)
+        os.makedirs(run)
+        shutil.copy(src, os.path.join(run, name))
+        sh(['bash', '-c', recipe(name, [], True, False)[0]], cwd=run)
+        old = os.path.join(run, name + '.pgp')
+        info['keybox'] = True
+    fo, fn = fingerprints(old), fingerprints(dl)
+    info['fingerprints'] = fo
+    if not fn:
+        info['error'] = 'no OpenPGP certificate at the URL (a web page?)'
+        return info
+    if sorted(fn) != sorted(fo):
+        info['error'] = 'different certificates at the URL: %s' % ', '.join(
+            ['+' + f for f in fn if f not in fo] + ['-' + f for f in fo if f not in fn])
+        return info
+    if open(dl, 'rb').read() == open(src, 'rb').read():
+        info['error'] = 'the URL serves the same file as dist-git'
+        return info
+    shutil.copy(dl, dst)
+    info['size_new'] = os.path.getsize(dst)
+    info['sha256_new'] = hashlib.sha256(open(dst, 'rb').read()).hexdigest()
+    info['changed'] = True
+    info['old_summary_base'] = old != src
+    return info
+
+
+def propose_upstream(pkg, rec):
+    """Like propose(), but take the keyring from the URL the spec names."""
+    res = (rec.get('results') or [{}])[0]
+    bad = [c for c in res.get('new_calls', []) if c['rc'] != 0]
+    if not bad:
+        return dict(status='not-applicable', note='no failing openpgpverify call')
+    d = os.path.join(phase1.WORK, pkg)
+    g = os.path.join(d, 'dist-git')
+    spec = open(os.path.join(g, pkg + '.spec')).read()
+    keyrings, sig, data = call_files(bad[0])
+    out = os.path.join(d, 'upstream')
+    tmp = os.path.join(out, '.tmp')
+    shutil.rmtree(out, ignore_errors=True)
+    os.makedirs(tmp)
+    files, tried = [], []
+    for k in keyrings:
+        src = phase1.host_path(k, g)
+        if not src or not os.path.isfile(src):
+            continue
+        rel = os.path.relpath(src, g)
+        os.makedirs(os.path.dirname(os.path.join(out, rel)), exist_ok=True)
+        for url in key_urls(spec, pkg, os.path.basename(rel)):
+            info = upstream_file(src, url, os.path.join(out, rel), tmp)
+            info['file'] = rel
+            tried.append(info)
+            if info.get('changed'):
+                files.append(info)
+                break
+    if not tried:
+        shutil.rmtree(out, ignore_errors=True)
+        return dict(status='no-url', method='upstream-url')
+    if not files:
+        shutil.rmtree(tmp, ignore_errors=True)
+        return dict(status='not-found', method='upstream-url',
+                    tried=[dict(url=t['url'], error=t.get('error')) for t in tried])
+    for f in (sig, data):
+        h = phase1.host_path(f or '', g)
+        if h and not os.path.exists(h):
+            sh(['fedpkg', '--path', g, '--name', pkg, 'sources'], timeout=900)
+            break
+    host_rc = None
+    sig_h, data_h = phase1.host_path(sig or '', g), phase1.host_path(data or '', g)
+    review = ['# Keyring update from upstream for %s' % pkg, '',
+              'Failing call: `%s`' % bad[0]['args'], '',
+              'Phase 1 reason: `%s`' % res.get('failure_reason'), '']
+    if sig_h and data_h and os.path.isfile(sig_h) and os.path.isfile(data_h):
+        new = {f['file']: os.path.join(out, f['file']) for f in files}
+        rings = [new.get(os.path.relpath(phase1.host_path(k, g), g), phase1.host_path(k, g))
+                 for k in keyrings]
+        p = sh(['sqv'] + ['--keyring=' + r for r in rings] +
+               ['--signature-file', sig_h, data_h], timeout=600)
+        host_rc = p.returncode
+        verify = ['## Verification with the upstream keyring', '', '```',
+                  '$ sqv ... %s' % os.path.basename(data_h), (p.stdout + p.stderr).strip(),
+                  'rc=%d' % host_rc, '```', '']
+    else:
+        verify = ['Host verification skipped (data from stdin or a generated file); '
+                  'run phase1.py after approval.', '']
+    for f in files:
+        rel = f['file']
+        base = os.path.join(tmp, 'kbx', os.path.basename(rel) + '.pgp') \
+            if f.pop('old_summary_base') else os.path.join(g, rel)
+        old_s, new_s = os.path.join(tmp, 'old.summary'), os.path.join(tmp, 'new.summary')
+        open(old_s, 'w').write('\n'.join(summary(base)) + '\n')
+        open(new_s, 'w').write('\n'.join(summary(os.path.join(out, rel))) + '\n')
+        p = sh(['diff', '-u', '--label', 'dist-git/' + rel, '--label', 'upstream/' + rel,
+                old_s, new_s], timeout=60)
+        review += ['## %s' % rel, '', '- from: %s' % f['url'],
+                   '- certificates (unchanged): %s' % ', '.join(f['fingerprints']),
+                   '- size: %s → %s bytes' % (f['size_old'], f['size_new']), '',
+                   '```', *f['commands'], '```', '',
+                   '```diff', p.stdout.rstrip() or '(no change in sq inspect summary)', '```', '']
+    review += verify
+    shutil.rmtree(tmp, ignore_errors=True)
+    status = 'still-fails' if host_rc not in (None, 0) else 'proposed'
+    review.insert(2, '**Status: %s**' % status)
+    review.insert(3, '')
+    text = '\n'.join(review) + '\n'
+    open(os.path.join(out, 'REVIEW.md'), 'w').write(text)
+    shared = os.path.join(state.ROOT, 'reports', 'keyring-upstream')
+    os.makedirs(shared, exist_ok=True)
+    open(os.path.join(shared, pkg + '.md'), 'w').write(text)
+    return dict(status=status, method='upstream-url', files=files, host_verify_rc=host_rc,
+                review=os.path.relpath(os.path.join(out, 'REVIEW.md'), state.ROOT),
+                proposed=state.now())
+
+
 def propose(pkg, rec):
     res = (rec.get('results') or [{}])[0]
     bad = [c for c in res.get('new_calls', []) if c['rc'] != 0]
@@ -290,7 +455,8 @@ def propose(pkg, rec):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('action', choices=['propose', 'show', 'approve', 'reject'])
+    ap.add_argument('action', choices=['propose', 'propose-upstream', 'show', 'approve',
+                                       'reject'])
     ap.add_argument('packages', nargs='*')
     ap.add_argument('--note', default=None)
     a = ap.parse_args()
@@ -310,6 +476,37 @@ def main():
                 cur[pkg]['updated'] = state.now()
                 state.save(cur)
             print('%-28s %s' % (pkg, kr['status']), flush=True)
+        return 0
+    if a.action == 'propose-upstream':
+        pkgs = a.packages or sorted(p for p, r in st.items() if r.get('status') == 'regression')
+        for pkg in pkgs:
+            try:
+                up = propose_upstream(pkg, st[pkg])
+            except Exception as e:  # one broken package must not stop the run
+                up = dict(status='error', method='upstream-url', note='%r' % e)
+            d = os.path.join(phase1.WORK, pkg)
+            with phase1.LOCK:
+                cur = state.load()
+                r = cur[pkg]
+                r['upstream_key'] = {k: v for k, v in up.items() if k != 'files'}
+                if up['status'] == 'proposed':
+                    # Preferred over a keyserver refresh: it is what the spec names.
+                    if r.get('keyring_refresh', {}).get('method') != 'upstream-url':
+                        r['keyring_refresh_keyserver'] = r.get('keyring_refresh')
+                        shutil.rmtree(os.path.join(d, 'refresh-keyserver'), ignore_errors=True)
+                        if os.path.isdir(os.path.join(d, 'refresh')):
+                            os.rename(os.path.join(d, 'refresh'),
+                                      os.path.join(d, 'refresh-keyserver'))
+                    shutil.rmtree(os.path.join(d, 'refresh'), ignore_errors=True)
+                    os.rename(os.path.join(d, 'upstream'), os.path.join(d, 'refresh'))
+                    up['review'] = os.path.relpath(os.path.join(d, 'refresh', 'REVIEW.md'),
+                                                   state.ROOT)
+                    r['keyring_refresh'] = up
+                r['updated'] = state.now()
+                state.save(cur)
+            print('%-28s %s %s' % (pkg, up['status'], '; '.join(
+                '%s: %s' % (t['url'], t['error']) for t in up.get('tried', []))[:200]),
+                  flush=True)
         return 0
     if len(a.packages) != 1:
         ap.error('%s takes exactly one package' % a.action)

@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `lasse_collin_pubkey.txt` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- updated `lasse_collin_pubkey.txt` to the current upstream copy from the URL in the spec (see below)
 - Release bumped (`1%{?dist}` → `2%{?dist}`) with a changelog entry
 
 ### Testing
@@ -29,27 +29,24 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 Tested on 2026-10-12 at dist-git commit `9624ab456837` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
-### Keyring refresh
+### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD; hkps://keyserver.ubuntu.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. Upstream has updated the key since: the copy at the URL the spec names for it has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte:
+
+```
+curl -fsSL -o lasse_collin_pubkey.txt https://tukaani.org/misc/lasse_collin_pubkey.txt
+```
+
+Fingerprints (unchanged):
 
 - `3690C240CE51B4670D30AD1C38EE757D69184620`
-
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
-
-```
-sq --home=none network search --output - 3690C240CE51B4670D30AD1C38EE757D69184620 \
-  | sq keyring filter --experimental --cert 3690C240CE51B4670D30AD1C38EE757D69184620 --output update.pgp
-sq keyring merge --output lasse_collin_pubkey.txt.new lasse_collin_pubkey.txt update.pgp
-mv lasse_collin_pubkey.txt.new lasse_collin_pubkey.txt
-```
 
 What changed in the certificate (`sq inspect`):
 
 ```diff
 --- dist-git/lasse_collin_pubkey.txt
-+++ refreshed/lasse_collin_pubkey.txt
-@@ -1,11 +1,10 @@
++++ upstream/lasse_collin_pubkey.txt
+@@ -1,11 +1,9 @@
        Fingerprint: 3690C240CE51B4670D30AD1C38EE757D69184620
 -                   Invalid: The primary key is not live: Expired on 2025-02-07T14:42:17Z
 -  Expiration time: 2025-02-07 14:42:17 UTC (creation time + 14years 3months 15days 5h 11m 19s)
@@ -63,9 +60,8 @@ What changed in the certificate (`sq inspect`):
             UserID: Lasse Collin <lasse.collin@tukaani.org>
 -self-signatures PositiveCertification: 2024-01-08
 -self-signatures SubkeyBinding: 2024-01-08
-+self-signatures PositiveCertification: 2010-10-24, 2015-01-24, 2016-09-10, 2019-01-20, 2020-03-16, 2021-03-12, 2022-09-30, 2024-01-08, 2025-01-08, 2026-01-16
-+self-signatures SubkeyBinding: 2010-10-24, 2015-01-24, 2016-09-10, 2019-01-20, 2020-03-16, 2021-03-12, 2022-09-30, 2024-01-08, 2025-01-08, 2026-01-16
-+third-party GenericCertification: 6
++self-signatures PositiveCertification: 2026-01-16
++self-signatures SubkeyBinding: 2026-01-16
 ```
 
 ### Notes

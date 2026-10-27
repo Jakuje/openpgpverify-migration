@@ -177,6 +177,10 @@ def make_commit(pkg, s, refresh_files):
                 'https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify')
     for f in refresh_files:
         shutil.copy(os.path.join(d, 'refresh', f['file']), os.path.join(pr, f['file']))
+        if f.get('method') == 'upstream-url':
+            extra.append('Update %s to the current copy at %s, the URL the spec names '
+                         'for it (same certificate(s)).' % (f['file'], f['url']))
+            continue
         extra.append('Refresh %s from keyservers/WKD: same certificate(s), with '
                      'self-signatures our copy was missing; the commands are in the '
                      'spec comment.%s' % (
@@ -184,7 +188,8 @@ def make_commit(pkg, s, refresh_files):
                          'which sqv can read.' if f.get('keybox') else ''))
     if s.get('release_bumped'):
         extra.append('Release bumped with a changelog entry.')
-    extra = [textwrap.fill(e, 72) for e in extra]
+    extra = [textwrap.fill(e, 72, break_long_words=False, break_on_hyphens=False)
+             for e in extra]
     body = tmpl('commit-message.txt', lead=lead,
                 extra_body=('\n' + '\n'.join(extra) + '\n') if extra else '')
     sh(['git', '-C', pr, 'add', '-A'])
@@ -229,6 +234,10 @@ def render_pr(pkg, s, draft):
     for f in files:
         commented = re.search(r'(?m)^\+#   mv %s\.new ' % re.escape(os.path.basename(f['file'])),
                               diff)
+        if f.get('method') == 'upstream-url':
+            changes.append('- updated `%s` to the current upstream copy from the URL in the '
+                           'spec (see below)' % f['file'])
+            continue
         changes.append('- refreshed keyring `%s` (see below)%s' % (
             f['file'], '; the comment above its `Source` line now shows the commands for '
             'refreshing it' if commented else ''))
@@ -257,6 +266,18 @@ def render_pr(pkg, s, draft):
         diffs = re.findall(r'```diff\n(.*?)```', review, re.S)
         reason = (REASONS.get(res.get('failure_reason')) or GENERIC)[0]
         keybox = any(f.get('keybox') for f in files)
+    if files and kr.get('method') == 'upstream-url':
+        refresh = ('\n### Keyring update\n\n`%%openpgpverify` rejected the signature with '
+                   'the keyring in dist-git (%s), while %s ignores that. Upstream has updated '
+                   'the key since: the copy at the URL the spec names for it has the same '
+                   'fingerprint(s) and verifies the release with sqv. This PR replaces the '
+                   'file with that copy, byte for byte:\n\n```\n%s\n```\n\nFingerprints '
+                   '(unchanged):\n\n%s\n\nWhat changed in the certificate (`sq inspect`):'
+                   '\n\n```diff\n%s```\n'
+                   % (reason, old_tool, '\n'.join(c for f in files for c in f['commands']),
+                      '\n'.join('- `%s`' % fp for f in files for fp in f['fingerprints']),
+                      ''.join(diffs)))
+    elif files:
         refresh = ('\n### Keyring refresh\n\n%sThe same certificate, looked up '
                    'by fingerprint (%s), has self-signatures our copy is missing (a renewed '
                    'expiry, modern hashes or the older binding history), so this PR updates '

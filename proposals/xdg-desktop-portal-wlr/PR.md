@@ -16,7 +16,7 @@ Why `sqv`:
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
 - dropped `BuildRequires:  gnupg2`, only needed for `%gpgverify`
-- refreshed keyring `gpgkey-0FDE7BE0E88F5E48.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- updated `gpgkey-0FDE7BE0E88F5E48.gpg` to the current upstream copy from the URL in the spec (see below)
 - Release bumped (`1%{?dist}` → `2%{?dist}`) with a changelog entry
 
 ### Testing
@@ -30,27 +30,24 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 Tested on 2026-10-22 at dist-git commit `b9fb340d5aa5` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
-### Keyring refresh
+### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. Upstream has updated the key since: the copy at the URL the spec names for it has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte:
+
+```
+curl -fsSL -o gpgkey-0FDE7BE0E88F5E48.gpg https://emersion.fr/.well-known/openpgpkey/hu/dj3498u4hyyarh35rkjfnghbjxug6b19
+```
+
+Fingerprints (unchanged):
 
 - `34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48`
-
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
-
-```
-sq --home=none network search --output - 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 \
-  | sq keyring filter --experimental --cert 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 --output update.pgp
-sq keyring merge gpgkey-0FDE7BE0E88F5E48.gpg update.pgp | sq packet dearmor --output gpgkey-0FDE7BE0E88F5E48.gpg.new
-mv gpgkey-0FDE7BE0E88F5E48.gpg.new gpgkey-0FDE7BE0E88F5E48.gpg
-```
 
 What changed in the certificate (`sq inspect`):
 
 ```diff
 --- dist-git/gpgkey-0FDE7BE0E88F5E48.gpg
-+++ refreshed/gpgkey-0FDE7BE0E88F5E48.gpg
-@@ -1,11 +1,12 @@
++++ upstream/gpgkey-0FDE7BE0E88F5E48.gpg
+@@ -1,11 +1,9 @@
        Fingerprint: 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48
 -                   Invalid: The primary key is not live: Expired on 2021-03-04T10:03:50Z
 -  Expiration time: 2021-03-04 10:03:50 UTC (creation time + 4years 11months 1day 16h 1m 56s)
@@ -61,14 +58,12 @@ What changed in the certificate (`sq inspect`):
 -  Expiration time: 2021-03-04 10:05:06 UTC (creation time + 4years 11months 1day 16h 3m 12s)
 +  Expiration time: 2027-04-12 16:35:24 UTC (creation time + 11years 10days 43m 6s)
          Key flags: transport encryption, data-at-rest encryption
-+           UserID: Simon Ser <contact@emersion.fr>
-            UserID: emersion <contact@emersion.fr>
+-           UserID: emersion <contact@emersion.fr>
 -self-signatures PositiveCertification: 2020-03-04
 -self-signatures SubkeyBinding: 2020-03-04
-+self-signatures PositiveCertification: 2016-04-01, 2017-04-01, 2018-04-02, 2019-03-11, 2019-04-08, 2020-03-04, 2021-03-10, 2022-03-30, 2023-04-01, 2023-04-21, 2024-04-03, 2025-04-12, 2026-04-12
-+self-signatures SubkeyBinding: 2016-04-01, 2017-04-01, 2018-04-02, 2019-04-08, 2020-03-04, 2021-03-10, 2022-03-30, 2023-04-01, 2024-04-03, 2025-04-12, 2026-04-12
-+third-party CasualCertification: 1
-+third-party GenericCertification: 1
++           UserID: Simon Ser <contact@emersion.fr>
++self-signatures PositiveCertification: 2026-04-12
++self-signatures SubkeyBinding: 2026-04-12
 ```
 
 ### Notes

@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- updated `B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE` to the current upstream copy from the URL in the spec (see below)
 - Release bumped (`4%{?dist}` → `5%{?dist}`) with a changelog entry
 
 ### Testing
@@ -29,27 +29,24 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 Tested on 2026-10-12 at dist-git commit `d30596280503` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
-### Keyring refresh
+### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.mailvelope.com, hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD; hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. Upstream has updated the key since: the copy at the URL the spec names for it has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte:
+
+```
+curl -fsSL -o B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE https://keys.openpgp.org/vks/v1/by-fingerprint/B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE
+```
+
+Fingerprints (unchanged):
 
 - `B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE`
-
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
-
-```
-sq --home=none network search --output - B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE \
-  | sq keyring filter --experimental --cert B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE --output update.pgp
-sq keyring merge --output B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE.new B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE update.pgp
-mv B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE.new B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE
-```
 
 What changed in the certificate (`sq inspect`):
 
 ```diff
 --- dist-git/B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE
-+++ refreshed/B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE
-@@ -1,19 +1,17 @@
++++ upstream/B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE
+@@ -1,19 +1,15 @@
        Fingerprint: B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE
 -                   Invalid: The primary key is not live: Expired on 2022-10-23T15:48:28Z
 -  Expiration time: 2022-10-23 15:48:28 UTC (creation time + 3years 7months 3days 20h 15m 52s)
@@ -74,9 +71,7 @@ What changed in the certificate (`sq inspect`):
 -self-signatures PositiveCertification: 2019-03-20, 2019-10-23, 2020-05-27, 2020-12-22, 2021-07-21, 2022-03-21
 -self-signatures SubkeyBinding: 2019-03-20, 2019-10-23, 2020-05-27, 2020-12-22, 2021-07-21, 2022-03-21
 +self-signatures PositiveCertification: 2019-03-20, 2019-10-23, 2020-05-27, 2020-12-22, 2021-07-21, 2022-03-21, 2022-10-04, 2023-09-01, 2024-03-22, 2025-03-12, 2026-04-17, 2026-10-20
-+self-signatures SubkeyBinding: 2019-03-20, 2019-10-23, 2020-05-27, 2020-12-22, 2021-07-21, 2022-03-21, 2022-10-04, 2023-09-01, 2024-03-22, 2025-03-12, 2026-04-16, 2026-10-20
-+third-party GenericCertification: 7
-+third-party PositiveCertification: 1
++self-signatures SubkeyBinding: 2019-03-20, 2019-10-23, 2020-05-27, 2020-12-22, 2021-07-21, 2022-03-21, 2022-10-04, 2024-03-22, 2025-03-12, 2026-04-16, 2026-10-20
 ```
 
 ### Notes
