@@ -154,6 +154,9 @@ rpm stops depending on gpg.
       - `error`: a harness, clone or sources problem
    6. `scripts/report.py` renders the state file to Markdown
       (`reports/phase1-*.md`).
+   7. `scripts/progress.py` compares the starting snapshot (2026-10-06) with
+      today's inventory and the dist-git PRs (`--fetch` queries Pagure) and
+      writes `reports/progress-DATE.md`: converted, PR open, still to do.
 1b. **Keyring refresh for regressions** (`scripts/refresh_keys.py`),
    semi-automatic, with a manual review for each package:
    - `propose [PKG...]` (default: regressions with reason `expired`,
