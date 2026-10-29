@@ -1,0 +1,38 @@
+From 87a5de6d5e0796ffb871fe73d2be9c9dc54addbb Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:54 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ wlroots0.19.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/wlroots0.19.spec b/wlroots0.19.spec
+index 97193dd..4a489b4 100644
+--- a/wlroots0.19.spec
++++ b/wlroots0.19.spec
+@@ -79,6 +79,7 @@ BuildRequires:  pkgconfig(xcb-xfixes)
+ BuildRequires:  pkgconfig(xcb-xinput)
+ BuildRequires:  pkgconfig(xkbcommon)
+ BuildRequires:  pkgconfig(xwayland)
++BuildRequires:  openpgpverify
+ # libliftoff does not bump soname on API changes
+ Requires:       libliftoff%{?_isa} >= %{liftoff_ver}
+ 
+@@ -97,7 +98,7 @@ Development files for %{name}.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -N -n wlroots-%{version}
+ # apply unconditional patches (0..99)
+ %autopatch -p1 -M99
+-- 
+2.56.0
+

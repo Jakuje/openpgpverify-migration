@@ -1,0 +1,60 @@
+From c6785fb7f9eb37f2a6b6dd121c2911f18a32bfb1 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:42 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ pdfio.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/pdfio.spec b/pdfio.spec
+index 9d40ecd..9ade8a4 100644
+--- a/pdfio.spec
++++ b/pdfio.spec
+@@ -2,7 +2,7 @@
+ 
+ Name: pdfio
+ Version: 1.6.5
+-Release: 1%{?dist}
++Release: 2%{?dist}
+ Summary: C library for PDF I/O
+ # Apache 2.0 with exception - pdfio code
+ # GPL-2.0-or-later - code128 font from examples
+@@ -29,7 +29,7 @@ BuildRequires: git-core
+ # builds with gcc
+ BuildRequires: gcc
+ # for verifying the tarball signature
+-BuildRequires: gpgverify
++BuildRequires: openpgpverify
+ # use make for Makefile
+ BuildRequires: make
+ # uses pkg-config in SPEC and in configure
+@@ -68,7 +68,7 @@ The package contains HTML documentation and man page for PDFIO library.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -S git
+ 
+ 
+@@ -134,6 +134,9 @@ make test
+ 
+ 
+ %changelog
++* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 1.6.5-2
++- Verify upstream source signatures with openpgpverify
++
+ * Mon Aug 31 2026 Zdenek Dohnal <zdohnal@redhat.com> - 1.6.5-1
+ - 1.6.5
+ 
+-- 
+2.56.0
+

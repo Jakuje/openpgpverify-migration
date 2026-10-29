@@ -1,0 +1,38 @@
+From 62470f59251eefebba0ac10ea0024995bf1f811e Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:40 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the direct GnuPG verification with %openpgpverify, which
+uses Sequoia sqv, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ pcsc-lite-ccid.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/pcsc-lite-ccid.spec b/pcsc-lite-ccid.spec
+index 274835c..f23e740 100644
+--- a/pcsc-lite-ccid.spec
++++ b/pcsc-lite-ccid.spec
+@@ -28,6 +28,7 @@ BuildRequires:  flex
+ BuildRequires:  zlib-devel
+ # for udev.pc dependency
+ BuildRequires:  systemd
++BuildRequires:  openpgpverify
+ Requires(post): systemd
+ Requires(postun): systemd
+ Requires:       pcsc-lite%{?_isa} >= %{pcsc_lite_ver}
+@@ -44,7 +45,7 @@ PC/SC Lite daemon.
+ 
+ 
+ %prep
+-gpgv2 --keyring %{SOURCE2} %{SOURCE1} %{SOURCE0}
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -n ccid-%{version} -p1
+ 
+ %build
+-- 
+2.56.0
+

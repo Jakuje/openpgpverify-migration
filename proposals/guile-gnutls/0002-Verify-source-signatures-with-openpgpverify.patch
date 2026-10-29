@@ -1,0 +1,38 @@
+From b287cbdf792a8c814dc5515d9338caf9671ce39d Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:50 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ guile-gnutls.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/guile-gnutls.spec b/guile-gnutls.spec
+index f8213c1..5521823 100644
+--- a/guile-gnutls.spec
++++ b/guile-gnutls.spec
+@@ -20,6 +20,7 @@ BuildRequires: gcc make
+ BuildRequires: gnupg2
+ BuildRequires: gnutls-devel
+ BuildRequires: guile30-devel
++BuildRequires: openpgpverify
+ 
+ Provides:  gnutls-guile = %{version}-%{release}
+ Obsoletes: gnutls-guile <= 3.7.8-4
+@@ -35,7 +36,7 @@ This package contains Guile bindings for the library.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ 
+-- 
+2.56.0
+

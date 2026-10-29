@@ -1,0 +1,59 @@
+From f92d0e7d2c05c610c568b4661a99217a5457970f Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:51 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ lld18.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/lld18.spec b/lld18.spec
+index 598c7c5..34421f2 100644
+--- a/lld18.spec
++++ b/lld18.spec
+@@ -49,7 +49,7 @@
+ 
+ Name:		%{pkg_name}
+ Version:	%{lld_version}%{?rc_ver:~rc%{rc_ver}}%{?llvm_snapshot_version_suffix:~%{llvm_snapshot_version_suffix}}
+-Release:	10%{?dist}
++Release:	11%{?dist}
+ Summary:	The LLVM Linker
+ 
+ License:	Apache-2.0 WITH LLVM-exception OR NCSA
+@@ -91,6 +91,7 @@ BuildRequires:	python3-lit
+ 
+ # For gpg source verification
+ BuildRequires:	gnupg2
++BuildRequires:	openpgpverify
+ 
+ Requires(post): /usr/sbin/update-alternatives
+ Requires(preun): /usr/sbin/update-alternatives
+@@ -121,7 +122,7 @@ Shared libraries for LLD.
+ 
+ %prep
+ %if %{without snapshot_build}
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %endif
+ 
+ %autosetup -n %{lld_srcdir} -p2
+@@ -222,6 +223,9 @@ export LD_LIBRARY_PATH=%{buildroot}/%{install_libdir}
+ %{install_libdir}/liblld*.so.*
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 18.1.8-11
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 18.1.8-10
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

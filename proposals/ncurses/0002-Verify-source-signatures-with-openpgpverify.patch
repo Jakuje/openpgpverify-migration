@@ -1,0 +1,61 @@
+From de16689de84c2b9e852faef790408f1e6ca232fb Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:41 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ ncurses.spec | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/ncurses.spec b/ncurses.spec
+index a42431e..9a0239c 100644
+--- a/ncurses.spec
++++ b/ncurses.spec
+@@ -4,7 +4,7 @@
+ Summary: Ncurses support utilities
+ Name: ncurses
+ Version: 6.6
+-Release: 3%{?dist}
++Release: 4%{?dist}
+ License: MIT-open-group
+ URL: https://invisible-island.net/ncurses/ncurses.html
+ Source0: https://invisible-mirror.net/archives/ncurses/ncurses-%{version}.tar.gz
+@@ -18,7 +18,8 @@ Source2: https://invisible-island.net/public/dickey@invisible-island.net-rsa3072
+ Patch8: ncurses-config.patch
+ Patch9: ncurses-libs.patch
+ Patch11: ncurses-urxvt.patch
+-BuildRequires: gcc gcc-c++ gnupg2 make pkgconfig
++BuildRequires: gcc gcc-c++ make pkgconfig
++BuildRequires: openpgpverify
+ %{?with_gpm:BuildRequires: gpm-devel}
+ 
+ Requires: %{name}-libs%{?_isa} = %{version}-%{release}
+@@ -110,7 +111,7 @@ Requires: %{name}-devel%{?_isa} = %{version}-%{release}
+ The ncurses-static package includes static libraries of the ncurses library.
+ 
+ %prep
+-%{gpgverify} --keyring=%{SOURCE2} --signature=%{SOURCE1} --data=%{SOURCE0}
++%{openpgpverify} --keyring=%{SOURCE2} --signature=%{SOURCE1} --data=%{SOURCE0}
+ 
+ %setup -q -n %{name}-%{version}
+ 
+@@ -289,6 +290,9 @@ xz NEWS
+ %{_libdir}/lib*.a
+ 
+ %changelog
++* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 6.6-4
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 6.6-3
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

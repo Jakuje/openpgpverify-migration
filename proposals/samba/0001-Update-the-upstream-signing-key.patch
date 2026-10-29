@@ -1,0 +1,135 @@
+From 921640c754422312647531b62cfcddff02d375b3 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:42 +0100
+Subject: [PATCH 1/2] Update the upstream signing key
+
+Refresh samba-pubkey_AA99442FB680B620.gpg from keyservers/WKD: same
+certificate(s), with self-signatures our copy was missing.
+The commands are in the comment above its Source line.
+
+The current key is needed to verify the release signature with
+openpgpverify (sqv), which checks that the key was valid when the
+release was signed.
+
+Assisted-by: Claude Opus 5.5
+---
+ samba-pubkey_AA99442FB680B620.gpg | Bin 2290 -> 7105 bytes
+ samba.spec                        |   4 ++++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/samba-pubkey_AA99442FB680B620.gpg b/samba-pubkey_AA99442FB680B620.gpg
+index c901409c92a9ccaa3f29dca796283d35ba462c4c..8ff4ddcaed113880af62f9f236fcdec123463fa5 100644
+GIT binary patch
+delta 4737
+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
+
+delta 55
+zcmX?T{z;H|CKK;QW?m-7Et3VAteHERLN>4F4q;;6$;7+4l8={(vy;h&MS_uwL2dFz
+LZu!ltB*mEkpGghR
+
+diff --git a/samba.spec b/samba.spec
+index e8c998f..754c618 100644
+--- a/samba.spec
++++ b/samba.spec
+@@ -226,6 +226,10 @@ URL:            https://www.samba.org
+ # This is a xz recompressed file of https://ftp.samba.org/pub/samba/samba-%%{version}%%{pre_release}.tar.gz
+ Source0:        https://ftp.samba.org/pub/samba/samba-%{version}%{pre_release}.tar.gz#/samba-%{version}%{pre_release}.tar.xz
+ Source1:        https://ftp.samba.org/pub/samba/samba-%{version}%{pre_release}.tar.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 81F5E2832BD2545A1897B713AA99442FB680B620 | sq keyring filter --experimental --cert 81F5E2832BD2545A1897B713AA99442FB680B620 --output update.pgp
++#   sq keyring merge samba-pubkey_AA99442FB680B620.gpg update.pgp | sq packet dearmor --output samba-pubkey_AA99442FB680B620.gpg.new
++#   mv samba-pubkey_AA99442FB680B620.gpg.new samba-pubkey_AA99442FB680B620.gpg
+ Source2:        samba-pubkey_AA99442FB680B620.gpg
+ 
+ # Red Hat specific replacement-files
+-- 
+2.56.0
+
+

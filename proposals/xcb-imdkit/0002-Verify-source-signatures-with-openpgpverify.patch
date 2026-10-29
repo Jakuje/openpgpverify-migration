@@ -1,0 +1,38 @@
+From d4556265df6f8d0c1a8c69c9ecbf8f0ffa4fcf24 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:54 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ xcb-imdkit.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/xcb-imdkit.spec b/xcb-imdkit.spec
+index 7047451..ddc16f1 100644
+--- a/xcb-imdkit.spec
++++ b/xcb-imdkit.spec
+@@ -21,6 +21,7 @@ BuildRequires:  gcc-c++
+ BuildRequires:  pkgconfig(xcb)
+ BuildRequires:  pkgconfig(xcb-keysyms)
+ BuildRequires:  pkgconfig(xcb-util)
++BuildRequires:  openpgpverify
+ 
+ %description
+ xcb-imdkit is an implementation of xim protocol in xcb, 
+@@ -36,7 +37,7 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
+ Devel files for xcb-imdkit
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+-- 
+2.56.0
+

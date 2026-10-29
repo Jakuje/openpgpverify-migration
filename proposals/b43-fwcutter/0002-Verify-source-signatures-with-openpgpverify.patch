@@ -1,0 +1,39 @@
+From bd0f22a1f6a3c4519d34fff9cd3a862f05cf34b9 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:43 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ b43-fwcutter.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/b43-fwcutter.spec b/b43-fwcutter.spec
+index 1ac8572..8797b7b 100644
+--- a/b43-fwcutter.spec
++++ b/b43-fwcutter.spec
+@@ -13,7 +13,7 @@ Source1:        https://bues.ch/b43/fwcutter/%{name}-%{version}.tar.xz.asc
+ Source2:        757FAB7CED1814AE15B4836E5FB027474203454C.gpg
+ Source100:      README.too
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  make
+ 
+ %description
+@@ -24,7 +24,7 @@ See the README.too file shipped in the package's documentation for
+ instructions on using this tool.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p2
+ 
+ cp %{SOURCE100} .
+-- 
+2.56.0
+

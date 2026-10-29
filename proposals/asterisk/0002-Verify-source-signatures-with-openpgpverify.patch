@@ -1,0 +1,59 @@
+From 397d26f5c6b7960c66431753002540b0440fd63a Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:58 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the direct GnuPG verification with %openpgpverify, which
+uses Sequoia sqv, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ asterisk.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/asterisk.spec b/asterisk.spec
+index 5c997b2..b1ed8de 100644
+--- a/asterisk.spec
++++ b/asterisk.spec
+@@ -57,7 +57,7 @@
+ Summary:          The Open Source PBX
+ Name:             asterisk
+ Version:          23.5.0
+-Release:          %{?_rc||?_beta:0.}5%{?_rc:.rc%{_rc}}%{?_beta:.beta%{_beta}}%{?dist}
++Release:          %{?_rc||?_beta:0.}5%{?_rc:.rc%{_rc}}%{?_beta:.beta%{_beta}}%{?dist}.1
+ # Automatically converted from old format: GPLv2 - review is highly recommended.
+ License:          GPL-2.0-only
+ URL:              http://www.asterisk.org/
+@@ -253,6 +253,7 @@ Provides:         bundled(jansson) = %{jansson_version}
+ # for gpg to be able to verify the signature
+ BuildRequires:    libgcrypt
+ BuildRequires:    make
++BuildRequires:    openpgpverify
+ 
+ 
+ Requires(post):   systemd-units
+@@ -616,7 +617,7 @@ Jabber/XMPP resources for Asterisk.
+ %if 0%{?fedora} || 0%{?rhel} >=8
+ # only verifying on Fedora and RHEL >=8 due to version of gpg
+ rpm -q libgcrypt
+-gpgv2 --keyring %{SOURCE7} %{SOURCE1} %{SOURCE0}
++%{openpgpverify} --keyring='%{SOURCE7}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %endif
+ %setup -q -n asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}
+ 
+@@ -1640,6 +1641,9 @@ fi
+ %endif
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 23.5.0-5.1
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Sep 23 2026 Peter Lemenkov <lemenkov@gmail.com> - 23.5.0-5
+ - Fix for CVE-2026-84975
+ 
+-- 
+2.56.0
+

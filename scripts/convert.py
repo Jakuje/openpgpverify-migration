@@ -127,7 +127,8 @@ SOURCE_TAG = re.compile(r'^Source(\d*)\s*:\s*(\S+)', re.I)
 KEY_CMD = re.compile(r'^#\s*(\$\s*)?(gpg2?|gpgv2?|sq|curl|wget|gpg-wks-client)\s')
 
 
-def refresh_comment(text, pkg, name, cmds):
+def refresh_comment(text, pkg, name, cmds,
+                    header='# Refreshed from keyservers/WKD (same keys, newer signatures):'):
     """Put the keyring refresh commands CMDS in the comment above the Source
     line of keyring file NAME, replacing commands that fetched or exported the
     key before (descriptive comment lines stay). Returns (text, note)."""
@@ -158,7 +159,7 @@ def refresh_comment(text, pkg, name, cmds):
             cont = line.rstrip().endswith('\\')
             continue
         keep.append(line)
-    new = ['# Refreshed from keyservers/WKD (same keys, newer signatures):']
+    new = [header]
     for c in cmds:
         new.append('#   ' + re.sub(r' \\\n\s*', ' ', c).replace('%', '%%'))
     if at is None:

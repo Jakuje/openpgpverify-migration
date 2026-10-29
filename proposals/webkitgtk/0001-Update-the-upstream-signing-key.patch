@@ -1,0 +1,211 @@
+From b12475a120b7270ca12b8fb7e92eaa4b6bdfdf4f Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:58 +0100
+Subject: [PATCH 1/2] Update the upstream signing key
+
+Refresh webkitgtk-keys.gpg from keyservers/WKD: same certificate(s),
+with self-signatures our copy was missing.
+The commands are in the comment above its Source line.
+
+The current key is needed to verify the release signature with
+openpgpverify (sqv), which checks that the key was valid when the
+release was signed.
+
+Assisted-by: Claude Opus 5.5
+---
+ webkitgtk-keys.gpg | Bin 4178 -> 13549 bytes
+ webkitgtk.spec     |   6 ++++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/webkitgtk-keys.gpg b/webkitgtk-keys.gpg
+index 1852062e1fe3110f69dfb1614d590804949f1d1a..b28f16fb0f1e2544c979b2a1a28065f8a0e1a843 100644
+GIT binary patch
+delta 8910
+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
+
+delta 135
+zcmV;20C@lHY0@AAnF0;50}TQJw3876DhY`KR0I<N3IINnUjiAEkPQa2x&$u*1GxeX
+zvmyx%0t1NxJhO2PJOTrm0iv_852679w3EXZEdhv=@fSXm&Jq@rOBpT!w3Aa2KLLo7
+plM;UexdaWfv@Z<=6^Ka$7!d*h2?YX3L;eK<8w>yn2@sRFG&bG!Bwqjk
+
+diff --git a/webkitgtk.spec b/webkitgtk.spec
+index 92a650c..aad358f 100644
+--- a/webkitgtk.spec
++++ b/webkitgtk.spec
+@@ -83,8 +83,10 @@ URL:            https://www.webkitgtk.org/
+ Source0:        https://webkitgtk.org/releases/webkitgtk-%{version}.tar.xz
+ Source1:        https://webkitgtk.org/releases/webkitgtk-%{version}.tar.xz.asc
+ # Use the keys from https://webkitgtk.org/verifying.html
+-# $ gpg --import aperez.key carlosgc.key
+-# $ gpg --export --export-options export-minimal 013A0127AC9C65B34FFA62526C1009B693975393 5AA3BC334FD7E3369E7C77B291C559DBE4C9123B > webkitgtk-keys.gpg
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 013A0127AC9C65B34FFA62526C1009B693975393 5AA3BC334FD7E3369E7C77B291C559DBE4C9123B | sq keyring filter --experimental --cert 013A0127AC9C65B34FFA62526C1009B693975393 --cert 5AA3BC334FD7E3369E7C77B291C559DBE4C9123B --output update.pgp
++#   sq keyring merge webkitgtk-keys.gpg update.pgp | sq packet dearmor --output webkitgtk-keys.gpg.new
++#   mv webkitgtk-keys.gpg.new webkitgtk-keys.gpg
+ Source2:        webkitgtk-keys.gpg
+ 
+ # https://bugs.webkit.org/show_bug.cgi?id=312677
+-- 
+2.56.0
+
+

@@ -1,0 +1,59 @@
+From f42dc23ec066700e7d332c533691bfc5c67575ba Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:57 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ llvm14.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/llvm14.spec b/llvm14.spec
+index 9e6573a..08bb671 100644
+--- a/llvm14.spec
++++ b/llvm14.spec
+@@ -71,7 +71,7 @@
+ 
+ Name:		%{pkg_name}
+ Version:	%{maj_ver}.%{min_ver}.%{patch_ver}%{?rc_ver:~rc%{rc_ver}}
+-Release:	15%{?dist}
++Release:	16%{?dist}
+ Summary:	The Low Level Virtual Machine
+ 
+ License:	NCSA
+@@ -126,6 +126,7 @@ BuildRequires:	python3-setuptools
+ 
+ # For origin certification
+ BuildRequires:	gnupg2
++BuildRequires:	openpgpverify
+ 
+ 
+ Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
+@@ -210,7 +211,7 @@ LLVM's modified googletest sources.
+ %endif
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -n %{llvm_srcdir} -p2
+ 
+ %py3_shebang_fix \
+@@ -568,6 +569,9 @@ fi
+ %endif
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 14.0.5-16
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 14.0.5-15
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

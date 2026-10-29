@@ -1,0 +1,38 @@
+From 118615ae6013a3c470b05b0dbd5b7b80ed6dd73b Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:41 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the direct GnuPG verification with %openpgpverify, which
+uses Sequoia sqv, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ libtevent.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/libtevent.spec b/libtevent.spec
+index 3d66f45..23720ae 100644
+--- a/libtevent.spec
++++ b/libtevent.spec
+@@ -26,6 +26,7 @@ BuildRequires: libxslt
+ BuildRequires: make
+ BuildRequires: python3-devel
+ BuildRequires: python3-talloc-devel >= %{talloc_version}
++BuildRequires: openpgpverify
+ 
+ Provides: bundled(libreplace)
+ Obsoletes: python2-tevent < 0.10.0-1
+@@ -57,7 +58,7 @@ Requires: libtevent%{?_isa} = %{version}-%{release}
+ Python 3 bindings for libtevent
+ 
+ %prep
+-zcat %{SOURCE0} | gpgv2 --quiet --keyring %{SOURCE2} %{SOURCE1} -
++zcat %{SOURCE0} | %{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data=-
+ %autosetup -n tevent-%{version} -p1
+ 
+ %build
+-- 
+2.56.0
+

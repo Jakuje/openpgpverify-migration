@@ -1,0 +1,59 @@
+From 71690bd6226678ea9e105cea14831bc4e741abc2 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:41 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ git.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/git.spec b/git.spec
+index eb579a8..d239ff0 100644
+--- a/git.spec
++++ b/git.spec
+@@ -87,7 +87,7 @@
+ 
+ Name:           git
+ Version:        2.56.0
+-Release:        1%{?dist}
++Release:        2%{?dist}
+ Summary:        Fast Version Control System
+ License:        BSD-3-Clause AND GPL-2.0-only AND GPL-2.0-or-later AND LGPL-2.1-or-later AND MIT
+ URL:            https://git-scm.com/
+@@ -212,6 +212,7 @@ BuildRequires:  tcl
+ BuildRequires:  tk
+ BuildRequires:  xz
+ BuildRequires:  zlib-devel >= 1.2
++BuildRequires:  openpgpverify
+ 
+ %if %{with tests}
+ # Test suite requirements
+@@ -544,7 +545,7 @@ Requires:       subversion
+ 
+ %prep
+ # Verify GPG signatures
+-xz -dc '%{SOURCE0}' | %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data=-
++xz -dc '%{SOURCE0}' | %{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data=-
+ 
+ %autosetup -p1 -n %{name}-%{real_version}
+ 
+@@ -1057,6 +1058,9 @@ rmdir --ignore-fail-on-non-empty "$testdir"
+ %{?with_docs:%{_pkgdocdir}/git-svn.html}
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 2.56.0-2
++- Verify upstream source signatures with openpgpverify
++
+ * Mon Oct 05 2026 Ondřej Pohořelský <opohorel@redhat.com> - 2.56.0-1
+ - update to 2.56.0
+ 
+-- 
+2.56.0
+

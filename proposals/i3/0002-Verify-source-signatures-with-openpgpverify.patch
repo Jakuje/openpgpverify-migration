@@ -1,0 +1,38 @@
+From c7af0353cdf2c707a09e0faf635090969f59d8e6 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:51 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ i3.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/i3.spec b/i3.spec
+index e59fd4e..f52a8f6 100644
+--- a/i3.spec
++++ b/i3.spec
+@@ -85,6 +85,7 @@ BuildRequires:  xorg-x11-drv-dummy
+ 
+ # gpg verification
+ BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ 
+ Requires:       xorg-x11-fonts-misc
+ # packages autostarted by the config
+@@ -155,7 +156,7 @@ Requires:       %{name} = %{version}-%{release}
+ Header files for %{name}.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ # Drop /usr/bin/env lines in those which will be installed to %%_bindir.
+-- 
+2.56.0
+

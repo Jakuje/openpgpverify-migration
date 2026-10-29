@@ -1,0 +1,38 @@
+From 0a77acb8c207e3755c83e7a0fd5bb8814c7a728d Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:58 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ webkitgtk.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/webkitgtk.spec b/webkitgtk.spec
+index aad358f..733a26f 100644
+--- a/webkitgtk.spec
++++ b/webkitgtk.spec
+@@ -162,6 +162,7 @@ BuildRequires:  pkgconfig(wayland-egl)
+ BuildRequires:  pkgconfig(wayland-protocols)
+ BuildRequires:  pkgconfig(wayland-server)
+ BuildRequires:  pkgconfig(xt)
++BuildRequires:  openpgpverify
+ 
+ %description
+ WebKitGTK is the port of the WebKit web rendering engine to the
+@@ -303,7 +304,7 @@ The javascriptcoregtk4.1-devel package contains libraries, build data, and heade
+ files for developing applications that use JavaScript engine from webkit2gtk-4.1.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1 -n webkitgtk-%{version}
+ 
+ %build
+-- 
+2.56.0
+

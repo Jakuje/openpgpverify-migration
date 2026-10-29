@@ -1,0 +1,54 @@
+From 8a0d9511ce804ea22073aa4fdfc9b601c8e6c2ae Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:58 +0100
+Subject: [PATCH 1/2] Update the upstream signing key
+
+Refresh gpgkey-B56B8B9D9915AA8796EDC013DFFF2CDB19FC338D.gpg from
+keyservers/WKD: same certificate(s), with self-signatures our copy was
+missing.
+The commands are in the comment above its Source line.
+
+The current key is needed to verify the release signature with
+openpgpverify (sqv), which checks that the key was valid when the
+release was signed.
+
+Assisted-by: Claude Opus 5.5
+---
+ ...6B8B9D9915AA8796EDC013DFFF2CDB19FC338D.gpg | Bin 5659 -> 5827 bytes
+ libHX.spec                                    |   4 ++++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/gpgkey-B56B8B9D9915AA8796EDC013DFFF2CDB19FC338D.gpg b/gpgkey-B56B8B9D9915AA8796EDC013DFFF2CDB19FC338D.gpg
+index 6e2171c87dee00ad5bf622ffa8ae2915e810c3e3..8048644a5a321c196f42badd76ec3a3fa147b326 100644
+GIT binary patch
+delta 247
+zcmV<T00{q^EW<4W#=%Xo0}TQJ&65!VAOpg|ezP<JJ_1X^Mg$NM0ssaD0!_$LIRFX?
+z5cg;Wf`m*%U^)N*ofdhNEnq9#;85Kj&Zg+{_w%@&?*N}k2wweGr4Ws*ifiY!MP)B_
+zB~Ine!A-Mu1PuZM!og*;g$5-81J1+lv*ix11RBD^B?K4&0ss#M0!_$J(E=L+1qlgd
+zYqtQ(ldTgdLPmt<q&{XfnoJdT8=%PyQrk<}3L-*~I`l1VHG*#&1OWXXer_f}CNN|{
+xRP;<rzLZ%|X2BFRdOp=>((iR}stPQ#w-aOn1J1)uv#kgX1OvjsWwX5uB?5&NUE=@%
+
+delta 108
+zcmX@CJ6nf&CKK;QW?m-7Et3VA6qq}i>^7S)*)cKiWa8btmxY&!xsyqC^I0}kCgz<i
+zyqo(3cv-+A^F+WR>o$MoSjQsO$<)ds!N|nG&&uR`BH$vEG!rW)XKMC#hOEhZc{Mh>
+I^0_eq0PTky5dZ)H
+
+diff --git a/libHX.spec b/libHX.spec
+index b2a3adb..514fbf3 100644
+--- a/libHX.spec
++++ b/libHX.spec
+@@ -8,6 +8,10 @@ License:        LicenseRef-Callaway-LGPLv2 OR LGPL-3.0-only
+ URL:            http://sourceforge.net/projects/libhx/
+ Source0:        http://downloads.sourceforge.net/libhx/libHX-%{version}.tar.xz
+ Source1:        http://downloads.sourceforge.net/libhx/libHX-%{version}.tar.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - B56B8B9D9915AA8796EDC013DFFF2CDB19FC338D | sq keyring filter --experimental --cert B56B8B9D9915AA8796EDC013DFFF2CDB19FC338D --output update.pgp
++#   sq keyring merge gpgkey-B56B8B9D9915AA8796EDC013DFFF2CDB19FC338D.gpg update.pgp | sq packet dearmor --output gpgkey-B56B8B9D9915AA8796EDC013DFFF2CDB19FC338D.gpg.new
++#   mv gpgkey-B56B8B9D9915AA8796EDC013DFFF2CDB19FC338D.gpg.new gpgkey-B56B8B9D9915AA8796EDC013DFFF2CDB19FC338D.gpg
+ Source2:        gpgkey-B56B8B9D9915AA8796EDC013DFFF2CDB19FC338D.gpg
+ 
+ BuildRequires:  perl-interpreter gcc-c++
+-- 
+2.56.0
+
+

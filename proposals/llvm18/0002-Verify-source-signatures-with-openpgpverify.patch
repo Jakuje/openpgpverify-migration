@@ -1,0 +1,63 @@
+From 501ab7889824b0facff2bad6d541d620fa9e40b2 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:57 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ llvm18.spec | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/llvm18.spec b/llvm18.spec
+index c030c92..57ca3a8 100644
+--- a/llvm18.spec
++++ b/llvm18.spec
+@@ -93,7 +93,7 @@
+ 
+ Name:		%{pkg_name}
+ Version:	%{maj_ver}.%{min_ver}.%{patch_ver}%{?rc_ver:~rc%{rc_ver}}%{?llvm_snapshot_version_suffix:~%{llvm_snapshot_version_suffix}}
+-Release:	9%{?dist}
++Release:	10%{?dist}
+ Summary:	The Low Level Virtual Machine
+ 
+ License:	Apache-2.0 WITH LLVM-exception OR NCSA
+@@ -154,6 +154,7 @@ BuildRequires:	python3-setuptools
+ 
+ # For origin certification
+ BuildRequires:	gnupg2
++BuildRequires:	openpgpverify
+ 
+ 
+ Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
+@@ -242,9 +243,9 @@ Summary: LLVM's modified googletest sources
+ LLVM's modified googletest sources.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE6}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+-%{gpgverify} --keyring='%{SOURCE6}' --signature='%{SOURCE3}' --data='%{SOURCE2}'
+-%{gpgverify} --keyring='%{SOURCE6}' --signature='%{SOURCE5}' --data='%{SOURCE4}'
++%{openpgpverify} --keyring='%{SOURCE6}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE6}' --signature='%{SOURCE3}' --data='%{SOURCE2}'
++%{openpgpverify} --keyring='%{SOURCE6}' --signature='%{SOURCE5}' --data='%{SOURCE4}'
+ %setup -T -q -b 2 -n %{cmake_srcdir}
+ # TODO: It would be more elegant to set -DLLVM_COMMON_CMAKE_UTILS=%{_builddir}/%{cmake_srcdir},
+ # but this is not a CACHED variable, so we can't actually set it externally :(
+@@ -599,6 +600,9 @@ fi
+ 
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 18.1.8-10
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 18.1.8-9
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

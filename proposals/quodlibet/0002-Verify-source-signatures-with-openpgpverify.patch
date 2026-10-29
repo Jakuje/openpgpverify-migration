@@ -1,0 +1,38 @@
+From 968a6dafef4b92c471e1db954c1d1ac8c9ed41dd Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:56 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ quodlibet.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/quodlibet.spec b/quodlibet.spec
+index 51006d1..b1d96aa 100644
+--- a/quodlibet.spec
++++ b/quodlibet.spec
+@@ -52,6 +52,7 @@ BuildRequires:	python3-mutagen >= 1.14
+ BuildRequires:	python3-pytest
+ BuildRequires:	python3-pyvirtualdisplay
+ BuildRequires:	xine-lib
++BuildRequires:	openpgpverify
+ 
+ Requires:	exfalso = %{version}-%{release}
+ Requires:	gstreamer1
+@@ -102,7 +103,7 @@ This package installs %{summary}.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p 1
+ 
+ install -pm 0644 %{S:3} .
+-- 
+2.56.0
+

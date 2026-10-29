@@ -1,0 +1,58 @@
+From 59295e3683031c56b459bb87a8e4ea3b73c55332 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:40 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ babeltrace2.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/babeltrace2.spec b/babeltrace2.spec
+index 73c7d0e..b367f2e 100644
+--- a/babeltrace2.spec
++++ b/babeltrace2.spec
+@@ -1,6 +1,6 @@
+ Name:           babeltrace2
+ Version:        2.1.2
+-Release:        10%{?dist}
++Release:        11%{?dist}
+ Summary:        A trace manipulation toolkit
+ License:        MIT AND GPL-2.0-only
+ URL:            https://www.efficios.com/babeltrace
+@@ -31,6 +31,7 @@ BuildRequires:  make
+ BuildRequires:  python3-devel >= 3.4
+ BuildRequires:  python3-setuptools
+ BuildRequires:  swig >= 3.0
++BuildRequires:  openpgpverify
+ 
+ Requires:       libbabeltrace2%{?_isa} = %{version}-%{release}
+ 
+@@ -71,7 +72,7 @@ The python3-bt2 package provides Python 3 bindings for libbabeltrace2.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+@@ -129,6 +130,9 @@ rm -f %{buildroot}/%{_pkgdocdir}/std-ext-lib.md
+ 
+ 
+ %changelog
++* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 2.1.2-11
++- Verify upstream source signatures with openpgpverify
++
+ * Mon Jul 27 2026 Jitka Plesnikova <jplesnik@redhat.com> - 2.1.2-10
+ - Replace removed Python 2 C API macros for SWIG 4.5.0 compatibility
+ 
+-- 
+2.56.0
+

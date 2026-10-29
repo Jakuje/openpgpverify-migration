@@ -1,0 +1,38 @@
+From fd5ab0b9342b510396d71d0738090e3f208edf09 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:52 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ newsboat.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/newsboat.spec b/newsboat.spec
+index 2c1d143..ab9b246 100644
+--- a/newsboat.spec
++++ b/newsboat.spec
+@@ -39,6 +39,7 @@ BuildRequires: pkgconfig(stfl)
+ # Rust parts
+ BuildRequires:  git-core
+ BuildRequires:  rust-packaging
++BuildRequires: openpgpverify
+ 
+ Obsoletes: newsbeuter < 2.9-29
+ 
+@@ -48,7 +49,7 @@ Provides: podboat = %{version}-%{release}
+ Newsboat is a fork of Newsbeuter, an RSS/Atom feed reader for the text console.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ # Note to self: do not use -S git_am for released builds, it messes up version string
+ %autosetup -p1
+ %cargo_prep
+-- 
+2.56.0
+

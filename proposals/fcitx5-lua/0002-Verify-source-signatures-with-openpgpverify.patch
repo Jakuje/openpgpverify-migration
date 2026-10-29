@@ -1,0 +1,38 @@
+From edae871ae30a57d02b3daf42240a9bdb4409aa48 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:44 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ fcitx5-lua.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fcitx5-lua.spec b/fcitx5-lua.spec
+index 6a3b822..09d0809 100644
+--- a/fcitx5-lua.spec
++++ b/fcitx5-lua.spec
+@@ -27,6 +27,7 @@ BuildRequires:  pkgconfig(Fcitx5Module)
+ BuildRequires:  /usr/bin/appstream-util
+ # to make testing happy
+ BuildRequires:  fcitx5
++BuildRequires:  openpgpverify
+ Requires:       fcitx5-data
+ 
+ %description
+@@ -41,7 +42,7 @@ Requires:       fcitx5-devel
+ Devel files for fcitx5-lua
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+-- 
+2.56.0
+

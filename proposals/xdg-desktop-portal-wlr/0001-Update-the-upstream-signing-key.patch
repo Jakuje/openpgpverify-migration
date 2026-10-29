@@ -1,0 +1,75 @@
+From 8b49edf840e4829a67850d734662af4b29e986a3 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:48 +0100
+Subject: [PATCH 1/2] Update the upstream signing key
+
+Update gpgkey-0FDE7BE0E88F5E48.gpg to the current copy at
+https://emersion.fr/.well-known/openpgpkey/hu/dj3498u4hyyarh35rkjfnghbjxug6b19,
+the URL the spec names for it (same certificate(s)).
+
+The current key is needed to verify the release signature with
+openpgpverify (sqv), which checks that the key was valid when the
+release was signed.
+
+Assisted-by: Claude Opus 5.5
+---
+ gpgkey-0FDE7BE0E88F5E48.gpg | Bin 2263 -> 2263 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+diff --git a/gpgkey-0FDE7BE0E88F5E48.gpg b/gpgkey-0FDE7BE0E88F5E48.gpg
+index c8c4240f016527562ab1d7da936084f6b784143d..1080404a42cdfdbd0a18b23fb6670e713d30f2c0 100644
+GIT binary patch
+delta 1177
+zcmV;K1ZMl!5!Vp|nF0;50}TQ?v>#JxZEtQMQ)O}>JY#QebYWw3KxJ)Za&u{KZZ2kW
+zK8XTU1QP)W06qd60|g5S2nPZN6$%Lm3j&i$0wjNF+sWSr2^78$%>W7s5D(sa;OLKD
+zNZx=D0H2Us1bs|{y612TJhvErThqIDu5+h<{i?>vypCHqV3e_7=nf%~?PQ2+te2+z
+zM;(EeDY$cU`*Sc8nm^ZgXixHo`*EQk{@FtbqTDIh9c)I%Y>~70OBEIlm5}z>;YWu8
+z-~@jZK#lkBN%UfoQl|gLX6yG}1!_qwVtx`iPHI*Z`-A2T9v2Tp$%fgEXN3J50SAxi
+zhGprc+^@aa8>`vRJQ*c#3p>p`py#<@aaPZwQE_<fHAd<74M$Od74Lx^_Dd>sYuo$e
+zyP_j}+^(>VUI&^>^X_W0MuWd>alawP8h(Fbv{Nd>)T|Kjd6?mqSw$k{-u)ZI8w|gO
+zEbr-Zr9PF3?FcO&;RClCj)W&5xRXgnYxlg};FA7*qL|W!uJ;B>JAMv(3uj5!$;xQ7
+zKgn<|Ki$#{_dJL!M|pfet|9H9;{OIOBbjMIVa$A%jI8qJL0ELd05yU@+hGw6L|T8k
+zQ!cp>w0gR>IP*nLP*QN2i%L$k<tkUrsfg`@XW^W&GXz`Dx0lMIW6A7PPR;|NSBZLm
+zLnuVWWOAzO3f1`PPK8CIozfJHd5vh~;$;r-(ZIi;B3Q>zf&=1+ar-GC$FY*-IHBqL
+zsxKf&=9@s_6A=sTCF;mE(SaWi=!7AMXNwc4d)r33uIQ&ImHZYgv4l@;sZ~E|rLccq
+zhPeU_vx@``0t1NxJd>LSB7bSy$;<@_6uu9-0162Z58iv==#O4Vv6c`09#?4(I|i2@
+zd)ddrHK5vAY(l;2Kqyu%GA~4siU8K4f36Ao6~IzdRG<e`uezqb-#M>b&2Qx5-0x|1
+zSjgrxeJpjzs^4S~SBBm$fD(K{QViER{n3I<|ANSIP4y}vKYZNjNPls+xot+Bf3_v%
+zqDZ-Hb_!lyrvaI-Q{lR<NhyVK*blGtxhu-AMAtIFWvE|4<q1NVsbW=7vZpqJt|8^Q
+z+>zsY^i;ikWQC@vCgacq;lkC)_L6UWh0_#4Esb8|UzeegF30|jzTgCf8HM3crFBiS
+zbQlF=@=4yd@CyOEe}4*WxdGmJh9J|6%F#(Y2}DyrGroE8tNiu7t4hqU=i{-<;EgOm
+z?&}=o^j&p9&V{k+Z~N;)PTB{VMz)Z@dZ@;L&B>d5rOi{)sAzsqO*^4Mj*Hqf4sw#B
+zDUS&_T09NLG)3ydY|AJ>?|tSJ*XcgZRWja_@df&R{U5XUZ+}vNlUri`uU=w-`*rkz
+zmEQ5Y(T2&POsgWs8QS`H_#21%FO#R*6xRwM$G197Y61zmda4%vzK^Xg^&XJPyP=$e
+zqrcKO+4<%^N-HW}=Bm?jt&?;{Bdt4i>KBBOST4f+r-r<niv0ZPG{Z&*e?^Odz4=A+
+rU8$bcV{2-p%^r{ZpRGkz-GY;a57y3_5U}aNft8|9KT`ATbq{np=XyjR
+
+delta 1177
+zcmV;K1ZMl!5!Vp|#=%Xo0}TQ?%^qcKWpZ<AZ*CwwV{dMBVPkYaWo>10b7^mGE@pB*
+z!oigU69EVSKLQ&A1`7!Y2Ll2I6$k<e3Ja4;0wjN4UwsAz2?;^M^Z*J85D(sa;OLKD
+zNI~@w0HRmEmEfy~8^$P+c(*honney>p?GABe&)?KG`c|CjOZ@A0d$Ka?D9j2>)D-3
+zJN~JYGgrZQF(Y6z%qf`>&tml)O_Z5Wet@sWCl?T18POFTU9XH+MG~jWer^)Q7eH&T
+z52=57_YLxyVR?b2b1vry3*^xW00HGIz~E>}YKI-Lmc&&iHY1KN{;^a@mXv=U%ukiX
+z3Wn<yRyX{d5Wtg(Cx<Fo``gi#bKWk=xWJ_@Wv*6iQqGQh4X-Kh02{K#<V!c3G)fLf
+zez1H!iI8uK^CM4=Meefl(SV95uyunr;Dvt*lH5{O*4V2sbC%_prs~pcPhnejg8)`A
+zb#kbjpdb}&(RA9ah`$z}^~y}5^hrc42s#GEMSTV~LXPL+@JgeoC32P0CeUl)Zw`t5
+z*zC--x<uk&cSaq^93&+iIE1ISfn9(~r9&(zF&z!WWw!tk4Z07<(mHMaJT_0vviW}q
+z!E5#m((8P~qkbr>T@QwocN;XM?^SRMIJ6U8BhRIaKQHrn;452tsSqeXZEsf$H~YpN
+zEGPXEg?abae&i6PgexI6eL<&BZ1a1&fR9o!kLe#Ck(`sl89)6=V0Iw&Gf~4?_!^7E
+zH;2b8xU`K!6Ikq_y_HY$?H3#;$5<hR6&bBVR!nr|lyBE<T^~6W3a;L0I?wEDCe#Qk
+zdCtL2vx@``0t3Rqe3P37B7a_AeNqJp2|>d^0162Z58iv==#O4V_udcyzB#dy7qqX;
+zVWr@#g;#r~)(Ik9y>|9GtFb(Vvu4!S>8Ui0_&w7Ww)*Wprkj4Q85Yxw3`nsw@2kh=
+zg|T)dGb=2^_6_HC))dndmon$`tyh=4L(trl2$U}bHRSGxgJq)87=N&hPIAryK=Vsp
+zR_E4+aB`j3$X_~@O3`jly^AHxd?Lf;M3bD>+nN)ET1$_c5q<}ZhNCzTJ9QadNxEn)
+zyP&o#FLm%d0>D>J*4i7}4@|=ImD)U~)T@@RZx2-2B0!!V9@7Y@iJ3P2Xhz^4gWvC$
+z#1HTWVCu(Ep4e5h5`WLaB;+n1G+ObzK`8YZZspwVDY}TTs+Uw`%Ck81%QiI{V_+@)
+znbOc?Jo|4hxFv}ew~H<xI8?nQPSZdYn!x)k14C?STrXFfV;=G~ZkcS*9Mbu#AFz_9
+zNuSQ0qeES_Vy{5}ch{LfPDnSO;&X9#w4(Sgsdbb5<40!UMSm8U0$1@hT{1_3j<Kv1
+z&z`(GgV?rhSVGcdzd`Kf+*YBkqA;=TN1;RFUffp{kc+U43{|8H0jWNt28=Mvqp5s`
+z+;Qd_DK^$Srj?%ob8Lx2f4#6FV7o@!5LE9!7ybbL%2isZxAJp^g@EIYBWBBNB1icu
+rE<lvI%t3um#~uQF-7vU4-?DF+sik*s<O|(i%ghrL{rfh`4R^UVbR8v;
+
+-- 
+2.56.0
+
+

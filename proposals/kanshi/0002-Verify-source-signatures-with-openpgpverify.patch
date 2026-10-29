@@ -1,0 +1,60 @@
+From 74833762016ab114b5c1f6c4214fbf36f3e8944d Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:45 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ kanshi.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/kanshi.spec b/kanshi.spec
+index 6171256..18a859e 100644
+--- a/kanshi.spec
++++ b/kanshi.spec
+@@ -2,7 +2,7 @@
+ 
+ Name:           kanshi
+ Version:        1.9.0
+-Release:        2%{?dist}
++Release:        3%{?dist}
+ Summary:        Dynamic display configuration for Wayland
+ 
+ # Overall project license: MIT
+@@ -24,7 +24,7 @@ Source2:        https://emersion.fr/.well-known/openpgpkey/hu/dj3498u4hyyarh35rk
+ Source3:        %{name}.service
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ BuildRequires:  meson >= 0.59.0
+ BuildRequires:  systemd-rpm-macros
+ 
+@@ -46,7 +46,7 @@ on Wayland compositors supporting the wlr-output-management protocol.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ 
+@@ -78,6 +78,9 @@ install -D -m 0644 -pv %{SOURCE3} %{buildroot}%{_userunitdir}/%{name}.service
+ 
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 1.9.0-3
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.0-2
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

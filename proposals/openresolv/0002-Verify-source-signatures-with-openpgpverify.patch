@@ -1,0 +1,39 @@
+From cd4d43cb0af5662e090029d9202da3ad6f23b65d Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:40 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ openresolv.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/openresolv.spec b/openresolv.spec
+index 0f80aea..508f689 100644
+--- a/openresolv.spec
++++ b/openresolv.spec
+@@ -28,7 +28,7 @@ Source2:        http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xa785ed275
+ Requires:       bash
+ BuildArch:      noarch
+ BuildRequires:  make
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ Provides:       resolvconf = %{version}-%{release}
+ Requires(post): %{_sbindir}/update-alternatives
+ Requires(postun): %{_sbindir}/update-alternatives
+@@ -44,7 +44,7 @@ openresolv can generate a combined resolv.conf or a configuration file for a loc
+ 
+ %prep
+ %if 0%{?fedora} || 0%{?rhel} > 8
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %endif
+ 
+ %autosetup
+-- 
+2.56.0
+

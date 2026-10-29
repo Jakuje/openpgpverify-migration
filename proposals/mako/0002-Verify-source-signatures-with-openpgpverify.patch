@@ -1,0 +1,59 @@
+From 8ed28320a172655b992fe7f139341d401ff682d3 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:45 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ mako.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/mako.spec b/mako.spec
+index 0eaa1f0..3de3b2f 100644
+--- a/mako.spec
++++ b/mako.spec
+@@ -1,6 +1,6 @@
+ Name:       mako
+ Version:    1.11.0
+-Release:    2%{?dist}
++Release:    3%{?dist}
+ Summary:    Lightweight Wayland notification daemon
+ Provides:   desktop-notification-daemon
+ 
+@@ -18,7 +18,7 @@ Source2:    https://emersion.fr/.well-known/openpgpkey/hu/dj3498u4hyyarh35rkjfng
+ Patch0: add-systemd-service-dbus.patch
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  meson >= 0.60.0
+ BuildRequires:  systemd-rpm-macros
+ BuildRequires:  pkgconfig(cairo)
+@@ -43,7 +43,7 @@ mako is a lightweight notification daemon for Wayland compositors that support
+ the layer-shell protocol.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+@@ -82,6 +82,9 @@ install -m0644 -Dt %{buildroot}%{_userunitdir}/ contrib/systemd/mako.service
+ %{zsh_completions_dir}/_mako*
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 1.11.0-3
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.11.0-2
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

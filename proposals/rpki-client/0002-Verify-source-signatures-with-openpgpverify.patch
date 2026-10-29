@@ -1,0 +1,67 @@
+From 8a1725a6dc1f570c9035a70d20a04820e7b14250 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:53 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ rpki-client.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/rpki-client.spec b/rpki-client.spec
+index 954c9d5..3ba75a7 100644
+--- a/rpki-client.spec
++++ b/rpki-client.spec
+@@ -9,7 +9,7 @@
+ Summary:        OpenBSD RPKI validator to support BGP Origin Validation
+ Name:           rpki-client
+ Version:        9.9
+-Release:        1%{?with_snapshot:.git%{gitdate}}%{?dist}
++Release:        2%{?with_snapshot:.git%{gitdate}}%{?dist}
+ # rpki-client itself is ISC but uses other source codes, breakdown:
+ # BSD-2-Clause: include/sys/tree.h and src/{http,output}.c
+ # BSD-3-Clause: compat/{setproctitle,vis}.c and include/{sha2_openbsd,vis,sys/queue}.h and src/mkdir.c
+@@ -31,7 +31,6 @@ Source4:        %{name}.service
+ Source5:        %{name}.timer
+ Source6:        %{name}.service.el8
+ %if !0%{?with_snapshot}
+-BuildRequires:  gnupg2
+ %else
+ BuildRequires:  autoconf
+ BuildRequires:  automake
+@@ -45,6 +44,7 @@ BuildRequires:  expat-devel
+ BuildRequires:  rsync
+ BuildRequires:  systemd-rpm-macros
+ BuildRequires:  zlib-devel
++BuildRequires:  openpgpverify
+ Requires:       rsync
+ %{?systemd_requires}
+ %{?sysusers_requires_compat}
+@@ -62,7 +62,7 @@ also as CSV or JSON objects for consumption by other routing stacks.
+ 
+ %prep
+ %if !0%{?with_snapshot}
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %setup -q
+ %else
+ %setup -q -n %{name}-portable-%{portable_commit}
+@@ -111,6 +111,9 @@ install -D -p -m 0644 %{SOURCE5} $RPM_BUILD_ROOT%{_unitdir}/%{name}.timer
+ %dir %attr(0755,%{name},%{name}) %{_localstatedir}/lib/%{name}/
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 9.9-2
++- Verify upstream source signatures with openpgpverify
++
+ * Mon Aug 24 2026 Robert Scheck <robert@fedoraproject.org> 9.9-1
+ - Upgrade to 9.9 (#2521687)
+ 
+-- 
+2.56.0
+

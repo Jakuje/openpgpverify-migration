@@ -1,0 +1,58 @@
+From 3079e24d1450396103ef93ca5664dba9c9cb2a47 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:52 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ ntpsec.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/ntpsec.spec b/ntpsec.spec
+index bf6a5b3..5844789 100644
+--- a/ntpsec.spec
++++ b/ntpsec.spec
+@@ -1,6 +1,6 @@
+ Name:           ntpsec
+ Version:        1.2.6
+-Release:        1%{?dist}
++Release:        2%{?dist}
+ Summary:        NTP daemon and utilities
+ 
+ License:        NTP AND BSD-2-Clause AND BSD-3-Clause AND BSD-4-Clause AND ISC AND Apache-2.0 AND Beerware
+@@ -26,6 +26,7 @@ BuildRequires:  python3-devel
+ BuildRequires:  rubygem-asciidoctor
+ BuildRequires:  systemd
+ BuildRequires:  waf
++BuildRequires:  openpgpverify
+ 
+ %{?systemd_requires}
+ 
+@@ -59,7 +60,7 @@ NTPsec is a more secure and improved implementation of the Network Time
+ Protocol derived from the original NTP project.
+ 
+ %prep
+-%{gpgverify} --keyring=%{SOURCE2} --signature=%{SOURCE1} --data=%{SOURCE0}
++%{openpgpverify} --keyring=%{SOURCE2} --signature=%{SOURCE1} --data=%{SOURCE0}
+ %autosetup -p1
+ 
+ # Fix egg info to use a shorter version which will work as an rpm provide
+@@ -213,6 +214,9 @@ sed -i.bak -E '/^restrict/s/no(e?peer|trap)//g' %{_sysconfdir}/ntp.conf
+ %{_sysusersdir}/ntpsec.conf
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 1.2.6-2
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Oct 21 2026 Miroslav Lichvar <mlichvar@redhat.com> 1.2.6-1
+ - update to 1.2.6 (CVE-2026-102483 CVE-2026-102484 CVE-2026-102485
+   CVE-2026-102486)
+-- 
+2.56.0
+

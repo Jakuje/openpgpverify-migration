@@ -1,0 +1,38 @@
+From 6af87f6c652990792de7b66bde6dfd84d557712f Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:41 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the direct GnuPG verification with %openpgpverify, which
+uses Sequoia sqv, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ libtasn1.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/libtasn1.spec b/libtasn1.spec
+index 20a1d08..0aa6a91 100644
+--- a/libtasn1.spec
++++ b/libtasn1.spec
+@@ -26,6 +26,7 @@ BuildRequires:	valgrind-devel
+ %endif
+ BuildRequires:  make
+ BuildRequires:  gtk-doc
++BuildRequires:	openpgpverify
+ # Wildcard bundling exception https://fedorahosted.org/fpc/ticket/174
+ Provides: bundled(gnulib) = 20260101
+ 
+@@ -59,7 +60,7 @@ data.
+ 
+ 
+ %prep
+-gpgv2 --keyring %{SOURCE2} %{SOURCE1} %{SOURCE0}
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %setup -q
+ 
+ %patch -P1 -p1 -b .rpath
+-- 
+2.56.0
+

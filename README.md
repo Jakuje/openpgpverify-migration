@@ -157,6 +157,7 @@ rpm stops depending on gpg.
    7. `scripts/progress.py` compares the starting snapshot (2026-10-06) with
       today's inventory and the dist-git PRs (`--fetch` queries Pagure) and
       writes `reports/progress-DATE.md`: converted, PR open, still to do.
+      `--since INVENTORY PRS` adds what changed since an earlier report.
 1b. **Keyring refresh for regressions** (`scripts/refresh_keys.py`),
    semi-automatic, with a manual review for each package:
    - `propose [PKG...]` (default: regressions with reason `expired`,
@@ -181,6 +182,11 @@ rpm stops depending on gpg.
      makes sqv pass. The file is used byte for byte (`curl -o FILE URL`); the
      keyserver proposal moves to `keyring_refresh_keyserver`. Reviews in
      `reports/keyring-upstream/`, list in `announce/keyring-upstream.md`.
+     `--url URL` takes the key from a URL upstream pointed to instead; that URL
+     is then added to the comment above the keyring's `Source` line.
+   - In the PR, a keyring update is its own first commit (maintainers asked
+     for that), followed by the openpgpverify commit. A keyring stored in the
+     lookaside cache moves into git, because a PR cannot upload there.
    - `show PKG`, then `approve PKG [--note]` or `reject PKG --note`. Only
      `proposed` can be approved, and the reviewer and time are recorded.
    - `phase1.py PKG` then uses approved keyrings in the new variant only

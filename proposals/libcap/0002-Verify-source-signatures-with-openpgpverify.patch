@@ -1,0 +1,58 @@
+From dc680e08f2702e234e1a25639bfe179454e1667e Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:41 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ libcap.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/libcap.spec b/libcap.spec
+index b8d3b7d..c65f452 100644
+--- a/libcap.spec
++++ b/libcap.spec
+@@ -1,6 +1,6 @@
+ Name: libcap
+ Version: 2.78
+-Release: 2%{?dist}
++Release: 3%{?dist}
+ Summary: Library for getting and setting POSIX.1e capabilities
+ URL: https://sites.google.com/site/fullycapable/
+ License: BSD-3-Clause OR GPL-2.0-only
+@@ -17,6 +17,7 @@ BuildRequires: pam-devel gcc
+ BuildRequires: make
+ BuildRequires: glibc-static
+ BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ 
+ %ifarch %{golang_arches}
+ BuildRequires: golang >= 1.22
+@@ -68,7 +69,7 @@ the capability status of processes and threads.
+ %endif
+ 
+ %prep
+-gzip -cd %{SOURCE0} | %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data=-
++gzip -cd %{SOURCE0} | %{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data=-
+ %autosetup -p1
+ 
+ 
+@@ -125,6 +126,9 @@ chmod +x %{buildroot}/%{_libdir}/*.so.*
+ %endif
+ 
+ %changelog
++* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 2.78-3
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 2.78-2
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

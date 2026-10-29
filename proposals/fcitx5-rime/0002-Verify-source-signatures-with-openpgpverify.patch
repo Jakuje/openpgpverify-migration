@@ -1,0 +1,38 @@
+From e55c3c58f73ed3e8624544dbf073cde1dd2f1f79 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:44 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ fcitx5-rime.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fcitx5-rime.spec b/fcitx5-rime.spec
+index d9e9dbd..5d9785e 100644
+--- a/fcitx5-rime.spec
++++ b/fcitx5-rime.spec
+@@ -27,6 +27,7 @@ BuildRequires:  pkgconfig(Fcitx5Core)
+ BuildRequires:  pkgconfig(Fcitx5Module)
+ BuildRequires:  pkgconfig(rime)
+ BuildRequires:  /usr/bin/appstream-util
++BuildRequires:  openpgpverify
+ Requires:       hicolor-icon-theme
+ Requires:       fcitx5-data
+ Requires:       brise
+@@ -36,7 +37,7 @@ RIME(中州韻輸入法引擎) is mainly a Traditional Chinese
+ input method engine.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+-- 
+2.56.0
+

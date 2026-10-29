@@ -58,6 +58,8 @@ What changed in the certificate (`sq inspect`):
 +self-signatures PositiveCertification: 2021-04-15, 2023-03-19, 2026-04-14
 ```
 
+The keyring change is the first of the two commits, so it can be reviewed or merged on its own.
+
 ### Notes
 
 - Rawhide only. Whether to merge it into other branches is up to you; openpgpverify is available in Fedora 43 and later, EPEL 9 and EPEL 10.

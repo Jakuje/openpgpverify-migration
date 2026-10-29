@@ -1,0 +1,38 @@
+From 8449052c8004112ede19a0f9b4f7af2afab994ff Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:42 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ uid_wrapper.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/uid_wrapper.spec b/uid_wrapper.spec
+index 2ba3442..7d1cad0 100644
+--- a/uid_wrapper.spec
++++ b/uid_wrapper.spec
+@@ -18,6 +18,7 @@ BuildRequires:  gcc
+ BuildRequires:  cmake
+ BuildRequires:  gnupg2
+ BuildRequires:  libcmocka-devel >= 1.1.0
++BuildRequires:  openpgpverify
+ 
+ Recommends:     cmake
+ Recommends:     pkgconfig
+@@ -37,7 +38,7 @@ This package doesn't have a devel package cause this project is for
+ development/testing.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+-- 
+2.56.0
+

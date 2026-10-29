@@ -1,0 +1,38 @@
+From 071c8fd2dfc515f764af9836368276dc29d2e522 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:58 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the direct GnuPG verification with %openpgpverify, which
+uses Sequoia sqv, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ ocserv.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/ocserv.spec b/ocserv.spec
+index d81fc86..a3d72fa 100644
+--- a/ocserv.spec
++++ b/ocserv.spec
+@@ -40,6 +40,7 @@ BuildRequires:	libnl3-devel, krb5-devel, libtasn1-devel, gperf, libtalloc-devel
+ BuildRequires:	libev-devel, llhttp-devel, radcli-devel, lz4-devel, readline-devel
+ 
+ BuildRequires:	libmaxminddb-devel
++BuildRequires: openpgpverify
+ 
+ %if %{use_systemd}
+ BuildRequires:	systemd
+@@ -88,7 +89,7 @@ to provide the secure VPN service.
+ 
+ %prep
+ %if %{have_gpgv2}
+-gpgv2 --keyring %{SOURCE2} %{SOURCE1} %{SOURCE0} || gpgv2 --keyring %{SOURCE10} %{SOURCE1} %{SOURCE0}
++%{openpgpverify} --keyrings '%{SOURCE2}' '%{SOURCE10}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %endif
+ 
+ %autosetup -p1
+-- 
+2.56.0
+

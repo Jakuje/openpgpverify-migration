@@ -1,0 +1,41 @@
+From 4a2ddb9e98ee72d79e733dfc3b4a2a0dea776bf9 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:42 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ poppler.spec | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/poppler.spec b/poppler.spec
+index 8561c7a..a47135b 100644
+--- a/poppler.spec
++++ b/poppler.spec
+@@ -74,8 +74,9 @@ BuildRequires: cmake(Qt6Widgets)
+ BuildRequires: cmake(Qt6Xml)
+ %endif
+ BuildRequires: boost-devel
+-# for %%gpgverify
++# for %%openpgpverify
+ BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ 
+ Requires: poppler-data
+ 
+@@ -177,7 +178,7 @@ Command line tools for manipulating PDF files and converting them to
+ other formats.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1 -b 3
+ 
+ chmod -x poppler/CairoFontEngine.cc
+-- 
+2.56.0
+

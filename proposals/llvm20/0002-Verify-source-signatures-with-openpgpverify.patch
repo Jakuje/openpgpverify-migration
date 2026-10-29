@@ -1,0 +1,43 @@
+From 76e4cef0e81352919a07bb9c3ffdfb5905ac8311 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:58 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ llvm20.spec | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/llvm20.spec b/llvm20.spec
+index d9ffe8f..e86f091 100644
+--- a/llvm20.spec
++++ b/llvm20.spec
+@@ -595,6 +595,7 @@ BuildRequires:	graphviz
+ 
+ # This is required because we need "ps" when running LLDB tests
+ BuildRequires: procps-ng
++BuildRequires: openpgpverify
+ 
+ # For reproducible pyc file generation
+ # See https://docs.fedoraproject.org/en-US/packaging-guidelines/Python_Appendix/#_byte_compilation_reproducibility
+@@ -1180,11 +1181,11 @@ Polly header files.
+ %prep
+ %if %{without snapshot_build}
+ # llvm
+-%{gpgverify} --keyring='%{SOURCE6}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE6}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %endif
+ 
+ %if %{with bundle_compat_lib}
+-%{gpgverify} --keyring='%{SOURCE6}' --signature='%{SOURCE3001}' --data='%{SOURCE3000}'
++%{openpgpverify} --keyring='%{SOURCE6}' --signature='%{SOURCE3001}' --data='%{SOURCE3000}'
+ %setup -T -q -b 3000 -n llvm-project-%{compat_ver}.src
+ 
+ # Apply all patches with number < 500 (unconditionally)
+-- 
+2.56.0
+

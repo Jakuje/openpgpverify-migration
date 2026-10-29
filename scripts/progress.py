@@ -77,6 +77,8 @@ def main():
     ap.add_argument('out')
     ap.add_argument('--prs', required=True)
     ap.add_argument('--fetch', action='store_true')
+    ap.add_argument('--since', nargs=2, metavar=('INVENTORY', 'PRS'),
+                    help='previous report inputs: adds a "changes since" section')
     a = ap.parse_args()
     base, today = load(a.baseline), load(a.today)
     st = state.load()
@@ -217,6 +219,28 @@ def main():
                 '[%s](https://bugzilla.redhat.com/%d) %s' % (b['component'][0], b['id'],
                                                             b['status'])
                 for b in pkg_bugs)) if pkg_bugs else '.'))
+    if a.since:
+        old = load(a.since[0])
+        oldprs = {(r[0], r[1]): r for r in (l.rstrip('\n').split('\t')
+                                            for l in list(open(a.since[1]))[1:])}
+        newc = sorted(p for p, v in status.items() if v[0] == 'converted' and
+                      (old.get(p) or {}).get('category') != 'converted')
+        when = os.path.basename(a.since[0])[len('inventory-'):-len('.jsonl')]
+        L += ['', '### Changes since %s' % when, '',
+              'Converted since then (%d): %s' % (len(newc), ', '.join(
+                  '%s (%s)' % (p, status[p][1]) for p in newc) or '-'), '']
+        rows = []
+        for k, rs in sorted((k, r) for k, r in
+                            ((('%s#%s' % (r['package'], r['id'])), r)
+                             for rs in prs.values() for r in rs)):
+            o = oldprs.get((rs['package'], rs['id']))
+            if not o:
+                rows.append('| %s | %s | new, %s |' % (k, rs['author'], rs['status'].lower()))
+            elif o[2] != rs['status']:
+                rows.append('| %s | %s | %s → %s |' % (k, rs['author'], o[2].lower(),
+                                                      rs['status'].lower()))
+        if rows:
+            L += ['| PR | Author | Change |', '|---|---|---|'] + rows
     L += ['', '## Per package', '',
           'Only packages not converted yet.', '',
           '| Package | Status | Detail | PR |', '|---|---|---|---|']

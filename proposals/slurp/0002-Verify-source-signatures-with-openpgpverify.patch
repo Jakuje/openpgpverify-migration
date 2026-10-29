@@ -1,0 +1,58 @@
+From e1a6d70d3aacda01a72a7d488e5804094f8ee26f Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:47 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ slurp.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/slurp.spec b/slurp.spec
+index 180a33f..7c7ea70 100644
+--- a/slurp.spec
++++ b/slurp.spec
+@@ -1,6 +1,6 @@
+ Name:		slurp
+ Version:	1.5.0
+-Release:	7%{?dist}
++Release:	8%{?dist}
+ Summary:	Select a region in Sway
+ 
+ License:	MIT
+@@ -21,14 +21,14 @@ BuildRequires:	pkgconfig(xkbcommon)
+ BuildRequires:	scdoc
+ BuildRequires:	meson
+ BuildRequires:	gcc
+-BuildRequires:	gnupg2
++BuildRequires:	openpgpverify
+ 
+ %description
+ Slurp is a command-line tool that allows the user to visually select a region
+ and prints it to the standard output.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+@@ -44,6 +44,9 @@ and prints it to the standard output.
+ %{_mandir}/man1/slurp.1*
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 1.5.0-8
++- Verify upstream source signatures with openpgpverify
++
+ * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.0-7
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

@@ -1,8 +1,8 @@
 # Proposals
 
-Generated 2026-10-27T11:35Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
+Generated 2026-10-29T08:06Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
 
-- **PR**: `0001-*.patch` is the commit a PR would carry (`git am` applies it to dist-git at the tested commit); `PR.md` is the PR title and description.
+- **PR**: `*.patch` are the commits a PR would carry (`git am` applies them to dist-git at the tested commit; a keyring update is a separate first commit); `PR.md` is the PR title and description.
 - **draft PR**: the same, but it includes a keyring refresh that hasn't been reviewed yet.
 - **bug**: `BUG.md`, the Bugzilla fields and description for packages that need upstream or maintainer action first.
 
@@ -245,7 +245,7 @@ Generated 2026-10-27T11:35Z by `scripts/render_proposals.py` from the Phase 1 st
 | [liblxi](liblxi/) | bug | sha1-cert |
 | [libnids](libnids/) | bug | sha1-sig |
 | [libptytty](libptytty/) | PR |  |
-| [libredwg](libredwg/) | draft PR | keyring refresh proposed |
+| libredwg | skipped | gnu-keyring.gpg is in the lookaside cache and too big to move into git; the maintainer has to upload it |
 | [lilv](lilv/) | PR |  |
 | [lua-unbound](lua-unbound/) | PR |  |
 | [mako](mako/) | draft PR | keyring refresh proposed |

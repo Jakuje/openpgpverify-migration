@@ -274,8 +274,10 @@ def upstream_file(src, url, dst, tmp):
     return info
 
 
-def propose_upstream(pkg, rec):
-    """Like propose(), but take the keyring from the URL the spec names."""
+def propose_upstream(pkg, rec, url=None):
+    """Like propose(), but take the keyring from the URL the spec names, or
+    from URL (e.g. one upstream pointed us to); a URL not in the spec is
+    added to the comment above the keyring's Source line."""
     res = (rec.get('results') or [{}])[0]
     bad = [c for c in res.get('new_calls', []) if c['rc'] != 0]
     if not bad:
@@ -295,9 +297,12 @@ def propose_upstream(pkg, rec):
             continue
         rel = os.path.relpath(src, g)
         os.makedirs(os.path.dirname(os.path.join(out, rel)), exist_ok=True)
-        for url in key_urls(spec, pkg, os.path.basename(rel)):
-            info = upstream_file(src, url, os.path.join(out, rel), tmp)
+        for u in [url] if url else key_urls(spec, pkg, os.path.basename(rel)):
+            info = upstream_file(src, u, os.path.join(out, rel), tmp)
             info['file'] = rel
+            if url and u not in key_urls(spec, pkg, os.path.basename(rel)):
+                info['spec_header'] = '# Upstream signing key:'
+                info['spec_commands'] = info['commands']
             tried.append(info)
             if info.get('changed'):
                 files.append(info)
@@ -459,6 +464,8 @@ def main():
                                        'reject'])
     ap.add_argument('packages', nargs='*')
     ap.add_argument('--note', default=None)
+    ap.add_argument('--url', default=None,
+                    help='propose-upstream: take the keyring from this URL')
     a = ap.parse_args()
     st = state.load()
     if a.action == 'propose':
@@ -481,7 +488,7 @@ def main():
         pkgs = a.packages or sorted(p for p, r in st.items() if r.get('status') == 'regression')
         for pkg in pkgs:
             try:
-                up = propose_upstream(pkg, st[pkg])
+                up = propose_upstream(pkg, st[pkg], a.url)
             except Exception as e:  # one broken package must not stop the run
                 up = dict(status='error', method='upstream-url', note='%r' % e)
             d = os.path.join(phase1.WORK, pkg)

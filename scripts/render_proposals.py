@@ -30,6 +30,7 @@ import state  # noqa: E402
 TEMPLATES = os.path.join(state.ROOT, 'templates')
 OUT = os.path.join(state.ROOT, 'proposals')
 AUTHOR = ('Jakub Jelen', 'jjelen@redhat.com')
+LOOKASIDE_TO_GIT_MAX = 1024 * 1024   # bytes; bigger keyrings stay in the lookaside cache
 PATCH_NAME = '0001-Verify-source-signatures-with-openpgpverify.patch'
 
 REASONS = {
@@ -146,8 +147,32 @@ def removed_brs(diff):
             if l.startswith('-BuildRequires') and re.search(r'gpg|gnupg', l)]
 
 
+def split_series(mbox):
+    """Split `git format-patch --stdout` output into (file name, patch) pairs
+    named like `git format-patch` names them."""
+    parts = re.split(r'(?m)^(?=From [0-9a-f]{40} Mon Sep 17 00:00:00 2001$)', mbox)
+    parts = [x for x in parts if x.strip()]
+    out = []
+    for i, x in enumerate(parts, 1):
+        subj = re.search(r'(?m)^Subject: \[PATCH(?: \d+/\d+)?\] (.*)$', x).group(1)
+        out.append(('%04d-%s.patch' % (i, re.sub(r'[^A-Za-z0-9]+', '-', subj).strip('-')), x))
+    return out
+
+
+def spec_comment(text, pkg, files):
+    """The spec comments that go with keyring updates (see refresh_keys.py)."""
+    for f in files:
+        if f.get('spec_commands'):
+            text = convert.refresh_comment(
+                text, pkg, os.path.basename(f['file']), f['spec_commands'],
+                *([f['spec_header']] if f.get('spec_header') else []))[0]
+    return text
+
+
 def make_commit(pkg, s, refresh_files):
-    """Commit the change in a scratch clone and return (patch text, notes)."""
+    """Commit the change in a scratch clone and return (patch series, spec diff).
+    A keyring update is a commit of its own, before the openpgpverify one
+    (maintainers asked for that: it is a different change)."""
     d = os.path.join(phase1.WORK, pkg)
     g, pr = os.path.join(d, 'dist-git'), os.path.join(d, 'pr')
     shutil.rmtree(pr, ignore_errors=True)
@@ -155,16 +180,63 @@ def make_commit(pkg, s, refresh_files):
             sh(['git', '-C', pr, 'checkout', '-q', '-b', 'openpgpverify',
                 s['spec_commit']]).returncode:
         raise RuntimeError('cannot prepare a clone at %s' % s['spec_commit'])
+    env = dict(os.environ, GIT_AUTHOR_NAME=AUTHOR[0], GIT_AUTHOR_EMAIL=AUTHOR[1],
+               GIT_COMMITTER_NAME=AUTHOR[0], GIT_COMMITTER_EMAIL=AUTHOR[1])
+    spec = os.path.join(pr, pkg + '.spec')
+
+    def commit(body):
+        sh(['git', '-C', pr, 'add', '-A'])
+        p = sh(['git', '-C', pr, 'commit', '-q', '-F', '-'], input=body, env=env)
+        if p.returncode:
+            raise RuntimeError('%s: commit failed: %s' % (pkg, (p.stdout + p.stderr).strip()))
+
+    def wrap(lines):
+        return [textwrap.fill(e, 72, break_long_words=False, break_on_hyphens=False)
+                for e in lines]
+    if refresh_files:
+        key, moved = [], []
+        for f in refresh_files:
+            shutil.copy(os.path.join(d, 'refresh', f['file']), os.path.join(pr, f['file']))
+            if sh(['git', '-C', pr, 'ls-files', '--error-unmatch', f['file']]).returncode:
+                # In the lookaside cache, which a PR cannot upload to.
+                if os.path.getsize(os.path.join(pr, f['file'])) > LOOKASIDE_TO_GIT_MAX:
+                    raise RuntimeError('%s: %s is in the lookaside cache and too big to move '
+                                       'into git; the maintainer has to upload it'
+                                       % (pkg, f['file']))
+                for meta in ('sources', '.gitignore'):
+                    path = os.path.join(pr, meta)
+                    if os.path.exists(path):
+                        keep = [l for l in open(path).read().splitlines()
+                                if not re.search(r'(^|[ (/])%s(\)|$)' % re.escape(f['file']), l)]
+                        open(path, 'w').write(''.join(l + '\n' for l in keep))
+                sh(['git', '-C', pr, 'add', '-f', f['file']])
+                moved.append(f['file'])
+            if f.get('method') == 'upstream-url':
+                key.append('Update %s to the current copy at %s%s (same certificate(s)).' % (
+                    f['file'], f['url'], '' if f.get('spec_commands') else
+                    ', the URL the spec names for it'))
+            else:
+                key.append('Refresh %s from keyservers/WKD: same certificate(s), with '
+                           'self-signatures our copy was missing.%s' % (
+                               f['file'], ' The GnuPG keybox becomes a plain OpenPGP '
+                               'keyring, which sqv can read.' if f.get('keybox') else ''))
+            if f.get('spec_commands'):
+                key.append('The commands are in the comment above its Source line.')
+        key += ['%s was in the lookaside cache, which a pull request cannot update, so it '
+                'moves into git (dropped from sources).' % m for m in moved]
+        # The current spec with only the keyring comment changed.
+        text = spec_comment(open(spec).read(), pkg, refresh_files)
+        open(spec, 'w').write(text)
+        n = len(refresh_files)
+        commit('Update the upstream signing key%s\n\n%s\n\nThe current key is needed to '
+               'verify the release signature with\nopenpgpverify (sqv), which checks that '
+               'the key was valid when the\nrelease was signed.\n\nAssisted-by: Claude '
+               'Opus 5.5\n' % ('' if n == 1 else 's', '\n'.join(wrap(key))))
     # Exactly the spec Phase 1 tested (incl. the Release bump done in the chroot).
-    shutil.copy(os.path.join(d, pkg + '.opv.spec'), os.path.join(pr, pkg + '.spec'))
+    shutil.copy(os.path.join(d, pkg + '.opv.spec'), spec)
     if refresh_files and not s.get('keyring_refresh_applied'):
         # Draft: phase1.py adds this comment once the refresh is approved.
-        spec = os.path.join(pr, pkg + '.spec')
-        text = open(spec).read()
-        for f in refresh_files:
-            if f.get('spec_commands'):
-                text = convert.refresh_comment(text, pkg, os.path.basename(f['file']),
-                                               f['spec_commands'])[0]
+        text = spec_comment(open(spec).read(), pkg, refresh_files)
         open(spec, 'w').write(text)
     extra = []
     if s.get('raw_rewritten'):
@@ -175,30 +247,14 @@ def make_commit(pkg, s, refresh_files):
         lead = ('Replace the GnuPG-based %gpgverify with %openpgpverify, which uses\n'
                 'Sequoia sqv and takes the same options, as part of the Fedora 45 Change\n'
                 'https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify')
-    for f in refresh_files:
-        shutil.copy(os.path.join(d, 'refresh', f['file']), os.path.join(pr, f['file']))
-        if f.get('method') == 'upstream-url':
-            extra.append('Update %s to the current copy at %s, the URL the spec names '
-                         'for it (same certificate(s)).' % (f['file'], f['url']))
-            continue
-        extra.append('Refresh %s from keyservers/WKD: same certificate(s), with '
-                     'self-signatures our copy was missing; the commands are in the '
-                     'spec comment.%s' % (
-                         f['file'], ' The GnuPG keybox becomes a plain OpenPGP keyring, '
-                         'which sqv can read.' if f.get('keybox') else ''))
     if s.get('release_bumped'):
         extra.append('Release bumped with a changelog entry.')
-    extra = [textwrap.fill(e, 72, break_long_words=False, break_on_hyphens=False)
-             for e in extra]
     body = tmpl('commit-message.txt', lead=lead,
-                extra_body=('\n' + '\n'.join(extra) + '\n') if extra else '')
-    sh(['git', '-C', pr, 'add', '-A'])
-    env = dict(os.environ, GIT_AUTHOR_NAME=AUTHOR[0], GIT_AUTHOR_EMAIL=AUTHOR[1],
-               GIT_COMMITTER_NAME=AUTHOR[0], GIT_COMMITTER_EMAIL=AUTHOR[1])
-    if sh(['git', '-C', pr, 'commit', '-q', '-F', '-'], input=body, env=env).returncode:
-        raise RuntimeError('commit failed')
-    patch = sh(['git', '-C', pr, 'format-patch', '-1', '--stdout', '--binary']).stdout
-    diff = sh(['git', '-C', pr, 'show', '--format=', pkg + '.spec']).stdout
+                extra_body=('\n' + '\n'.join(wrap(extra)) + '\n') if extra else '')
+    commit(body)
+    n = 2 if refresh_files else 1
+    patch = sh(['git', '-C', pr, 'format-patch', '-%d' % n, '--stdout', '--binary']).stdout
+    diff = sh(['git', '-C', pr, 'diff', s['spec_commit'], 'HEAD', '--', pkg + '.spec']).stdout
     return patch, diff
 
 
@@ -232,6 +288,10 @@ def render_pr(pkg, s, draft):
         changes.append('- dropped `%s`, only needed for %s' %
                        (br, 'the GnuPG verification' if raw else '`%gpgverify`'))
     for f in files:
+        if re.search(r'(?m)^-SHA512 \(%s\) = |^-[0-9a-f]{32,}  %s$'
+                     % (re.escape(f['file']), re.escape(f['file'])), patch):
+            changes.append('- `%s` was in the lookaside cache, which a PR cannot update, so '
+                           'it moves into git (its line in `sources` is dropped)' % f['file'])
         commented = re.search(r'(?m)^\+#   mv %s\.new ' % re.escape(os.path.basename(f['file'])),
                               diff)
         if f.get('method') == 'upstream-url':
@@ -298,6 +358,9 @@ def render_pr(pkg, s, draft):
                                              '\n'.join(f['commands']))
                               for f in files if f.get('commands')),
                       ''.join(diffs)))
+    if files:
+        refresh += ('\nThe keyring change is the first of the two commits, so it can be '
+                    'reviewed or merged on its own.\n')
     notes = ['- Rawhide only. Whether to merge it into other branches is up to you; '
              'openpgpverify is available in Fedora 43 and later, EPEL 9 and EPEL 10' +
              ('. It is not in EPEL 8, so if this spec is still used there, keep '
@@ -404,8 +467,15 @@ def main():
         os.makedirs(d)
         if status == 'tested' or (status == 'regression' and kr in ('proposed', 'approved')):
             draft = status != 'tested'
-            patch, text = render_pr(pkg, s, draft)
-            open(os.path.join(d, PATCH_NAME), 'w').write(patch)
+            try:
+                patch, text = render_pr(pkg, s, draft)
+            except RuntimeError as e:
+                shutil.rmtree(d, ignore_errors=True)
+                index.append((pkg, 'skipped', str(e).split(': ', 1)[-1]))
+                print('%-24s %s' % (pkg, index[-1][1]), flush=True)
+                continue
+            for name, text_ in split_series(patch):
+                open(os.path.join(d, name), 'w').write(text_)
             open(os.path.join(d, 'PR.md'), 'w').write(text)
             what = 'draft PR' if draft else 'PR'
             why = 'keyring refresh %s' % kr if draft else (
@@ -418,8 +488,9 @@ def main():
     lines = ['# Proposals', '',
              'Generated %s by `scripts/render_proposals.py` from the Phase 1 state. Nothing '
              'here has been opened or filed.' % state.now(), '',
-             '- **PR**: `0001-*.patch` is the commit a PR would carry (`git am` applies it '
-             'to dist-git at the tested commit); `PR.md` is the PR title and description.',
+             '- **PR**: `*.patch` are the commits a PR would carry (`git am` applies them '
+             'to dist-git at the tested commit; a keyring update is a separate first '
+             'commit); `PR.md` is the PR title and description.',
              '- **draft PR**: the same, but it includes a keyring refresh that hasn\'t been '
              'reviewed yet.',
              '- **bug**: `BUG.md`, the Bugzilla fields and description for packages that '

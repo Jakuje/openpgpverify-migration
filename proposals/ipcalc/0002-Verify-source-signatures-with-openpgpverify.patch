@@ -1,0 +1,38 @@
+From d37696929a076d1116327bbc62bd083e78a38f58 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:41 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ ipcalc.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/ipcalc.spec b/ipcalc.spec
+index eec3573..d70b261 100644
+--- a/ipcalc.spec
++++ b/ipcalc.spec
+@@ -16,6 +16,7 @@ BuildRequires: gcc, libmaxminddb-devel, meson, rubygem-ronn-ng
+ BuildRequires: gnupg2
+ # for the test suite (JsonEscapeHostname)
+ BuildRequires: jq
++BuildRequires: openpgpverify
+ Recommends:    libmaxminddb, geolite2-city, geolite2-country, geolite2-asn
+ 
+ # Explicitly conflict with older initscript packages that ship ipcalc
+@@ -32,7 +33,7 @@ parsing in scripts, generate random private addresses, resolve an IP address,
+ or check the validity of an address.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+-- 
+2.56.0
+

@@ -1,0 +1,39 @@
+From c2b977530248c45132781dc36bc69757a0158bb3 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:44 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ fcitx5-unikey.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fcitx5-unikey.spec b/fcitx5-unikey.spec
+index 4e40750..2b9eada 100644
+--- a/fcitx5-unikey.spec
++++ b/fcitx5-unikey.spec
+@@ -15,7 +15,7 @@ Source1:    https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.tar.
+ #   mv 0x8E8B898CBF2412F9.new 0x8E8B898CBF2412F9
+ Source2:    https://pgp.key-server.io/download/0x8E8B898CBF2412F9
+ 
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  cmake
+ BuildRequires:  extra-cmake-modules
+ BuildRequires:  gcc-c++
+@@ -32,7 +32,7 @@ Requires:       fcitx5-data
+ Unikey (Vietnamese Input Method) engine support for Fcitx5.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+-- 
+2.56.0
+

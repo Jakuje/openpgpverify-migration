@@ -73,6 +73,8 @@ What changed in the certificate (`sq inspect`):
 +third-party GenericCertification: 4
 ```
 
+The keyring change is the first of the two commits, so it can be reviewed or merged on its own.
+
 ### Notes
 
 - Rawhide only. Whether to merge it into other branches is up to you; openpgpverify is available in Fedora 43 and later, EPEL 9 and EPEL 10.

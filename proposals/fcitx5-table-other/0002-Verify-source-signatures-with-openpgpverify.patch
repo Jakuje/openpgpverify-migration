@@ -1,0 +1,39 @@
+From 7b71f80f37c9b42bb2472a8d422cd82887b7a0c9 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:50 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ fcitx5-table-other.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fcitx5-table-other.spec b/fcitx5-table-other.spec
+index 7d7b9fe..c66b697 100644
+--- a/fcitx5-table-other.spec
++++ b/fcitx5-table-other.spec
+@@ -15,7 +15,7 @@ Source2:    https://pgp.key-server.io/download/0x8E8B898CBF2412F9
+ Patch1:     0001-tell-CMAKE-no-compiler-will-be-used.patch
+ BuildArch:  noarch
+ 
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  cmake
+ BuildRequires:  extra-cmake-modules
+ BuildRequires:  ninja-build
+@@ -33,7 +33,7 @@ Fcitx-table-other provides some other tables
+ for Fcitx, fork from ibus-table-others, scim-tables.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build 
+-- 
+2.56.0
+

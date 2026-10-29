@@ -11,6 +11,7 @@ All are the same kind of change: rename + BuildRequires (+ Release bump for
 specs without rpmautospec). "%{?rhel}" marks specs with RHEL conditionals,
 whose PR text mentions that openpgpverify is not in EPEL 8.
 """
+import glob
 import os
 import re
 import subprocess
@@ -31,9 +32,11 @@ def head(pkg):
 
 
 def diffstat(pkg):
-    patch = os.path.join(render_proposals.OUT, pkg, render_proposals.PATCH_NAME)
-    if not os.path.exists(patch):
+    found = glob.glob(os.path.join(render_proposals.OUT, pkg,
+                                   '*-Verify-source-signatures-with-openpgpverify.patch'))
+    if not found:
         return None
+    patch = found[0]
     t = open(patch).read().split('\n---\n', 1)[-1]
     m = re.search(r'(\d+) insertions?\(\+\)(?:, (\d+) deletions?)?', t)
     return '+%s/-%s' % (m.group(1), m.group(2) or 0) if m else '?'
@@ -85,7 +88,7 @@ def main():
             '```sh',
             'P=libmnl   # package',
             'fedpkg clone "$P" && cd "$P"',
-            'git am ~/devel/openpgpverify-migration/proposals/"$P"/0001-*.patch',
+            'git am ~/devel/openpgpverify-migration/proposals/"$P"/*.patch',
             'fedpkg fork                      # adds a remote named after your FAS user',
             'git push "$USER" HEAD:openpgpverify',
             '# then open the PR from the fork (branch openpgpverify -> rawhide) in the web UI,',

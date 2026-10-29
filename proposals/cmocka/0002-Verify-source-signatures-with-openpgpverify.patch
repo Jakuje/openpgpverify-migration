@@ -1,0 +1,39 @@
+From 7c9407af773a738f794e45001533103fa4fe4a2e Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:41 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ cmocka.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/cmocka.spec b/cmocka.spec
+index ad7d00f..239e3fd 100644
+--- a/cmocka.spec
++++ b/cmocka.spec
+@@ -19,7 +19,7 @@ BuildRequires:  gcc
+ BuildRequires:  cmake
+ BuildRequires:  doxygen
+ BuildRequires:  glibc-devel
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ 
+ Obsoletes:      libcmocka-static < %{version}
+ 
+@@ -104,7 +104,7 @@ This package provides the API documentation for the cmocka unit testing
+ framework.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -a4 -p1
+ 
+ %build
+-- 
+2.56.0
+

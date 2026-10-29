@@ -1,0 +1,59 @@
+From 99e3ca47af2290764317dca268099c52faa8fbb5 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:43 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ cswrap.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/cswrap.spec b/cswrap.spec
+index 51471ed..0a364ea 100644
+--- a/cswrap.spec
++++ b/cswrap.spec
+@@ -5,7 +5,7 @@
+ 
+ Name:       cswrap
+ Version:    2.2.6
+-Release:    2%{?dist}
++Release:    3%{?dist}
+ Summary:    Generic compiler wrapper
+ 
+ License:    GPL-3.0-or-later
+@@ -29,6 +29,7 @@ BuildRequires: gnupg2
+ # against the old version of glibc if it was built against a newer one.
+ # Therefore, we link glibc statically.
+ BuildRequires: glibc-static
++BuildRequires: openpgpverify
+ 
+ # The test-suite runs automatically trough valgrind if valgrind is available
+ # on the system.  By not installing valgrind into mock's chroot, we disable
+@@ -56,7 +57,7 @@ fully automatically.
+ %endif
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+@@ -98,6 +99,9 @@ done
+ %endif
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 2.2.6-3
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 2.2.6-2
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

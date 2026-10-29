@@ -1,0 +1,59 @@
+From e0fee53bf0920ca9c430220d87c468da9b82319c Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:43 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ dhcpdump.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/dhcpdump.spec b/dhcpdump.spec
+index aa550de..840fb2b 100644
+--- a/dhcpdump.spec
++++ b/dhcpdump.spec
+@@ -1,6 +1,6 @@
+ Name:           dhcpdump
+ Version:        2.00
+-Release:        1%{?dist}
++Release:        2%{?dist}
+ Summary:        Parse DHCP packets
+ 
+ License:        BSD-2-Clause
+@@ -11,7 +11,7 @@ Source2:        https://raw.githubusercontent.com/bbonev/%{name}/v%{version}/deb
+ 
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  make
+ BuildRequires:  perl-podlators
+ BuildRequires:  pkgconfig(libpcap)
+@@ -25,7 +25,7 @@ Version 2.00 introduces a TUI to see packets grouped by session.
+ %global _hardened_build 1
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ 
+@@ -43,6 +43,9 @@ install -D -p -m 644 -t %{buildroot}%{_mandir}/man8/ %{name}.8
+ 
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 2.00-2
++- Verify upstream source signatures with openpgpverify
++
+ * Sat Aug 2 2026 Boian Bonev <bbonev@ipacct.com> - 2.00-1
+ - New upstream release 2.00
+ 
+-- 
+2.56.0
+

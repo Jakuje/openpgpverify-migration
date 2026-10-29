@@ -15,6 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
+- `priv_wrapper.keyring` was in the lookaside cache, which a PR cannot update, so it moves into git (its line in `sources` is dropped)
 - refreshed keyring `priv_wrapper.keyring` (see below); the comment above its `Source` line now shows the commands for refreshing it
 - Release bumped (`12%{?dist}` → `13%{?dist}`) with a changelog entry
 
@@ -74,6 +75,8 @@ What changed in the certificate (`sq inspect`):
 +third-party GenericCertification: 14
 +third-party PositiveCertification: 1
 ```
+
+The keyring change is the first of the two commits, so it can be reviewed or merged on its own.
 
 ### Notes
 

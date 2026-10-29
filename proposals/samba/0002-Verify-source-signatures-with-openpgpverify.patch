@@ -1,0 +1,38 @@
+From 8256608128b80718e79cd2845b426a69f63f4982 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:42 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the direct GnuPG verification with %openpgpverify, which
+uses Sequoia sqv, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ samba.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/samba.spec b/samba.spec
+index 754c618..19a4c09 100644
+--- a/samba.spec
++++ b/samba.spec
+@@ -399,6 +399,7 @@ BuildRequires: cepces-certmonger >= 0.3.8
+ BuildRequires: perl(ExtUtils::MakeMaker)
+ BuildRequires: perl(FindBin)
+ BuildRequires: perl(Parse::Yapp)
++BuildRequires: openpgpverify
+ 
+ %if %{without includelibs}
+ BuildRequires: libtalloc-devel >= %{talloc_version}
+@@ -1366,7 +1367,7 @@ Python bindings for the LDB library
+ 
+ %prep
+ %if 0%{?fedora} || 0%{?rhel} >= 9
+-xzcat %{SOURCE0} | %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data=-
++xzcat %{SOURCE0} | %{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data=-
+ %else
+ xzcat %{SOURCE0} | gpgv2 --quiet --keyring %{SOURCE2} %{SOURCE1} -
+ %endif
+-- 
+2.56.0
+

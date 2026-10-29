@@ -1,0 +1,65 @@
+From 0a4e880bb22f1ea33f9820acfe7665359846aa8b Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:57 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ clang18.spec | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/clang18.spec b/clang18.spec
+index ba6f3af..dd8b760 100644
+--- a/clang18.spec
++++ b/clang18.spec
+@@ -75,7 +75,7 @@
+ 
+ Name:		%pkg_name
+ Version:	%{clang_version}%{?rc_ver:~rc%{rc_ver}}%{?llvm_snapshot_version_suffix:~%{llvm_snapshot_version_suffix}}
+-Release:	11%{?dist}
++Release:	12%{?dist}
+ Summary:	A C language family front-end for LLVM
+ 
+ License:	Apache-2.0 WITH LLVM-exception OR NCSA
+@@ -185,6 +185,7 @@ BuildRequires: perl(lib)
+ BuildRequires: perl(Term::ANSIColor)
+ BuildRequires: perl(Text::ParseWords)
+ BuildRequires: perl(Sys::Hostname)
++BuildRequires:	openpgpverify
+ 
+ Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
+ 
+@@ -306,12 +307,12 @@ Requires:      python3
+ 
+ %prep
+ %if %{without snapshot_build}
+-%{gpgverify} --keyring='%{SOURCE4}' --signature='%{SOURCE3}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE4}' --signature='%{SOURCE3}' --data='%{SOURCE0}'
+ %endif
+ 
+ 
+ %if %{without snapshot_build}
+-%{gpgverify} --keyring='%{SOURCE4}' --signature='%{SOURCE2}' --data='%{SOURCE1}'
++%{openpgpverify} --keyring='%{SOURCE4}' --signature='%{SOURCE2}' --data='%{SOURCE1}'
+ %endif
+ 
+ %setup -T -q -b 1 -n %{clang_tools_srcdir}
+@@ -735,6 +736,9 @@ LD_LIBRARY_PATH=%{buildroot}/%{install_libdir} %{__ninja} check-all -C %{__cmake
+ 
+ %endif
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 18.1.8-12
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Sep 10 2026 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 18.1.8-11
+ - Rebuilt for libxml-2.5.4
+ 
+-- 
+2.56.0
+

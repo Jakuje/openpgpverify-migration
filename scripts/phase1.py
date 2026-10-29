@@ -560,8 +560,9 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
         text = open(new_spec).read()
         for f in kr['files']:
             if f.get('changed') and f.get('spec_commands'):
-                text, note = convert.refresh_comment(text, pkg, os.path.basename(f['file']),
-                                                     f['spec_commands'])
+                text, note = convert.refresh_comment(
+                    text, pkg, os.path.basename(f['file']), f['spec_commands'],
+                    *([f['spec_header']] if f.get('spec_header') else []))
                 if note:
                     upd.setdefault('convert_notes', []).append(note)
         with open(new_spec, 'w') as fh:

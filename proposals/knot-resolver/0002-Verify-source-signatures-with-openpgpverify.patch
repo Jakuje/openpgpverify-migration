@@ -1,0 +1,62 @@
+From 3e4c554a2ce136bbd52d6bc8a86b641ed911a721 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:58 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the direct GnuPG verification with %openpgpverify, which
+uses Sequoia sqv, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ knot-resolver.spec | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/knot-resolver.spec b/knot-resolver.spec
+index 9b49ee5..d5b0e4c 100644
+--- a/knot-resolver.spec
++++ b/knot-resolver.spec
+@@ -7,7 +7,7 @@
+ 
+ Name:           knot-resolver
+ Version:        5.7.9
+-Release:        1%{?dist}
++Release:        2%{?dist}
+ Summary:        Caching full DNS Resolver
+ 
+ License:        GPL-3.0-or-later
+@@ -42,6 +42,7 @@ BuildRequires:  pkgconfig(libuv)
+ BuildRequires:  pkgconfig(luajit) >= 2.0
+ BuildRequires:  pkgconfig(jemalloc)
+ BuildRequires:  systemd-rpm-macros
++BuildRequires:  openpgpverify
+ 
+ Requires:       systemd
+ Requires(post): systemd
+@@ -152,10 +153,7 @@ native C implementation, which doesn't require this package.
+ 
+ %prep
+ %if 0%{GPG_CHECK}
+-export GNUPGHOME=./gpg-keyring
+-mkdir -m 700 ${GNUPGHOME}
+-gpg2 --import %{SOURCE100}
+-gpg2 --verify %{SOURCE1} %{SOURCE0}
++%{openpgpverify} --keyring='%{SOURCE100}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %endif
+ %setup -q -n %{name}-%{version}
+ 
+@@ -374,6 +372,9 @@ fi
+ %endif
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 5.7.9-2
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Oct 22 2026 Jan Včelák <jvcelak@fedoraproject.org> - 5.7.9-1
+ - New upstream version 5.7.9 (security fixes)
+ 
+-- 
+2.56.0
+

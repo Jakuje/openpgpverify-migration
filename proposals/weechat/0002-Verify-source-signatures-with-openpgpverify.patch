@@ -1,0 +1,38 @@
+From da0a44fb79ff294867870619342e2f677d40dd33 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:54 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ weechat.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/weechat.spec b/weechat.spec
+index 24c9868..aba3c62 100644
+--- a/weechat.spec
++++ b/weechat.spec
+@@ -44,6 +44,7 @@ BuildRequires: tcl-devel
+ BuildRequires: uriparser-devel
+ %endif
+ BuildRequires: zlib-devel
++BuildRequires: openpgpverify
+ 
+ Requires:      hicolor-icon-theme
+ 
+@@ -72,7 +73,7 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
+ This package provides the PHP plugin for weechat.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1 -n %{name}-%{version}
+ 
+ 
+-- 
+2.56.0
+

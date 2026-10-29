@@ -1,0 +1,59 @@
+From 92975a71f6c350fcd6ecac88fbe9fb87dd4f0e5d Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:56 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ keepassxc.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/keepassxc.spec b/keepassxc.spec
+index 767b2a0..1361cb8 100644
+--- a/keepassxc.spec
++++ b/keepassxc.spec
+@@ -2,7 +2,7 @@
+ 
+ Name:           keepassxc
+ Version:        2.8.0
+-Release:        3%{?dist}
++Release:        4%{?dist}
+ Summary:        Cross-platform password manager
+ License:        GPL-2.0-or-later AND BSD-2-Clause AND MIT AND CC0-1.0 AND Apache-2.0 AND LGPL-2.0-only AND LGPL-2.1-only
+ URL:            https://keepassxc.org/
+@@ -54,6 +54,7 @@ BuildRequires:  zlib-devel
+ BuildRequires:  rubygem-asciidoctor
+ # Required for GPG signature verification
+ BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ 
+ # enforces on the user system, Qt version to be the same one used to build KeepassXC
+ # This avoids "not a bug" bugreports like this one
+@@ -104,7 +105,7 @@ information can be considered as quite safe.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ %autosetup -n %{name}-%{version}
+ 
+@@ -170,6 +171,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/org.%{nam
+ %{_mandir}/man1/%{name}.1*
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 2.8.0-4
++- Verify upstream source signatures with openpgpverify
++
+ * Sun Oct 25 2026 Jan Grulich <jgrulich@redhat.com> - 2.8.0-3
+ - Rebuild (qt6)
+ 
+-- 
+2.56.0
+

@@ -1,0 +1,58 @@
+From 17990ead0a990680a5f727cc3c36b6dc20478020 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:49 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ babeltrace.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/babeltrace.spec b/babeltrace.spec
+index 44e9787..cd1bc4c 100644
+--- a/babeltrace.spec
++++ b/babeltrace.spec
+@@ -1,6 +1,6 @@
+ Name:           babeltrace
+ Version:        1.5.11
+-Release:        22%{?dist}
++Release:        23%{?dist}
+ Summary:        Trace Viewer and Converter, mainly for the Common Trace Format
+ License:        MIT AND GPL-3.0-or-later WITH Bison-exception-2.2 AND LGPL-2.1-only AND BSD-4-Clause-UC
+ URL:            https://www.efficios.com/babeltrace
+@@ -27,6 +27,7 @@ BuildRequires:  elfutils-devel >= 0.154
+ BuildRequires:  autoconf automake libtool
+ BuildRequires:  gnupg2
+ BuildRequires:  make
++BuildRequires:  openpgpverify
+ 
+ Requires:       lib%{name}%{?_isa} = %{version}-%{release}
+ 
+@@ -69,7 +70,7 @@ to/from another trace format.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+@@ -122,6 +123,9 @@ rm -f %{buildroot}/%{_pkgdocdir}/std-ext-lib.txt
+ 
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 1.5.11-23
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 22 2026 Python Maint <python-maint@redhat.com> - 1.5.11-22
+ - Rebuilt for Python 3.15.0b4 ABI change
+ 
+-- 
+2.56.0
+

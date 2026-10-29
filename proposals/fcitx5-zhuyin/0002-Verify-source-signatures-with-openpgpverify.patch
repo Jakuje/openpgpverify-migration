@@ -1,0 +1,39 @@
+From 2ee0fbf7ae32b6851f546c43af06be267669b3f5 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:55 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ fcitx5-zhuyin.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fcitx5-zhuyin.spec b/fcitx5-zhuyin.spec
+index 0de7f60..e5ddee8 100644
+--- a/fcitx5-zhuyin.spec
++++ b/fcitx5-zhuyin.spec
+@@ -14,7 +14,7 @@ Source1:    https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}_dict
+ #   mv 0x8E8B898CBF2412F9.new 0x8E8B898CBF2412F9
+ Source2:    https://pgp.key-server.io/download/0x8E8B898CBF2412F9
+ 
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  cmake
+ BuildRequires:  extra-cmake-modules
+ BuildRequires:  gcc-c++
+@@ -42,7 +42,7 @@ Requires:       hicolor-icon-theme
+ Provides data files and icon files need for fcitx5-zhuyin package.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+-- 
+2.56.0
+

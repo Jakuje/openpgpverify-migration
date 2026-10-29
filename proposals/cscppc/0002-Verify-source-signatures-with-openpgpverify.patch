@@ -1,0 +1,59 @@
+From de109a55b229f8b0735f62614fd0fadeac0e4806 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:43 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ cscppc.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/cscppc.spec b/cscppc.spec
+index acdf3c2..8981d95 100644
+--- a/cscppc.spec
++++ b/cscppc.spec
+@@ -3,7 +3,7 @@
+ 
+ Name:       cscppc
+ Version:    2.2.8
+-Release:    2%{?dist}
++Release:    3%{?dist}
+ Summary:    A compiler wrapper that runs Cppcheck in background
+ 
+ License:    GPL-3.0-or-later
+@@ -27,6 +27,7 @@ BuildRequires: gnupg2
+ # against the old version of glibc if it was built against a newer one.
+ # Therefore, we link glibc statically.
+ BuildRequires: glibc-static
++BuildRequires: openpgpverify
+ 
+ # The test-suite runs automatically trough valgrind if valgrind is available
+ # on the system.  By not installing valgrind into mock's chroot, we disable
+@@ -79,7 +80,7 @@ This package contains the csmatch compiler wrapper that runs the Smatch analyzer
+ in background fully transparently.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+@@ -141,6 +142,9 @@ done
+ %{_mandir}/man1/csmatch.1*
+ 
+ %changelog
++* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 2.2.8-3
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 2.2.8-2
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

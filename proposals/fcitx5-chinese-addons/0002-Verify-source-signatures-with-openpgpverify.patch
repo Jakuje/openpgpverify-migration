@@ -1,0 +1,38 @@
+From 1b695af9d1c3359c9bcc4bec4cb7b4525eae85b1 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:50 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ fcitx5-chinese-addons.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fcitx5-chinese-addons.spec b/fcitx5-chinese-addons.spec
+index 25e013e..1e9ab71 100644
+--- a/fcitx5-chinese-addons.spec
++++ b/fcitx5-chinese-addons.spec
+@@ -42,6 +42,7 @@ BuildRequires:  pkgconfig(opencc)
+ BuildRequires:  pkgconfig(Fcitx5Core)
+ BuildRequires:  pkgconfig(Fcitx5Module)
+ BuildRequires:  /usr/bin/appstream-util
++BuildRequires:  openpgpverify
+ Requires:       hicolor-icon-theme
+ Requires:       %{name}-data = %{version}-%{release}
+ Requires:       fcitx5-lua
+@@ -74,7 +75,7 @@ Requires:       fcitx5-devel
+ devel files for fcitx5-chinese-addons
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+-- 
+2.56.0
+

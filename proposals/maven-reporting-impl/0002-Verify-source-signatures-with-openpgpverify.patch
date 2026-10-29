@@ -1,0 +1,59 @@
+From 081354e8c5baa220537564b258cb42f16425c515 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:51 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ maven-reporting-impl.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/maven-reporting-impl.spec b/maven-reporting-impl.spec
+index cc554f0..85f0e7c 100644
+--- a/maven-reporting-impl.spec
++++ b/maven-reporting-impl.spec
+@@ -1,6 +1,6 @@
+ Name:           maven-reporting-impl
+ Version:        4.0.0
+-Release:        7%{?dist}
++Release:        8%{?dist}
+ Summary:        Abstract classes to manage report generation
+ License:        Apache-2.0
+ URL:            https://maven.apache.org/shared/maven-reporting-impl/
+@@ -18,7 +18,7 @@ Source2:        https://downloads.apache.org/maven/KEYS
+ BuildArch:      noarch
+ ExclusiveArch:  %{java_arches} noarch
+ 
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ BuildRequires:  maven-local-openjdk25
+ BuildRequires:  mvn(org.apache.maven:maven-archiver)
+ BuildRequires:  mvn(org.apache.maven:maven-artifact)
+@@ -54,7 +54,7 @@ Abstract classes to manage report generation, which can be run both:
+ * or as a direct standalone invocation (as a maven-plugin-api's Mojo).
+ 
+ %prep
+-%{gpgverify} --data=%{SOURCE0} --signature=%{SOURCE1} --keyring=%{SOURCE2}
++%{openpgpverify} --data=%{SOURCE0} --signature=%{SOURCE1} --keyring=%{SOURCE2}
+ %autosetup -p1
+ 
+ # Fix end of line encoding
+@@ -81,6 +81,9 @@ rm README.md.orig
+ %license LICENSE NOTICE
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 4.0.0-8
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 4.0.0-7
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

@@ -1,0 +1,38 @@
+From 3b9fa1d6f1a5b6501d924e62b520efbc9cbb4cc4 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:56 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ mat2.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/mat2.spec b/mat2.spec
+index d67de49..333ee45 100644
+--- a/mat2.spec
++++ b/mat2.spec
+@@ -43,6 +43,7 @@ BuildRequires:  poppler-glib
+ # Test dependencies
+ BuildRequires:  ffmpeg-free
+ BuildRequires:  perl-Image-ExifTool
++BuildRequires:  openpgpverify
+ 
+ Requires:       python3-%{modname} = %{version}-%{release}
+ 
+@@ -110,7 +111,7 @@ Requires:       python3-%{modname} = %{version}-%{release}
+ Dolphin integration for %{name}.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %install -a
+-- 
+2.56.0
+

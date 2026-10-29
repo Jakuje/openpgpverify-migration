@@ -1,0 +1,39 @@
+From dda7a20c00c9e40af310cd698039fbde3812df4d Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:48 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ swaylock.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/swaylock.spec b/swaylock.spec
+index 9d7aa33..1e72d97 100644
+--- a/swaylock.spec
++++ b/swaylock.spec
+@@ -14,7 +14,7 @@ Source1:    %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz.sig
+ Source2:    gpgkey-E88F5E48.asc
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  meson >= 0.59.0
+ BuildRequires:  pam-devel
+ BuildRequires:  pkgconfig(cairo)
+@@ -29,7 +29,7 @@ BuildRequires:  scdoc
+ swaylock is a screen locking utility for Wayland compositors.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+-- 
+2.56.0
+

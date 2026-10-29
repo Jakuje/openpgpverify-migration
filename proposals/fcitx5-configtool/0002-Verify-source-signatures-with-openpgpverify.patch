@@ -1,0 +1,39 @@
+From 2e2cd4996213edb563633ce1dfc896bfe2b5093f Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:44 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ fcitx5-configtool.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fcitx5-configtool.spec b/fcitx5-configtool.spec
+index 5c5160c..ddab9fc 100644
+--- a/fcitx5-configtool.spec
++++ b/fcitx5-configtool.spec
+@@ -16,7 +16,7 @@ Source1:        https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.
+ #   mv 0x8E8B898CBF2412F9.new 0x8E8B898CBF2412F9
+ Source2:        https://pgp.key-server.io/download/0x8E8B898CBF2412F9
+ 
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  cmake
+ BuildRequires:  desktop-file-utils
+ BuildRequires:  extra-cmake-modules
+@@ -80,7 +80,7 @@ Requires:       fcitx5-migrator%{?_isa} = %{version}-%{release}
+ Development files for fcitx5-migrator
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ #fix typos
+-- 
+2.56.0
+

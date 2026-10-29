@@ -1,0 +1,59 @@
+From 6dd3f5cff181e96a34c94b245c3902774cc2e9f5 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:42 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ wayland.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/wayland.spec b/wayland.spec
+index a18a326..5d821d2 100644
+--- a/wayland.spec
++++ b/wayland.spec
+@@ -2,7 +2,7 @@
+ 
+ Name:           wayland
+ Version:        1.26.0
+-Release:        3%{?dist}
++Release:        4%{?dist}
+ Summary:        Wayland Compositor Infrastructure
+ 
+ # SPDX
+@@ -36,6 +36,7 @@ BuildRequires:  xmlto
+ 
+ # For origin certification
+ BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ 
+ %description
+ Wayland is a protocol for a compositor to talk to its clients as well as a C
+@@ -140,7 +141,7 @@ Wayland server library
+ %dnl ------------------------------------------------------------------------
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %conf
+@@ -156,6 +157,9 @@ Wayland server library
+ %meson_test
+ 
+ %changelog
++* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 1.26.0-4
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Sep 10 2026 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 1.26.0-3
+ - Rebuilt for libxml-2.5.4
+ 
+-- 
+2.56.0
+

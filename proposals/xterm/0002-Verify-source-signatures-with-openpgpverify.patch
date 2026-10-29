@@ -1,0 +1,39 @@
+From 7495fbb0f42914d545657afe438ecdd7dfe5c861 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:42 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ xterm.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/xterm.spec b/xterm.spec
+index 1f148f7..8e39452 100644
+--- a/xterm.spec
++++ b/xterm.spec
+@@ -10,7 +10,7 @@ BuildRequires: make
+ BuildRequires: gcc pkgconfig ncurses-devel libutempter-devel
+ BuildRequires: libXft-devel libXaw-devel libXext-devel desktop-file-utils
+ BuildRequires: libxkbfile-devel pcre2-devel pkgconfig(libpcre2-posix)
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ Recommends: xorg-x11-fonts-misc
+ 
+ Source0: https://invisible-island.net/archives/xterm/%{name}-%{version}.tgz
+@@ -37,7 +37,7 @@ Prints a shell command for setting the appropriate environment variables to
+ indicate the current size of the window from which the command is run.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ for f in THANKS; do
+-- 
+2.56.0
+

@@ -1,0 +1,39 @@
+From 3c21d1663fce3baf159a7f05a53ed370c65c8b51 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:42 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ pcsc-lite.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/pcsc-lite.spec b/pcsc-lite.spec
+index cb6b01d..facd923 100644
+--- a/pcsc-lite.spec
++++ b/pcsc-lite.spec
+@@ -30,7 +30,7 @@ BuildRequires:  perl-podlators
+ BuildRequires:  polkit-devel
+ %endif
+ BuildRequires:  gettext-devel
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  meson
+ BuildRequires:  gcc
+ BuildRequires:  python3-devel
+@@ -83,7 +83,7 @@ Requires:       %{name}-libs = %{version}-%{release}
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ %autosetup
+ 
+-- 
+2.56.0
+

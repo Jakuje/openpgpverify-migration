@@ -1,0 +1,123 @@
+From 717822bc08f39f4faff3b2bc782342de53d34cea Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:42 +0100
+Subject: [PATCH 1/2] Update the upstream signing key
+
+Refresh keyring.gpg from keyservers/WKD: same certificate(s), with
+self-signatures our copy was missing. The GnuPG keybox becomes a plain
+OpenPGP keyring, which sqv can read.
+The commands are in the comment above its Source line.
+
+The current key is needed to verify the release signature with
+openpgpverify (sqv), which checks that the key was valid when the
+release was signed.
+
+Assisted-by: Claude Opus 5.5
+---
+ keyring.gpg   | Bin 4556 -> 8104 bytes
+ pyparted.spec |   4 ++++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/keyring.gpg b/keyring.gpg
+index 10fab63c2af6ac1ffb5794a3b49ce0ce41847aed..db936ac896e3b06ea0592f1c22c42bab794da41b 100644
+GIT binary patch
+delta 4025
+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
+JPl58d{{eahQOE!Q
+
+delta 458
+zcmZ2se@3~Ufq_ARk&%JP+bJTAfq{V`&gpmq2!q%VAh?E!5zJc0z##C7fr&we<NJxt
+z#}udX2=|vICQYy2dBSmLD##p=D(lIDd`FcW+h)9Ro7G-hR^XVd^@@Rk!3Js=3j+@W
+z1JgMM1_mRrNDu>SCIbV5F+`e!m4Si562j(M4rjA6ut2rr1TZJhWa8b(%*({Tfro)1
+zy&xUpaE2|D_wyMGLdBRMhIBIdP4;6_+$_eg%fz{Xje$A6Ae~{$WPVW-917D#Q4|U?
+zSz#*N?8oGXY?>gG!sPpW9Fr$-2w^G)TYrp0mx&u@{Z1y{%}LU{Oq`ueW-Jnn91IGR
+leMF@<PnH#Bl7Xply=xY0@n)&BK&!T%x67;iODF!6002q$T$um>
+
+diff --git a/pyparted.spec b/pyparted.spec
+index ad79d71..3fde933 100644
+--- a/pyparted.spec
++++ b/pyparted.spec
+@@ -8,6 +8,10 @@ URL:           https://github.com/dcantrell/pyparted
+ 
+ Source0:       https://github.com/dcantrell/pyparted/releases/download/v%{version}/%{name}-%{version}.tar.gz
+ Source1:       https://github.com/dcantrell/pyparted/releases/download/v%{version}/%{name}-%{version}.tar.gz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 08F7C8B3C621950C138F766162977BB9C841B965 | sq keyring filter --experimental --cert 08F7C8B3C621950C138F766162977BB9C841B965 --output update.pgp
++#   sq keyring merge keyring.gpg update.pgp | sq packet dearmor --output keyring.gpg.new
++#   mv keyring.gpg.new keyring.gpg
+ Source2:       keyring.gpg
+ Source3:       trustdb.gpg
+ 
+-- 
+2.56.0
+
+

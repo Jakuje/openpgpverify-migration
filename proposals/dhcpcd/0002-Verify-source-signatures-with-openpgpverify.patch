@@ -1,0 +1,38 @@
+From 1e7b7a518f4b0b239ed2181989c2c382318df07c Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:41 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ dhcpcd.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/dhcpcd.spec b/dhcpcd.spec
+index 6c52308..7ab36c1 100644
+--- a/dhcpcd.spec
++++ b/dhcpcd.spec
+@@ -35,6 +35,7 @@ BuildRequires: systemd-devel
+ BuildRequires: ypbind
+ %endif
+ BuildRequires: make
++BuildRequires: openpgpverify
+ %if 0%{?fedora} || 0%{?rhel} > 8
+ BuildRequires: gnupg2
+ %endif
+@@ -46,7 +47,7 @@ through NDP, DHCPv4 and DHCPv6 protocols.
+ 
+ %prep
+ %if 0%{?fedora} || 0%{?rhel} > 8
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %endif
+ %autosetup -p1
+ 
+-- 
+2.56.0
+

@@ -1,0 +1,65 @@
+From 225ca1965ee3e17a9f5057300f3a175bccb462b4 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:59 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the direct GnuPG verification with %openpgpverify, which
+uses Sequoia sqv, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ znc.spec | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/znc.spec b/znc.spec
+index 8888f77..6b52384 100644
+--- a/znc.spec
++++ b/znc.spec
+@@ -13,7 +13,7 @@
+ 
+ Name:           znc
+ Version:        1.10.3
+-Release:        1%{?dist}
++Release:        2%{?dist}
+ Summary:        An advanced IRC bouncer
+ 
+ # Automatically converted from old format: ASL 2.0 - review is highly recommended.
+@@ -60,6 +60,7 @@ Obsoletes:      znc-extra <= %{version}-%{release}
+ %endif # 0%{?rhel} && 0%{?rhel} <= 9
+ 
+ BuildRequires:  systemd
++BuildRequires:  openpgpverify
+ %{?systemd_requires}
+ 
+ %description
+@@ -127,12 +128,8 @@ Requires:      python%{python3_pkgversion}
+ 
+ 
+ %prep
+-# Verify GPG signature
+-gpghome="$(mktemp -qd)" # Ensure we don't use any existing gpg keyrings
+-key="%{SOURCE2}"
+-gpg2 --dearmor --quiet --batch --yes $key >/dev/null
+-gpgv2 --homedir "$gpghome" --quiet --keyring $key.gpg %{SOURCE1} %{SOURCE0}
+-rm -rf "$gpghome" $key.gpg # Cleanup tmp gpg home dir and dearmored key
++# Verify the source signature
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ %autosetup -p1
+ 
+@@ -247,6 +244,9 @@ install -m0644 -D znc.sysusers.conf %{buildroot}%{_sysusersdir}/znc.conf
+ 
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 1.10.3-2
++- Verify upstream source signatures with openpgpverify
++
+ * Sun Sep 13 2026 Nick Bebout <nb@fedoraproject.org> - 1.10.3-1
+ - Update to 1.10.3
+ - Fix CVE-2026-82373, CVE-2026-82374, CVE-2020-11022, CVE-2020-11023
+-- 
+2.56.0
+

@@ -1,0 +1,39 @@
+From 8636a37eab17a54f7fe803c99df181defabf9453 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:44 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ i3lock.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/i3lock.spec b/i3lock.spec
+index 3095be5..d7545b1 100644
+--- a/i3lock.spec
++++ b/i3lock.spec
+@@ -34,7 +34,7 @@ BuildRequires:  libev-devel
+ BuildRequires:  pam-devel
+ 
+ # gpg verification
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  make
+ 
+ %description
+@@ -57,7 +57,7 @@ Many little improvements have been made to i3lock over time:
+   uses the bsd_auth(3) framework.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+-- 
+2.56.0
+

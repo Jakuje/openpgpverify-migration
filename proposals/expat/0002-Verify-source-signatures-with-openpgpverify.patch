@@ -1,0 +1,38 @@
+From 784c224723d6ba2de514ba2817bc3aaabd59a86b Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:41 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ expat.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/expat.spec b/expat.spec
+index 8c005d0..8c81bd3 100644
+--- a/expat.spec
++++ b/expat.spec
+@@ -13,6 +13,7 @@ License: MIT
+ BuildRequires: autoconf, libtool, xmlto, gcc-c++
+ BuildRequires: make
+ BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ 
+ %description
+ This is expat, the C library for parsing XML, written by James Clark. Expat
+@@ -39,7 +40,7 @@ The expat-static package contains the static version of the expat library.
+ Install it if you need to link statically with expat.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ sed -i 's/install-data-hook/do-nothing-please/' lib/Makefile.am
+ ./buildconf.sh
+-- 
+2.56.0
+

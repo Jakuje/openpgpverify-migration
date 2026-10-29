@@ -1,0 +1,131 @@
+From eff974eed721adfa1608882f82ef8b3916281307 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:43 +0100
+Subject: [PATCH 1/2] Update the upstream signing key
+
+Refresh bemenu-pgp.txt from keyservers/WKD: same certificate(s), with
+self-signatures our copy was missing.
+The commands are in the comment above its Source line.
+bemenu-pgp.txt was in the lookaside cache, which a pull request cannot
+update, so it moves into git (dropped from sources).
+
+The current key is needed to verify the release signature with
+openpgpverify (sqv), which checks that the key was valid when the
+release was signed.
+
+Assisted-by: Claude Opus 5.5
+---
+ .gitignore     |  1 -
+ bemenu-pgp.txt | 66 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ bemenu.spec    |  4 +++
+ sources        |  1 -
+ 4 files changed, 70 insertions(+), 2 deletions(-)
+ create mode 100644 bemenu-pgp.txt
+
+diff --git a/.gitignore b/.gitignore
+index e57078c..3419c5a 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,3 +1,2 @@
+ /bemenu-*.tar.gz
+ /bemenu-*.tar.gz.asc
+-/bemenu-pgp.txt
+diff --git a/bemenu-pgp.txt b/bemenu-pgp.txt
+new file mode 100644
+index 0000000..f88c1f0
+--- /dev/null
++++ b/bemenu-pgp.txt
+@@ -0,0 +1,66 @@
++-----BEGIN PGP PUBLIC KEY BLOCK-----
++
++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
++e4wF8UfjfpV6oLNGwrkJfBCtMWQ/B5s=
++=74n/
++-----END PGP PUBLIC KEY BLOCK-----
+diff --git a/bemenu.spec b/bemenu.spec
+index dd98f2c..5d4a1a0 100644
+--- a/bemenu.spec
++++ b/bemenu.spec
+@@ -11,6 +11,10 @@ License:    GPL-3.0-or-later AND LGPL-3.0-or-later
+ URL:        https://github.com/Cloudef/bemenu
+ Source0:    %{url}/releases/download/%{version}/%{name}-%{version}.tar.gz
+ Source1:    %{url}/releases/download/%{version}/%{name}-%{version}.tar.gz.asc
++# Refreshed from keyservers/WKD (same keys, newer signatures):
++#   sq --home=none network search --output - 16B6B7CACAF339DECE9F154729317348D687B86B | sq keyring filter --experimental --cert 16B6B7CACAF339DECE9F154729317348D687B86B --output update.pgp
++#   sq keyring merge --output bemenu-pgp.txt.new bemenu-pgp.txt update.pgp
++#   mv bemenu-pgp.txt.new bemenu-pgp.txt
+ Source2:    https://cloudef.pw/bemenu-pgp.txt
+ 
+ Patch:      respect-env-build-flags.patch
+diff --git a/sources b/sources
+index cae728f..1a14fc5 100644
+--- a/sources
++++ b/sources
+@@ -1,3 +1,2 @@
+ SHA512 (bemenu-0.6.23.tar.gz) = b854fe75e839d6d48c9eb8c80cc4b40accfb8f7225740e558b33739bcffd4d3243c211edebc7004f6e7caf3fc7f16822de34e22f22ebe3da38ab2206484efaed
+ SHA512 (bemenu-0.6.23.tar.gz.asc) = 23001143ebf8e407403c82d83beec1acfcc01b6c4a2e782ec6263a40f41d783807a39b94e0316aebd7e86c265dbc7200f88f8285ddfb2c9bee3603e23501e037
+-SHA512 (bemenu-pgp.txt) = 496184155fa4c4c3f4c59cdcb5df9da2c570da12d754291a3f5687ff344f4c6e2d959916fb21b32a845ce83517329bcfaeb609f77eed956bf1c6252754324ff3
+-- 
+2.56.0
+
+

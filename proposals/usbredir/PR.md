@@ -15,6 +15,7 @@ Why `sqv`:
 
 - the direct `gpgv2` call is replaced by `%{openpgpverify}` with the same keyring, signature and data
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
+- `victortoso-E37A484F.keyring` was in the lookaside cache, which a PR cannot update, so it moves into git (its line in `sources` is dropped)
 - refreshed keyring `victortoso-E37A484F.keyring` (see below); the comment above its `Source` line now shows the commands for refreshing it
 - Release bumped (`4%{?dist}` → `5%{?dist}`) with a changelog entry
 
@@ -87,6 +88,8 @@ What changed in the certificate (`sq inspect`):
  self-signatures SubkeyRevocation: 2017-01-04
  third-party GenericCertification: 3
 ```
+
+The keyring change is the first of the two commits, so it can be reviewed or merged on its own.
 
 ### Notes
 

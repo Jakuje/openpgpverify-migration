@@ -1,0 +1,38 @@
+From 7c0de0a0c655a351de0ab3d3fd7a72e72379df6e Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:55 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ fcitx5.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fcitx5.spec b/fcitx5.spec
+index addeda8..b142cf9 100644
+--- a/fcitx5.spec
++++ b/fcitx5.spec
+@@ -53,6 +53,7 @@ BuildRequires:  pkgconfig(librsvg-2.0)
+ BuildRequires:  /usr/bin/appstream-util
+ BuildRequires:  cmake(nlohmann_json)
+ BuildRequires:  cmake(PlasmaWaylandProtocols)
++BuildRequires:  openpgpverify
+ Requires:       dbus-common
+ Requires:       %{name}-data = %{version}-%{release}
+ Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
+@@ -103,7 +104,7 @@ Requires:       %{name} = %{version}-%{release}
+ This package will setup autostart and environment needed for fcitx5 to work properly.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+-- 
+2.56.0
+

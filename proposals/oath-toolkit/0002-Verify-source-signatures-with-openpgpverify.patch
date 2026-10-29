@@ -1,0 +1,59 @@
+From ad1c623fe31d909673b83cb1fd45ce26d5abdce0 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:56 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ oath-toolkit.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/oath-toolkit.spec b/oath-toolkit.spec
+index 7503517..a194ec9 100644
+--- a/oath-toolkit.spec
++++ b/oath-toolkit.spec
+@@ -1,6 +1,6 @@
+ Name:          oath-toolkit
+ Version:       2.6.15
+-Release:       1%{?dist}
++Release:       2%{?dist}
+ # Automatically converted from old format: GPLv3+ - review is highly recommended.
+ License:       GPL-3.0-or-later
+ Summary:       One-time password components
+@@ -13,7 +13,7 @@ BuildRequires: xmlsec1-devel
+ BuildRequires: xmlsec1-openssl-devel
+ BuildRequires: autoconf
+ BuildRequires: automake
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ Source0:       https://download.savannah.nongnu.org/releases/%{name}/%{name}-%{version}.tar.gz
+ Source1:       https://download.savannah.nongnu.org/releases/%{name}/%{name}-%{version}.tar.gz.sig
+ # Refreshed from keyservers/WKD (same keys, newer signatures):
+@@ -118,7 +118,7 @@ Requires: pam
+ A PAM module for pluggable login authentication for OATH.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+@@ -191,6 +191,9 @@ mkdir -p -m 0600 %{buildroot}%{_sysconfdir}/liboath
+ %{_libdir}/security/pam_oath.so
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 2.6.15-2
++- Verify upstream source signatures with openpgpverify
++
+ * Mon Oct 19 2026 Jaroslav Škarvada <jskarvad@redhat.com> - 2.6.15-1
+ - New version
+   Resolves: rhbz#2552043
+-- 
+2.56.0
+

@@ -1,0 +1,59 @@
+From 7af0882441ecccbb684dd9030c7ffc56aa8f5cf3 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:54 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ skribilo.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/skribilo.spec b/skribilo.spec
+index e2fb4d3..5ca8bb3 100644
+--- a/skribilo.spec
++++ b/skribilo.spec
+@@ -5,7 +5,7 @@
+ 
+ Name:         skribilo
+ Version:      0.11.0
+-Release:      3%{?dist}
++Release:      4%{?dist}
+ Summary:      A free document production tool
+ 
+ License:      GPL-3.0-or-later
+@@ -33,6 +33,7 @@ BuildRequires:  texlive-collection-context
+ BuildRequires:  glibc-common
+ # needed to check signing
+ BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ Requires:       guile30
+ Requires:       lomt-junction-fonts
+ Requires:       linux-libertine-biolinum-fonts
+@@ -70,7 +71,7 @@ Configuration files for writing Skribilo documents using
+ Emacs.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ iconv -f ISO-8859-1 -t UTF-8 ChangeLog.Skribe > ChangeLog.Skribe.tmp
+@@ -199,6 +200,9 @@ make check
+ %{_datadir}/emacs/site-lisp/skribe.el
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 0.11.0-4
++- Verify upstream source signatures with openpgpverify
++
+ * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.11.0-3
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

@@ -1,0 +1,61 @@
+From f726fbbce18f94ea6e7c1f49268e3fff7f2e4891 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:55 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ cgit.spec | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/cgit.spec b/cgit.spec
+index 2f35d78..0325d3e 100644
+--- a/cgit.spec
++++ b/cgit.spec
+@@ -35,7 +35,7 @@
+ 
+ Name:           cgit
+ Version:        1.3
+-Release:        5%{?dist}
++Release:        6%{?dist}
+ Summary:        A fast web interface for git
+ 
+ License:        GPL-2.0-only
+@@ -106,6 +106,7 @@ BuildRequires:  tidy
+ BuildRequires:  unzip
+ BuildRequires:  xz
+ BuildRequires:  zstd
++BuildRequires:  openpgpverify
+ 
+ %if %{with httpd_filesystem}
+ # httpd-filesystem provides the basic apache directory layout
+@@ -119,8 +120,8 @@ Cgit is a fast web interface for git.  It uses caching to increase performance.
+ 
+ %prep
+ # Verify GPG signatures
+-xz -dc '%{SOURCE0}' | %{gpgverify} --keyring='%{SOURCE90}' --signature='%{SOURCE92}' --data=-
+-xz -dc '%{SOURCE1}' | %{gpgverify} --keyring='%{SOURCE91}' --signature='%{SOURCE93}' --data=-
++xz -dc '%{SOURCE0}' | %{openpgpverify} --keyring='%{SOURCE90}' --signature='%{SOURCE92}' --data=-
++xz -dc '%{SOURCE1}' | %{openpgpverify} --keyring='%{SOURCE91}' --signature='%{SOURCE93}' --data=-
+ 
+ %autosetup -a 1 -S git
+ 
+@@ -216,6 +217,9 @@ install -Dp -m0644 httpd.conf %{buildroot}%{httpdconfd}/%{name}.conf
+ 
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 1.3-6
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.3-5
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

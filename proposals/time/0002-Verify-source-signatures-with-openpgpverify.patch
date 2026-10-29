@@ -1,0 +1,59 @@
+From 4067940a4455c4fbaeb6c10a336398a134b166fe Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:40 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ time.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/time.spec b/time.spec
+index e9ef6ed..53c7c1e 100644
+--- a/time.spec
++++ b/time.spec
+@@ -1,7 +1,7 @@
+ Summary:    A GNU utility for monitoring a program's use of system resources
+ Name:       time
+ Version:    1.9
+-Release:    29%{?dist}
++Release:    30%{?dist}
+ # src/time.c:               GPL-3.0-or-later
+ # COPYING:                  GPL-3.0 text
+ # doc/time.texi:            GFDL-1.3-no-invariants-or-later
+@@ -83,6 +83,7 @@ BuildRequires:  gnupg2
+ BuildRequires:  make
+ BuildRequires:  sed
+ BuildRequires:  texinfo
++BuildRequires:  openpgpverify
+ 
+ %description
+ The GNU time utility runs another program, collects information about
+@@ -90,7 +91,7 @@ the resources used by that program while it is running, and displays
+ the results.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %setup -q
+ %patch -P0 -p1
+ %patch -P1 -p1
+@@ -126,6 +127,9 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
+ # time(1) manual page lives in man-pages package, bug #1612294.
+ 
+ %changelog
++* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 1.9-30
++- Verify upstream source signatures with openpgpverify
++
+ * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.9-29
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

@@ -16,6 +16,7 @@ Why `sqv`:
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
 - dropped `BuildRequires:  gnupg2`, only needed for `%gpgverify`
+- `bemenu-pgp.txt` was in the lookaside cache, which a PR cannot update, so it moves into git (its line in `sources` is dropped)
 - refreshed keyring `bemenu-pgp.txt` (see below); the comment above its `Source` line now shows the commands for refreshing it
 
 ### Testing
@@ -65,6 +66,8 @@ What changed in the certificate (`sq inspect`):
 +self-signatures SubkeyBinding: 2021-05-20, 2023-08-29
  third-party GenericCertification: 1
 ```
+
+The keyring change is the first of the two commits, so it can be reviewed or merged on its own.
 
 ### Notes
 

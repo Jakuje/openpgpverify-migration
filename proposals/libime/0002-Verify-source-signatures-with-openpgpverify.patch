@@ -1,0 +1,38 @@
+From 25491e30078317c6ecd85978ff73e3fdce169e53 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:57 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ libime.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/libime.spec b/libime.spec
+index 8440d91..219d4d8 100644
+--- a/libime.spec
++++ b/libime.spec
+@@ -26,6 +26,7 @@ BuildRequires: pkgconfig(zlib)
+ BuildRequires: pkgconfig(bzip2)
+ BuildRequires: pkgconfig(libzstd)
+ BuildRequires: pkgconfig(eigen3)
++BuildRequires: openpgpverify
+ Requires:      %{name}-data
+ 
+ 
+@@ -50,7 +51,7 @@ Requires:       boost-devel%{?_isa}
+ Development files for %{name}
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup
+ 
+ %build
+-- 
+2.56.0
+

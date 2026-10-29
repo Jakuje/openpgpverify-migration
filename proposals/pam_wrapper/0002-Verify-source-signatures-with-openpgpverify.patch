@@ -1,0 +1,39 @@
+From ce555963e8b63c79a1c0063efa6da8d23dcc8a40 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:42 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ pam_wrapper.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/pam_wrapper.spec b/pam_wrapper.spec
+index 810284d..12bf70b 100644
+--- a/pam_wrapper.spec
++++ b/pam_wrapper.spec
+@@ -15,7 +15,7 @@ Source1:        https://ftp.samba.org/pub/cwrap/%{name}-%{version}.tar.gz.asc
+ Source2:        pam_wrapper.keyring
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ BuildRequires:  cmake
+ BuildRequires:  libcmocka-devel
+ BuildRequires:  python3-devel
+@@ -87,7 +87,7 @@ Python module to quickly write tests in Python.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ # Not compatible with Python 3.12 headers
+ sed -i -e '/Werror=declaration-after-statement/d' CompilerChecks.cmake
+-- 
+2.56.0
+

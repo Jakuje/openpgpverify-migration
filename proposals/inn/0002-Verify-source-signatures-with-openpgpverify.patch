@@ -1,0 +1,60 @@
+From 62b9b3864e1c0d81bab56fac6746fd25f9ae46d1 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:58 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the direct GnuPG verification with %openpgpverify, which
+uses Sequoia sqv, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ inn.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/inn.spec b/inn.spec
+index 07ec69b..b49213e 100644
+--- a/inn.spec
++++ b/inn.spec
+@@ -3,7 +3,7 @@
+ Summary: The InterNetNews system, an Usenet news server
+ Name: inn
+ Version: 2.7.4
+-Release: 5%{?dist}
++Release: 6%{?dist}
+ # most files are under ISC, except:
+ # contrib/analyze-traffic.in: public-domain
+ # contrib/mm_ckpasswd: GPL-2.0-or-later
+@@ -74,7 +74,7 @@ BuildRequires: sqlite-devel
+ BuildRequires: systemd-rpm-macros
+ BuildRequires: wget
+ BuildRequires: zlib-devel
+-BuildRequires: %{_bindir}/gpgv2
++BuildRequires: openpgpverify
+ BuildRequires: make
+ %if 0%{?fedora} || 0%{?rhel} >= 8
+ Recommends: perl(GD)
+@@ -136,7 +136,7 @@ Summary: Libraries provided by INN
+ This package contains dynamic libraries provided by INN project
+ 
+ %prep
+-gpgv2 --keyring %{S:3} %{S:1} %{S:0}
++%{openpgpverify} --keyring='%{S:3}' --signature='%{S:1}' --data='%{S:0}'
+ %autosetup -p1
+ 
+ # Create a sysusers.d config file
+@@ -580,6 +580,9 @@ fi
+ %{_sysusersdir}/inn.conf
+ 
+ %changelog
++* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 2.7.4-6
++- Verify upstream source signatures with openpgpverify
++
+ * Fri Jul 24 2026 Python Maint <python-maint@redhat.com> - 2.7.4-5
+ - Rebuilt for Python 3.15.0b4 ABI change
+ 
+-- 
+2.56.0
+

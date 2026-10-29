@@ -1,0 +1,60 @@
+From a8d6a67b401ce16c3e9d19a1577bca77e1b46f52 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:52 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ mingw-libidn2.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/mingw-libidn2.spec b/mingw-libidn2.spec
+index 6e98cf7..1084ebd 100644
+--- a/mingw-libidn2.spec
++++ b/mingw-libidn2.spec
+@@ -3,7 +3,7 @@
+ Summary:        MinGW Windows Internationalized Domain Name 2008 support library
+ Name:           mingw-libidn2
+ Version:        2.3.8
+-Release:        4%{?dist}
++Release:        5%{?dist}
+ License:        (GPL-2.0-or-later OR LGPL-3.0-or-later) AND GPL-3.0-or-later
+ URL:            https://www.gnu.org/software/libidn/#libidn2
+ 
+@@ -21,7 +21,7 @@ BuildRequires:  mingw64-filesystem >= 95
+ BuildRequires:  mingw64-gcc
+ BuildRequires:  mingw64-binutils
+ 
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  gcc
+ BuildRequires:  make
+ BuildRequires:  pkgconfig
+@@ -73,7 +73,7 @@ Static version of the MinGW Windows IDN 2008 library.
+ %?mingw_debug_package
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %setup -q -n libidn2-%{version}
+ 
+ %build
+@@ -128,6 +128,9 @@ find $RPM_BUILD_ROOT -name "*.la" -delete
+ %{mingw64_libdir}/libidn2.a
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 2.3.8-5
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 2.3.8-4
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

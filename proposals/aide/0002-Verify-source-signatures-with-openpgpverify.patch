@@ -1,0 +1,38 @@
+From a2b8a0ac4984d0662cf36600151f88b0dd618348 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:40 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ aide.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/aide.spec b/aide.spec
+index e41a006..9fc837b 100644
+--- a/aide.spec
++++ b/aide.spec
+@@ -38,6 +38,7 @@ BuildRequires:  systemd-rpm-macros
+ BuildRequires:  gnupg2
+ # For being able to run 'make check'
+ BuildRequires:  check-devel
++BuildRequires:  openpgpverify
+ 
+ 
+ Requires:       logrotate
+@@ -47,7 +48,7 @@ AIDE (Advanced Intrusion Detection Environment) is a file integrity
+ checker and intrusion detection program.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ cp -a %{SOURCE4} .
+ 
+-- 
+2.56.0
+

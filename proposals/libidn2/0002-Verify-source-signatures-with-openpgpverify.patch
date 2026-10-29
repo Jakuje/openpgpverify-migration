@@ -1,0 +1,59 @@
+From b7effebe0ae8e9a7b08cbd303996b845dd464f8b Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 09:06:41 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ libidn2.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/libidn2.spec b/libidn2.spec
+index e505740..5d98347 100644
+--- a/libidn2.spec
++++ b/libidn2.spec
+@@ -1,7 +1,7 @@
+ Summary:          Library to support IDNA2008 internationalized domain names
+ Name:             libidn2
+ Version:          2.3.8
+-Release:          4%{?dist}
++Release:          5%{?dist}
+ License:          (GPL-2.0-or-later OR LGPL-3.0-or-later) AND GPL-3.0-or-later
+ URL:              https://www.gnu.org/software/libidn/#libidn2
+ 
+@@ -15,6 +15,7 @@ BuildRequires:    make
+ BuildRequires:    gettext
+ BuildRequires:    libunistring-devel
+ BuildRequires:    texinfo
++BuildRequires:    openpgpverify
+ Provides:         bundled(gnulib)
+ 
+ %description
+@@ -40,7 +41,7 @@ The idn2 package contains the idn2 command line tool for testing
+ IDNA2008 conversions.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %setup -q
+ 
+ %build
+@@ -87,6 +88,9 @@ rm -f $RPM_BUILD_ROOT%{_datadir}/info/dir
+ %{_infodir}/%{name}.info*
+ 
+ %changelog
++* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 2.3.8-5
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 2.3.8-4
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+
