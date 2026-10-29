@@ -29,6 +29,7 @@ According to the keyring in dist-git, the signing key had already expired when t
 ### What can be done
 
 - Ask upstream to publish their current key (keys.openpgp.org, WKD or the project website), then update the keyring in dist-git.
+- If the expiry was extended only after the release was signed, the new self-signatures have to be dated before the release signature; [Updating GPG keys for Fedora and RHEL](https://www.redhat.com/en/blog/updating-gpg-keys-for-fedora-and-rhel) describes how to backdate them.
 
 The rest of the conversion is mechanical. Once the signature or key is sorted out, the spec change is the same as for other packages: `%{gpgverify}` → `%{openpgpverify}` and `BuildRequires: openpgpverify`. I'm happy to send the PR.
 

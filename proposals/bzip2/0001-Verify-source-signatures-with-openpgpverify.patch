@@ -1,0 +1,60 @@
+From e8b6c24a07e6b7b08f06037d737d1d50a1e0b3fc Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 29 Oct 2026 14:12:27 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ bzip2.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/bzip2.spec b/bzip2.spec
+index 0599e03..b714358 100644
+--- a/bzip2.spec
++++ b/bzip2.spec
+@@ -3,7 +3,7 @@
+ Summary: File compression utility
+ Name: bzip2
+ Version: 1.0.8
+-Release: 24%{?dist}
++Release: 25%{?dist}
+ License: BSD-4-Clause
+ URL: https://sourceware.org/bzip2
+ #Source0: http://www.bzip.org/%{version}/%{name}-%{version}.tar.gz
+@@ -22,7 +22,7 @@ Patch3: man_gzipdiff.patch
+ 
+ BuildRequires: gcc
+ BuildRequires: make
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ 
+ %description
+ Bzip2 is a freely available, patent-free, high quality data compressor.
+@@ -56,7 +56,7 @@ Summary: Libraries for applications using bzip2
+ Static libraries for applications using the bzip2 compression format.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE3}' --signature='%{SOURCE2}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE3}' --signature='%{SOURCE2}' --data='%{SOURCE0}'
+ %setup -q
+ %patch -P0 -p1
+ %patch -P1 -p1
+@@ -128,6 +128,9 @@ ln -s bzgrep.1 $RPM_BUILD_ROOT%{_mandir}/man1/bzfgrep.1
+ %{_libdir}/pkgconfig/bzip2.pc
+ 
+ %changelog
++* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 1.0.8-25
++- Verify upstream source signatures with openpgpverify
++
+ * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.0.8-24
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

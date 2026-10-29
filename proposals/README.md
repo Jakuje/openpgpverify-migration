@@ -1,6 +1,6 @@
 # Proposals
 
-Generated 2026-10-29T08:06Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
+Generated 2026-10-29T13:12Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
 
 - **PR**: `*.patch` are the commits a PR would carry (`git am` applies them to dist-git at the tested commit; a keyring update is a separate first commit); `PR.md` is the PR title and description.
 - **draft PR**: the same, but it includes a keyring refresh that hasn't been reviewed yet.
@@ -56,7 +56,7 @@ Generated 2026-10-29T08:06Z by `scripts/render_proposals.py` from the Phase 1 st
 | bind | skipped | guard-failed: fedora-rawhide-x86_64: guard-failed (old spec executed no gpgverify call (prep rc 0)); fedora-eln-x86_64: not-verified (the unchanged spec does not verify sources in this chroot) |
 | [bison](bison/) | bug | sha1-sig |
 | blktrace | skipped | open PR exists: https://src.fedoraproject.org/rpms/blktrace/pull-request/8 |
-| bzip2 | skipped | open PR exists: https://src.fedoraproject.org/rpms/bzip2/pull-request/4 |
+| [bzip2](bzip2/) | PR |  |
 | cairomm1.16 | skipped | superseded: converted in dist-git (snapshot 2026-10-26) |
 | checkpolicy | skipped | open PR exists: https://src.fedoraproject.org/rpms/checkpolicy/pull-request/12 |
 | chrony | skipped | open PR exists: https://src.fedoraproject.org/rpms/chrony/pull-request/15 |
@@ -65,7 +65,7 @@ Generated 2026-10-29T08:06Z by `scripts/render_proposals.py` from the Phase 1 st
 | [coreutils](coreutils/) | bug | sha1-cert |
 | [cpio](cpio/) | bug | sha1-sig |
 | crun | skipped | open PR exists: https://src.fedoraproject.org/rpms/crun/pull-request/159 |
-| curl | skipped | not-buildable: fedora-rawhide-x86_64: not-buildable (unchanged spec: installdeps failed); fedora-eln-x86_64: not-buildable (unchanged spec: installdeps failed) |
+| [curl](curl/) | PR |  |
 | [cyrus-imapd](cyrus-imapd/) | bug | sha1-cert |
 | [debugedit](debugedit/) | bug | keybox |
 | [dhcpcd](dhcpcd/) | draft PR | keyring refresh proposed |

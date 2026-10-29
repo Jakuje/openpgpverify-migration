@@ -33,6 +33,9 @@ AUTHOR = ('Jakub Jelen', 'jjelen@redhat.com')
 LOOKASIDE_TO_GIT_MAX = 1024 * 1024   # bytes; bigger keyrings stay in the lookaside cache
 PATCH_NAME = '0001-Verify-source-signatures-with-openpgpverify.patch'
 
+# How to re-create SHA-1 self-signatures so that old signatures stay valid (Clemens Lang).
+RESIGN_ARTICLE = ('[Updating GPG keys for Fedora and RHEL]'
+                  '(https://www.redhat.com/en/blog/updating-gpg-keys-for-fedora-and-rhel)')
 REASONS = {
     'sha1-cert': (
         'SHA-1 key self-signatures',
@@ -41,10 +44,22 @@ REASONS = {
         "Sequoia applies the policy to key bindings too; GnuPG doesn't check them. No "
         "newer copy of the key with modern self-signatures is published on "
         "keys.openpgp.org, keyserver.ubuntu.com or WKD.",
-        "- Ask upstream to re-create the key's self-signatures with a modern hash and "
-        "publish the updated key; renewing the expiry does that (`gpg --cert-digest-algo "
-        "SHA512 --quick-set-expire FPR 2y`, and again with `'*'` for the subkeys). Then "
-        "refresh the keyring in dist-git.\n"
+        "- Ask upstream to re-create the key's self-signatures with SHA-256, dated one "
+        "second after the key was created, and publish the updated key. "
+        "%s describes how. The date matters: Sequoia checks how the key was bound when "
+        "the release was signed, so self-signatures made today (a plain `gpg "
+        "--quick-set-expire`) only help future releases. With the backdated ones, the "
+        "existing release signatures verify again. In short (`CT` is the newest "
+        "creation time from `gpg --list-keys --with-colons --fixed-list-mode FPR`, "
+        "field 6 of the `pub`/`sub` lines):\n\n"
+        "      gpg --faked-system-time \"$((CT + 1))!\" --cert-digest-algo SHA256 "
+        "--quick-set-expire FPR 2030-12-31\n"
+        "      gpg --faked-system-time \"$((CT + 1))!\" --cert-digest-algo SHA256 "
+        "--quick-set-expire FPR 2030-12-31 '*'\n\n"
+        "  Use an absolute expiry date (or `0`): a relative one such as `4y` counts "
+        "from the faked time and may already be over. `sqv --keyring KEY.asc "
+        "RELEASE.sig RELEASE.tar.gz` on an existing release shows whether it worked. "
+        "Then refresh the keyring in dist-git.\n" % RESIGN_ARTICLE +
         "- If upstream already signs with a newer key, switch the keyring to that key."),
     'sha1-sig': (
         'SHA-1 data signature',
@@ -72,7 +87,10 @@ REASONS = {
         "checks that the key was valid when the signature was made. (Signatures made "
         "while the key was valid keep verifying after it expires.)",
         "- Ask upstream to publish their current key (keys.openpgp.org, WKD or the "
-        "project website), then update the keyring in dist-git."),
+        "project website), then update the keyring in dist-git.\n"
+        "- If the expiry was extended only after the release was signed, the new "
+        "self-signatures have to be dated before the release signature; %s describes "
+        "how to backdate them." % RESIGN_ARTICLE),
     'binding-after-signature': (
         'keyring lacks older self-signatures',
         "The keyring in dist-git only has self-signatures that are newer than the "
