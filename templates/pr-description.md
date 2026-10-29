@@ -19,7 +19,7 @@ The current and the changed spec were both run through `$stage` in a clean mock 
 | current ($old_tool) | $calls_old | $result_old |
 | this PR (`%openpgpverify`) | $calls_new | $result_new |
 
-Tested on $tested_on at dist-git commit `$commit` with sequoia-sqv $sqv_version (Fedora DEFAULT crypto policy).
+Tested on $tested_on at dist-git commit `$commit` with sequoia-sqv $sqv_version (Fedora DEFAULT crypto policy).$rebased_note
 $refresh_section$notes_section
 ### Questions
 

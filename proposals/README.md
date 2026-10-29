@@ -1,6 +1,6 @@
 # Proposals
 
-Generated 2026-10-29T13:12Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
+Generated 2026-10-29T13:18Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
 
 - **PR**: `*.patch` are the commits a PR would carry (`git am` applies them to dist-git at the tested commit; a keyring update is a separate first commit); `PR.md` is the PR title and description.
 - **draft PR**: the same, but it includes a keyring refresh that hasn't been reviewed yet.
@@ -72,7 +72,7 @@ Generated 2026-10-29T13:12Z by `scripts/render_proposals.py` from the Phase 1 st
 | [dialog](dialog/) | draft PR | keyring refresh proposed |
 | dnf | skipped | open PR exists: https://src.fedoraproject.org/rpms/dnf/pull-request/28 |
 | [dos2unix](dos2unix/) | bug | sha1-cert |
-| dotnet10.0 | skipped | dist-git changed since Phase 1; re-run it |
+| [dotnet10.0](dotnet10.0/) | PR |  |
 | [e2fsprogs](e2fsprogs/) | bug | unparseable-cert |
 | [ed](ed/) | bug | sha1-sig |
 | emacs | skipped | open PR exists: https://src.fedoraproject.org/rpms/emacs/pull-request/51 |

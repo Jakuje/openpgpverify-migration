@@ -405,6 +405,12 @@ def render_pr(pkg, s, draft):
     if s.get('stage') and s['stage'] != '-bp':
         notes.append('- The verification runs outside `%prep`. Moving it to the start of '
                      '`%prep` would check the sources before anything else uses them.')
+    # Rebased onto a newer dist-git commit without re-running Phase 1 (the
+    # maintainers' CI builds it).
+    rebased = '' if not s.get('tested_commit') else (
+        ' The spec has changed since (`%s`); this PR '
+        'applies the same change on top of that without re-running the test, so the '
+        'CI build here is the check for the current spec.' % s['spec_commit'][:12])
     text = tmpl('pr-description.md',
                 changes='\n'.join(changes) + '\n', stage='rpmbuild %s' % s.get('stage', '-bp'),
                 chroots=', '.join(chroots), old_tool=old_tool,
@@ -415,8 +421,9 @@ def render_pr(pkg, s, draft):
                 'and data.' if raw else
                 'The macro takes the same options, so the call itself only changes its name.', calls_old=n_old, calls_new=calls_new,
                 result_old=result_old, result_new=result_new,
-                tested_on=(s.get('tested_at') or s['updated'])[:10], commit=s['spec_commit'][:12],
-                sqv_version=s.get('sqv_version') or '?',
+                tested_on=(s.get('tested_at') or s['updated'])[:10],
+                commit=(s.get('tested_commit') or s['spec_commit'])[:12],
+                sqv_version=s.get('sqv_version') or '?', rebased_note=rebased,
                 refresh_section=refresh,
                 notes_section='\n### Notes\n\n' + '\n'.join(notes) + '\n')
     title = 'Verify source signatures with openpgpverify'
