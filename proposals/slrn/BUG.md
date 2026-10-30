@@ -8,7 +8,7 @@ Summary: slrn: source signature does not verify with openpgpverify (OpenPGP v3 s
 
 As part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify), `%gpgverify` (GnuPG) is being replaced by `%openpgpverify` (Sequoia `sqv`). For slrn, the switch can't be done in a simple PR: the current check with `gpgv2` accepts the current upstream signature, but `%openpgpverify` rejects it.
 
-Failing check (dist-git commit `74b8cbb44ffa`):
+Failing check (dist-git commit `80300b0556c6`):
 
 ```
 %openpgpverify --keyring=slrn-gpgkeys.gpg --signature=slrn-1.0.3a.tar.bz2.asc --data=slrn-1.0.3a.tar.bz2

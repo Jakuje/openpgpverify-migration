@@ -1,0 +1,38 @@
+From 7d2958beb4948fb0296d72784db64973736e262a Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 30 Oct 2026 13:47:21 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ forgejo.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/forgejo.spec b/forgejo.spec
+index 35d403c..c57625b 100644
+--- a/forgejo.spec
++++ b/forgejo.spec
+@@ -69,6 +69,7 @@ BuildRequires:  sed
+ BuildRequires:  sqlite-devel
+ BuildRequires:  systemd-rpm-macros
+ BuildRequires:  util-linux-core
++BuildRequires:  openpgpverify
+ 
+ Requires:       bash
+ Requires:       coreutils
+@@ -83,7 +84,7 @@ host git repositories, track their issues and allow people to contribute to
+ them!
+ 
+ %prep
+-%{gpgverify} --keyring='%{S:2}' --signature='%{S:1}' --data='%{S:0}'
++%{openpgpverify} --keyring='%{S:2}' --signature='%{S:1}' --data='%{S:0}'
+ %autosetup -N -n %{name}-src-%{version}
+ patch --input=%{PATCH0} --output=app.ini.tmpl custom/conf/app.example.ini
+ 
+-- 
+2.56.0
+

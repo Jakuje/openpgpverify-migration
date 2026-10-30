@@ -1,6 +1,6 @@
-From b12475a120b7270ca12b8fb7e92eaa4b6bdfdf4f Mon Sep 17 00:00:00 2001
+From 9012d1efa30cd29d088de1147d583f3ef60e7074 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:58 +0100
+Date: Fri, 30 Oct 2026 13:47:22 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Refresh webkitgtk-keys.gpg from keyservers/WKD: same certificate(s),
@@ -189,7 +189,7 @@ zvmyx%0t1NxJhO2PJOTrm0iv_852679w3EXZEdhv=@fSXm&Jq@rOBpT!w3Aa2KLLo7
 plM;UexdaWfv@Z<=6^Ka$7!d*h2?YX3L;eK<8w>yn2@sRFG&bG!Bwqjk
 
 diff --git a/webkitgtk.spec b/webkitgtk.spec
-index 92a650c..aad358f 100644
+index 4dd1940..e921b58 100644
 --- a/webkitgtk.spec
 +++ b/webkitgtk.spec
 @@ -83,8 +83,10 @@ URL:            https://www.webkitgtk.org/
@@ -204,7 +204,7 @@ index 92a650c..aad358f 100644
 +#   mv webkitgtk-keys.gpg.new webkitgtk-keys.gpg
  Source2:        webkitgtk-keys.gpg
  
- # https://bugs.webkit.org/show_bug.cgi?id=312677
+ # CMake: add missing ordering information to fix a potential race condition that
 -- 
 2.56.0
 

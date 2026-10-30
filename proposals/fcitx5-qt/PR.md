@@ -15,7 +15,6 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- dropped `BuildRequires:  gnupg2`, only needed for `%gpgverify`
 - refreshed keyring `0x8E8B898CBF2412F9` (see below); the comment above its `Source` line now shows the commands for refreshing it
 
 ### Testing
@@ -27,7 +26,7 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 | current (`%gpgverify`) | 1 | pass |
 | this PR (`%openpgpverify`) | 1 | fails with the keyring in dist-git; **passes with the refreshed keyring** (sqv run directly) |
 
-Tested on 2026-10-22 at dist-git commit `734df4c70c26` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
+Tested on 2026-10-30 at dist-git commit `5897c118a9b1` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
 ### Keyring refresh
 
@@ -51,12 +50,12 @@ What changed in the certificate (`sq inspect`):
 +++ refreshed/0x8E8B898CBF2412F9
 @@ -1,15 +1,13 @@
        Fingerprint: 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9
--                   Invalid: No binding signature at time 2026-10-27T10:51:45Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-30T12:46:07Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: certification, signing
             Subkey: 5D5BB5D0FFB8A3697A5ABFF01D4174D1707CCADF
                     Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
                     because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-27T10:51:45Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-30T12:46:07Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance: SHA1 is not considered secure
             UserID: Weng Xuetian <csslayer@chakra-project.org>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
@@ -78,6 +77,7 @@ The keyring change is the first of the two commits, so it can be reviewed or mer
 ### Notes
 
 - Rawhide only. Whether to merge it into other branches is up to you; openpgpverify is available in Fedora 43 and later, EPEL 9 and EPEL 10.
+- `BuildRequires: gnupg2` is kept: not checked: the changed spec does not get past the signature check. If it was only there for the signature check, it can go too.
 - Nothing changes in the built packages, so this doesn't need a build right away; the new check runs with your next build.
 
 ### Questions

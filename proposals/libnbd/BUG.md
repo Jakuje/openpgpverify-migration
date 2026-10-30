@@ -8,15 +8,15 @@ Summary: libnbd: source signature does not verify with openpgpverify (SHA-1 key 
 
 As part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify), `%gpgverify` (GnuPG) is being replaced by `%openpgpverify` (Sequoia `sqv`). For libnbd, the switch can't be done in a simple PR: `%gpgverify` accepts the current upstream signature, but `%openpgpverify` rejects it.
 
-Failing check (dist-git commit `dd613758501a`):
+Failing check (dist-git commit `255fbfafff9e`):
 
 ```
-%openpgpverify --keyring=libguestfs.keyring --signature=libnbd-1.25.7.tar.gz.sig --data=libnbd-1.25.7.tar.gz
+%openpgpverify --keyring=libguestfs.keyring --signature=libnbd-1.25.8.tar.gz.sig --data=libnbd-1.25.8.tar.gz
 ```
 
 ```
 Signing key on F7774FB1AD074A7E8C8767EA91738F73E1B768A0 is not bound:
-           No binding signature at time 2026-07-28T10:57:49Z
+           No binding signature at time 2026-10-13T10:17:27Z
   because: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
   because: SHA1 is not considered secure
 0 of 1 signatures are valid (threshold is: 1).

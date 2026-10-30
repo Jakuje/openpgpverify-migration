@@ -26,7 +26,7 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 | current (`%gpgverify`) | 1 | pass |
 | this PR (`%openpgpverify`) | 1 | fails with the keyring in dist-git; **passes with the refreshed keyring** (sqv run directly) |
 
-Tested on 2026-10-12 at dist-git commit `36fa667693d1` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
+Tested on 2026-10-30 at dist-git commit `b56282e7d675` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
 ### Keyring refresh
 
@@ -50,13 +50,13 @@ What changed in the certificate (`sq inspect`):
 +++ refreshed/gpgkey-1F42418905D8206AA754CCDC29EE58B996865171.gpg
 @@ -1,29 +1,28 @@
        Fingerprint: 1F42418905D8206AA754CCDC29EE58B996865171
--                   Invalid: No binding signature at time 2026-10-27T10:55:27Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-30T12:46:20Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 -           Subkey: 1F9ABA5E96A1227366ED49A19B4A51263E13AF91
--                   Invalid: primary key: No binding signature at time 2026-10-27T10:55:27Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-30T12:46:20Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +  Expiration time: 2028-04-29 16:35:00 UTC (creation time + 19years 11months 25days 9h 50m 24s)
 +        Key flags: certification, signing
             Subkey: 59FBB55CA7F3A8AB0C503773D81C4887F1679A65
--                   Invalid: primary key: No binding signature at time 2026-10-27T10:55:27Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-30T12:46:20Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +  Expiration time: 2028-02-04 05:45:13 UTC (creation time + 9years 11months 27days 21h 50m 24s)
 +        Key flags: signing
 +           Subkey: 1F9ABA5E96A1227366ED49A19B4A51263E13AF91
@@ -65,12 +65,12 @@ What changed in the certificate (`sq inspect`):
             Subkey: 98637A1E80A2414A9D6A7F6AA6B2AEE71404A91D
                     Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
                     because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-27T10:55:27Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-30T12:46:20Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance: SHA1 is not considered secure
             Subkey: A812CBFDFCDC4D0BE7A093129D5EAAF69013B842
                     Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
                     because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-27T10:55:27Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-30T12:46:20Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance: SHA1 is not considered secure
             UserID: Nikos Mavrogiannopoulos <n.mavrogiannopoulos@gmail.com>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
@@ -100,7 +100,7 @@ The keyring change is the first of the two commits, so it can be reviewed or mer
 ### Notes
 
 - Rawhide only. Whether to merge it into other branches is up to you; openpgpverify is available in Fedora 43 and later, EPEL 9 and EPEL 10.
-- `BuildRequires: gnupg2` is kept: the spec has a `%check` section or uses gpg elsewhere, and tests may need it. If it was only there for the signature check, it can go too.
+- `BuildRequires: gnupg2` is kept: not checked: the changed spec does not get past the signature check. If it was only there for the signature check, it can go too.
 - Nothing changes in the built packages, so this doesn't need a build right away; the new check runs with your next build.
 
 ### Questions

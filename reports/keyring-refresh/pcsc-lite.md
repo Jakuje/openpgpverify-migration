@@ -2,7 +2,7 @@
 
 **Status: proposed**
 
-Failing call: `--keyring=/builddir/new/gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg --signature=/builddir/new/pcsc-lite-2.5.2.tar.xz.asc --data=/builddir/new/pcsc-lite-2.5.2.tar.xz`
+Failing call: `--keyring=/builddir/new/gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg --signature=/builddir/new/pcsc-lite-2.5.3.tar.xz.asc --data=/builddir/new/pcsc-lite-2.5.3.tar.xz`
 
 Phase 1 reason: `sha1-cert`
 
@@ -26,10 +26,10 @@ mv gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg.new gpgkey-F5E11B9FFE9111
 +++ refreshed/gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg
 @@ -1,18 +1,19 @@
        Fingerprint: F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E
--                   Invalid: No binding signature at time 2026-10-27T11:02:58Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-30T12:46:30Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: certification, signing
             Subkey: 1FB866BC68EFCC584B1A974B2533629C5982E499
--                   Invalid: primary key: No binding signature at time 2026-10-27T11:02:58Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-30T12:46:30Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: The subkey is not live: Expired on 2012-12-03T16:19:52Z
 +  Expiration time: 2012-12-03 16:19:52 UTC (creation time + 11months 30days 3h 50m 24s)
 +        Key flags: signing
@@ -40,7 +40,7 @@ mv gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg.new gpgkey-F5E11B9FFE9111
             Subkey: AF1912CE1D685FF5ACF7C26E36A241532F1BEFF0
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-27T11:02:58Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-30T12:46:30Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: transport encryption, data-at-rest encryption
             UserID: Ludovic Rousseau <ludovic.rousseau@free.fr>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
@@ -61,7 +61,7 @@ mv gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg.new gpgkey-F5E11B9FFE9111
 ## Verification with the refreshed keyring
 
 ```
-$ sqv ... pcsc-lite-2.5.2.tar.xz
+$ sqv ... pcsc-lite-2.5.3.tar.xz
 F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E
 rc=0
 ```

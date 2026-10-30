@@ -15,7 +15,6 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- dropped `BuildRequires:  gnupg2`, only needed for `%gpgverify`
 - refreshed keyring `gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
 
 ### Testing
@@ -27,7 +26,7 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 | current (`%gpgverify`) | 1 | pass |
 | this PR (`%openpgpverify`) | 1 | fails with the keyring in dist-git; **passes with the refreshed keyring** (sqv run directly) |
 
-Tested on 2026-10-12 at dist-git commit `67d3c51d8c3d` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
+Tested on 2026-10-30 at dist-git commit `688e87ad9699` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
 ### Keyring refresh
 
@@ -51,10 +50,10 @@ What changed in the certificate (`sq inspect`):
 +++ refreshed/gpgkey-F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E.gpg
 @@ -1,18 +1,19 @@
        Fingerprint: F5E11B9FFE911146F41D953D78A1B4DFE8F9C57E
--                   Invalid: No binding signature at time 2026-10-27T11:02:58Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-30T12:46:30Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: certification, signing
             Subkey: 1FB866BC68EFCC584B1A974B2533629C5982E499
--                   Invalid: primary key: No binding signature at time 2026-10-27T11:02:58Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-30T12:46:30Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: The subkey is not live: Expired on 2012-12-03T16:19:52Z
 +  Expiration time: 2012-12-03 16:19:52 UTC (creation time + 11months 30days 3h 50m 24s)
 +        Key flags: signing
@@ -65,7 +64,7 @@ What changed in the certificate (`sq inspect`):
             Subkey: AF1912CE1D685FF5ACF7C26E36A241532F1BEFF0
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-27T11:02:58Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-30T12:46:30Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: transport encryption, data-at-rest encryption
             UserID: Ludovic Rousseau <ludovic.rousseau@free.fr>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
@@ -88,6 +87,7 @@ The keyring change is the first of the two commits, so it can be reviewed or mer
 ### Notes
 
 - Rawhide only. Whether to merge it into other branches is up to you; openpgpverify is available in Fedora 43 and later, EPEL 9 and EPEL 10.
+- `BuildRequires: gnupg2` is kept: not checked: the changed spec does not get past the signature check. If it was only there for the signature check, it can go too.
 - Nothing changes in the built packages, so this doesn't need a build right away; the new check runs with your next build.
 
 ### Questions

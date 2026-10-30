@@ -26,7 +26,7 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 | current (`%gpgverify`) | 1 | pass |
 | this PR (`%openpgpverify`) | 1 | fails with the keyring in dist-git; **passes with the refreshed keyring** (sqv run directly) |
 
-Tested on 2026-10-12 at dist-git commit `31e641b11f28` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
+Tested on 2026-10-30 at dist-git commit `937abbe18677` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
 ### Keyring update
 
@@ -73,7 +73,7 @@ The keyring change is the first of the two commits, so it can be reviewed or mer
 ### Notes
 
 - Rawhide only. Whether to merge it into other branches is up to you; openpgpverify is available in Fedora 43 and later, EPEL 9 and EPEL 10.
-- `BuildRequires: gnupg2` is kept: the spec has a `%check` section or uses gpg elsewhere, and tests may need it. If it was only there for the signature check, it can go too.
+- `BuildRequires: gnupg2` is kept: not checked: the changed spec does not get past the signature check. If it was only there for the signature check, it can go too.
 - Nothing changes in the built packages, so this doesn't need a build right away; the new check runs with your next build.
 
 ### Questions

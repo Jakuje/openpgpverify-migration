@@ -1,6 +1,6 @@
-From d6f7f6ea35f71c5bb23ff3c04ff8b526e24906de Mon Sep 17 00:00:00 2001
+From e086edcbc38cd18fd526a994508687c14fbdefb3 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:41 +0100
+Date: Fri, 30 Oct 2026 13:47:05 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Refresh gpgkey-1F42418905D8206AA754CCDC29EE58B996865171.gpg from
@@ -252,7 +252,7 @@ zo$3EAbN#<;-D6B=a_*_+EEE6Z&IJZD*eZ2-`if98gLTTJm``C&SrCsNF34+qy=YX2
 N;n72Ts8C_2*gq55CprKC
 
 diff --git a/ipcalc.spec b/ipcalc.spec
-index d020e56..eec3573 100644
+index a43e21b..ffa4f7e 100644
 --- a/ipcalc.spec
 +++ b/ipcalc.spec
 @@ -6,6 +6,10 @@ License: GPL-2.0-or-later

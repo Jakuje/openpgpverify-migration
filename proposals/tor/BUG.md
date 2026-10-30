@@ -8,10 +8,10 @@ Summary: tor: source signature does not verify with openpgpverify (several armor
 
 As part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify), `%gpgverify` (GnuPG) is being replaced by `%openpgpverify` (Sequoia `sqv`). For tor, the switch can't be done in a simple PR: `%gpgverify` accepts the current upstream signature, but `%openpgpverify` rejects it.
 
-Failing check (dist-git commit `76e4b6dc9271`):
+Failing check (dist-git commit `9d12b9ecd0c8`):
 
 ```
-%openpgpverify --keyring=tor-keyring.pub --signature=tor-0.4.9.14.tar.gz.sha256sum.asc --data=tor-0.4.9.14.tar.gz.sha256sum
+%openpgpverify --keyring=tor-keyring.pub --signature=tor-0.4.9.15.tar.gz.sha256sum.asc --data=tor-0.4.9.15.tar.gz.sha256sum
 ```
 
 ```

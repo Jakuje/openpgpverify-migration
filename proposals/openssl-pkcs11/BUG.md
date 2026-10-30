@@ -8,7 +8,7 @@ Summary: openssl-pkcs11: source signature does not verify with openpgpverify (SH
 
 As part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify), `%gpgverify` (GnuPG) is being replaced by `%openpgpverify` (Sequoia `sqv`). For openssl-pkcs11, the switch can't be done in a simple PR: `%gpgverify` accepts the current upstream signature, but `%openpgpverify` rejects it.
 
-Failing check (dist-git commit `70f0a5470345`):
+Failing check (dist-git commit `c319e878a172`):
 
 ```
 %openpgpverify --keyring=libp11.keyring --signature=libp11-0.4.21.tar.gz.asc --data=libp11-0.4.21.tar.gz

@@ -1,6 +1,6 @@
-From c18add139a48bb3d0690803172c6b6f6e85469fc Mon Sep 17 00:00:00 2001
+From f99c252b5dae56e1aff8055edc02f694e4ca47c7 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:43 +0100
+Date: Fri, 30 Oct 2026 13:47:07 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- dbus-python.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ dbus-python.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/dbus-python.spec b/dbus-python.spec
-index 8c238a5..dec3349 100644
+index 8c238a5..0fe6c6b 100644
 --- a/dbus-python.spec
 +++ b/dbus-python.spec
-@@ -22,6 +22,7 @@ BuildRequires: python3-gobject
+@@ -13,7 +13,7 @@ Source1: http://dbus.freedesktop.org/releases/dbus-python/%{srcname}-%{version}.
+ # gpg --export --export-options export-minimal > gpgkey-7A073AD1AE694FA25BFF62E5235C099D3EB33076.gpg
+ Source2: gpgkey-7A073AD1AE694FA25BFF62E5235C099D3EB33076.gpg
  
- BuildRequires: gcc
- BuildRequires: meson
+-BuildRequires: gnupg2
 +BuildRequires: openpgpverify
- 
- %global _description\
- D-Bus python bindings for use with python programs.
-@@ -50,7 +51,7 @@ Headers and static libraries for hooking up custom mainloops to the dbus python
+ BuildRequires: pkgconfig(dbus-1)
+ BuildRequires: pkgconfig(glib-2.0)
+ # for %%check
+@@ -50,7 +50,7 @@ Headers and static libraries for hooking up custom mainloops to the dbus python
  bindings.
  
  %prep

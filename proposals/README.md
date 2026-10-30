@@ -1,6 +1,6 @@
 # Proposals
 
-Generated 2026-10-30T09:52Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
+Generated 2026-10-30T12:47Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
 
 - **PR**: `*.patch` are the commits a PR would carry (`git am` applies them to dist-git at the tested commit; a keyring update is a separate first commit); `PR.md` is the PR title and description.
 - **draft PR**: the same, but it includes a keyring refresh that hasn't been reviewed yet.
@@ -67,7 +67,7 @@ Generated 2026-10-30T09:52Z by `scripts/render_proposals.py` from the Phase 1 st
 | crun | skipped | open PR exists: https://src.fedoraproject.org/rpms/crun/pull-request/159 |
 | [curl](curl/) | PR |  |
 | [cyrus-imapd](cyrus-imapd/) | bug | sha1-cert |
-| [debugedit](debugedit/) | bug | keybox |
+| [debugedit](debugedit/) | PR |  |
 | [dhcpcd](dhcpcd/) | draft PR | keyring refresh proposed |
 | [dialog](dialog/) | draft PR | keyring refresh proposed |
 | dnf | skipped | open PR exists: https://src.fedoraproject.org/rpms/dnf/pull-request/28 |
@@ -151,7 +151,7 @@ Generated 2026-10-30T09:52Z by `scripts/render_proposals.py` from the Phase 1 st
 | npth | skipped | superseded: converted in dist-git (snapshot 2026-10-26) |
 | [nss_wrapper](nss_wrapper/) | draft PR | keyring refresh proposed |
 | [ocaml-augeas](ocaml-augeas/) | bug | sha1-cert |
-| [p11-kit](p11-kit/) | draft PR | keyring refresh proposed |
+| p11-kit | skipped | superseded: already converted or no longer verifying |
 | [pam_wrapper](pam_wrapper/) | draft PR | keyring refresh proposed |
 | parted | skipped | open PR exists: https://src.fedoraproject.org/rpms/parted/pull-request/9 |
 | pcre2 | skipped | open PR exists: https://src.fedoraproject.org/rpms/pcre2/pull-request/39 |
@@ -188,9 +188,9 @@ Generated 2026-10-30T09:52Z by `scripts/render_proposals.py` from the Phase 1 st
 | [wayland](wayland/) | draft PR | keyring refresh proposed |
 | xfsdump | skipped | open PR exists: https://src.fedoraproject.org/rpms/xfsdump/pull-request/6 |
 | xfsprogs | skipped | open PR exists: https://src.fedoraproject.org/rpms/xfsprogs/pull-request/30 |
-| [xkeyboard-config](xkeyboard-config/) | bug | sha1-cert |
+| xkeyboard-config | skipped | skipped: now gnupg2-br-only |
 | [xterm](xterm/) | draft PR | keyring refresh proposed |
-| [xz](xz/) | draft PR | keyring refresh proposed |
+| xz | skipped | superseded: already converted or no longer verifying |
 | zsh | skipped | open PR exists: https://src.fedoraproject.org/rpms/zsh/pull-request/13 |
 | [abcde](abcde/) | PR |  |
 | [aesfix](aesfix/) | bug | v3-sig |
@@ -213,7 +213,7 @@ Generated 2026-10-30T09:52Z by `scripts/render_proposals.py` from the Phase 1 st
 | ctstream | skipped | superseded: converted in dist-git (snapshot 2026-10-26) |
 | [dbus-python](dbus-python/) | PR |  |
 | [dehydrated](dehydrated/) | PR |  |
-| [dhcpdump](dhcpdump/) | draft PR | keyring refresh proposed |
+| dhcpdump | skipped | superseded: already converted or no longer verifying |
 | [drm_info](drm_info/) | draft PR | keyring refresh proposed |
 | [facter](facter/) | PR |  |
 | [fcitx5-anthy](fcitx5-anthy/) | draft PR | keyring refresh proposed |
@@ -262,7 +262,7 @@ Generated 2026-10-30T09:52Z by `scripts/render_proposals.py` from the Phase 1 st
 | [pari-galdata](pari-galdata/) | bug | v3-sig |
 | [pass-audit](pass-audit/) | PR |  |
 | [pdfgrep](pdfgrep/) | bug | weak-key |
-| [perl-WWW-OrangeHRM-Client](perl-WWW-OrangeHRM-Client/) | bug | weak-key |
+| perl-WWW-OrangeHRM-Client | skipped | superseded: already converted or no longer verifying |
 | [pianobar](pianobar/) | PR |  |
 | [postfix-mta-sts-resolver](postfix-mta-sts-resolver/) | PR |  |
 | [pylibacl](pylibacl/) | PR |  |
@@ -315,7 +315,7 @@ Generated 2026-10-30T09:52Z by `scripts/render_proposals.py` from the Phase 1 st
 | [sord](sord/) | PR |  |
 | [sratom](sratom/) | PR |  |
 | [suil](suil/) | PR |  |
-| [swaybg](swaybg/) | draft PR | keyring refresh proposed |
+| swaybg | skipped | superseded: already converted or no longer verifying |
 | [swayidle](swayidle/) | draft PR | keyring refresh proposed |
 | [swaylock](swaylock/) | draft PR | keyring refresh proposed |
 | [sysconftool](sysconftool/) | PR |  |
@@ -452,7 +452,7 @@ Generated 2026-10-30T09:52Z by `scripts/render_proposals.py` from the Phase 1 st
 | [rpminspect](rpminspect/) | PR |  |
 | [rush](rush/) | PR |  |
 | [rxvt-unicode](rxvt-unicode/) | PR |  |
-| [shigofumi](shigofumi/) | PR |  |
+| shigofumi | skipped | superseded: already converted or no longer verifying |
 | [skribilo](skribilo/) | draft PR | keyring refresh proposed |
 | [sngrep](sngrep/) | PR |  |
 | [spread-sheet-widget](spread-sheet-widget/) | bug | expired |
@@ -542,7 +542,7 @@ Generated 2026-10-30T09:52Z by `scripts/render_proposals.py` from the Phase 1 st
 | [clang18](clang18/) | draft PR | keyring refresh proposed |
 | [feather](feather/) | PR |  |
 | [fop](fop/) | bug | sha1-cert |
-| forgejo | skipped | error: harness: TimeoutExpired(['fedpkg', '--path', '/home/jjelen/devel/openpgpverify-migration/work/forgejo/dist-git', '--name', 'forgejo', 'sources'], 7199.999976676889) |
+| [forgejo](forgejo/) | PR |  |
 | [freeipa](freeipa/) | PR |  |
 | [gcompris-qt](gcompris-qt/) | PR |  |
 | [grout](grout/) | PR |  |
@@ -556,7 +556,7 @@ Generated 2026-10-30T09:52Z by `scripts/render_proposals.py` from the Phase 1 st
 | [llvm19](llvm19/) | PR |  |
 | [llvm20](llvm20/) | draft PR | keyring refresh proposed |
 | [llvm21](llvm21/) | PR |  |
-| [opam](opam/) | draft PR | keyring refresh proposed |
+| opam | skipped | superseded: already converted or no longer verifying |
 | [pari-elldata](pari-elldata/) | bug | sha1-cert |
 | [pari-seadata](pari-seadata/) | bug | sha1-sig |
 | [passwordsafe](passwordsafe/) | PR |  |

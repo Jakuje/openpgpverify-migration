@@ -26,12 +26,12 @@ mv 0x8E8B898CBF2412F9.new 0x8E8B898CBF2412F9
 +++ refreshed/0x8E8B898CBF2412F9
 @@ -1,15 +1,13 @@
        Fingerprint: 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9
--                   Invalid: No binding signature at time 2026-10-27T10:51:45Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-30T12:46:07Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: certification, signing
             Subkey: 5D5BB5D0FFB8A3697A5ABFF01D4174D1707CCADF
                     Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
                     because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-27T10:51:45Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-30T12:46:07Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance: SHA1 is not considered secure
             UserID: Weng Xuetian <csslayer@chakra-project.org>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance

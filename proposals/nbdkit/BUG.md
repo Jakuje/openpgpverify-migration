@@ -8,15 +8,15 @@ Summary: nbdkit: source signature does not verify with openpgpverify (SHA-1 key 
 
 As part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify), `%gpgverify` (GnuPG) is being replaced by `%openpgpverify` (Sequoia `sqv`). For nbdkit, the switch can't be done in a simple PR: `%gpgverify` accepts the current upstream signature, but `%openpgpverify` rejects it.
 
-Failing check (dist-git commit `a947dd63734b`):
+Failing check (dist-git commit `c83791ae0aa0`):
 
 ```
-%openpgpverify --keyring=libguestfs.keyring --signature=nbdkit-1.49.3.tar.gz.sig --data=nbdkit-1.49.3.tar.gz
+%openpgpverify --keyring=libguestfs.keyring --signature=nbdkit-1.49.4.tar.gz.sig --data=nbdkit-1.49.4.tar.gz
 ```
 
 ```
 Signing key on F7774FB1AD074A7E8C8767EA91738F73E1B768A0 is not bound:
-           No binding signature at time 2026-09-01T13:00:49Z
+           No binding signature at time 2026-10-17T09:37:59Z
   because: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
   because: SHA1 is not considered secure
 0 of 1 signatures are valid (threshold is: 1).

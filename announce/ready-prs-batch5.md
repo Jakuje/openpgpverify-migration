@@ -1,8 +1,8 @@
 # PRs ready to open
 
-Generated 2026-10-30T09:52Z by `scripts/ready_list.py` from `/tmp/claude-1000/-home-jjelen-devel/d7f35f6e-ac0c-4840-8252-b22d83166897/scratchpad/ready-1030.txt`. Every package below passed Phase 1 (`%prep` with `%gpgverify` and `%openpgpverify` in mock, all verification calls logged), has no open PR, and its rawhide branch is still at the tested commit (checked when this list was generated).
+Generated 2026-10-30T12:47Z by `scripts/ready_list.py` from `/tmp/claude-1000/-home-jjelen-devel/d7f35f6e-ac0c-4840-8252-b22d83166897/scratchpad/ready-1030.txt`. Every package below passed Phase 1 (`%prep` with `%gpgverify` and `%openpgpverify` in mock, all verification calls logged), has no open PR, and its rawhide branch is still at the tested commit (checked when this list was generated).
 
-## Ready (212)
+## Ready (215)
 
 | Package | Maintainers | Diff | Release bump | `%{?rhel}` | BR gnupg2 | Tested |
 |---|---|---|---|---|---|---|
@@ -36,6 +36,8 @@ Generated 2026-10-30T09:52Z by `scripts/ready_list.py` from `/tmp/claude-1000/-h
 | [csmock](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/csmock/) | kdudka lzaoral svashisht | +6/-3 | yes |  |  | 2026-10-22 |
 | [davfs2](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/davfs2/) | fschwarz jonathanspw | +6/-3 | yes |  | dropped (checked) | 2026-10-23 |
 | [dbus-glib](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/dbus-glib/) | walters rstrode rhughes alexl | +6/-2 | yes |  |  | 2026-10-09 |
+| [dbus-python](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/dbus-python/) | vtrefny rhughes alexl amigadave ngompa rstrode besser82 | +2/-2 |  |  | dropped (checked) | 2026-10-30 |
+| [debugedit](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/debugedit/) | mjw mcermak | +6/-3 | yes |  | dropped (checked) | 2026-10-30 |
 | [dehydrated](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/dehydrated/) | pwouters robert | +2/-2 |  |  |  | 2026-10-22 |
 | [dino](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/dino/) | jcline bowlofeggs | +2/-2 |  |  | dropped (checked) | 2026-10-23 |
 | [diskimage-builder](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/diskimage-builder/) | amoralej | +2/-4 |  |  |  | 2026-10-23 |
@@ -48,6 +50,7 @@ Generated 2026-10-30T09:52Z by `scripts/ready_list.py` from `/tmp/claude-1000/-h
 | [feather](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/feather/) | js | +2/-1 |  |  | kept | 2026-10-26 |
 | [fish](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/fish/) | ngompa salimma defolos svashisht | +2/-2 |  |  | dropped (checked) | 2026-10-26 |
 | [foot](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/foot/) | alebastr | +6/-3 | yes |  |  | 2026-10-23 |
+| [forgejo](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/forgejo/) | nphilipp-rh nphilipp | +2/-1 |  |  | kept | 2026-10-30 |
 | [freeipa](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/freeipa/) | abbra twoerner dhanina rcritten simo | +6/-2 | yes |  | kept | 2026-10-30 |
 | [freetalk](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/freetalk/) | fed500 | +2/-2 |  |  | dropped (checked) | 2026-10-23 |
 | [fuse-sshfs](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/fuse-sshfs/) | peter vascom rjones | +6/-2 | yes |  |  | 2026-10-22 |
@@ -218,8 +221,6 @@ Generated 2026-10-30T09:52Z by `scripts/ready_list.py` from `/tmp/claude-1000/-h
 | [xwud](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/xwud/) | aekoroglu ajax ofourdan | +2/-2 |  |  |  | 2026-10-22 |
 | [yambar](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/yambar/) | alebastr | +6/-2 | yes |  |  | 2026-10-22 |
 | [zix](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/zix/) | tartina | +2/-1 |  |  |  | 2026-10-22 |
-
-Not listed because dist-git moved since the test (re-run `phase1.py`): shigofumi
 
 ## Opening a PR
 

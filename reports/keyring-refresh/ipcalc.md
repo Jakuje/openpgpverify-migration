@@ -2,7 +2,7 @@
 
 **Status: proposed**
 
-Failing call: `--keyring=/builddir/new/gpgkey-1F42418905D8206AA754CCDC29EE58B996865171.gpg --signature=/builddir/new/ipcalc-1.1.0.tar.xz.sig --data=/builddir/new/ipcalc-1.1.0.tar.xz`
+Failing call: `--keyring=/builddir/new/gpgkey-1F42418905D8206AA754CCDC29EE58B996865171.gpg --signature=/builddir/new/ipcalc-1.2.0.tar.xz.sig --data=/builddir/new/ipcalc-1.2.0.tar.xz`
 
 Phase 1 reason: `sha1-cert`
 
@@ -26,13 +26,13 @@ mv gpgkey-1F42418905D8206AA754CCDC29EE58B996865171.gpg.new gpgkey-1F42418905D820
 +++ refreshed/gpgkey-1F42418905D8206AA754CCDC29EE58B996865171.gpg
 @@ -1,29 +1,28 @@
        Fingerprint: 1F42418905D8206AA754CCDC29EE58B996865171
--                   Invalid: No binding signature at time 2026-10-27T10:55:27Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-10-30T12:46:20Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 -           Subkey: 1F9ABA5E96A1227366ED49A19B4A51263E13AF91
--                   Invalid: primary key: No binding signature at time 2026-10-27T10:55:27Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-30T12:46:20Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +  Expiration time: 2028-04-29 16:35:00 UTC (creation time + 19years 11months 25days 9h 50m 24s)
 +        Key flags: certification, signing
             Subkey: 59FBB55CA7F3A8AB0C503773D81C4887F1679A65
--                   Invalid: primary key: No binding signature at time 2026-10-27T10:55:27Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-30T12:46:20Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +  Expiration time: 2028-02-04 05:45:13 UTC (creation time + 9years 11months 27days 21h 50m 24s)
 +        Key flags: signing
 +           Subkey: 1F9ABA5E96A1227366ED49A19B4A51263E13AF91
@@ -41,12 +41,12 @@ mv gpgkey-1F42418905D8206AA754CCDC29EE58B996865171.gpg.new gpgkey-1F42418905D820
             Subkey: 98637A1E80A2414A9D6A7F6AA6B2AEE71404A91D
                     Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
                     because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-27T10:55:27Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-30T12:46:20Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance: SHA1 is not considered secure
             Subkey: A812CBFDFCDC4D0BE7A093129D5EAAF69013B842
                     Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
                     because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-27T10:55:27Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-10-30T12:46:20Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance: SHA1 is not considered secure
             UserID: Nikos Mavrogiannopoulos <n.mavrogiannopoulos@gmail.com>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
@@ -74,7 +74,7 @@ mv gpgkey-1F42418905D8206AA754CCDC29EE58B996865171.gpg.new gpgkey-1F42418905D820
 ## Verification with the refreshed keyring
 
 ```
-$ sqv ... ipcalc-1.1.0.tar.xz
+$ sqv ... ipcalc-1.2.0.tar.xz
 1F42418905D8206AA754CCDC29EE58B996865171
 rc=0
 ```
