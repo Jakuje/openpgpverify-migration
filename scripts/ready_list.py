@@ -11,6 +11,7 @@ All are the same kind of change: rename + BuildRequires (+ Release bump for
 specs without rpmautospec). "%{?rhel}" marks specs with RHEL conditionals,
 whose PR text mentions that openpgpverify is not in EPEL 8.
 """
+import concurrent.futures
 import glob
 import os
 import re
@@ -26,9 +27,15 @@ REPO = 'https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/'
 
 
 def head(pkg):
-    p = subprocess.run(['git', 'ls-remote', phase1.DISTGIT % pkg, 'refs/heads/rawhide'],
-                       capture_output=True, text=True, timeout=60)
-    return p.stdout.split('\t')[0] if p.returncode == 0 else None
+    for _ in range(3):
+        try:
+            p = subprocess.run(['git', 'ls-remote', phase1.DISTGIT % pkg, 'refs/heads/rawhide'],
+                               capture_output=True, text=True, timeout=60)
+        except subprocess.TimeoutExpired:
+            continue
+        if p.returncode == 0:
+            return p.stdout.split('\t')[0]
+    return None
 
 
 def diffstat(pkg):
@@ -47,12 +54,13 @@ def main():
     st = state.load()
     rows = []
     stale, other = [], []
-    for p in sorted(set(pkgs)):
-        s = st.get(p)
-        if not s or s.get('status') != 'tested' or s.get('existing_prs') or \
-                s.get('keyring_refresh_applied'):
-            continue
-        if head(p) != s.get('spec_commit'):
+    pkgs = [p for p in sorted(set(pkgs)) if st.get(p) and st[p].get('status') == 'tested'
+            and not st[p].get('existing_prs') and not st[p].get('keyring_refresh_applied')]
+    with concurrent.futures.ThreadPoolExecutor(8) as ex:
+        heads = dict(zip(pkgs, ex.map(head, pkgs)))
+    for p in pkgs:
+        s = st[p]
+        if heads[p] != s.get('spec_commit'):
             stale.append(p)
             continue
         ds = diffstat(p)
