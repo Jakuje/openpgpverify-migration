@@ -1,6 +1,6 @@
-From 1b2ed700ef02c77fdbd4535b62cc7fb38507cad1 Mon Sep 17 00:00:00 2001
+From d51e5e01b3f1296213d873b7ea616a070e94095f Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:56 +0100
+Date: Fri, 30 Oct 2026 10:52:06 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/roundcubemail.spec b/roundcubemail.spec
-index d699a82..5d7c47a 100644
+index 39b5a18..368b915 100644
 --- a/roundcubemail.spec
 +++ b/roundcubemail.spec
 @@ -18,7 +18,7 @@
@@ -49,11 +49,11 @@ index d699a82..5d7c47a 100644
  
  
  %changelog
-+* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 1.7.4-2
++* Fri Oct 30 2026 Jakub Jelen <jjelen@redhat.com> - 1.7.5-2
 +- Verify upstream source signatures with openpgpverify
 +
- * Tue Sep  8 2026 Remi Collet <remi@remirepo.net> - 1.7.4-1
- - update to 1.7.4
+ * Tue Oct 27 2026 Remi Collet <remi@remirepo.net> - 1.7.5-1
+ - update to 1.7.5
  
 -- 
 2.56.0

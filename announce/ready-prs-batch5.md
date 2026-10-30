@@ -1,8 +1,8 @@
 # PRs ready to open
 
-Generated 2026-10-30T07:13Z by `scripts/ready_list.py` from `/tmp/claude-1000/-home-jjelen-devel/d7f35f6e-ac0c-4840-8252-b22d83166897/scratchpad/ready-1030.txt`. Every package below passed Phase 1 (`%prep` with `%gpgverify` and `%openpgpverify` in mock, all verification calls logged), has no open PR, and its rawhide branch is still at the tested commit (checked when this list was generated).
+Generated 2026-10-30T09:52Z by `scripts/ready_list.py` from `/tmp/claude-1000/-home-jjelen-devel/d7f35f6e-ac0c-4840-8252-b22d83166897/scratchpad/ready-1030.txt`. Every package below passed Phase 1 (`%prep` with `%gpgverify` and `%openpgpverify` in mock, all verification calls logged), has no open PR, and its rawhide branch is still at the tested commit (checked when this list was generated).
 
-## Ready (210)
+## Ready (212)
 
 | Package | Maintainers | Diff | Release bump | `%{?rhel}` | BR gnupg2 | Tested |
 |---|---|---|---|---|---|---|
@@ -48,6 +48,7 @@ Generated 2026-10-30T07:13Z by `scripts/ready_list.py` from `/tmp/claude-1000/-h
 | [feather](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/feather/) | js | +2/-1 |  |  | kept | 2026-10-26 |
 | [fish](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/fish/) | ngompa salimma defolos svashisht | +2/-2 |  |  | dropped (checked) | 2026-10-26 |
 | [foot](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/foot/) | alebastr | +6/-3 | yes |  |  | 2026-10-23 |
+| [freeipa](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/freeipa/) | abbra twoerner dhanina rcritten simo | +6/-2 | yes |  | kept | 2026-10-30 |
 | [freetalk](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/freetalk/) | fed500 | +2/-2 |  |  | dropped (checked) | 2026-10-23 |
 | [fuse-sshfs](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/fuse-sshfs/) | peter vascom rjones | +6/-2 | yes |  |  | 2026-10-22 |
 | [gcompris-qt](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/gcompris-qt/) | musuruan | +6/-2 | yes |  |  | 2026-10-26 |
@@ -57,6 +58,7 @@ Generated 2026-10-30T07:13Z by `scripts/ready_list.py` from `/tmp/claude-1000/-h
 | [gplugin](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/gplugin/) | qulogic | +2/-1 |  |  |  | 2026-10-22 |
 | [grout](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/grout/) | rjarry mruprich | +2/-2 |  |  | dropped (checked) | 2026-10-26 |
 | [growlight](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/growlight/) | nickblack | +2/-2 |  |  | kept | 2026-10-23 |
+| [haruna](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/haruna/) | zawertun | +2/-2 |  |  | dropped (checked) | 2026-10-30 |
 | [haunt](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/haunt/) | fed500 | +2/-2 |  |  | dropped (checked) | 2026-10-23 |
 | [hello](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/hello/) | petersen | +2/-2 |  |  | dropped (checked) | 2026-10-26 |
 | [hiera](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/hiera/) | stevetraylen brandfbb ekohl ignatenkobrain | +2/-1 |  |  |  | 2026-10-09 |
@@ -172,6 +174,7 @@ Generated 2026-10-30T07:13Z by `scripts/ready_list.py` from `/tmp/claude-1000/-h
 | [river](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/river/) | alebastr sentry | +2/-2 |  |  | dropped (checked) | 2026-10-23 |
 | [river-classic](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/river-classic/) | alebastr | +2/-2 |  |  | dropped (checked) | 2026-10-23 |
 | [rkward](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/rkward/) | kkofler | +6/-2 | yes |  |  | 2026-10-26 |
+| [roundcubemail](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/roundcubemail/) | remi kevin | +6/-3 | yes |  | dropped (checked) | 2026-10-30 |
 | [rpminspect](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/rpminspect/) | dcantrell | +2/-2 |  |  | kept | 2026-10-23 |
 | [rpminspect-data-centos](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/rpminspect-data-centos/) | dcantrell | +6/-3 | yes |  |  | 2026-10-22 |
 | [rush](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/rush/) | sthiell | +6/-3 | yes |  | dropped (checked) | 2026-10-23 |
@@ -179,7 +182,6 @@ Generated 2026-10-30T07:13Z by `scripts/ready_list.py` from `/tmp/claude-1000/-h
 | [screenkey](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/screenkey/) | rajeeshknambiar | +6/-2 | yes |  |  | 2026-10-22 |
 | [serd](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/serd/) | tartina nphilipp | +6/-2 | yes |  |  | 2026-10-22 |
 | [setxkbmap](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/setxkbmap/) | whot | +2/-2 |  |  |  | 2026-10-22 |
-| [shigofumi](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/shigofumi/) | ppisar | +6/-3 | yes |  | dropped (checked) | 2026-10-23 |
 | [sngrep](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/sngrep/) | peter | +2/-1 |  |  |  | 2026-10-23 |
 | [sord](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/sord/) | tartina nphilipp | +2/-1 |  |  |  | 2026-10-22 |
 | [sratom](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/sratom/) | tartina nphilipp | +2/-1 |  |  |  | 2026-10-22 |
@@ -217,7 +219,7 @@ Generated 2026-10-30T07:13Z by `scripts/ready_list.py` from `/tmp/claude-1000/-h
 | [yambar](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/yambar/) | alebastr | +6/-2 | yes |  |  | 2026-10-22 |
 | [zix](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/zix/) | tartina | +2/-1 |  |  |  | 2026-10-22 |
 
-Not listed because dist-git moved since the test (re-run `phase1.py`): forgejo, freeipa, haruna, oidentd, roundcubemail
+Not listed because dist-git moved since the test (re-run `phase1.py`): shigofumi
 
 ## Opening a PR
 

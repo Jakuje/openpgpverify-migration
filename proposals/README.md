@@ -1,6 +1,6 @@
 # Proposals
 
-Generated 2026-10-29T13:18Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
+Generated 2026-10-30T09:52Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
 
 - **PR**: `*.patch` are the commits a PR would carry (`git am` applies them to dist-git at the tested commit; a keyring update is a separate first commit); `PR.md` is the PR title and description.
 - **draft PR**: the same, but it includes a keyring refresh that hasn't been reviewed yet.
@@ -257,7 +257,7 @@ Generated 2026-10-29T13:18Z by `scripts/render_proposals.py` from the Phase 1 st
 | [nss-pem](nss-pem/) | draft PR | keyring refresh proposed |
 | [ocaml-mysql](ocaml-mysql/) | bug | sha1-sig |
 | [oclock](oclock/) | bug | weak-key |
-| [oidentd](oidentd/) | PR |  |
+| oidentd | skipped | superseded: already converted or no longer verifying |
 | [opendoas](opendoas/) | bug | expired |
 | [pari-galdata](pari-galdata/) | bug | v3-sig |
 | [pass-audit](pass-audit/) | PR |  |
@@ -542,7 +542,7 @@ Generated 2026-10-29T13:18Z by `scripts/render_proposals.py` from the Phase 1 st
 | [clang18](clang18/) | draft PR | keyring refresh proposed |
 | [feather](feather/) | PR |  |
 | [fop](fop/) | bug | sha1-cert |
-| [forgejo](forgejo/) | PR |  |
+| forgejo | skipped | error: harness: TimeoutExpired(['fedpkg', '--path', '/home/jjelen/devel/openpgpverify-migration/work/forgejo/dist-git', '--name', 'forgejo', 'sources'], 7199.999976676889) |
 | [freeipa](freeipa/) | PR |  |
 | [gcompris-qt](gcompris-qt/) | PR |  |
 | [grout](grout/) | PR |  |

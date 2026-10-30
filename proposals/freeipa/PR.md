@@ -13,7 +13,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- Release bumped (`3.2%{?rc_version:.%rc_version}%{?dist}` → `3.2%{?rc_version:.%rc_version}%{?dist}.1`) with a changelog entry
+- Release bumped (`4%{?rc_version:.%rc_version}%{?dist}` → `4%{?rc_version:.%rc_version}%{?dist}.1`) with a changelog entry
 
 ### Testing
 
@@ -24,7 +24,7 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 | current (`%gpgverify`) | 1 | pass |
 | this PR (`%openpgpverify`) | 1 | pass |
 
-Tested on 2026-10-26 at dist-git commit `0ede9ec7e965` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
+Tested on 2026-10-30 at dist-git commit `0ee83d08756f` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
 ### Notes
 

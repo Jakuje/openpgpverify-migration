@@ -1,6 +1,6 @@
-From ffe929e51a29de3fcafcf2e3108261bb8ae7367a Mon Sep 17 00:00:00 2001
+From 8d7d52122eaebd439d0830754e67dd0e5185437c Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:57 +0100
+Date: Fri, 30 Oct 2026 10:52:06 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,19 +15,19 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/freeipa.spec b/freeipa.spec
-index 77fe24b..79d7450 100644
+index 431a000..3bb7843 100644
 --- a/freeipa.spec
 +++ b/freeipa.spec
 @@ -211,7 +211,7 @@
  
  Name:           %{package_name}
  Version:        %{IPA_VERSION}
--Release:        3.2%{?rc_version:.%rc_version}%{?dist}
-+Release:        3.2%{?rc_version:.%rc_version}%{?dist}.1
+-Release:        4%{?rc_version:.%rc_version}%{?dist}
++Release:        4%{?rc_version:.%rc_version}%{?dist}.1
  Summary:        The Identity, Policy and Audit system
  
  License:        GPL-3.0-or-later
-@@ -344,6 +344,7 @@ BuildRequires:  python3-pyasn1
+@@ -338,6 +338,7 @@ BuildRequires:  python3-pyasn1
  BuildRequires:  python3-pyasn1-modules
  BuildRequires:  python3-six
  BuildRequires:  python3-psutil
@@ -35,7 +35,7 @@ index 77fe24b..79d7450 100644
  
  #
  # Build dependencies for wheel packaging and PyPI upload
-@@ -1088,7 +1089,7 @@ Custom SELinux policy module for Thales Luna HSMs
+@@ -1082,7 +1083,7 @@ Custom SELinux policy module for Thales Luna HSMs
  %prep
  # Verify release signature
  %if %{NON_DEVELOPER_BUILD}
@@ -44,16 +44,16 @@ index 77fe24b..79d7450 100644
  %endif
  
  %autosetup -n freeipa-%{TARBALL_IPA_VERSION}%{?rc_version} -N -p1
-@@ -1979,6 +1980,9 @@ fi
+@@ -1973,6 +1974,9 @@ fi
  %endif
  
  %changelog
-+* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 4.13.4-3.2.1
++* Fri Oct 30 2026 Jakub Jelen <jjelen@redhat.com> - 4.13.4-4.1
 +- Verify upstream source signatures with openpgpverify
 +
- * Tue Oct 06 2026 David Hanina <dhanina@redhat.com> - 4.13.4-3.2
- - Resolves: rhbz#2546573
- 
+ * Mon Oct 26 2026 David Hanina <dhanina@redhat.com> - 4.13.4-4
+ - Rebuild against Samba 4.25.1
+ - Consolidate post-4.13.4 patches from ipa-4-13 branch upstream
 -- 
 2.56.0
 
