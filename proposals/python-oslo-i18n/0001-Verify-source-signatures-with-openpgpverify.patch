@@ -1,6 +1,6 @@
-From a83b15e04bc12ea7a3545c30db43e98f5dc8f75e Mon Sep 17 00:00:00 2001
+From 014c28f84d4951e97524536ff27960f885aca75a Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:46 +0100
+Date: Sat, 31 Oct 2026 23:04:48 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,27 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-oslo-i18n.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-oslo-i18n.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-oslo-i18n.spec b/python-oslo-i18n.spec
-index a8fc3df..b0f8f28 100644
+index a8fc3df..ea38520 100644
 --- a/python-oslo-i18n.spec
 +++ b/python-oslo-i18n.spec
-@@ -29,11 +29,9 @@ Patch1:         0001-tests-fix-TypeError-message-for-Python-3.15.patch
- BuildArch:      noarch
+@@ -30,7 +30,7 @@ BuildArch:      noarch
  
  # Required for tarball sources verification
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:  /usr/bin/gpgv2
--%endif
++BuildRequires:  openpgpverify
+ %endif
  
  BuildRequires:  git-core
-+BuildRequires:  openpgpverify
- 
- %description
- %{common_desc}
-@@ -65,7 +63,7 @@ Translation files for Oslo i18n library
+@@ -65,7 +65,7 @@ Translation files for Oslo i18n library
  %prep
  # Required for tarball sources verification
  %if 0%{?sources_gpg} == 1

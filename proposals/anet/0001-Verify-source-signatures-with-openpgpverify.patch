@@ -1,6 +1,6 @@
-From 5e0f5a29fa3444286164d2b475d5417c2211fb10 Mon Sep 17 00:00:00 2001
+From 45847f786a42cdef593d60e318d05d8de2d007b7 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:43 +0100
+Date: Sat, 31 Oct 2026 23:04:44 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/anet.spec b/anet.spec
-index 95765f6..279bbed 100644
+index 95765f6..6cc69ab 100644
 --- a/anet.spec
 +++ b/anet.spec
 @@ -1,6 +1,6 @@
@@ -48,7 +48,7 @@ index 95765f6..279bbed 100644
  
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 0.5.1-11
++* Fri Oct 30 2026 Jakub Jelen <jjelen@redhat.com> - 0.5.1-11
 +- Verify upstream source signatures with openpgpverify
 +
  * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.5.1-10

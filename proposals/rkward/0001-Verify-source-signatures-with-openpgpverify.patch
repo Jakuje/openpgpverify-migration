@@ -1,6 +1,6 @@
-From 6199329e86c7827212b06dcf4354f85cc650e659 Mon Sep 17 00:00:00 2001
+From e96339ffc2697f08806e28a4196778a626f2d4c7 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:56 +0100
+Date: Sat, 31 Oct 2026 23:04:58 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/rkward.spec b/rkward.spec
-index ad591b5..b897178 100644
+index ad591b5..3838403 100644
 --- a/rkward.spec
 +++ b/rkward.spec
 @@ -1,6 +1,6 @@
@@ -26,14 +26,14 @@ index ad591b5..b897178 100644
  Summary:        Graphical frontend for R language
  
  License:        GPL-2.0-or-later AND LGPL-2.1-or-later AND MIT
-@@ -45,6 +45,7 @@ BuildRequires:  cmake(Qt6Widgets)
- BuildRequires:  cmake(Qt6Xml)
- 
- BuildRequires:  cmake(KDSingleApplication-qt6)
+@@ -33,6 +33,7 @@ BuildRequires:  cmake(KF6TextEditor)
+ BuildRequires:  cmake(KF6WidgetsAddons)
+ BuildRequires:  cmake(KF6WindowSystem)
+ BuildRequires:  cmake(KF6XmlGui)
 +BuildRequires:  openpgpverify
  
- Requires:       hicolor-icon-theme
- Requires:       shared-mime-info
+ BuildRequires:  cmake(Qt6Core)
+ BuildRequires:  cmake(Qt6Core5Compat)
 @@ -59,7 +60,7 @@ R-project. RKWard tries to combine the power of the R-language with the
  include integration with office suites
  
@@ -47,7 +47,7 @@ index ad591b5..b897178 100644
  %{_libexecdir}/%{name}.rbackend
  
  %changelog
-+* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 0.8.3-5
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 0.8.3-5
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.8.3-4

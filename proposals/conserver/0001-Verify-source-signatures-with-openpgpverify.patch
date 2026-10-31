@@ -1,6 +1,6 @@
-From 80f2ebfeb40ffae4db1ed5720a917d043df46c5d Mon Sep 17 00:00:00 2001
+From 3900d79068ae7502b4934bdb4caedf724c32fa0b Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:49 +0100
+Date: Sat, 31 Oct 2026 23:04:50 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/conserver.spec b/conserver.spec
-index 3727720..072e742 100644
+index 3727720..72f1903 100644
 --- a/conserver.spec
 +++ b/conserver.spec
 @@ -7,7 +7,7 @@
@@ -49,7 +49,7 @@ index 3727720..072e742 100644
  %{_mandir}/man1/console.1*
  
  %changelog
-+* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 8.3.0-4
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 8.3.0-4
 +- Verify upstream source signatures with openpgpverify
 +
  * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 8.3.0-3

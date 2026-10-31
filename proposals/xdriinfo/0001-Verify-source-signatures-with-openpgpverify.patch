@@ -1,6 +1,6 @@
-From e4b9a8ada5e8a14cf2a644015752ada1ee32501b Mon Sep 17 00:00:00 2001
+From 03a352fc7f1fc7a69ba5f565c619affaefca6b4a Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:48 +0100
+Date: Sat, 31 Oct 2026 23:04:49 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,21 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- xdriinfo.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ xdriinfo.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/xdriinfo.spec b/xdriinfo.spec
-index 463150e..981261c 100644
+index 463150e..f278b36 100644
 --- a/xdriinfo.spec
 +++ b/xdriinfo.spec
-@@ -18,13 +18,14 @@ BuildRequires: meson
+@@ -13,7 +13,7 @@ Source2: https://gitlab.freedesktop.org/alanc.gpg
+ Conflicts: glx-utils < 9.0.0-4
+ 
+ BuildRequires: gcc
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ BuildRequires: meson
  BuildRequires: pkgconfig(gl)
  BuildRequires: pkgconfig(glproto)
- BuildRequires: pkgconfig(x11)
-+BuildRequires: openpgpverify
- 
- %description
- xdriinfo can be used to query configuration information of direct
+@@ -24,7 +24,7 @@ xdriinfo can be used to query configuration information of direct
  rendering drivers.
  
  %prep

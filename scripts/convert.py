@@ -168,6 +168,67 @@ def refresh_comment(text, pkg, name, cmds,
     return '\n'.join(lines), None
 
 
+def br_key(line):
+    """Sort key of a BuildRequires line: its first dependency, without macro
+    wrapping ("%{py3_dist foo}" -> "foo")."""
+    m = BR_LINE.match(line)
+    name = split_deps(m.group(2))[0].split()[0] if m and m.group(2).strip() else ''
+    return re.sub(r'^%\{\??(\w+\s+)?|\}$', '', name).lower()
+
+
+def sorted_position(out, idx, name):
+    """Where NAME goes in the longest run of adjacent unconditional
+    BuildRequires lines if that run is (mostly) sorted, else None. Mostly:
+    at most one pair out of order, so one misplaced entry doesn't count."""
+    runs, run = [], []
+    for i in idx:
+        if run and i != run[-1] + 1:
+            runs.append(run)
+            run = []
+        run.append(i)
+    if run:
+        runs.append(run)
+    if not runs:
+        return None
+    run = max(runs, key=len)
+    if len(run) < 3:
+        return None
+    keys = [br_key(out[i]) for i in run]
+    if sum(a > b for a, b in zip(keys, keys[1:])) > max(1, len(keys) // 10):
+        return None
+    for i, k in zip(run, keys):
+        if k > name:
+            return i
+    return run[-1] + 1
+
+
+def neighbour_prefix(out, i, br):
+    """BR with the "BuildRequires:" spacing of the line before (or after) I."""
+    for j in (i - 1, i):
+        m = BR_LINE.match(out[j]) if 0 <= j < len(out) else None
+        if m:
+            return m.group(1) + br.split(':', 1)[1].strip()
+    return br
+
+
+def swap_conditional(out, br, body):
+    """A "%if COND / BuildRequires: gnupg2 / %endif" block whose only line we
+    dropped, with COND also guarding the call in %prep (OpenStack's
+    "%if 0%{?sources_gpg} == 1"), gets "BuildRequires: openpgpverify" in
+    place of the dropped line. Only for exactly one such block."""
+    hits = [k for k in range(1, len(out) - 1)
+            if out[k] == DROPPED and COND_OPEN.match(out[k - 1].strip())
+            and COND_END.match(out[k + 1].strip())]
+    if len(hits) != 1 or DROPPED in out[:hits[0]] + out[hits[0] + 1:]:
+        return False
+    k = hits[0]
+    cond = out[k - 1].strip()
+    if len(re.findall(r'(?m)^\s*' + re.escape(cond) + r'\s*$', body)) < 2:
+        return False
+    out[k] = br
+    return True
+
+
 def convert(text, rec, drop_gnupg2=None):
     """drop_gnupg2: None drops "BR: gnupg2" only for gnupg2_action "remove"
     (no %check); True also for "review" (has %check), False never. With True
@@ -186,6 +247,8 @@ def convert(text, rec, drop_gnupg2=None):
     section = 'preamble'
     depth = 0
     insert_at = None          # index in out where BR: openpgpverify goes
+    uncond = []               # indexes in out of unconditional preamble BR lines
+    gnupg2_kept = None        # index in out of a kept "BR: gnupg2" line
     last_uncond_br = None
     first_section = None
     have_op = rec['br']['openpgpverify']
@@ -224,6 +287,10 @@ def convert(text, rec, drop_gnupg2=None):
             else:
                 keep.append(d)
         if not dropped:
+            if depth == 0 and section == 'preamble':
+                uncond.append(len(out))
+                if any(GNUPG2.match(d.split()[0]) for d in deps):
+                    gnupg2_kept = len(out)
             out.append(line)
             continue
         if depth == 0 and insert_at is None:
@@ -237,7 +304,12 @@ def convert(text, rec, drop_gnupg2=None):
         elif depth:
             out.append(DROPPED)
     if not have_op:
-        if insert_at is None:
+        swapped = insert_at is None and swap_conditional(out, br_new, body)
+        if not swapped and insert_at is None and gnupg2_kept is not None:
+            insert_at = gnupg2_kept + 1           # next to the other verification BR
+        if not swapped and insert_at is None:
+            insert_at = sorted_position(out, uncond, 'openpgpverify')
+        if not swapped and insert_at is None:
             if last_uncond_br is not None:
                 insert_at = last_uncond_br + 1
             elif first_section is not None:
@@ -245,7 +317,8 @@ def convert(text, rec, drop_gnupg2=None):
                 notes.append('no unconditional BuildRequires; BR added before first section')
             else:
                 raise Unconvertible('could not find a place for BuildRequires')
-        out.insert(insert_at, br_new)
+        if not swapped:
+            out.insert(insert_at, neighbour_prefix(out, insert_at, br_new))
     out = drop_empty_branches(out)
     body, ncalls = rewrite_calls('\n'.join(out))
     if ncalls == 0:

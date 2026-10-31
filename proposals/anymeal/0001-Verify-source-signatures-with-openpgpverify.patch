@@ -1,6 +1,6 @@
-From b5e0356bde7ee1f82062b245be5e6c149a155b3e Mon Sep 17 00:00:00 2001
+From 06ca4d8788976025dcee3f9a524de8a6c9d0df15 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:49 +0100
+Date: Sat, 31 Oct 2026 23:04:50 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/anymeal.spec b/anymeal.spec
-index bc5d0c7..36793a2 100644
+index bc5d0c7..7f2948a 100644
 --- a/anymeal.spec
 +++ b/anymeal.spec
 @@ -2,7 +2,7 @@ Summary:  A free and open source recipe management software
@@ -49,7 +49,7 @@ index bc5d0c7..36793a2 100644
  
  
  %changelog
-+* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 1.33-7
++* Fri Oct 30 2026 Jakub Jelen <jjelen@redhat.com> - 1.33-7
 +- Verify upstream source signatures with openpgpverify
 +
  * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.33-6

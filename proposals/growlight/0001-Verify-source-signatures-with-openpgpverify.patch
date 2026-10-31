@@ -1,6 +1,6 @@
-From 7f670cf0c572cd337b9cceda47d3cbaf9c7ba3ff Mon Sep 17 00:00:00 2001
+From bdbe61846bb49a627ecdfd91b16d71b924244430 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:50 +0100
+Date: Sat, 31 Oct 2026 23:04:51 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,23 +9,22 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- growlight.spec | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ growlight.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/growlight.spec b/growlight.spec
-index 12a75b4..45ae36d 100644
+index 12a75b4..9770dcc 100644
 --- a/growlight.spec
 +++ b/growlight.spec
-@@ -9,7 +9,7 @@ Source0:       https://github.com/dankamongmen/%{name}/archive/v%{version}.tar.g
- Source1:       https://github.com/dankamongmen/%{name}/releases/download/v%{version}/v%{version}.tar.gz.asc
+@@ -10,6 +10,7 @@ Source1:       https://github.com/dankamongmen/%{name}/releases/download/v%{vers
  Source2:       https://nick-black.com/dankamongmen.gpg
  
--BuildRequires: gnupg2
+ BuildRequires: gnupg2
 +BuildRequires: openpgpverify
  BuildRequires: cmake
  BuildRequires: doctest-devel
  BuildRequires: gcc-c++
-@@ -33,7 +33,7 @@ boot when run in an installer context. Both full-screen and REPL readline UIs
+@@ -33,7 +34,7 @@ boot when run in an installer context. Both full-screen and REPL readline UIs
  are available.
  
  %prep

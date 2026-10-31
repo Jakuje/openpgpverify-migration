@@ -1,6 +1,6 @@
-From 7dcac010cd15f3ea34187e1081c2524de3bcbd36 Mon Sep 17 00:00:00 2001
+From 1fd4d0e7fa193a28075cb70d0ffe620d52235860 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:40 +0100
+Date: Sat, 31 Oct 2026 23:04:41 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- kio-fuse.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ kio-fuse.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/kio-fuse.spec b/kio-fuse.spec
-index 76d7873..e21df36 100644
+index 76d7873..b609ebd 100644
 --- a/kio-fuse.spec
 +++ b/kio-fuse.spec
 @@ -10,7 +10,7 @@
@@ -27,15 +27,16 @@ index 76d7873..e21df36 100644
  Summary:        KIO FUSE
  
  License:        GPL-3.0-or-later
-@@ -35,6 +35,7 @@ BuildRequires:  cmake(Qt6Test)       >= %{min_qt_version}
+@@ -22,7 +22,7 @@ Source2:        gpgkey-21EC3FD75D26B39E820BE6FBD27C2C1AF21D8BAD.gpg
+ ## upstream fixes
  
- BuildRequires:  cmake(KF6KIO)        >= %{min_kf_version}
- BuildRequires:  cmake(KF6CoreAddons) >= %{min_kf_version}
+ BuildRequires:  cmake
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
- 
- %if 0%{?tests}
- BuildRequires:  dbus-x11
-@@ -51,7 +52,7 @@ FUSE.
+ BuildRequires:  gcc-c++
+ BuildRequires:  systemd
+ BuildRequires:  kf6-rpm-macros
+@@ -51,7 +51,7 @@ FUSE.
  
  
  %prep
@@ -44,11 +45,11 @@ index 76d7873..e21df36 100644
  %autosetup -p1
  
  
-@@ -84,6 +85,9 @@ dbus-launch --exit-with-session \
+@@ -84,6 +84,9 @@ dbus-launch --exit-with-session \
  
  
  %changelog
-+* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 5.1.1-5
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 5.1.1-5
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 5.1.1-4

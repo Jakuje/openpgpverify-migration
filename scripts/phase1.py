@@ -22,6 +22,7 @@ parsed and executed inside mock; on the host they are read as data.
 import argparse
 import concurrent.futures
 import time
+import traceback
 import hashlib
 import json
 import os
@@ -149,11 +150,19 @@ class Mock:
 def checkout(pkg, d, log):
     os.makedirs(d, exist_ok=True)
     g = os.path.join(d, 'dist-git')
-    if os.path.isdir(os.path.join(g, '.git')):
-        rc = run(['git', '-C', g, 'fetch', '--depth', '1', 'origin', 'rawhide'], log) or \
-             run(['git', '-C', g, 'reset', '--hard', 'FETCH_HEAD'], log)
-    else:
-        rc = run(['git', 'clone', '--depth', '1', '--branch', 'rawhide', DISTGIT % pkg, g], log)
+    # src.fedoraproject.org drops connections under load (TLS "unexpected eof"):
+    # retry with a growing pause before giving up.
+    for pause in (30, 120, 300, None):
+        if os.path.isdir(os.path.join(g, '.git')):
+            rc = run(['git', '-C', g, 'fetch', '--depth', '1', 'origin', 'rawhide'], log) or \
+                 run(['git', '-C', g, 'reset', '--hard', 'FETCH_HEAD'], log)
+        else:
+            shutil.rmtree(g, ignore_errors=True)
+            rc = run(['git', 'clone', '--depth', '1', '--branch', 'rawhide', DISTGIT % pkg, g],
+                     log)
+        if not rc or pause is None:
+            break
+        time.sleep(pause)
     if rc:
         return None, 'git clone/fetch failed'
     if os.path.exists(os.path.join(g, 'dead.package')):
@@ -521,12 +530,20 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
                                    reason='not checked: sources over %d MB, too large for '
                                    'the full build without gnupg2 on the test machine'
                                    % FULL_BUILD_MAX_MB)
+    # A full build without gnupg2 that already passed at this very commit is
+    # not repeated (re-runs for spec layout changes only).
+    pg = (prev or {}).get('gnupg2_check') or {}
+    reused = gnupg2_check and pg.get('verdict') == 'drop' and \
+        (prev or {}).get('spec_commit') == upd['spec_commit']
+    if reused:
+        gnupg2_check = False
+        upd['gnupg2_check'] = dict(pg, reused_from=(prev or {}).get('tested_at'))
     keep_text = None
     if not raw or rewritten:
         try:
             # None (legacy, --no-gnupg2-check): drop only without %check
             new_text, notes = convert.convert(
-                src_text, rec, drop_gnupg2=gnupg2_check if GNUPG2_CHECK else None)
+                src_text, rec, drop_gnupg2=(gnupg2_check or reused) if GNUPG2_CHECK else None)
             if gnupg2_check:
                 keep_text, _ = convert.convert(src_text, rec, drop_gnupg2=False)
                 open(os.path.join(d, pkg + '.opv-unbumped.spec'), 'w').write(new_text)
@@ -698,6 +715,7 @@ def main():
         cfgs = [a.chroot]
         if a.eln and inv.get(pkg, {}).get('mentions_rhel'):
             cfgs.append('fedora-eln-x86_64')
+        prev = None
         try:
             with LOCK:
                 prev = state.load().get(pkg)
@@ -708,6 +726,8 @@ def main():
                 slots.put(slot)
         except Exception as e:  # keep going with other packages
             upd = dict(status='error', outcome_detail='harness: %r' % e, results=[])
+            with open(os.path.join(WORK, pkg, 'harness-error.txt'), 'w') as fh:
+                traceback.print_exc(file=fh)
         with LOCK:
             done_count[0] += 1
             scrub_cache = done_count[0] % 20 == 0
@@ -723,11 +743,22 @@ def main():
         if a.prune_sources and os.path.isdir(os.path.join(g, '.git')):
             subprocess.run(['git', '-C', g, 'clean', '-fdxq'])
         upd['updated'] = state.now()
+        transient = upd['status'] == 'error' and (
+            upd.get('outcome_detail', '').startswith('harness:') or
+            upd.get('outcome_detail') in ('git clone/fetch failed', 'fedpkg sources failed'))
+        if transient and prev and prev.get('status') not in (None, 'error'):
+            # Don't throw away an earlier result for a network or harness hiccup.
+            upd = dict(last_error=upd['outcome_detail'], last_error_at=upd['updated'])
         with LOCK:
             st = state.load()
             st.setdefault(pkg, dict(package=pkg)).update(upd)
             state.save(st)
-        print('%-28s %-13s %s' % (pkg, upd['status'], upd.get('outcome_detail') or ''), flush=True)
+        if 'last_error' in upd and 'status' not in upd:
+            print('%-28s %-13s %s (earlier result kept)' % (pkg, 'error', upd['last_error']),
+                  flush=True)
+        else:
+            print('%-28s %-13s %s' % (pkg, upd['status'], upd.get('outcome_detail') or ''),
+                  flush=True)
 
     with concurrent.futures.ThreadPoolExecutor(a.jobs) as ex:
         list(ex.map(one, a.packages))

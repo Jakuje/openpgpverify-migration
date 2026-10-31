@@ -107,8 +107,21 @@ rpm stops depending on gpg.
    template; dropped on 2026-10-22.) The PR text mentions EPEL 8 for these
    specs. Escaped `%%gpgverify` (comments) is left alone.
 
-   The added `BuildRequires` copies the alignment of the spec's first
-   `BuildRequires:` line.
+   Exception: a `%if COND` block that held only the gpg BuildRequires, where
+   the same `%if COND` also guards the call in `%prep` (OpenStack's
+   `%if 0%{?sources_gpg} == 1`), keeps its condition and gets
+   `BuildRequires: openpgpverify` in place of the dropped line.
+7. **Where `BuildRequires: openpgpverify` goes** (2026-10-30), first match:
+   in place of a dropped unconditional gpg BuildRequires; inside the `%if`
+   block from rule 6; right after a kept `BR: gnupg2`; at its alphabetical
+   position in the longest run of unconditional BuildRequires if that run is
+   sorted (one entry out of order, or up to 10 %, is tolerated); otherwise
+   after the last unconditional BuildRequires. It copies the `BuildRequires:`
+   spacing of the line next to it.
+
+   A re-run of Phase 1 reuses a passed gnupg2 check (`reused_from` in
+   `gnupg2_check`) when dist-git is still at the commit it ran on, instead of
+   repeating the full build.
 
 ## Phases
 

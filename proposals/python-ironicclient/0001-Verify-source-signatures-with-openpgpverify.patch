@@ -1,6 +1,6 @@
-From 0a1dcce00dd0ca4b758c267399f897b5095b1061 Mon Sep 17 00:00:00 2001
+From 0b68ecdc7133e4a6af710b60a67f9e41060042e0 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:53 +0100
+Date: Sat, 31 Oct 2026 23:04:54 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,27 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-ironicclient.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-ironicclient.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-ironicclient.spec b/python-ironicclient.spec
-index ebdb260..82d3b4e 100644
+index ebdb260..aea79ca 100644
 --- a/python-ironicclient.spec
 +++ b/python-ironicclient.spec
-@@ -21,11 +21,9 @@ Source102:        https://releases.openstack.org/_static/%{sources_gpg_sign}.txt
- BuildArch:      noarch
- 
- BuildRequires:  python3-devel
-+BuildRequires:  openpgpverify
+@@ -24,7 +24,7 @@ BuildRequires:  python3-devel
  
  # Required for tarball sources verification
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:  /usr/bin/gpgv2
--%endif
++BuildRequires:  openpgpverify
+ %endif
  
  
- %description
-@@ -45,7 +43,7 @@ Suggests:       python3-openstackclient
+@@ -45,7 +45,7 @@ Suggests:       python3-openstackclient
  %prep
  # Required for tarball sources verification
  %if 0%{?sources_gpg} == 1

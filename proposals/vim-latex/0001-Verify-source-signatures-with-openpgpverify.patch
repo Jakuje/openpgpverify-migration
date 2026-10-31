@@ -1,6 +1,6 @@
-From a1a81200a9a363d8b514fa7b1c8bb65c43268a04 Mon Sep 17 00:00:00 2001
+From 9e9f1cc99728d6efb84f1dd3aa2a6ba94ee9f2c1 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:40 +0100
+Date: Sat, 31 Oct 2026 23:04:41 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/vim-latex.spec b/vim-latex.spec
-index 47a634c..ba46367 100644
+index 47a634c..187f6a1 100644
 --- a/vim-latex.spec
 +++ b/vim-latex.spec
 @@ -1,6 +1,6 @@
@@ -48,7 +48,7 @@ index 47a634c..ba46367 100644
  
  
  %changelog
-+* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 1.10.0-20
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 1.10.0-20
 +- Verify upstream source signatures with openpgpverify
 +
  * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.10.0-19

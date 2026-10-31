@@ -1,6 +1,6 @@
-From 482d4699131f72d83d929ef9d67515dccacd9ebd Mon Sep 17 00:00:00 2001
+From 39548f9c0cbd135c62a60bf15d914e28adb93da5 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:52 +0100
+Date: Sat, 31 Oct 2026 23:04:54 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/perl-Net-DNS.spec b/perl-Net-DNS.spec
-index 1f2721c..bc57f0c 100644
+index 1f2721c..e334b57 100644
 --- a/perl-Net-DNS.spec
 +++ b/perl-Net-DNS.spec
 @@ -1,6 +1,6 @@
@@ -48,7 +48,7 @@ index 1f2721c..bc57f0c 100644
  %{_libexecdir}/%{name}
  
  %changelog
-+* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 1.57-2
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 1.57-2
 +- Verify upstream source signatures with openpgpverify
 +
  * Wed Sep 02 2026 Jitka Plesnikova <jplesnik@redhat.com> - 1.57-1

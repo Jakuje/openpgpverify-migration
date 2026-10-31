@@ -1,6 +1,6 @@
-From 04db820f9c578aecc40aff936a03dd8be1040e8e Mon Sep 17 00:00:00 2001
+From 76cb5ecb13cb1f931dafc0a9a0129179f3e2c2b9 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:46 +0100
+Date: Sat, 31 Oct 2026 23:04:47 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,26 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-hacking.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-hacking.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-hacking.spec b/python-hacking.spec
-index a9b92f8..5e5b902 100644
+index a9b92f8..04bee1e 100644
 --- a/python-hacking.spec
 +++ b/python-hacking.spec
-@@ -50,10 +50,8 @@ Patch1:         test-requirements.txt.patch
- BuildArch:      noarch
+@@ -51,7 +51,7 @@ BuildArch:      noarch
  
  # Required for tarball sources verification
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:  /usr/bin/gpgv2
--%endif
- 
 +BuildRequires:  openpgpverify
+ %endif
+ 
  %description
- %{common_desc}
- %if 0%{?fedora}
-@@ -81,7 +79,7 @@ https://bugs.launchpad.net/hacking/+bug/1652409 for details.
+@@ -81,7 +81,7 @@ https://bugs.launchpad.net/hacking/+bug/1652409 for details.
  %prep
  # Required for tarball sources verification
  %if 0%{?sources_gpg} == 1

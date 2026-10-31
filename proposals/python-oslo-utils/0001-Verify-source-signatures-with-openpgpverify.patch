@@ -1,6 +1,6 @@
-From 1c14891d17819ec78d2f90fa4f53387c1aa22ff4 Mon Sep 17 00:00:00 2001
+From 99c807ffed2373030315985ac6e4b926733f0671 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:47 +0100
+Date: Sat, 31 Oct 2026 23:04:48 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,27 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-oslo-utils.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-oslo-utils.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-oslo-utils.spec b/python-oslo-utils.spec
-index 3ffe9dc..3261841 100644
+index 3ffe9dc..0d664f9 100644
 --- a/python-oslo-utils.spec
 +++ b/python-oslo-utils.spec
-@@ -27,11 +27,9 @@ Source102:        https://releases.openstack.org/_static/%{sources_gpg_sign}.txt
- BuildArch:      noarch
+@@ -28,7 +28,7 @@ BuildArch:      noarch
  
  # Required for tarball sources verification
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:  /usr/bin/gpgv2
--%endif
++BuildRequires:  openpgpverify
+ %endif
  
  BuildRequires:  git-core
-+BuildRequires:  openpgpverify
- 
- 
- %description
-@@ -82,7 +80,7 @@ Translation files for Oslo utils library
+@@ -82,7 +82,7 @@ Translation files for Oslo utils library
  %prep
  # Required for tarball sources verification
  %if 0%{?sources_gpg} == 1

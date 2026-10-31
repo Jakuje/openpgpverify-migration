@@ -1,6 +1,6 @@
-From f462c241ab4979d699ccb605dc6599b58d5cee8c Mon Sep 17 00:00:00 2001
+From e43233dec5cc0febfec23bb7626a20a06ed7d86b Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:53 +0100
+Date: Sat, 31 Oct 2026 23:04:55 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/rush.spec b/rush.spec
-index c792e11..f3dcea6 100644
+index c792e11..fad756e 100644
 --- a/rush.spec
 +++ b/rush.spec
 @@ -1,6 +1,6 @@
@@ -48,7 +48,7 @@ index c792e11..f3dcea6 100644
  %{_infodir}/rush.info*
  
  %changelog
-+* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 2.4-6
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 2.4-6
 +- Verify upstream source signatures with openpgpverify
 +
  * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 2.4-5

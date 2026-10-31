@@ -1,6 +1,6 @@
-From e1333cf6ffe8761f2442b3e0546984925ac1a45a Mon Sep 17 00:00:00 2001
+From e906d3c7dff591f2c8c54ed546e8bbff1b486486 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:57 +0100
+Date: Sat, 31 Oct 2026 23:04:58 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,17 +13,17 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/asahi-installer.spec b/asahi-installer.spec
-index 9a5f3d8..4a2794a 100644
+index 9a5f3d8..a493514 100644
 --- a/asahi-installer.spec
 +++ b/asahi-installer.spec
-@@ -60,6 +60,7 @@ BuildRequires:  python3
- BuildRequires:  python3dist(certifi)
- BuildRequires:  system-logos
- BuildRequires:  tar
-+BuildRequires:  openpgpverify
+@@ -47,6 +47,7 @@ Source3:        https://www.python.org/ftp/python/%{installer_python_version}/%{
+ Source4:        https://keybase.io/nad/pgp_keys.asc?fingerprint=0d96df4d4110e5c43fbfb17f2d347ea6aa65421d#/key.asc
  
- # LZFSE isn't supported on big-endian architectures
- # https://github.com/lzfse/lzfse/issues/23
+ BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  python3-devel
+ BuildRequires:  python3dist(asn1)
+ 
 @@ -99,7 +100,7 @@ Asahi Linux firmware tools
  
  %prep

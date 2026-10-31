@@ -1,6 +1,6 @@
-From c043a46c85c3916d484ecc129c956706db570b1e Mon Sep 17 00:00:00 2001
+From ddb53e85a2898e354547a7527d246690deefc260 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:57 +0100
+Date: Sat, 31 Oct 2026 23:04:59 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/gcompris-qt.spec b/gcompris-qt.spec
-index b0a5f37..45e9587 100644
+index b0a5f37..5da2603 100644
 --- a/gcompris-qt.spec
 +++ b/gcompris-qt.spec
 @@ -1,6 +1,6 @@
@@ -47,7 +47,7 @@ index b0a5f37..45e9587 100644
  
  
  %changelog
-+* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 26.2-2
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 26.2-2
 +- Verify upstream source signatures with openpgpverify
 +
  * Fri Sep 25 2026 Andrea Musuruane <musuruan@gmail.com> - 26.2-1

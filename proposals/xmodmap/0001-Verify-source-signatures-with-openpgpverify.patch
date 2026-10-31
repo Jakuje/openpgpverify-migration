@@ -1,6 +1,6 @@
-From 2722ff33e6db0ee5e5cb04b90965b3838eb90c79 Mon Sep 17 00:00:00 2001
+From d4aa8ab689889b9e23c11a1ed767088a1a7e7599 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:48 +0100
+Date: Sat, 31 Oct 2026 23:04:50 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- xmodmap.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ xmodmap.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/xmodmap.spec b/xmodmap.spec
-index f1361a1..f7c1195 100644
+index f1361a1..62268ac 100644
 --- a/xmodmap.spec
 +++ b/xmodmap.spec
-@@ -13,6 +13,7 @@ BuildRequires:  gcc
- BuildRequires:  gnupg2
+@@ -10,7 +10,7 @@ Source1:    https://xorg.freedesktop.org/archive/individual/app/%{name}-%{versio
+ Source2:    gpgkey-3AB285232C46AE43D8E192F4DAB0F78EA6E7E2D2.gpg
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
  BuildRequires:  meson
  BuildRequires:  pkgconfig(x11)
-+BuildRequires:  openpgpverify
  
- %description
- The xmodmap program is used to edit and display the keyboard modifier
-@@ -20,7 +21,7 @@ map and keymap table that are used by client applications to convert
+@@ -20,7 +20,7 @@ map and keymap table that are used by client applications to convert
  event keycodes into keysyms.
  
  %prep

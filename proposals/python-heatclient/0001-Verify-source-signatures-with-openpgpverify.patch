@@ -1,6 +1,6 @@
-From 2dc6abc9dd326b2a8a7fad65d6af3c67657d34e3 Mon Sep 17 00:00:00 2001
+From 24a1b3bc69950e51df4e33b62ac757dc858e6d6f Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:46 +0100
+Date: Sat, 31 Oct 2026 23:04:47 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,27 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-heatclient.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-heatclient.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-heatclient.spec b/python-heatclient.spec
-index f407f23..b9b29d4 100644
+index f407f23..ebf1016 100644
 --- a/python-heatclient.spec
 +++ b/python-heatclient.spec
-@@ -28,11 +28,9 @@ BuildArch: noarch
- 
- BuildRequires: python3-devel
- BuildRequires: git-core
-+BuildRequires: openpgpverify
+@@ -31,7 +31,7 @@ BuildRequires: git-core
  
  # Required for tarball sources verification
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:  /usr/bin/gpgv2
--%endif
++BuildRequires: openpgpverify
+ %endif
  
  
- %description
-@@ -62,7 +60,7 @@ This package contains auto-generated documentation.
+@@ -62,7 +62,7 @@ This package contains auto-generated documentation.
  %prep
  # Required for tarball sources verification
  %if 0%{?sources_gpg} == 1

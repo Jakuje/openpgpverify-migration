@@ -1,6 +1,6 @@
-From 6a1ecf6749a2928fa67eea81ac63a46717821684 Mon Sep 17 00:00:00 2001
+From ec60b855836fe5f645d6dc149585999a6b637bb6 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:44 +0100
+Date: Sat, 31 Oct 2026 23:04:45 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,21 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- gencolormap.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ gencolormap.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/gencolormap.spec b/gencolormap.spec
-index fc56469..8230945 100644
+index fc56469..7a08858 100644
 --- a/gencolormap.spec
 +++ b/gencolormap.spec
-@@ -19,13 +19,14 @@ BuildRequires:  libappstream-glib
+@@ -14,7 +14,7 @@ Requires:       hicolor-icon-theme
+ BuildRequires:  cmake
+ BuildRequires:  desktop-file-utils
+ BuildRequires:  gcc-c++
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  libappstream-glib
  
  BuildRequires:  libGL-devel
- BuildRequires:  qt6-qtbase-devel
-+BuildRequires:  openpgpverify
- 
- %description
- gencolormap provides tools generate color maps for visualization. A variety of
+@@ -25,7 +25,7 @@ gencolormap provides tools generate color maps for visualization. A variety of
  methods for sequential, diverging, and qualitative maps is available.
  
  %prep

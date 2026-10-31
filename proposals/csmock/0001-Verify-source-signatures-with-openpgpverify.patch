@@ -1,6 +1,6 @@
-From 25bf6168d94d19687598863c318cc8e53a3f336d Mon Sep 17 00:00:00 2001
+From 8cc4e72c078a1c836d01019a19ae86e54365f49e Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:43 +0100
+Date: Sat, 31 Oct 2026 23:04:44 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/csmock.spec b/csmock.spec
-index 33ee5ad..465c1c9 100644
+index 33ee5ad..fb5151f 100644
 --- a/csmock.spec
 +++ b/csmock.spec
 @@ -3,7 +3,7 @@
@@ -49,7 +49,7 @@ index 33ee5ad..465c1c9 100644
  %{python3_sitelib}/csmock/plugins/__pycache__/unicontrol.*
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 3.8.7-3
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 3.8.7-3
 +- Verify upstream source signatures with openpgpverify
 +
  * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 3.8.7-2

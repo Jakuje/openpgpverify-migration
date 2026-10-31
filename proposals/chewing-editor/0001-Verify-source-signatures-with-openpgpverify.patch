@@ -1,6 +1,6 @@
-From b0a708ecda330e2ba8ade96ece48384ba721fe64 Mon Sep 17 00:00:00 2001
+From 715dea57ae626030ba9c14cae1966fd59a1917b3 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:43 +0100
+Date: Sat, 31 Oct 2026 23:04:44 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- chewing-editor.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ chewing-editor.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/chewing-editor.spec b/chewing-editor.spec
-index 85551d6..982e388 100644
+index 85551d6..863e6f4 100644
 --- a/chewing-editor.spec
 +++ b/chewing-editor.spec
 @@ -1,6 +1,6 @@
@@ -26,15 +26,16 @@ index 85551d6..982e388 100644
  Summary:        Cross platform chewing user phrase editor
  Summary(zh_TW): 跨平台酷音詞庫編輯器
  
-@@ -20,6 +20,7 @@ BuildRequires:  pkgconfig(gtest) >= 1.7.0
+@@ -19,7 +19,7 @@ BuildRequires:  pkgconfig(chewing) >= 0.4.0
+ BuildRequires:  pkgconfig(gtest) >= 1.7.0
  BuildRequires:  help2man
  BuildRequires:  desktop-file-utils
- BuildRequires:  gnupg2
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
  Requires:       hicolor-icon-theme
  
  %description
-@@ -32,7 +33,7 @@ chewing-editor 是一個跨平台的詞庫編輯器。它提供了簡單管理
+@@ -32,7 +32,7 @@ chewing-editor 是一個跨平台的詞庫編輯器。它提供了簡單管理
  有了它，使用者可以自訂自己的詞庫來提高輸入效率。
  
  %prep
@@ -43,11 +44,11 @@ index 85551d6..982e388 100644
  %autosetup -p1 -n %{name}-%{version}-Source
  
  
-@@ -59,6 +60,9 @@ desktop-file-validate %{buildroot}/%{_datadir}/applications/chewing-editor.deskt
+@@ -59,6 +59,9 @@ desktop-file-validate %{buildroot}/%{_datadir}/applications/chewing-editor.deskt
  
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 0.1.2-5
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 0.1.2-5
 +- Verify upstream source signatures with openpgpverify
 +
  * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.1.2-4

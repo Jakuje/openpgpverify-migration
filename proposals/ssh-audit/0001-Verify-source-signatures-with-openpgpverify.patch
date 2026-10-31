@@ -1,6 +1,6 @@
-From 68b3ae499103d8fa968d91cb0fa52e6bc7066fac Mon Sep 17 00:00:00 2001
+From 1078f7486d078c2b49a7ca7bdc04a718a9485d83 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:40 +0100
+Date: Sat, 31 Oct 2026 23:04:41 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/ssh-audit.spec b/ssh-audit.spec
-index 94273cb..e4fab64 100644
+index 94273cb..9734b39 100644
 --- a/ssh-audit.spec
 +++ b/ssh-audit.spec
 @@ -1,6 +1,6 @@
@@ -26,14 +26,15 @@ index 94273cb..e4fab64 100644
  Summary:        An SSH server & client configuration security auditing tool
  
  License:        MIT
-@@ -14,13 +14,14 @@ BuildArch:      noarch
+@@ -13,6 +13,7 @@ Source:         %{url}/releases/download/v%{version}/jtesta_2020-2025.asc
+ BuildArch:      noarch
  BuildRequires:  python3-devel
  BuildRequires:  gnupg2
- BuildRequires:  python3dist(pytest)
 +BuildRequires:  openpgpverify
+ BuildRequires:  python3dist(pytest)
  
  %description
- ssh-audit is an SSH server & client security auditing (banner, key exchange,
+@@ -20,7 +21,7 @@ ssh-audit is an SSH server & client security auditing (banner, key exchange,
  encryption, mac, compression, compatibility, security, etc)
  
  %prep
@@ -46,7 +47,7 @@ index 94273cb..e4fab64 100644
  %{_bindir}/ssh-audit
  
  %changelog
-+* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 3.3.0-10
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 3.3.0-10
 +- Verify upstream source signatures with openpgpverify
 +
  * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 3.3.0-9

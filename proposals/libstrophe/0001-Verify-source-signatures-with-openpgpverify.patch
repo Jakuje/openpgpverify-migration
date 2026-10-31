@@ -1,6 +1,6 @@
-From 1535f20e04a90c5027344f367277c2fa9da0ae89 Mon Sep 17 00:00:00 2001
+From 595aae0399762ec3fa0b74389199d06fa34bb9bf Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:40 +0100
+Date: Sat, 31 Oct 2026 23:04:40 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/libstrophe.spec b/libstrophe.spec
-index 0e64b13..c8609dd 100644
+index 0e64b13..4fac260 100644
 --- a/libstrophe.spec
 +++ b/libstrophe.spec
 @@ -1,6 +1,6 @@
@@ -48,7 +48,7 @@ index 0e64b13..c8609dd 100644
  
  
  %changelog
-+* Fri Oct 09 2026 Jakub Jelen <jjelen@redhat.com> - 0.14.0-6
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 0.14.0-6
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.14.0-5

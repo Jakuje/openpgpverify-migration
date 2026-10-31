@@ -1,6 +1,6 @@
-From e0368eb2df1305c625350d6909ce5eae930ed518 Mon Sep 17 00:00:00 2001
+From e4d18d3dc37115c6677933525204e838e2e5d7bf Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:46 +0100
+Date: Sat, 31 Oct 2026 23:04:47 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,17 +13,17 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/python-liblore.spec b/python-liblore.spec
-index 701a02e..5d3dd99 100644
+index 701a02e..215f68e 100644
 --- a/python-liblore.spec
 +++ b/python-liblore.spec
-@@ -25,6 +25,7 @@ BuildRequires:  python3dist(pytest)
- BuildRequires:  python3dist(pytest-asyncio)
- BuildRequires:  python3dist(responses)
- BuildRequires:  python3dist(typing-extensions)
+@@ -20,6 +20,7 @@ BuildRequires:  pyproject-rpm-macros
+ # linters, typecheckers, etc.; see
+ # https://docs.fedoraproject.org/en-US/packaging-guidelines/Python/#_linters.
+ # Therefore, we maintain the following list of test dependencies manually.
 +BuildRequires:  openpgpverify
- 
- %global _description %{expand:
- A Python library for working with public-inbox servers, particularly
+ BuildRequires:  python3dist(authheaders)
+ BuildRequires:  python3dist(pytest)
+ BuildRequires:  python3dist(pytest-asyncio)
 @@ -42,7 +43,7 @@ Provides:       python%{python3_pkgversion}-%{srcname} = %{version}-%{release}
  
  

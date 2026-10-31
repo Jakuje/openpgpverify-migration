@@ -1,6 +1,6 @@
-From 62174cfa78a4815fafa6643768c9630fd37d34d6 Mon Sep 17 00:00:00 2001
+From 4dbba3829b954b0f591377989eb018565b6122a3 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:46 +0100
+Date: Sat, 31 Oct 2026 23:04:47 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,32 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-oslo-config.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-oslo-config.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-oslo-config.spec b/python-oslo-config.spec
-index ee62d1e..567e1d9 100644
+index ee62d1e..ea5a938 100644
 --- a/python-oslo-config.spec
 +++ b/python-oslo-config.spec
-@@ -31,9 +31,6 @@ Source102:        https://releases.openstack.org/_static/%{sources_gpg_sign}.txt
- BuildArch:  noarch
+@@ -32,7 +32,7 @@ BuildArch:  noarch
  
  # Required for tarball sources verification
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:  gpgverify
--%endif
++BuildRequires:  openpgpverify
+ %endif
  
  %global _description %{expand:
- The Oslo project intends to produce a python library containing
-@@ -44,6 +41,7 @@ useful.
- The oslo-config library is a command line and configuration file
- parsing library from the Oslo project.}
- 
-+BuildRequires:  openpgpverify
- %description
- %_description
- 
-@@ -70,7 +68,7 @@ Documentation for the oslo-config library.
+@@ -70,7 +70,7 @@ Documentation for the oslo-config library.
  %prep
  # Required for tarball sources verification
  %if 0%{?sources_gpg} == 1

@@ -1,6 +1,6 @@
-From 155acbb31fac0a439375981c8ff5c5ca5e8206f5 Mon Sep 17 00:00:00 2001
+From 558f4bcf1dd62b3e6f29ce83e00fa51422d47d3a Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:43 +0100
+Date: Sat, 31 Oct 2026 23:04:44 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- cksfv.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ cksfv.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/cksfv.spec b/cksfv.spec
-index 115cd9e..d26f189 100644
+index 115cd9e..8213eb2 100644
 --- a/cksfv.spec
 +++ b/cksfv.spec
 @@ -1,6 +1,6 @@
@@ -26,15 +26,16 @@ index 115cd9e..d26f189 100644
  Summary:        Utility to manipulate SFV files
  
  # Automatically converted from old format: GPLv2+ - review is highly recommended.
-@@ -12,6 +12,7 @@ Source2:        https://zakalwe.fi/~shd/keys/heikki-orsila-2017.pub
+@@ -10,7 +10,7 @@ Source0:        https://zakalwe.fi/~shd/foss/%{name}/files/%{name}-%{version}.ta
+ Source1:        https://zakalwe.fi/~shd/foss/%{name}/files/%{name}-%{version}.tar.bz2.asc
+ Source2:        https://zakalwe.fi/~shd/keys/heikki-orsila-2017.pub
  BuildRequires:  gcc
- BuildRequires:  gnupg2
- BuildRequires: make
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
+ BuildRequires: make
  
  %description
- cksfv is a utility that can create and use SFV files. SFV (Simple File
-@@ -20,7 +21,7 @@ checksums.
+@@ -20,7 +20,7 @@ checksums.
  
  
  %prep
@@ -43,11 +44,11 @@ index 115cd9e..d26f189 100644
  %setup -q
  
  # fix rpmlint warnings
-@@ -56,6 +57,9 @@ mv -f ChangeLog.conv ChangeLog
+@@ -56,6 +56,9 @@ mv -f ChangeLog.conv ChangeLog
  
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 1.3.15-18
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 1.3.15-18
 +- Verify upstream source signatures with openpgpverify
 +
  * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.3.15-17

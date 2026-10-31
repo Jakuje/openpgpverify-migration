@@ -1,6 +1,6 @@
-From 82310fd515c28fa7d11684f4c1436ba382376b6f Mon Sep 17 00:00:00 2001
+From 817e888ca6f53d8c9dd57ffd0a205cd8a5080ce4 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:49 +0100
+Date: Sat, 31 Oct 2026 23:04:51 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/dropbear.spec b/dropbear.spec
-index b060791..864a99c 100644
+index b060791..61a1ac1 100644
 --- a/dropbear.spec
 +++ b/dropbear.spec
 @@ -1,6 +1,6 @@
@@ -48,7 +48,7 @@ index b060791..864a99c 100644
  %{_mandir}/man8/*.8*
  
  %changelog
-+* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 2026.94-2
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 2026.94-2
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 23 2026 Federico Pellegrin <fede@evolware.org> - 2026.94-1

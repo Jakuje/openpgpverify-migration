@@ -1,6 +1,6 @@
-From 7d2958beb4948fb0296d72784db64973736e262a Mon Sep 17 00:00:00 2001
+From 1bb6d6624d91292a49c02d0df13b6e6816274a53 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 30 Oct 2026 13:47:21 +0100
+Date: Sat, 31 Oct 2026 23:04:58 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,17 +13,17 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/forgejo.spec b/forgejo.spec
-index 35d403c..c57625b 100644
+index 35d403c..ed3dcff 100644
 --- a/forgejo.spec
 +++ b/forgejo.spec
-@@ -69,6 +69,7 @@ BuildRequires:  sed
- BuildRequires:  sqlite-devel
- BuildRequires:  systemd-rpm-macros
- BuildRequires:  util-linux-core
-+BuildRequires:  openpgpverify
+@@ -57,6 +57,7 @@ ExclusiveArch:  %golang_arches_future
  
- Requires:       bash
- Requires:       coreutils
+ BuildRequires:  coreutils
+ BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  go-rpm-macros
+ BuildRequires:  golang-bin >= 1.23
+ BuildRequires:  golang-src >= 1.23
 @@ -83,7 +84,7 @@ host git repositories, track their issues and allow people to contribute to
  them!
  

@@ -1,6 +1,6 @@
-From f9121689785aa36b45f44193d7cc5c42dcfd5060 Mon Sep 17 00:00:00 2001
+From e8e401e2b6ff0f001cdd377db9f2f0a857c2f6de Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:46 +0100
+Date: Sat, 31 Oct 2026 23:04:47 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,30 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-barbicanclient.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-barbicanclient.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-barbicanclient.spec b/python-barbicanclient.spec
-index 0f99141..5c48606 100644
+index 0f99141..d77bf7a 100644
 --- a/python-barbicanclient.spec
 +++ b/python-barbicanclient.spec
-@@ -26,14 +26,12 @@ Source102:        https://releases.openstack.org/_static/%{sources_gpg_sign}.txt
- BuildArch:        noarch
+@@ -27,7 +27,7 @@ BuildArch:        noarch
  
  # Required for tarball sources verification
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:    gpgverify
--%endif
++BuildRequires:    openpgpverify
+ %endif
  
  BuildRequires:    git-core
- BuildRequires:    python3-devel
- # This package is split not following python guidelines
- BuildRequires:    python3-sphinxcontrib-rsvgconverter
-+BuildRequires:    openpgpverify
- 
- 
- %description %{_description}
-@@ -60,7 +58,7 @@ This package contains auto-generated documentation.
+@@ -60,7 +60,7 @@ This package contains auto-generated documentation.
  
  %prep
  %if 0%{?sources_gpg} == 1

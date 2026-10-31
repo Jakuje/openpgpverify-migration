@@ -1,6 +1,6 @@
-From 8d7d52122eaebd439d0830754e67dd0e5185437c Mon Sep 17 00:00:00 2001
+From 0fb99abd35f819916327b714f499e6eabec70bea Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 30 Oct 2026 10:52:06 +0100
+Date: Sat, 31 Oct 2026 23:04:59 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/freeipa.spec b/freeipa.spec
-index 431a000..3bb7843 100644
+index 431a000..5e26242 100644
 --- a/freeipa.spec
 +++ b/freeipa.spec
 @@ -211,7 +211,7 @@
@@ -27,14 +27,14 @@ index 431a000..3bb7843 100644
  Summary:        The Identity, Policy and Audit system
  
  License:        GPL-3.0-or-later
-@@ -338,6 +338,7 @@ BuildRequires:  python3-pyasn1
- BuildRequires:  python3-pyasn1-modules
- BuildRequires:  python3-six
- BuildRequires:  python3-psutil
+@@ -273,6 +273,7 @@ BuildRequires:  jansson-devel
+ BuildRequires:  popt-devel
+ BuildRequires:  gcc
+ BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
- 
- #
- # Build dependencies for wheel packaging and PyPI upload
+ BuildRequires:  make
+ BuildRequires:  pkgconfig
+ BuildRequires:  pkgconf
 @@ -1082,7 +1083,7 @@ Custom SELinux policy module for Thales Luna HSMs
  %prep
  # Verify release signature
@@ -48,7 +48,7 @@ index 431a000..3bb7843 100644
  %endif
  
  %changelog
-+* Fri Oct 30 2026 Jakub Jelen <jjelen@redhat.com> - 4.13.4-4.1
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 4.13.4-4.1
 +- Verify upstream source signatures with openpgpverify
 +
  * Mon Oct 26 2026 David Hanina <dhanina@redhat.com> - 4.13.4-4

@@ -1,6 +1,6 @@
-From e167572fe9e4e8da2becdb3e20af38e7c6668180 Mon Sep 17 00:00:00 2001
+From 0e9f5b56817086a21cb4500eddbb2d7352d26d31 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:56 +0100
+Date: Sat, 31 Oct 2026 23:04:57 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/mod_perl.spec b/mod_perl.spec
-index 2bcbc36..f93d5d4 100644
+index 2bcbc36..7e53dbe 100644
 --- a/mod_perl.spec
 +++ b/mod_perl.spec
 @@ -14,7 +14,7 @@
@@ -49,7 +49,7 @@ index 2bcbc36..f93d5d4 100644
  %endif
  
  %changelog
-+* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 2.0.13-15
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 2.0.13-15
 +- Verify upstream source signatures with openpgpverify
 +
  * Wed Jul 22 2026 Jitka Plesnikova <jplesnik@redhat.com> - 2.0.13-14

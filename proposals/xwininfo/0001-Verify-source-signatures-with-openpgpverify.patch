@@ -1,6 +1,6 @@
-From e66c64475b7b91bc6c057cc29c294fcd39dabcfd Mon Sep 17 00:00:00 2001
+From 88cee6df0fdd07b7df282d3cdf783e3e16c7ed77 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:48 +0100
+Date: Sat, 31 Oct 2026 23:04:50 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,20 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- xwininfo.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ xwininfo.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/xwininfo.spec b/xwininfo.spec
-index f006135..e8559ec 100644
+index f006135..aa6793f 100644
 --- a/xwininfo.spec
 +++ b/xwininfo.spec
-@@ -14,12 +14,13 @@ BuildRequires:  meson
+@@ -9,7 +9,7 @@ Source1:    https://xorg.freedesktop.org/archive/individual/app/%{name}-%{versio
+ Source2:    gpgkey-3AB285232C46AE43D8E192F4DAB0F78EA6E7E2D2.gpg
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  meson
  BuildRequires:  pkgconfig(x11)
  BuildRequires:  pkgconfig(xcb)
- BuildRequires:  pkgconfig(xcb-shape)
-+BuildRequires:  openpgpverify
- 
- %description
+@@ -19,7 +19,7 @@ BuildRequires:  pkgconfig(xcb-shape)
  xwininfo prints information about an X11 window.
  
  %prep

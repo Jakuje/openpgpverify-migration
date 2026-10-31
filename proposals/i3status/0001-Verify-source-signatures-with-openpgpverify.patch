@@ -1,6 +1,6 @@
-From 6a29d690e77f84b25bc61ecee4e016acd8fe21c8 Mon Sep 17 00:00:00 2001
+From 3a93a078a0ddc78829f84ad46efa2f91c3313e1b Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:40 +0100
+Date: Sat, 31 Oct 2026 23:04:41 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- i3status.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ i3status.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/i3status.spec b/i3status.spec
-index 9d7c6db..26866d4 100644
+index 9d7c6db..d62843e 100644
 --- a/i3status.spec
 +++ b/i3status.spec
-@@ -25,6 +25,7 @@ BuildRequires:  gnupg2
+@@ -20,7 +20,7 @@ BuildRequires:  pkgconfig(yajl)
+ BuildRequires:  asciidoc
+ BuildRequires:  xmlto
+ # gpg verification
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ # tests
  BuildRequires:  perl
  BuildRequires:  make
- BuildRequires:  meson
-+BuildRequires:  openpgpverify
- 
- Recommends:     i3status-config
- Requires:       (i3status-config or i3status-config-fedora)
-@@ -56,7 +57,7 @@ Conflicts:      %{name}-config
+@@ -56,7 +56,7 @@ Conflicts:      %{name}-config
  This is the configuration file of %{name} used for the Fedora i3 Spin.
  
  %prep

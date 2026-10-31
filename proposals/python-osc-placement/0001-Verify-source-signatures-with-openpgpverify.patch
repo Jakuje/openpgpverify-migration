@@ -1,6 +1,6 @@
-From 4c31ec0b4d4c172e0cc7bf2c13c12594c7802998 Mon Sep 17 00:00:00 2001
+From 5e0f8f4a677df0480c978d94a5c95a99d7361600 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:46 +0100
+Date: Sat, 31 Oct 2026 23:04:47 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,27 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-osc-placement.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-osc-placement.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-osc-placement.spec b/python-osc-placement.spec
-index 835ff92..532aac7 100644
+index 835ff92..d074e74 100644
 --- a/python-osc-placement.spec
 +++ b/python-osc-placement.spec
-@@ -22,11 +22,9 @@ Source2:          https://releases.openstack.org/_static/%{sources_gpg_sign}.txt
- 
+@@ -23,7 +23,7 @@ Source2:          https://releases.openstack.org/_static/%{sources_gpg_sign}.txt
  BuildArch:        noarch
  
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:    /usr/bin/gpgv2
--%endif
++BuildRequires:    openpgpverify
+ %endif
  BuildRequires:    git-core
  BuildRequires:    python%{python3_pkgversion}-devel
-+BuildRequires:    openpgpverify
- 
- 
- %description %{_description}
-@@ -51,7 +49,7 @@ Requires:         python%{python3_pkgversion}-osc-placement = %{version}-%{relea
+@@ -51,7 +51,7 @@ Requires:         python%{python3_pkgversion}-osc-placement = %{version}-%{relea
  
  %prep
  %if 0%{?sources_gpg} == 1

@@ -1,6 +1,6 @@
-From 2463e4a75df6f32309fe368a90e2cb59f1b688e3 Mon Sep 17 00:00:00 2001
+From 9cd055420d061267c6a4184740640febe20ec78b Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:47 +0100
+Date: Sat, 31 Oct 2026 23:04:48 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,26 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-zaqarclient.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-zaqarclient.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-zaqarclient.spec b/python-zaqarclient.spec
-index b2eab2c..75b790a 100644
+index b2eab2c..4f334fe 100644
 --- a/python-zaqarclient.spec
 +++ b/python-zaqarclient.spec
-@@ -22,10 +22,8 @@ Source102:        https://releases.openstack.org/_static/%{sources_gpg_sign}.txt
- BuildArch:      noarch
- 
+@@ -24,7 +24,7 @@ BuildArch:      noarch
  BuildRequires:  python3-devel
-+BuildRequires:  openpgpverify
  # Required for tarball sources verification
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:  /usr/bin/gpgv2
--%endif
++BuildRequires:  openpgpverify
+ %endif
  
  
- %description
-@@ -41,7 +39,7 @@ Summary:        Client Library for OpenStack Zaqar Queueing API
+@@ -41,7 +41,7 @@ Summary:        Client Library for OpenStack Zaqar Queueing API
  
  %prep
  %if 0%{?sources_gpg} == 1

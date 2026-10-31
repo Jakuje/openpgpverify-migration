@@ -1,6 +1,6 @@
-From b0b356edcf1d97bc29ef80e4579227f73a7d3763 Mon Sep 17 00:00:00 2001
+From ae7170db299a47c9d39331ee6ee29797be0a0951 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:54 +0100
+Date: Sat, 31 Oct 2026 23:04:55 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/rxvt-unicode.spec b/rxvt-unicode.spec
-index 1e3f1f7..1f02a72 100644
+index 1e3f1f7..09fe6b7 100644
 --- a/rxvt-unicode.spec
 +++ b/rxvt-unicode.spec
 @@ -1,6 +1,6 @@
@@ -48,7 +48,7 @@ index 1e3f1f7..1f02a72 100644
  %{_libdir}/urxvt
  
  %changelog
-+* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 9.31-18
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 9.31-18
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 23 2026 Jitka Plesnikova <jplesnik@redhat.com> - 9.31-17

@@ -1,6 +1,6 @@
-From 1861d0b7e541613c2407f2be1f2ff987b324857e Mon Sep 17 00:00:00 2001
+From db7554d51171fbbd7c70dbe97e5cd453d102cc91 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:46 +0100
+Date: Sat, 31 Oct 2026 23:04:47 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,27 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-neutronclient.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-neutronclient.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-neutronclient.spec b/python-neutronclient.spec
-index 9dbe44f..678016b 100644
+index 9dbe44f..30a8ba5 100644
 --- a/python-neutronclient.spec
 +++ b/python-neutronclient.spec
-@@ -27,11 +27,9 @@ BuildArch:  noarch
- 
- BuildRequires: git-core
- BuildRequires: python3-devel
-+BuildRequires: openpgpverify
+@@ -30,7 +30,7 @@ BuildRequires: python3-devel
  
  # Required for tarball sources verification
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:  /usr/bin/gpgv2
--%endif
++BuildRequires: openpgpverify
+ %endif
  
  %description
- %{common_desc}
-@@ -70,7 +68,7 @@ Summary:          Documentation for OpenStack Neutron API Client
+@@ -70,7 +70,7 @@ Summary:          Documentation for OpenStack Neutron API Client
  %prep
  # Required for tarball sources verification
  %if 0%{?sources_gpg} == 1

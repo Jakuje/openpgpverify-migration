@@ -1,6 +1,6 @@
-From 0959a09c1095235f24d30c6c174fabaeb1d66510 Mon Sep 17 00:00:00 2001
+From 19efd3e44b219b83e52f04f09282f46ddfc23f42 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:47 +0100
+Date: Sat, 31 Oct 2026 23:04:48 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/qgpgme.spec b/qgpgme.spec
-index 014ae7d..0b80b58 100644
+index 014ae7d..7b871a3 100644
 --- a/qgpgme.spec
 +++ b/qgpgme.spec
 @@ -6,7 +6,7 @@ Name:           qgpgme
@@ -27,14 +27,14 @@ index 014ae7d..0b80b58 100644
  
  License:        GPL-2.0-or-later
  URL:            https://gnupg.org/related_software/gpgme/
-@@ -27,6 +27,7 @@ BuildRequires:  pkgconfig(gpg-error) >= 1.47
- 
- # to remove RPATH
- BuildRequires:  chrpath
+@@ -21,6 +21,7 @@ Patch2:         qgpgme-2.2.0-ftbfs.patch
+ BuildRequires:  cmake
+ BuildRequires:  gcc
+ BuildRequires:  gcc-c++
 +BuildRequires:  openpgpverify
- 
- %description
- %{summary}. GnuPG Made Easy (GPGME) is a library
+ BuildRequires:  pkgconfig(gpgme) >= %{version}
+ BuildRequires:  pkgconfig(gpgmepp) >= %{version}
+ BuildRequires:  pkgconfig(gpg-error) >= 1.47
 @@ -84,7 +85,7 @@ Requires:       pkgconfig(gpg-error) >= 1.47
  
  %prep
@@ -48,7 +48,7 @@ index 014ae7d..0b80b58 100644
  %endif
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 1:2.2.0-2
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 1:2.2.0-2
 +- Verify upstream source signatures with openpgpverify
 +
  * Tue Oct 13 2026 Michal Hlavinka <mhlavink@redhat.com> - 1:2.2.0-1

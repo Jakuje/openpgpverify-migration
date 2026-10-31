@@ -1,6 +1,6 @@
-From 9251103218bbc61c5274528d21cbbaeb8313c007 Mon Sep 17 00:00:00 2001
+From c84372e008f7b15c41f76ccd1042dd5dbd268fe1 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:45 +0100
+Date: Sat, 31 Oct 2026 23:04:46 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- kronometer.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ kronometer.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/kronometer.spec b/kronometer.spec
-index 9f01a49..314bc3b 100644
+index 9f01a49..7e6091b 100644
 --- a/kronometer.spec
 +++ b/kronometer.spec
 @@ -3,7 +3,7 @@
@@ -27,15 +27,16 @@ index 9f01a49..314bc3b 100644
  
  # code is GPLv2, appdata file is CC0
  License: GPL-2.0-or-later AND CC0-1.0
-@@ -36,6 +36,7 @@ BuildRequires: cmake(KF5DocTools)
- BuildRequires: cmake(KF5I18n)
- BuildRequires: cmake(KF5WidgetsAddons)
- BuildRequires: cmake(KF5XmlGui)
+@@ -22,7 +22,7 @@ Source2: gpgkey-F07D85CAA18ACF46A346FD017C7FC6EA8633B4EA.gpg
+ BuildRequires: desktop-file-utils
+ BuildRequires: extra-cmake-modules
+ BuildRequires: gcc-c++
+-BuildRequires: gnupg2
 +BuildRequires: openpgpverify
+ BuildRequires: libappstream-glib
  
- %if %{with tests}
- BuildRequires: cmake(Qt5Test)
-@@ -50,7 +51,7 @@ Kronometer is a stopwatch application.
+ BuildRequires: cmake(Qt5Core) >= 5.15.0
+@@ -50,7 +50,7 @@ Kronometer is a stopwatch application.
  
  
  %prep
@@ -44,11 +45,11 @@ index 9f01a49..314bc3b 100644
  %autosetup -p1
  
  
-@@ -89,6 +90,9 @@ export QT_QPA_PLATFORM=offscreen
+@@ -89,6 +89,9 @@ export QT_QPA_PLATFORM=offscreen
  
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 2.3.0-12
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 2.3.0-12
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 2.3.0-11

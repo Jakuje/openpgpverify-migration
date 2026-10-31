@@ -1,6 +1,6 @@
-From ba7b76f49bee90b7916323bae3c01e335546fcbf Mon Sep 17 00:00:00 2001
+From 92e6974c7d1c79e0db1d65f056d7678760b8663f Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:46 +0100
+Date: Sat, 31 Oct 2026 23:04:47 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,27 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-aodhclient.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-aodhclient.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-aodhclient.spec b/python-aodhclient.spec
-index 6a76c27..65fd4de 100644
+index 6a76c27..f825a0c 100644
 --- a/python-aodhclient.spec
 +++ b/python-aodhclient.spec
-@@ -27,11 +27,9 @@ BuildArch:        noarch
- 
- BuildRequires:    python3-devel
- BuildRequires:    git-core
-+BuildRequires:    openpgpverify
+@@ -30,7 +30,7 @@ BuildRequires:    git-core
  
  # Required for tarball sources verification
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:  /usr/bin/gpgv2
--%endif
++BuildRequires:    openpgpverify
+ %endif
  
  
- %description
-@@ -71,7 +69,7 @@ Requires:         python3-%{pypi_name} = %{version}-%{release}
+@@ -71,7 +71,7 @@ Requires:         python3-%{pypi_name} = %{version}-%{release}
  %prep
  # Required for tarball sources verification
  %if 0%{?sources_gpg} == 1

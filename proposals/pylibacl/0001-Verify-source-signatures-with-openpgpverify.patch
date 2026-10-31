@@ -1,6 +1,6 @@
-From bb25e3355ef98741115235d3d5a3992e3dd6a3f4 Mon Sep 17 00:00:00 2001
+From 69c0a7119c11bd6d9866690a697757c6f47e4016 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:46 +0100
+Date: Sat, 31 Oct 2026 23:04:47 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- pylibacl.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ pylibacl.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/pylibacl.spec b/pylibacl.spec
-index ca30739..001ea6a 100644
+index ca30739..7d9518f 100644
 --- a/pylibacl.spec
 +++ b/pylibacl.spec
 @@ -1,7 +1,7 @@
@@ -27,15 +27,16 @@ index ca30739..001ea6a 100644
  # Automatically converted from old format: LGPLv2+ - review is highly recommended.
  License:        LicenseRef-Callaway-LGPLv2+
  URL:            https://pylibacl.k1024.org
-@@ -17,6 +17,7 @@ BuildRequires:  python3-devel
- BuildRequires:  gnupg2
+@@ -14,7 +14,7 @@ Patch:          https://github.com/iustin/pylibacl/commit/64011b3c82746.patch
+ BuildRequires:  gcc
+ BuildRequires:  libacl-devel
+ BuildRequires:  python3-devel
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
  BuildRequires:  python3dist(pytest)
  BuildRequires:  python3-setuptools
-+BuildRequires:  openpgpverify
  
- %global _description %{expand:
- Python extension module for POSIX ACLs. It allows to query, list,
-@@ -34,7 +35,7 @@ Obsoletes: py3libacl < 0.5.4
+@@ -34,7 +34,7 @@ Obsoletes: py3libacl < 0.5.4
  %description -n python3-%{name} %_description
  
  %prep
@@ -44,11 +45,11 @@ index ca30739..001ea6a 100644
  %autosetup -p1
  
  %build
-@@ -61,6 +62,9 @@ python3 -m pytest tests -v \
+@@ -61,6 +61,9 @@ python3 -m pytest tests -v \
  
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 0.6.0-20
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 0.6.0-20
 +- Verify upstream source signatures with openpgpverify
 +
  * Wed Jul 22 2026 Python Maint <python-maint@redhat.com> - 0.6.0-19

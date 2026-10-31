@@ -1,6 +1,6 @@
-From b361d507da76bdb1e91e26cdd08c259aa08a020c Mon Sep 17 00:00:00 2001
+From d61dc5dbb4babdb56d1a0086b93f653a179c8f3d Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:44 +0100
+Date: Sat, 31 Oct 2026 23:04:46 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- gplugin.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ gplugin.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/gplugin.spec b/gplugin.spec
-index e6e2e4b..cd26691 100644
+index e6e2e4b..afef9f9 100644
 --- a/gplugin.spec
 +++ b/gplugin.spec
-@@ -25,6 +25,7 @@ BuildRequires:  pkgconfig(glib-2.0) >= 2.70.0
- BuildRequires:  pkgconfig(gobject-2.0)
- BuildRequires:  pkgconfig(gmodule-2.0)
- BuildRequires:  gettext
+@@ -16,7 +16,7 @@ Source2:        https://keybase.io/grim/pgp_keys.asc
+ # This is too strict for downstream packaging.
+ Patch:          gplugin-0.43.1-gi-docgen-no-fatal-warnings.patch
+ 
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
- %if %{with check}
- BuildRequires:  /usr/bin/gtester
- %endif
-@@ -117,7 +118,7 @@ Requires:       %{name}-vala%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
+ BuildRequires:  meson >= 0.61.0
+ BuildRequires:  gcc
+ BuildRequires:  gi-docgen
+@@ -117,7 +117,7 @@ Requires:       %{name}-vala%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
  %{summary}.
  
  %prep

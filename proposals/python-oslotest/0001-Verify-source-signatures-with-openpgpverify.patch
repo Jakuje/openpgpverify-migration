@@ -1,6 +1,6 @@
-From 4bec11a8e58e2683644667e446fd0564c4f44f7c Mon Sep 17 00:00:00 2001
+From f85323c0ea2dd340b995bc1fdd8541d361c7628e Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:47 +0100
+Date: Sat, 31 Oct 2026 23:04:48 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,28 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-oslotest.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-oslotest.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-oslotest.spec b/python-oslotest.spec
-index 01ee326..8df622e 100644
+index 01ee326..f6665d2 100644
 --- a/python-oslotest.spec
 +++ b/python-oslotest.spec
-@@ -31,12 +31,10 @@ Source102:        https://releases.openstack.org/_static/%{sources_gpg_sign}.txt
- BuildArch:      noarch
+@@ -32,7 +32,7 @@ BuildArch:      noarch
  
  # Required for tarball sources verification
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:  /usr/bin/gpgv2
--%endif
++BuildRequires:  openpgpverify
+ %endif
  
  BuildRequires:  git-core
- BuildRequires:  python3-devel
-+BuildRequires:  openpgpverify
- 
- %description
- %{common_desc}
-@@ -62,7 +60,7 @@ Summary:        Documentation for the OpenStack test framework
+@@ -62,7 +62,7 @@ Summary:        Documentation for the OpenStack test framework
  %prep
  # Required for tarball sources verification
  %if 0%{?sources_gpg} == 1

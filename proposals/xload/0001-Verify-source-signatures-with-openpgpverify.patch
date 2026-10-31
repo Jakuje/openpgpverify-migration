@@ -1,6 +1,6 @@
-From dbaefc99d58606f500c77fde15140886261f1452 Mon Sep 17 00:00:00 2001
+From d293ea847e4e873f9a84fb2c922b6d1e0f7d5e6d Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:48 +0100
+Date: Sat, 31 Oct 2026 23:04:49 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,20 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- xload.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ xload.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/xload.spec b/xload.spec
-index 309e4c7..27ff529 100644
+index 309e4c7..cca02ae 100644
 --- a/xload.spec
 +++ b/xload.spec
-@@ -18,12 +18,13 @@ BuildRequires:  pkgconfig(xaw7)
- BuildRequires:  pkgconfig(xmu)
- BuildRequires:  pkgconfig(xproto) >= 7.0.17
- BuildRequires:  pkgconfig(xt)
+@@ -11,7 +11,7 @@ Source2:    gpgkey-3AB285232C46AE43D8E192F4DAB0F78EA6E7E2D2.gpg
+ Patch0:     xload-1.2.1-setgroups.patch
+ BuildRequires:  gcc
+ BuildRequires:  gettext
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
- 
- %description
+ BuildRequires:  meson
+ BuildRequires:  pkgconfig(x11)
+ BuildRequires:  pkgconfig(xaw7)
+@@ -23,7 +23,7 @@ BuildRequires:  pkgconfig(xt)
  xload displays a periodically updating histogram of the system load average.
  
  %prep

@@ -1,6 +1,6 @@
-From 8b06ff544d5c58b761b63d454cfacaf454eb7729 Mon Sep 17 00:00:00 2001
+From 3ecf023e10a6eb11980eddbbcd2b8588b36c72fc Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:45 +0100
+Date: Sat, 31 Oct 2026 23:04:46 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,17 +13,17 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/pass-audit.spec b/pass-audit.spec
-index eefc9ad..ac1e59b 100644
+index eefc9ad..2b56961 100644
 --- a/pass-audit.spec
 +++ b/pass-audit.spec
-@@ -23,6 +23,7 @@ BuildRequires: make
- # Test dependencies
- BuildRequires: python3dist(pytest)
- BuildRequires: pass
+@@ -18,6 +18,7 @@ Patch: 0001-Install-data-files-from-the-Makefile.patch
+ Patch: 0001-remove-shebang-from-non-executable-__main__.py-file.patch
+ 
+ BuildRequires: gnupg2
 +BuildRequires: openpgpverify
- 
- Requires: python3-%{name} = %{version}-%{release}
- 
+ BuildRequires: python3-devel
+ BuildRequires: make
+ # Test dependencies
 @@ -45,7 +46,7 @@ Requires: pass
  `pass audit` python package.
  

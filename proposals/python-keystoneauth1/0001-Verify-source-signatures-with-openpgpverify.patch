@@ -1,6 +1,6 @@
-From 26d72f3d57c1767f55a7967713bfb9d35b022e4d Mon Sep 17 00:00:00 2001
+From da0f5bdec483825b2e83f51cc70de48431264f91 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:53 +0100
+Date: Sat, 31 Oct 2026 23:04:54 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,28 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-keystoneauth1.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-keystoneauth1.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-keystoneauth1.spec b/python-keystoneauth1.spec
-index 8003954..0132b1e 100644
+index 8003954..5e62d41 100644
 --- a/python-keystoneauth1.spec
 +++ b/python-keystoneauth1.spec
-@@ -27,12 +27,10 @@ BuildArch:     noarch
- 
- BuildRequires: git-core
- BuildRequires: python3-devel
-+BuildRequires: openpgpverify
- 
+@@ -31,7 +31,7 @@ BuildRequires: python3-devel
  
  # Required for tarball sources verification
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:  /usr/bin/gpgv2
--%endif
++BuildRequires: openpgpverify
+ %endif
  
  
- %description %_description
-@@ -61,7 +59,7 @@ Documentation for OpenStack Identity Authentication Library
+@@ -61,7 +61,7 @@ Documentation for OpenStack Identity Authentication Library
  %prep
  # Required for tarball sources verification
  %if 0%{?sources_gpg} == 1

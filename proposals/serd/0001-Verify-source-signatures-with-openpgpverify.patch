@@ -1,6 +1,6 @@
-From d7c614f4d0c81a5fbf20d8650baa5f5023b5ff67 Mon Sep 17 00:00:00 2001
+From 7c440578a0a2075be2e3cc0d404f851eaec8edc9 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:47 +0100
+Date: Sat, 31 Oct 2026 23:04:48 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/serd.spec b/serd.spec
-index 7995ef1..14eb0e3 100644
+index 7995ef1..06c9b81 100644
 --- a/serd.spec
 +++ b/serd.spec
 @@ -2,7 +2,7 @@
@@ -27,14 +27,14 @@ index 7995ef1..14eb0e3 100644
  Summary:        A lightweight C library for RDF syntax
  
  License:        ISC
-@@ -20,6 +20,7 @@ BuildRequires:  gnupg2
+@@ -17,6 +17,7 @@ BuildRequires:  graphviz
+ BuildRequires:  python3
+ BuildRequires:  gcc
+ BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
  BuildRequires:  python3-sphinx
  BuildRequires:  python3-sphinx_lv2_theme
  BuildRequires:  python-sphinxygen
-+BuildRequires:  openpgpverify
- 
- %description
- %{name} is a lightweight C library for RDF syntax which supports reading and 
 @@ -40,7 +41,7 @@ writing Turtle, TRiG, NTriples, and NQuads.
  This package contains the headers and development libraries for %{name}.
  
@@ -48,7 +48,7 @@ index 7995ef1..14eb0e3 100644
  %{_includedir}/%{name}-%{maj}/
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 0.32.10-3
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 0.32.10-3
 +- Verify upstream source signatures with openpgpverify
 +
  * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.32.10-2

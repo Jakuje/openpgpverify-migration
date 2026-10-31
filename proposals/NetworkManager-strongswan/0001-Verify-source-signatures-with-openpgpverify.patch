@@ -1,6 +1,6 @@
-From d2efac8c468ccddafd7ebdd76ed196a1d0dcaaa8 Mon Sep 17 00:00:00 2001
+From d58bceb19adc799dc7e5a4a553db6f1ffffaddc1 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:49 +0100
+Date: Sat, 31 Oct 2026 23:04:50 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- NetworkManager-strongswan.spec | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ NetworkManager-strongswan.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/NetworkManager-strongswan.spec b/NetworkManager-strongswan.spec
-index 504cb55..25cbe64 100644
+index 504cb55..c113cbf 100644
 --- a/NetworkManager-strongswan.spec
 +++ b/NetworkManager-strongswan.spec
 @@ -17,7 +17,7 @@
@@ -27,18 +27,16 @@ index 504cb55..25cbe64 100644
  Summary:   NetworkManager strongSwan IPSec VPN plug-in
  # Automatically converted from old format: GPLv2+ - review is highly recommended.
  License:   GPL-2.0-or-later
-@@ -33,9 +33,7 @@ BuildRequires: pkgconfig(libnm) >= 1.1.0
- BuildRequires: pkgconfig(libnma) >= 1.1.0
+@@ -34,7 +34,7 @@ BuildRequires: pkgconfig(libnma) >= 1.1.0
  BuildRequires: intltool
  BuildRequires: libtool
--%if 0%{?fedora}
+ %if 0%{?fedora}
 -BuildRequires: gnupg2
--%endif
 +BuildRequires: openpgpverify
+ %endif
  
  %if %{with gtk4}
- BuildRequires: pkgconfig(gtk4)
-@@ -73,7 +71,7 @@ with the graphical desktop.
+@@ -73,7 +73,7 @@ with the graphical desktop.
  
  %prep
  %if 0%{?fedora}
@@ -47,11 +45,11 @@ index 504cb55..25cbe64 100644
  %endif
  %autosetup -p1
  
-@@ -119,6 +117,9 @@ rm -f %{buildroot}%{_libdir}/NetworkManager/libnm-*.la
+@@ -119,6 +119,9 @@ rm -f %{buildroot}%{_libdir}/NetworkManager/libnm-*.la
  
  
  %changelog
-+* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 1.6.0-14
++* Fri Oct 30 2026 Jakub Jelen <jjelen@redhat.com> - 1.6.0-14
 +- Verify upstream source signatures with openpgpverify
 +
  * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.6.0-13

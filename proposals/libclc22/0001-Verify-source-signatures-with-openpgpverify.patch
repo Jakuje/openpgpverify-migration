@@ -1,6 +1,6 @@
-From e5b69d63b4e5653c4b73d280cb77fe8ce9de6e7a Mon Sep 17 00:00:00 2001
+From e512aca78d7b422faa92c5debc1df5ae0a8a63e7 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:57 +0100
+Date: Sat, 31 Oct 2026 23:04:59 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/libclc22.spec b/libclc22.spec
-index c1ff333..b07aee2 100644
+index c1ff333..76ce0ba 100644
 --- a/libclc22.spec
 +++ b/libclc22.spec
 @@ -8,7 +8,7 @@
@@ -48,7 +48,7 @@ index c1ff333..b07aee2 100644
  %{_libdir}/pkgconfig/libclc.pc
  
  %changelog
-+* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 22.1.8-5
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 22.1.8-5
 +- Verify upstream source signatures with openpgpverify
 +
  * Fri Sep 11 2026 Timm Baeder <tbaeder@redhat.com> - 22.1.8-4

@@ -1,6 +1,6 @@
-From a39ac4965798fc456f5125a2f67b1957ec6d442e Mon Sep 17 00:00:00 2001
+From a13efbd33da51d7523ffae43469402e7f8f28f27 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:55 +0100
+Date: Sat, 31 Oct 2026 23:04:56 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/budgie-desktop.spec b/budgie-desktop.spec
-index 5525097..b074c6d 100644
+index 5525097..47cd0dc 100644
 --- a/budgie-desktop.spec
 +++ b/budgie-desktop.spec
 @@ -8,7 +8,7 @@
@@ -49,7 +49,7 @@ index 5525097..b074c6d 100644
  %{_datadir}/gtk-doc/html/%{name}/*
  
  %changelog
-+* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 10.10.3-4
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 10.10.3-4
 +- Verify upstream source signatures with openpgpverify
 +
  * Sun Oct 11 2026 Joshua Strobl <joshua@buddiesofbudgie.org> - 10.10.3-3

@@ -1,6 +1,6 @@
-From 7c5a7987fc4a0f5a550699d1598c9983753ee0d7 Mon Sep 17 00:00:00 2001
+From 96234b73c1307ac4a79a6a3049588b552cb16f0d Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:53 +0100
+Date: Sat, 31 Oct 2026 23:04:55 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/radsecproxy.spec b/radsecproxy.spec
-index 0a87f21..5eac34f 100644
+index 0a87f21..511eb26 100644
 --- a/radsecproxy.spec
 +++ b/radsecproxy.spec
 @@ -1,7 +1,7 @@
@@ -49,7 +49,7 @@ index 0a87f21..5eac34f 100644
  %dir %attr(0750,%{name},%{name}) %{_localstatedir}/log/%{name}/
  
  %changelog
-+* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 1.11.4-2
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 1.11.4-2
 +- Verify upstream source signatures with openpgpverify
 +
  * Mon Aug 10 2026 Robert Scheck <robert@fedoraproject.org> 1.11.4-1

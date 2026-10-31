@@ -1,6 +1,6 @@
-From 178f9226daa0c0d478ce79307ce80efca614c893 Mon Sep 17 00:00:00 2001
+From 02112c44244aeabd07921302479a3787b7037b50 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:45 +0100
+Date: Sat, 31 Oct 2026 23:04:46 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,14 +11,14 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- lua-unbound.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ lua-unbound.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/lua-unbound.spec b/lua-unbound.spec
-index b072340..a00a517 100644
+index b072340..42fb1bb 100644
 --- a/lua-unbound.spec
 +++ b/lua-unbound.spec
-@@ -1,7 +1,7 @@
+@@ -1,14 +1,14 @@
  Summary:        Binding to libunbound for Lua
  Name:           lua-unbound
  Version:        1.1.0
@@ -27,13 +27,15 @@ index b072340..a00a517 100644
  License:        MIT
  URL:            https://www.zash.se/luaunbound.html
  Source0:        https://code.zash.se/dl/luaunbound/luaunbound-%{version}.tar.gz
-@@ -14,12 +14,13 @@ BuildRequires:  make
- BuildRequires:  lua >= %{lua_version}
- BuildRequires:  lua-devel >= %{lua_version}
- BuildRequires:  unbound-devel
+ Source1:        https://code.zash.se/dl/luaunbound/luaunbound-%{version}.tar.gz.asc
+ Source2:        gpgkey-3E52119EF853C59678DBBF6BADED9A77B67AD329.gpg
+ Requires:       lua(abi) = %{lua_version}
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
- 
- %description
+ BuildRequires:  gcc
+ BuildRequires:  make
+ BuildRequires:  lua >= %{lua_version}
+@@ -19,7 +19,7 @@ BuildRequires:  unbound-devel
  Lua bindings for the Unbound APIs.
  
  %prep
@@ -42,11 +44,11 @@ index b072340..a00a517 100644
  %setup -q -n luaunbound-%{version}
  
  %build
-@@ -47,6 +48,9 @@ lua -e \
+@@ -47,6 +47,9 @@ lua -e \
  %{lua_libdir}/lunbound.so
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 1.1.0-3
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 1.1.0-3
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.1.0-2

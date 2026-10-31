@@ -1,6 +1,6 @@
-From a80af61ee2de38969d6081550b8925e31e413a88 Mon Sep 17 00:00:00 2001
+From 19849fec0a4ac22dc3c85c92a2dfd224fecba9dd Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:46 +0100
+Date: Sat, 31 Oct 2026 23:04:47 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,28 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-magnumclient.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-magnumclient.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-magnumclient.spec b/python-magnumclient.spec
-index 2474a17..32b3cee 100644
+index 2474a17..e18b830 100644
 --- a/python-magnumclient.spec
 +++ b/python-magnumclient.spec
-@@ -26,12 +26,10 @@ Source102:        https://releases.openstack.org/_static/%{sources_gpg_sign}.txt
- BuildArch:        noarch
+@@ -27,7 +27,7 @@ BuildArch:        noarch
  
  # Required for tarball sources verification
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:    /usr/bin/gpgv2
--%endif
++BuildRequires:    openpgpverify
+ %endif
  
  BuildRequires:    git-core
- BuildRequires:    python3-devel
-+BuildRequires:    openpgpverify
- 
- 
- %description %{_description}
-@@ -58,7 +56,7 @@ This package contains auto-generated documentation.
+@@ -58,7 +58,7 @@ This package contains auto-generated documentation.
  
  %prep
  %if 0%{?sources_gpg} == 1

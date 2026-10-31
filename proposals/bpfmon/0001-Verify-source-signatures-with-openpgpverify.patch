@@ -1,6 +1,6 @@
-From dc5208d3cbd39a3901fe8ac0567e7bce9ab273ef Mon Sep 17 00:00:00 2001
+From bcacfad70ab39f8a1e19c2230701abdb17b72a54 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:43 +0100
+Date: Sat, 31 Oct 2026 23:04:44 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/bpfmon.spec b/bpfmon.spec
-index e86c583..c3895d0 100644
+index e86c583..9987719 100644
 --- a/bpfmon.spec
 +++ b/bpfmon.spec
 @@ -1,6 +1,6 @@
@@ -48,7 +48,7 @@ index e86c583..c3895d0 100644
  %{_mandir}/man8/bpfmon.8*
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 2.60-2
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 2.60-2
 +- Verify upstream source signatures with openpgpverify
 +
  * Wed Jul 29 2026 Boian Bonev <bbonev@ipacct.com> - 2.60-1

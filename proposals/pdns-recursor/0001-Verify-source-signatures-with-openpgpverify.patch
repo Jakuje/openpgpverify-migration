@@ -1,6 +1,6 @@
-From 7e53efc1091c186efb3ea130adda0b557449f012 Mon Sep 17 00:00:00 2001
+From dd567a209b14df14424e45f901f46ee63874f4a8 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:52 +0100
+Date: Sat, 31 Oct 2026 23:04:54 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,7 +13,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/pdns-recursor.spec b/pdns-recursor.spec
-index de8a4b0..d8bb383 100644
+index 8ca8763..495aafd 100644
 --- a/pdns-recursor.spec
 +++ b/pdns-recursor.spec
 @@ -25,7 +25,7 @@ BuildRequires:  chrpath

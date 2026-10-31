@@ -1,6 +1,6 @@
-From 7dd382844fd6c753e11b2224b219cd73367cbc32 Mon Sep 17 00:00:00 2001
+From 84e5fe8419dc741baaac139c518297e46b357cd1 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:57 +0100
+Date: Sat, 31 Oct 2026 23:04:58 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/budgie-backgrounds.spec b/budgie-backgrounds.spec
-index 46f6c35..67946a1 100644
+index 46f6c35..8186825 100644
 --- a/budgie-backgrounds.spec
 +++ b/budgie-backgrounds.spec
 @@ -1,6 +1,6 @@
@@ -47,7 +47,7 @@ index 46f6c35..67946a1 100644
  %{_datadir}/gnome-background-properties/%{name}.xml
  
  %changelog
-+* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 4.1-2
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 4.1-2
 +- Verify upstream source signatures with openpgpverify
 +
  * Sun Sep 13 2026 Joshua Strobl <joshua@buddiesofbudgie.org> - 4.1-1

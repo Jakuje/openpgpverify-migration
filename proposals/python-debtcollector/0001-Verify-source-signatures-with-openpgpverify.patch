@@ -1,6 +1,6 @@
-From 766c3e5d35099b4b09ddaf1fc4233ace368f9266 Mon Sep 17 00:00:00 2001
+From 4decc46952261d731a066ebf182e46b6782982d9 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:46 +0100
+Date: Sat, 31 Oct 2026 23:04:47 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,27 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-debtcollector.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-debtcollector.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-debtcollector.spec b/python-debtcollector.spec
-index b07eb03..ae07970 100644
+index b07eb03..a4e9c75 100644
 --- a/python-debtcollector.spec
 +++ b/python-debtcollector.spec
-@@ -31,11 +31,9 @@ BuildRequires: python%{python3_pkgversion}-devel
- BuildArch:     noarch
+@@ -32,7 +32,7 @@ BuildArch:     noarch
  
  # Required for tarball sources verification
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:  /usr/bin/gpgv2
--%endif
++BuildRequires: openpgpverify
+ %endif
  
  BuildRequires: git-core
-+BuildRequires: openpgpverify
- 
- 
- %description
-@@ -63,7 +61,7 @@ Documentation for the debtcollector module
+@@ -63,7 +63,7 @@ Documentation for the debtcollector module
  %prep
  # Required for tarball sources verification
  %if 0%{?sources_gpg} == 1

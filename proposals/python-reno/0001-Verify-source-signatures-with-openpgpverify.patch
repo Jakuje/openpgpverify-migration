@@ -1,6 +1,6 @@
-From bdb4fb9be3594fb39868e402c15eacb40bf32c8c Mon Sep 17 00:00:00 2001
+From fa847b96d93924b798087ba80b6a83833118fc41 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:47 +0100
+Date: Sat, 31 Oct 2026 23:04:48 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,27 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-reno.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-reno.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-reno.spec b/python-reno.spec
-index a871992..7b8198c 100644
+index a871992..770e798 100644
 --- a/python-reno.spec
 +++ b/python-reno.spec
-@@ -32,11 +32,9 @@ BuildArch:      noarch
- BuildRequires:  python3-devel
- # tests require source to be a git repo.
- BuildRequires:  git-core
-+BuildRequires:  openpgpverify
+@@ -35,7 +35,7 @@ BuildRequires:  git-core
  
  # Required for tarball sources verification
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:  /usr/bin/gpgv2
--%endif
++BuildRequires:  openpgpverify
+ %endif
  
  
- %description
-@@ -61,7 +59,7 @@ Documentation for reno
+@@ -61,7 +61,7 @@ Documentation for reno
  %prep
  # Required for tarball sources verification
  %if 0%{?sources_gpg} == 1

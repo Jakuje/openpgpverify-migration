@@ -1,6 +1,6 @@
-From 62b4a01373b150fdbf014c8e2ea45a139057b9de Mon Sep 17 00:00:00 2001
+From 7eac40cd33554d2892b33a4a62f977e5064fe650 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:48 +0100
+Date: Sat, 31 Oct 2026 23:04:49 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- tomcli.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ tomcli.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/tomcli.spec b/tomcli.spec
-index 1f21214..269bbd0 100644
+index 1f21214..fd57982 100644
 --- a/tomcli.spec
 +++ b/tomcli.spec
 @@ -31,7 +31,7 @@ PATH=%{buildroot}%{_bindir}:${PATH}
@@ -27,15 +27,16 @@ index 1f21214..269bbd0 100644
  Summary:        CLI for working with TOML files. Pronounced "tom clee."
  
  License:        MIT
-@@ -44,6 +44,7 @@ Source2:        https://meta.sr.ht/~gotmax23.pgp
+@@ -42,7 +42,7 @@ Source1:        %{furl}/refs/download/v%{version}/tomcli-%{version}.tar.gz.asc
+ Source2:        https://meta.sr.ht/~gotmax23.pgp
+ 
  BuildArch:      noarch
- BuildRequires:  gnupg2
- BuildRequires:  python3-devel
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
+ BuildRequires:  python3-devel
  %if %{with manpages}
  BuildRequires:  scdoc
- %endif
-@@ -63,7 +64,7 @@ tomcli is a CLI for working with TOML files. Pronounced "tom clee."
+@@ -63,7 +63,7 @@ tomcli is a CLI for working with TOML files. Pronounced "tom clee."
  
  
  %prep
@@ -44,11 +45,11 @@ index 1f21214..269bbd0 100644
  %autosetup -p1
  
  
-@@ -143,6 +144,9 @@ test "${newname}" = "not-tomcli"
+@@ -143,6 +143,9 @@ test "${newname}" = "not-tomcli"
  
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 0.10.1-7
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 0.10.1-7
 +- Verify upstream source signatures with openpgpverify
 +
  * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.10.1-6

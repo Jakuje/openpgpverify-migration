@@ -1,6 +1,6 @@
-From 7b024138a9e11c4fe22caa45476a49f50760a3eb Mon Sep 17 00:00:00 2001
+From dd7466f9be245247826c90b69c9bc52f2ddb4bf2 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:46 +0100
+Date: Sat, 31 Oct 2026 23:04:47 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- postfix-mta-sts-resolver.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ postfix-mta-sts-resolver.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/postfix-mta-sts-resolver.spec b/postfix-mta-sts-resolver.spec
-index c3b6801..e2cb87a 100644
+index c3b6801..f00dde2 100644
 --- a/postfix-mta-sts-resolver.spec
 +++ b/postfix-mta-sts-resolver.spec
-@@ -24,6 +24,7 @@ BuildRequires:  systemd-rpm-macros
+@@ -23,7 +23,7 @@ BuildRequires:  make
+ BuildRequires:  systemd-rpm-macros
  BuildRequires:  pyproject-rpm-macros
  BuildRequires:  sed
- BuildRequires:  gnupg2
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
  
  # uvloop subpkg removed due to rhbz#2326210
  Obsoletes:      postfix-mta-sts-resolver+uvloop < 1.5.1-2
-@@ -36,7 +37,7 @@ client policy to Postfix via socketmap.
+@@ -36,7 +36,7 @@ client policy to Postfix via socketmap.
  
  
  %prep

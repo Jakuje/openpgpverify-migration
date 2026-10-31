@@ -1,6 +1,6 @@
-From 9043fc9b2e59d617c8f2bfea7e24f56eae749519 Mon Sep 17 00:00:00 2001
+From dd43596c5807c1ef9c5b183b34e9539c3adb9dc9 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:43 +0100
+Date: Sat, 31 Oct 2026 23:04:44 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/budgie-desktop-defaults.spec b/budgie-desktop-defaults.spec
-index 9605933..ec0fb54 100644
+index 9605933..ede03a5 100644
 --- a/budgie-desktop-defaults.spec
 +++ b/budgie-desktop-defaults.spec
 @@ -1,6 +1,6 @@
@@ -48,7 +48,7 @@ index 9605933..ec0fb54 100644
  %{_datadir}/glib-2.0/schemas/10_budgie_*.gschema.override
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 0.5.4-5
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 0.5.4-5
 +- Verify upstream source signatures with openpgpverify
 +
  * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.5.4-4

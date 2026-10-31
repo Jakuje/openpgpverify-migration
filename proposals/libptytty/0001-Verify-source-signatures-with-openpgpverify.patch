@@ -1,6 +1,6 @@
-From 0f7698ecf56dd6fa4c423cf2676f78e3ba957e17 Mon Sep 17 00:00:00 2001
+From 819ede417da55ac8b01aa636e3950c87e2cc67e4 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:45 +0100
+Date: Sat, 31 Oct 2026 23:04:46 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/libptytty.spec b/libptytty.spec
-index e16a8f7..b4bc6cb 100644
+index e16a8f7..a311e1d 100644
 --- a/libptytty.spec
 +++ b/libptytty.spec
 @@ -1,6 +1,6 @@
@@ -48,7 +48,7 @@ index e16a8f7..b4bc6cb 100644
  %doc README
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 2.0-16
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 2.0-16
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 2.0-15

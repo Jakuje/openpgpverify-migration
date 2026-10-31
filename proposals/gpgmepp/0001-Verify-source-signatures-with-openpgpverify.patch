@@ -1,6 +1,6 @@
-From c0f0d6f1504f3ec9b819c24ca9a6565eefe9d0f9 Mon Sep 17 00:00:00 2001
+From 809d76c3d039861375081067a31261486125c026 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:44 +0100
+Date: Sat, 31 Oct 2026 23:04:45 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/gpgmepp.spec b/gpgmepp.spec
-index feb6708..8e449c8 100644
+index feb6708..2054be4 100644
 --- a/gpgmepp.spec
 +++ b/gpgmepp.spec
 @@ -1,7 +1,7 @@
@@ -49,7 +49,7 @@ index feb6708..8e449c8 100644
  %{_libdir}/pkgconfig/%{name}.pc
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 1:2.2.0-2
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 1:2.2.0-2
 +- Verify upstream source signatures with openpgpverify
 +
  * Tue Oct 13 2026 Michal Hlavinka <mhlavink@redhat.com> - 1:2.2.0-1

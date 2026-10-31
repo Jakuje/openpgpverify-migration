@@ -1,6 +1,6 @@
-From d3cde74b5d9969a82bb81a9cd57028d5f3d20e95 Mon Sep 17 00:00:00 2001
+From 162430cbd21c718836642bededcf5ee300cc36bf Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:47 +0100
+Date: Sat, 31 Oct 2026 23:04:49 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- sord.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sord.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/sord.spec b/sord.spec
-index 4781bb7..e297bf5 100644
+index 4781bb7..80df0dc 100644
 --- a/sord.spec
 +++ b/sord.spec
-@@ -18,6 +18,7 @@ BuildRequires: meson
+@@ -13,7 +13,7 @@ Source2:    https://drobilla.net/drobilla.gpg
+ 
+ BuildRequires: doxygen
+ BuildRequires: gcc
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ BuildRequires: meson
  BuildRequires: pkgconfig(libpcre2-8)
  BuildRequires: pkgconfig(serd-0) >= 0.30.10
- BuildRequires: pkgconfig(zix-0) >= 0.4.0
-+BuildRequires: openpgpverify
- 
- %description
- %{name} is a lightweight C library for storing Resource Description
-@@ -36,7 +37,7 @@ Framework (RDF) data in memory.
+@@ -36,7 +36,7 @@ Framework (RDF) data in memory.
  This package contains the headers and development libraries for %{name}.
  
  %prep

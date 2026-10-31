@@ -18,14 +18,14 @@ Why `sqv`:
 
 ### Testing
 
-The current and the changed spec were both run through `rpmbuild -bp` in a clean mock chroot without network access (fedora-rawhide-x86_64). Every call of the verification tool was logged:
+The current and the changed spec were both run through `rpmbuild -bp` in a clean mock chroot without network access (fedora-rawhide-x86_64, fedora-eln-x86_64, where even the current spec cannot install its build dependencies). Every call of the verification tool was logged:
 
 | Spec | Verification calls | Result |
 |---|---|---|
 | current (`%gpgverify`) | 1 | pass |
 | this PR (`%openpgpverify`) | 1 | pass |
 
-Tested on 2026-10-23 at dist-git commit `8c78ba272edc` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
+Tested on 2026-10-31 at dist-git commit `8c78ba272edc` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
 ### Notes
 

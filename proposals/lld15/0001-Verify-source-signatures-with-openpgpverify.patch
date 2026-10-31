@@ -1,6 +1,6 @@
-From 0cff7acd294588050e2163618980bfbf432c5638 Mon Sep 17 00:00:00 2001
+From 768569d2a5a2baaec3a918b87de0ad54e9289743 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:51 +0100
+Date: Sat, 31 Oct 2026 23:04:53 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/lld15.spec b/lld15.spec
-index 0a9a2c3..99ae3ad 100644
+index 0a9a2c3..d624db2 100644
 --- a/lld15.spec
 +++ b/lld15.spec
 @@ -27,7 +27,7 @@
@@ -49,7 +49,7 @@ index 0a9a2c3..99ae3ad 100644
  %{install_libdir}/liblld*.so.*
  
  %changelog
-+* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 15.0.7-12
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 15.0.7-12
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 15.0.7-11

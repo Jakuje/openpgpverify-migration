@@ -1,6 +1,6 @@
-From 7bf48f28e6e70884ca7ba2ad6a62af53f3366133 Mon Sep 17 00:00:00 2001
+From fd40aa08fd5fbdeb68fd4ee5cb49bf9295c668cc Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:54 +0100
+Date: Sat, 31 Oct 2026 23:04:55 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,17 +13,17 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/sngrep.spec b/sngrep.spec
-index 35cd292..db7f2fe 100644
+index 35cd292..2e29a3f 100644
 --- a/sngrep.spec
 +++ b/sngrep.spec
-@@ -15,6 +15,7 @@ BuildRequires:  pkgconfig(libpcre2-8)
- BuildRequires:  pkgconfig(libssl)
- BuildRequires:  pkgconfig(ncursesw)
- BuildRequires:  pkgconfig(zlib)
+@@ -9,6 +9,7 @@ Source0:        %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz
+ Source1:        %{url}/releases/download/v%{version}/v%{version}.tar.gz.asc
+ Source2:        69100FFB90E87A320DF8643CBEC39009E8321A61.gpg
+ BuildRequires:  gcc
 +BuildRequires:  openpgpverify
- BuildSystem:    cmake
- BuildOption(conf): -DWITH_OPENSSL=ON -DWITH_PCRE2=ON -DWITH_ZLIB=ON -DWITH_NCURSES=ON -DWITH_UNICODE=ON -DUSE_IPV6=ON -DUSE_EEP=ON -DCMAKE_INSTALL_SYSCONFDIR=/etc
- 
+ BuildRequires:  pkgconfig(libcrypto)
+ BuildRequires:  pkgconfig(libpcap)
+ BuildRequires:  pkgconfig(libpcre2-8)
 @@ -24,7 +25,7 @@ supports live capture to display realtime SIP packets and can also be used as
  PCAP viewer.
  

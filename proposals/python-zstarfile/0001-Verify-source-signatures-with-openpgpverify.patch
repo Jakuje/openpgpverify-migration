@@ -1,6 +1,6 @@
-From b926e48f458b75dc9558639e0852880cfaba9350 Mon Sep 17 00:00:00 2001
+From 68d50941119892d0846c4b24e14192b17528ded5 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:47 +0100
+Date: Sat, 31 Oct 2026 23:04:48 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- python-zstarfile.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ python-zstarfile.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/python-zstarfile.spec b/python-zstarfile.spec
-index 8f6b2c5..2fc1b0e 100644
+index 8f6b2c5..03b09d2 100644
 --- a/python-zstarfile.spec
 +++ b/python-zstarfile.spec
 @@ -4,7 +4,7 @@
@@ -27,15 +27,16 @@ index 8f6b2c5..2fc1b0e 100644
  Summary:        Tarfile extension with additional compression algorithms and PEP 706 by default
  
  
-@@ -19,6 +19,7 @@ BuildArch:      noarch
+@@ -17,7 +17,7 @@ Source2:        https://meta.sr.ht/~gotmax23.pgp
  
- BuildRequires:  gnupg2
- BuildRequires:  python3-devel
+ BuildArch:      noarch
+ 
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
+ BuildRequires:  python3-devel
  
  # zstandard is part of stdlib on Python 3.14, so no need to pull in pyzstd by default.
- # Zstarfile still provides an option pyzstopen method that uses pyzstd.
-@@ -38,7 +39,7 @@ Summary:        %{summary}
+@@ -38,7 +38,7 @@ Summary:        %{summary}
  
  
  %prep
@@ -44,11 +45,11 @@ index 8f6b2c5..2fc1b0e 100644
  %autosetup -p1 -n zstarfile-%{version}
  
  
-@@ -71,6 +72,9 @@ export ERROR_FOR_MISSING=1
+@@ -71,6 +71,9 @@ export ERROR_FOR_MISSING=1
  %pyproject_extras_subpkg -n python3-zstarfile all lz4 zstandard
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 0.3.0-8
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 0.3.0-8
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.3.0-7

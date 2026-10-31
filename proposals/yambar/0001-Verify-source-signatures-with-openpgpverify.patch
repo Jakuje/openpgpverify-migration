@@ -1,6 +1,6 @@
-From cb6d7aeccd6c92677abc3344c27ce4f331eb1c70 Mon Sep 17 00:00:00 2001
+From 23382802bcd3335388f4ac7170d35c6040ec421d Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:49 +0100
+Date: Sat, 31 Oct 2026 23:04:50 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- yambar.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ yambar.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/yambar.spec b/yambar.spec
-index e4451ce..58184aa 100644
+index e4451ce..b991ecb 100644
 --- a/yambar.spec
 +++ b/yambar.spec
 @@ -9,7 +9,7 @@ end}
@@ -27,15 +27,16 @@ index e4451ce..58184aa 100644
  Summary:        Modular status panel for X11 and Wayland
  
  # The main source is MIT
-@@ -67,6 +67,7 @@ BuildRequires:  pkgconfig(libmpdclient)
- BuildRequires:  pkgconfig(libpipewire-0.3)
- BuildRequires:  pkgconfig(libpulse)
- BuildRequires:  pkgconfig(libudev)
+@@ -32,7 +32,7 @@ BuildRequires:  bison
+ BuildRequires:  desktop-file-utils
+ BuildRequires:  flex
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
+ BuildRequires:  meson >= 0.59
  
- %description
- yambar is a lightweight and configurable status panel (bar, for short)
-@@ -84,7 +85,7 @@ applications and plugins for %{name}.
+ BuildRequires:  pkgconfig(fcft) >= 3.0.0
+@@ -84,7 +84,7 @@ applications and plugins for %{name}.
  
  
  %prep
@@ -44,11 +45,11 @@ index e4451ce..58184aa 100644
  %autosetup
  chmod -x examples/scripts/*
  
-@@ -125,6 +126,9 @@ desktop-file-validate \
+@@ -125,6 +125,9 @@ desktop-file-validate \
  %{_includedir}/%{name}
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 1.11.0-7
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 1.11.0-7
 +- Verify upstream source signatures with openpgpverify
 +
  * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.11.0-6

@@ -1,6 +1,6 @@
-From 4810068d2ec9193730c4eab7dbfe822ced4b559e Mon Sep 17 00:00:00 2001
+From da29d0d32db0f1998ece38bf52ac36a2abc20587 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:45 +0100
+Date: Sat, 31 Oct 2026 23:04:46 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,17 +13,17 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/lilv.spec b/lilv.spec
-index 991a800..2b7bfc1 100644
+index 991a800..c264aa8 100644
 --- a/lilv.spec
 +++ b/lilv.spec
-@@ -31,6 +31,7 @@ BuildRequires:  pkgconfig(zix-0) >= 0.6.0
- BuildRequires:  python3-sphinx
- BuildRequires:  python3-sphinx_lv2_theme
- BuildRequires:  python3-sphinxygen
+@@ -16,6 +16,7 @@ Source2:    https://drobilla.net/drobilla.gpg
+ Patch0:     %{name}-bindings-test.patch
+ 
+ BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
- 
- Requires:       lv2 >= 1.18.2
- 
+ BuildRequires:  meson
+ BuildRequires:  doxygen
+ BuildRequires:  graphviz
 @@ -75,7 +76,7 @@ supports reading and writing Turtle and NTriples.
  This package contains the python libraries for %{name}.
  

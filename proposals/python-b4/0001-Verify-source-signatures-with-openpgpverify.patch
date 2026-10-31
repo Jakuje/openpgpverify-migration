@@ -1,6 +1,6 @@
-From 85cbb0880993d356b61f886a74043f561df62dd6 Mon Sep 17 00:00:00 2001
+From c87c685253c9913787e681c60524e8e7bea773d3 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:53 +0100
+Date: Sat, 31 Oct 2026 23:04:54 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,17 +13,17 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/python-b4.spec b/python-b4.spec
-index e654e98..526b21e 100644
+index e654e98..314d717 100644
 --- a/python-b4.spec
 +++ b/python-b4.spec
-@@ -29,6 +29,7 @@ BuildRequires:  gnupg2
+@@ -26,6 +26,7 @@ Patch4:         0005-b4-Drop-shebang-lines-from-library-modules.patch
+ BuildArch:      noarch
+ 
+ BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
  BuildRequires:  python%{python3_pkgversion}-devel
  BuildRequires:  python3dist(pytest)
  BuildRequires:  python3dist(shtab)
-+BuildRequires:  openpgpverify
- 
- %global _description %{expand:
- B4 is a helper utility to work with patches made available via a public-inbox
 @@ -46,7 +47,7 @@ Provides:       python%{python3_pkgversion}-%{srcname} = %{version}-%{release}
  
  

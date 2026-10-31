@@ -1,6 +1,6 @@
-From 272d07fb87ad9b40e537b93563d72aa3930f055e Mon Sep 17 00:00:00 2001
+From 2dad86f2ca26fd0ecd17ddffc92d41892af24379 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:53 +0100
+Date: Sat, 31 Oct 2026 23:04:55 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/reprotest.spec b/reprotest.spec
-index a1c7a42..476111a 100644
+index a1c7a42..665c965 100644
 --- a/reprotest.spec
 +++ b/reprotest.spec
 @@ -1,6 +1,6 @@
@@ -48,7 +48,7 @@ index a1c7a42..476111a 100644
  %{python3_sitelib}/%{name}-%{version}.dist-info
  
  %changelog
-+* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 0.7.32-3
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 0.7.32-3
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.7.32-2

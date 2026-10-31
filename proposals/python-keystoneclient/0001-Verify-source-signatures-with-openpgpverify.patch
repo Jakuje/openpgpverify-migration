@@ -1,6 +1,6 @@
-From c6e164b2f5d7a878966366d9c7e5492d02a07923 Mon Sep 17 00:00:00 2001
+From 10212c59d3bf38b3b5a7e2b649769438bc1df5e2 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:53 +0100
+Date: Sat, 31 Oct 2026 23:04:54 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,27 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-keystoneclient.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-keystoneclient.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-keystoneclient.spec b/python-keystoneclient.spec
-index 89bcf2a..9d57b7b 100644
+index 89bcf2a..3b941e7 100644
 --- a/python-keystoneclient.spec
 +++ b/python-keystoneclient.spec
-@@ -26,11 +26,9 @@ Source102:        https://releases.openstack.org/_static/%{sources_gpg_sign}.txt
- BuildArch:  noarch
+@@ -27,7 +27,7 @@ BuildArch:  noarch
  
  # Required for tarball sources verification
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:  /usr/bin/gpgv2
--%endif
++BuildRequires:  openpgpverify
+ %endif
  
  BuildRequires: /usr/bin/openssl
-+BuildRequires:  openpgpverify
- 
- 
- %description
-@@ -82,7 +80,7 @@ Summary: Documentation for OpenStack Keystone API client
+@@ -82,7 +82,7 @@ Summary: Documentation for OpenStack Keystone API client
  
  %prep
  %if 0%{?sources_gpg} == 1

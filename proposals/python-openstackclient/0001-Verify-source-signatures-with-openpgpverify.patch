@@ -1,6 +1,6 @@
-From f449b99d8e0856bd9f6b06cc78e77e88a62d0b90 Mon Sep 17 00:00:00 2001
+From ee5e73eba0ce6409c83f23ec1b8fe6a03d012a4f Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:53 +0100
+Date: Sat, 31 Oct 2026 23:08:06 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,27 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-openstackclient.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-openstackclient.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-openstackclient.spec b/python-openstackclient.spec
-index eed8f2b..e4b7c7b 100644
+index 7a23b16..3c62cd1 100644
 --- a/python-openstackclient.spec
 +++ b/python-openstackclient.spec
-@@ -42,11 +42,9 @@ BuildRequires:    python%{python3_pkgversion}-devel
- Buildrequires:    systemd-rpm-macros
+@@ -43,7 +43,7 @@ Buildrequires:    systemd-rpm-macros
  
  # Required for tarball sources verification
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:  /usr/bin/gpgv2
--%endif
++BuildRequires:    openpgpverify
+ %endif
  
  BuildRequires:    git-core
-+BuildRequires:    openpgpverify
- 
- 
- %description %_description
-@@ -88,7 +86,7 @@ Translation files for Openstackclient
+@@ -88,7 +88,7 @@ Translation files for Openstackclient
  %prep
  # Required for tarball sources verification
  %if 0%{?sources_gpg} == 1

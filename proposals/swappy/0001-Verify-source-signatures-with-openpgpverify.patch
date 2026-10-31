@@ -1,6 +1,6 @@
-From e74a7a63d70c881ad34ee9ffe81ce6a52075f867 Mon Sep 17 00:00:00 2001
+From efa13d6394ad6c7c4e76f48ad6bbaa29009c1a89 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:54 +0100
+Date: Sat, 31 Oct 2026 23:04:55 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/swappy.spec b/swappy.spec
-index f47b565..4ae3c27 100644
+index f47b565..b5672ca 100644
 --- a/swappy.spec
 +++ b/swappy.spec
 @@ -2,7 +2,7 @@
@@ -49,7 +49,7 @@ index f47b565..4ae3c27 100644
  %{_mandir}/man1/%{name}.1.*
  
  %changelog
-+* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 1.5.1-10
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 1.5.1-10
 +- Verify upstream source signatures with openpgpverify
 +
  * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.1-9

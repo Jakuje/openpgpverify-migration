@@ -1,6 +1,6 @@
-From 7a965951b42b14cca4db2ce7ca3ee98b08917778 Mon Sep 17 00:00:00 2001
+From 287e27b922c0d78f7186a0be8a7f672b1e7b48cb Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:50 +0100
+Date: Sat, 31 Oct 2026 23:04:51 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/fcft.spec b/fcft.spec
-index d5c321f..804ad02 100644
+index d5c321f..1a42463 100644
 --- a/fcft.spec
 +++ b/fcft.spec
 @@ -2,7 +2,7 @@
@@ -49,7 +49,7 @@ index d5c321f..804ad02 100644
  
  
  %changelog
-+* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 3.3.3-4
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 3.3.3-4
 +- Verify upstream source signatures with openpgpverify
 +
  * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 3.3.3-3

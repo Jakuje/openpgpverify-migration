@@ -1,6 +1,6 @@
-From 2389b28ca1848533770899651b0fd5bc07b9f90c Mon Sep 17 00:00:00 2001
+From 4e06b55447566446bce3a04a905b40479f3accfe Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:47 +0100
+Date: Sat, 31 Oct 2026 23:04:48 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,25 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-os-service-types.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-os-service-types.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-os-service-types.spec b/python-os-service-types.spec
-index a5fd655..f253e1b 100644
+index a5fd655..d3da518 100644
 --- a/python-os-service-types.spec
 +++ b/python-os-service-types.spec
-@@ -32,9 +32,7 @@ Source2:        https://releases.openstack.org/_static/%{sources_gpg_sign}.txt
- 
+@@ -33,7 +33,7 @@ Source2:        https://releases.openstack.org/_static/%{sources_gpg_sign}.txt
  BuildArch:      noarch
  BuildRequires:  git-core
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:  gpgverify
--%endif
 +BuildRequires:  openpgpverify
+ %endif
  
  
- %description
-@@ -64,7 +62,7 @@ Documentation for %{pypi_name}
+@@ -64,7 +64,7 @@ Documentation for %{pypi_name}
  
  %prep
  %if 0%{?sources_gpg} == 1

@@ -1,6 +1,6 @@
-From 1c19d7a088caa097f0d7edc3b49e533f27cdc339 Mon Sep 17 00:00:00 2001
+From cdec2303a39fb0d9997df84b92e46026cd7444bc Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:47 +0100
+Date: Sat, 31 Oct 2026 23:04:48 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- screenkey.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ screenkey.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/screenkey.spec b/screenkey.spec
-index a506bd6..1e387c9 100644
+index a506bd6..c38266f 100644
 --- a/screenkey.spec
 +++ b/screenkey.spec
 @@ -1,7 +1,7 @@
@@ -27,15 +27,16 @@ index a506bd6..1e387c9 100644
  Summary:	A screencast tool to display your keys
  License:	GPL-3.0-or-later
  URL:		https://www.thregr.org/~wavexx/software/%{name}
-@@ -16,6 +16,7 @@ BuildRequires:	python3-babel
+@@ -15,7 +15,7 @@ BuildRequires:	python3-devel
+ BuildRequires:	python3-babel
  BuildRequires:	desktop-file-utils
  
- BuildRequires: gnupg2
+-BuildRequires: gnupg2
 +BuildRequires:	openpgpverify
  
  Requires:   slop
  
-@@ -35,7 +36,7 @@ A screencast tool to display your keys, featuring:
+@@ -35,7 +35,7 @@ A screencast tool to display your keys, featuring:
  
  
  %prep
@@ -44,11 +45,11 @@ index a506bd6..1e387c9 100644
  %autosetup
  
  %generate_buildrequires
-@@ -59,6 +60,9 @@ desktop-file-validate %{buildroot}/%{_datadir}/applications/%{name}.desktop
+@@ -59,6 +59,9 @@ desktop-file-validate %{buildroot}/%{_datadir}/applications/%{name}.desktop
  %{_datadir}/metainfo/org.thregr.%{name}.metainfo.xml
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 1.5-20
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 1.5-20
 +- Verify upstream source signatures with openpgpverify
 +
  * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.5-19

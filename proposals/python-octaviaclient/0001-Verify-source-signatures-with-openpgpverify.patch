@@ -1,6 +1,6 @@
-From 954608995e5cc0aaf5431c9ffeb22a1fdab3ff1c Mon Sep 17 00:00:00 2001
+From a74dc6ad6f1a80ad82ce4653b8a5ca95954d3348 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:46 +0100
+Date: Sat, 31 Oct 2026 23:04:47 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,32 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-octaviaclient.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-octaviaclient.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-octaviaclient.spec b/python-octaviaclient.spec
-index f949b82..1649823 100644
+index f949b82..f25d44f 100644
 --- a/python-octaviaclient.spec
 +++ b/python-octaviaclient.spec
-@@ -26,6 +26,7 @@ BuildArch:      noarch
- 
- BuildRequires:  git-core
- BuildRequires:  python3-devel
-+BuildRequires:  openpgpverify
- 
- # pypi module has been broken into 3 rpms it seems.
- %if 0%{?with_doc}
-@@ -33,9 +34,6 @@ BuildRequires:  python3-sphinxcontrib-rsvgconverter
- %endif
+@@ -34,7 +34,7 @@ BuildRequires:  python3-sphinxcontrib-rsvgconverter
  
  # Required for tarball sources verification
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:  /usr/bin/gpgv2
--%endif
++BuildRequires:  openpgpverify
+ %endif
  
  
- %description
-@@ -85,7 +83,7 @@ This package contains the example client test files.
+@@ -85,7 +85,7 @@ This package contains the example client test files.
  %prep
  # Required for tarball sources verification
  %if 0%{?sources_gpg} == 1

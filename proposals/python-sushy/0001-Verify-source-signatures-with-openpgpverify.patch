@@ -1,6 +1,6 @@
-From 287e9f0bae089e6f6c2e6a6d83e3a23e598dc12f Mon Sep 17 00:00:00 2001
+From 524c3dec679e082a4710033e0b7b18f32073381c Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:53 +0100
+Date: Sat, 31 Oct 2026 23:04:55 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,29 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-sushy.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-sushy.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-sushy.spec b/python-sushy.spec
-index 372a655..3b21697 100644
+index 372a655..53ab034 100644
 --- a/python-sushy.spec
 +++ b/python-sushy.spec
-@@ -25,13 +25,11 @@ Source102:     https://releases.openstack.org/_static/%{sources_gpg_sign}.txt
- %endif
- BuildRequires: git-core
- BuildRequires: python3-devel
-+BuildRequires: openpgpverify
- 
- BuildArch:     noarch
+@@ -30,7 +30,7 @@ BuildArch:     noarch
  
  # Required for tarball sources verification
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires: gpgverify
--%endif
++BuildRequires: openpgpverify
+ %endif
  
  
- %description
-@@ -60,7 +58,7 @@ Summary:       %{summary}
+@@ -60,7 +60,7 @@ Summary:       %{summary}
  
  %prep
  %if 0%{?sources_gpg} == 1

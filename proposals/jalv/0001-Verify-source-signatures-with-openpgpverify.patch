@@ -1,6 +1,6 @@
-From 5cbf104aeb6dd41520d8c26a19c2d8033557f24d Mon Sep 17 00:00:00 2001
+From 3f5d0480047705447029aea4cd6e2a8906e8eed2 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:45 +0100
+Date: Sat, 31 Oct 2026 23:04:46 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- jalv.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ jalv.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/jalv.spec b/jalv.spec
-index 1e89823..4a62753 100644
+index 1e89823..4ebf5f0 100644
 --- a/jalv.spec
 +++ b/jalv.spec
 @@ -1,6 +1,6 @@
@@ -26,15 +26,16 @@ index 1e89823..4a62753 100644
  Summary:    A simple but fully featured LV2 host for Jack
  
  License:    MIT
-@@ -31,6 +31,7 @@ BuildRequires:  gcc-c++
- BuildRequires:  desktop-file-utils
- BuildRequires:  mandoc
- BuildRequires:  libappstream-glib
+@@ -13,7 +13,7 @@ BuildRequires:  python3
+ BuildRequires:  meson
+ BuildRequires:  doxygen
+ BuildRequires:  graphviz
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
- Requires:       lv2 >= 1.18.0
- 
- # gtkmm is no longer supported
-@@ -57,7 +58,7 @@ Requires:   %{name}%{_isa} = %{version}-%{release}
+ BuildRequires:  lilv-devel >= 0.26.0
+ BuildRequires:  suil-devel >= 0.10.0
+ BuildRequires:  serd-devel >= 0.30.2
+@@ -57,7 +57,7 @@ Requires:   %{name}%{_isa} = %{version}-%{release}
  
  
  %prep
@@ -43,11 +44,11 @@ index 1e89823..4a62753 100644
  %autosetup
  
  %build
-@@ -91,6 +92,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
+@@ -91,6 +91,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
  %{_mandir}/man1/%{name}.gtk3.1.*
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 1.8.0-3
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 1.8.0-3
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.8.0-2

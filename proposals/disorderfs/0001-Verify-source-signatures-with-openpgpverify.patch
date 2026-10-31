@@ -1,6 +1,6 @@
-From 9442d5e0a20947fb1fc249bed97e6a5d89da5715 Mon Sep 17 00:00:00 2001
+From 93c157cb79318a7b16ce408401ee3948be9f91e8 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:49 +0100
+Date: Sat, 31 Oct 2026 23:04:51 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/disorderfs.spec b/disorderfs.spec
-index 682223f..7a79bbd 100644
+index 682223f..30a8b32 100644
 --- a/disorderfs.spec
 +++ b/disorderfs.spec
 @@ -1,6 +1,6 @@
@@ -48,7 +48,7 @@ index 682223f..7a79bbd 100644
  %{_datadir}/man/man1/disorderfs.1*
  
  %changelog
-+* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 0.6.2-3
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 0.6.2-3
 +- Verify upstream source signatures with openpgpverify
 +
  * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.6.2-2

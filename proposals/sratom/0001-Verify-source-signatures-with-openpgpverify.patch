@@ -1,6 +1,6 @@
-From 3710c9349694c858fcee9fe36edbb2d9159cc8e6 Mon Sep 17 00:00:00 2001
+From f993b0bb47997bc87f8a026f03e6932272082185 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:47 +0100
+Date: Sat, 31 Oct 2026 23:04:49 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- sratom.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sratom.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/sratom.spec b/sratom.spec
-index fe32d01..ce9d8a6 100644
+index fe32d01..35d7490 100644
 --- a/sratom.spec
 +++ b/sratom.spec
-@@ -22,6 +22,7 @@ BuildRequires:  pkgconfig(lv2) >= 1.18.4
- BuildRequires:  python3-sphinx
- BuildRequires:  python3-sphinx_lv2_theme
- BuildRequires:  python3-sphinxygen
-+BuildRequires:  openpgpverify
+@@ -13,7 +13,7 @@ Source2:    https://drobilla.net/drobilla.gpg
  
- %description
- %{name} is a C library for serializing LV2 atoms to/from Turtle. It is
-@@ -44,7 +45,7 @@ control with network transparency.
+ BuildRequires:  doxygen
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  graphviz
+ BuildRequires:  meson
+ BuildRequires:  pkgconfig(sord-0) >= 0.16.16
+@@ -44,7 +44,7 @@ control with network transparency.
  This package contains the headers and development libraries for %{name}.
  
  %prep

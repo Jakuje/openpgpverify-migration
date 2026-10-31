@@ -1,6 +1,6 @@
-From 78684318c56ba6f3d0bea48e2f3a2ff7f0017a71 Mon Sep 17 00:00:00 2001
+From 0a8c23e733d55996d03c5f4bf221e139e3c9b7eb Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:53 +0100
+Date: Sat, 31 Oct 2026 23:04:55 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,23 +9,22 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- rpminspect.spec | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ rpminspect.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/rpminspect.spec b/rpminspect.spec
-index 26647b2..5cc2b8c 100644
+index 26647b2..837f836 100644
 --- a/rpminspect.spec
 +++ b/rpminspect.spec
-@@ -47,7 +47,7 @@ BuildRequires:  libcap-devel
- BuildRequires:  gettext-devel
+@@ -48,6 +48,7 @@ BuildRequires:  gettext-devel
  BuildRequires:  clamav-devel
  BuildRequires:  libmandoc-devel >= 1.14.5
--BuildRequires:  gnupg2
+ BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
  BuildRequires:  libicu-devel
  BuildRequires:  libcdson-devel
  %if 0%{?fedora}
-@@ -167,7 +167,7 @@ control files.
+@@ -167,7 +168,7 @@ control files.
  
  
  %prep

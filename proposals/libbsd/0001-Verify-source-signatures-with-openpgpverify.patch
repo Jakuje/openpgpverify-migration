@@ -1,6 +1,6 @@
-From 09f229ec1d0b3298c1c55e8379c2f154ea8d6c9f Mon Sep 17 00:00:00 2001
+From 1f5eefe921c3a54e7cf1b3a30bd9cf1c04424199 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:51 +0100
+Date: Sat, 31 Oct 2026 23:04:52 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/libbsd.spec b/libbsd.spec
-index 356daff..4eea805 100644
+index 356daff..2054a72 100644
 --- a/libbsd.spec
 +++ b/libbsd.spec
 @@ -1,6 +1,6 @@
@@ -48,7 +48,7 @@ index 356daff..4eea805 100644
  %{_libdir}/pkgconfig/%{name}-ctor.pc
  
  %changelog
-+* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 0.12.2-9
++* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 0.12.2-9
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.12.2-8

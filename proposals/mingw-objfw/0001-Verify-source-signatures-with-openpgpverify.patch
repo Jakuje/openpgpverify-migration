@@ -1,6 +1,6 @@
-From cad9850b793a59013a21d077f6613d263ff6b45a Mon Sep 17 00:00:00 2001
+From e6a48ec94726f09ceb507eea6bb7a368bcd1067d Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:52 +0100
+Date: Sat, 31 Oct 2026 23:04:53 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,23 +9,22 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- mingw-objfw.spec | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mingw-objfw.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/mingw-objfw.spec b/mingw-objfw.spec
-index e2260d7..0de764e 100644
+index e2260d7..ef2f2bd 100644
 --- a/mingw-objfw.spec
 +++ b/mingw-objfw.spec
-@@ -16,7 +16,7 @@ Source2:       gpgkey-objfw.gpg
- BuildArch:     noarch
+@@ -17,6 +17,7 @@ BuildArch:     noarch
  
  BuildRequires: clang
--BuildRequires: gnupg2
+ BuildRequires: gnupg2
 +BuildRequires: openpgpverify
  BuildRequires: make
  
  BuildRequires: mingw32-filesystem >= 95
-@@ -72,7 +72,7 @@ MinGW port of ObjFW for ucrt64
+@@ -72,7 +73,7 @@ MinGW port of ObjFW for ucrt64
  %{?mingw_debug_package}
  
  %prep

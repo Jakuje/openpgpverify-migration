@@ -1,6 +1,6 @@
-From 02155e6535a234d5e595e0a4df79ff66849575c0 Mon Sep 17 00:00:00 2001
+From b2194031706c1cc775b73e8bff1d96c1a5ba12d6 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:40 +0100
+Date: Sat, 31 Oct 2026 23:04:41 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,26 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-oslo-metrics.spec | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ python-oslo-metrics.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-oslo-metrics.spec b/python-oslo-metrics.spec
-index 29b3cad..5a3a594 100644
+index 29b3cad..7ef4f56 100644
 --- a/python-oslo-metrics.spec
 +++ b/python-oslo-metrics.spec
-@@ -27,10 +27,8 @@ BuildArch:      noarch
- 
- BuildRequires:  git-core
+@@ -29,7 +29,7 @@ BuildRequires:  git-core
  BuildRequires:  python3-devel
-+BuildRequires:  openpgpverify
  # Required for tarball sources verification
--%if 0%{?sources_gpg} == 1
+ %if 0%{?sources_gpg} == 1
 -BuildRequires:  /usr/bin/gpgv2
--%endif
++BuildRequires:  openpgpverify
+ %endif
  
  
- %package -n python3-%{pkg_name}
-@@ -67,7 +65,7 @@ Tests for the Oslo Metrics library.
+@@ -67,7 +67,7 @@ Tests for the Oslo Metrics library.
  %prep
  # Required for tarball sources verification
  %if 0%{?sources_gpg} == 1
