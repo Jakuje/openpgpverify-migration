@@ -8,15 +8,15 @@ Summary: ImageMagick: source signature does not verify with openpgpverify (SHA-1
 
 As part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify), `%gpgverify` (GnuPG) is being replaced by `%openpgpverify` (Sequoia `sqv`). For ImageMagick, the switch can't be done in a simple PR: `%gpgverify` accepts the current upstream signature, but `%openpgpverify` rejects it.
 
-Failing check (dist-git commit `69e0cae1fac3`):
+Failing check (dist-git commit `1bd132aaecb5`):
 
 ```
-%openpgpverify --keyring=ImageMagick.keyring --signature=ImageMagick-7.1.2-34.tar.xz.asc --data=ImageMagick-7.1.2-34.tar.xz
+%openpgpverify --keyring=ImageMagick.keyring --signature=ImageMagick-7.1.2-35.tar.xz.asc --data=ImageMagick-7.1.2-35.tar.xz
 ```
 
 ```
 Signing key on D8272EF51DA223E4D05B466989AB63D48277377A is not bound:
-           No binding signature at time 2026-10-15T01:19:41Z
+           No binding signature at time 2026-11-01T01:59:10Z
   because: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
   because: SHA1 is not considered secure
 0 of 1 signatures are valid (threshold is: 1).

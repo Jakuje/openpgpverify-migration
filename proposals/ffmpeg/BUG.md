@@ -8,7 +8,7 @@ Summary: ffmpeg: source signature does not verify with openpgpverify (SHA-1 key 
 
 As part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify), `%gpgverify` (GnuPG) is being replaced by `%openpgpverify` (Sequoia `sqv`). For ffmpeg, the switch can't be done in a simple PR: `%gpgverify` accepts the current upstream signature, but `%openpgpverify` rejects it.
 
-Failing check (dist-git commit `af47fadd46c3`):
+Failing check (dist-git commit `b40bf995d001`):
 
 ```
 %openpgpverify --keyring=ffmpeg.keyring --signature=ffmpeg-9.0.2.tar.xz.asc --data=ffmpeg-9.0.2.tar.xz

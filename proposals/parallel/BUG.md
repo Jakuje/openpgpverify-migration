@@ -8,15 +8,15 @@ Summary: parallel: source signature does not verify with openpgpverify (SHA-1 ke
 
 As part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify), `%gpgverify` (GnuPG) is being replaced by `%openpgpverify` (Sequoia `sqv`). For parallel, the switch can't be done in a simple PR: `%gpgverify` accepts the current upstream signature, but `%openpgpverify` rejects it.
 
-Failing check (dist-git commit `1c0176f88f60`):
+Failing check (dist-git commit `fc83aeb9fca4`):
 
 ```
-%openpgpverify --keyring=cda01a4208c4f74506107e7bd1ab451688888888.asc --signature=parallel-20260922.tar.bz2.sig --data=parallel-20260922.tar.bz2
+%openpgpverify --keyring=cda01a4208c4f74506107e7bd1ab451688888888.asc --signature=parallel-20261022.tar.bz2.sig --data=parallel-20261022.tar.bz2
 ```
 
 ```
 Signing key on CDA01A4208C4F74506107E7BD1AB451688888888 is not bound:
-           No binding signature at time 2026-09-22T19:26:42Z
+           No binding signature at time 2026-10-28T21:01:07Z
   because: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
   because: SHA1 is not considered secure
 0 of 1 signatures are valid (threshold is: 1).

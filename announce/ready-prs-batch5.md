@@ -1,8 +1,8 @@
 # PRs ready to open
 
-Generated 2026-10-31T22:08Z by `scripts/ready_list.py` from `data/ready-batch5.txt`. Every package below passed Phase 1 (`%prep` with `%gpgverify` and `%openpgpverify` in mock, all verification calls logged), has no open PR, and its rawhide branch is still at the tested commit (checked when this list was generated).
+Generated 2026-11-02T21:23Z by `scripts/ready_list.py` from `data/ready-batch5.txt`. Every package below passed Phase 1 (`%prep` with `%gpgverify` and `%openpgpverify` in mock, all verification calls logged), has no open PR, and its rawhide branch is still at the tested commit (checked when this list was generated).
 
-## Ready (215)
+## Ready (218)
 
 | Package | Maintainers | Diff | Release bump | `%{?rhel}` | BR gnupg2 | Tested |
 |---|---|---|---|---|---|---|
@@ -23,7 +23,7 @@ Generated 2026-10-31T22:08Z by `scripts/ready_list.py` from `data/ready-batch5.t
 | [bpfmon](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/bpfmon/) | bbonev1 | +6/-3 | yes |  | dropped (checked) | 2026-10-31 |
 | [browserpass](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/browserpass/) | wojnilowicz | +2/-2 |  |  | dropped (checked) | 2026-10-31 |
 | [budgie-backgrounds](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/budgie-backgrounds/) | joshstrobl | +6/-3 | yes |  | dropped (checked) | 2026-10-31 |
-| [budgie-desktop](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/budgie-desktop/) | joshstrobl | +6/-3 | yes |  | dropped (checked) | 2026-10-31 |
+| [budgie-desktop](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/budgie-desktop/) | joshstrobl | +6/-3 | yes |  | dropped (checked) | 2026-11-02 |
 | [budgie-desktop-defaults](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/budgie-desktop-defaults/) | joshstrobl | +6/-3 | yes |  | dropped (checked) | 2026-10-31 |
 | [chewing-editor](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/chewing-editor/) | kanru | +6/-3 | yes |  | dropped (checked) | 2026-10-31 |
 | [cksfv](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/cksfv/) | rathann | +6/-3 | yes |  | dropped (checked) | 2026-10-31 |
@@ -61,7 +61,8 @@ Generated 2026-10-31T22:08Z by `scripts/ready_list.py` from `data/ready-batch5.t
 | [gplugin](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/gplugin/) | qulogic | +2/-2 |  |  | dropped (checked) | 2026-10-31 |
 | [grout](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/grout/) | rjarry mruprich | +2/-2 |  |  | dropped (checked) | 2026-10-31 |
 | [growlight](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/growlight/) | nickblack | +2/-1 |  |  | kept | 2026-10-31 |
-| [haruna](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/haruna/) | zawertun | +2/-2 |  |  | dropped (checked) | 2026-10-31 |
+| [guestfs-tools](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/guestfs-tools/) | rjones | +6/-2 | yes |  |  | 2026-11-02 |
+| [haruna](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/haruna/) | zawertun | +2/-2 |  |  | dropped (checked) | 2026-11-02 |
 | [haunt](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/haunt/) | fed500 | +2/-2 |  |  | dropped (checked) | 2026-10-31 |
 | [hello](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/hello/) | petersen | +2/-2 |  |  | dropped (checked) | 2026-10-31 |
 | [hiera](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/hiera/) | stevetraylen brandfbb ekohl ignatenkobrain | +2/-2 |  |  | dropped (checked) | 2026-10-31 |
@@ -78,6 +79,7 @@ Generated 2026-10-31T22:08Z by `scripts/ready_list.py` from `data/ready-batch5.t
 | [libclc22](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/libclc22/) | kkleine | +6/-2 | yes |  | kept | 2026-10-31 |
 | [libeatmydata](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/libeatmydata/) | trawets | +7/-3 | yes |  | dropped (checked) | 2026-10-31 |
 | [libgnt](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/libgnt/) | jskarvad | +6/-3 | yes |  | dropped (checked) | 2026-10-31 |
+| [libguestfs](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/libguestfs/) | rjones | +6/-2 | yes |  | kept | 2026-11-02 |
 | [libmd](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/libmd/) | robert | +6/-3 | yes |  | dropped (checked) | 2026-10-31 |
 | [libmodsecurity](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/libmodsecurity/) | mikelo2 | +2/-2 |  |  | dropped (checked) | 2026-10-31 |
 | [libptytty](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/libptytty/) | dcantrell | +6/-3 | yes |  | dropped (checked) | 2026-10-31 |
@@ -116,7 +118,7 @@ Generated 2026-10-31T22:08Z by `scripts/ready_list.py` from `data/ready-batch5.t
 | [postfix-mta-sts-resolver](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/postfix-mta-sts-resolver/) | thebeanogamer | +2/-2 |  |  | dropped (checked) | 2026-10-31 |
 | [pspp](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/pspp/) | peter | +2/-2 |  |  | dropped (checked) | 2026-10-31 |
 | [puppet](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/puppet/) | brandfbb ekohl ignatenkobrain terjeros | +6/-3 | yes |  | dropped (checked) | 2026-10-31 |
-| [pv](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/pv/) | ferdnyc cheeselee | +2/-2 |  |  | dropped (checked) | 2026-10-31 |
+| [pv](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/pv/) | ferdnyc cheeselee | +2/-2 |  |  | dropped (checked) | 2026-11-02 |
 | [pylibacl](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/pylibacl/) | szpak kevin frankcrawford | +6/-3 | yes |  | dropped (checked) | 2026-10-31 |
 | [python-aodhclient](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/python-aodhclient/) | jcapitao | +2/-2 |  |  |  | 2026-10-31 |
 | [python-authres](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/python-authres/) | sdgathman salimma | +6/-3 | yes |  | dropped (checked) | 2026-10-31 |
@@ -199,6 +201,7 @@ Generated 2026-10-31T22:08Z by `scripts/ready_list.py` from `data/ready-batch5.t
 | [trojan](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/trojan/) | yanqiyu | +2/-2 |  |  | dropped (checked) | 2026-10-31 |
 | [vali](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/vali/) | alebastr | +2/-2 |  |  |  | 2026-10-31 |
 | [vim-latex](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/vim-latex/) | principis | +6/-3 | yes |  | dropped (checked) | 2026-10-31 |
+| [virt-v2v](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/virt-v2v/) | rjones | +6/-2 | yes |  | kept | 2026-11-02 |
 | [weldr-client](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/weldr-client/) | bcl obudai ochosi | +2/-2 |  |  | dropped (checked) | 2026-10-31 |
 | [wget2](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/wget2/) | ngompa jonathanspw mruprich suve | +6/-2 | yes |  | kept | 2026-10-31 |
 | [wl-mirror](https://github.com/Jakuje/openpgpverify-migration/tree/main/proposals/wl-mirror/) | alebastr | +2/-2 |  |  |  | 2026-10-31 |

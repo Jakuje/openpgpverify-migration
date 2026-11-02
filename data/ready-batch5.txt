@@ -213,3 +213,6 @@ xwininfo
 xwud
 yambar
 zix
+libguestfs
+virt-v2v
+guestfs-tools

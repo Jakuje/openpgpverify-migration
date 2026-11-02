@@ -1,0 +1,59 @@
+From da4b5246081eef2685620d9e484f5db2cd8f94af Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 2 Nov 2026 22:22:30 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ virt-v2v.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/virt-v2v.spec b/virt-v2v.spec
+index e56ae11..b6eda04 100644
+--- a/virt-v2v.spec
++++ b/virt-v2v.spec
+@@ -45,7 +45,7 @@ ExclusiveArch: x86_64
+ Name:          virt-v2v
+ Epoch:         1
+ Version:       2.13.9
+-Release:       1%{?dist}
++Release:       2%{?dist}
+ Summary:       Convert a virtual machine to run on KVM
+ 
+ License:       GPL-2.0-or-later AND LGPL-2.0-or-later
+@@ -85,6 +85,7 @@ BuildRequires: libvirt-daemon-kvm
+ BuildRequires: libvirt-devel
+ BuildRequires: libxcrypt-devel
+ BuildRequires: libxml2-devel
++BuildRequires: openpgpverify
+ BuildRequires: pcre2-devel
+ BuildRequires: perl(Sys::Guestfs)
+ BuildRequires: po4a
+@@ -225,7 +226,7 @@ for %{name}.
+ 
+ %prep
+ %if 0%{verify_tarball_signature}
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %endif
+ %autosetup -p1
+ 
+@@ -370,6 +371,9 @@ done
+ 
+ 
+ %changelog
++* Mon Nov 02 2026 Jakub Jelen <jjelen@redhat.com> - 1:2.13.9-2
++- Verify upstream source signatures with openpgpverify
++
+ * Fri Oct 30 2026 Richard W.M. Jones <rich@annexia.org> - 1:2.13.9-1
+ - New upstream development version 2.13.9
+ - New signing key using SHA256 hashes.
+-- 
+2.56.0
+

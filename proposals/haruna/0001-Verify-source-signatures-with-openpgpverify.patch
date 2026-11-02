@@ -1,6 +1,6 @@
-From cc3f4533d1e42516cab2926b4155e7b455170d52 Mon Sep 17 00:00:00 2001
+From 7182530a687e7eb821ec6d6214ed06c99bc4d1f5 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:51 +0100
+Date: Mon, 2 Nov 2026 22:22:39 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,7 +13,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/haruna.spec b/haruna.spec
-index ff9f6ec..be63155 100644
+index 08bccae..5eec94e 100644
 --- a/haruna.spec
 +++ b/haruna.spec
 @@ -14,7 +14,7 @@ Source2: gpgkey-4E421C6554B89766DF9B7A37E12AB207C8755905.gpg

@@ -1,6 +1,6 @@
-From 042eedab79dc7214603bd4c661ce8563a92f67ac Mon Sep 17 00:00:00 2001
+From c7312e3741e99b185941cdba7247c2ec7ee32f46 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:52 +0100
+Date: Mon, 2 Nov 2026 22:22:41 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,7 +13,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/pv.spec b/pv.spec
-index ecb96f7..147d1de 100644
+index ec6d3b2..6320181 100644
 --- a/pv.spec
 +++ b/pv.spec
 @@ -9,7 +9,7 @@ Source0: https://www.ivarch.com/programs/sources/%{name}-%{version}.tar.gz

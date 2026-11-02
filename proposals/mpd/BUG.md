@@ -8,15 +8,15 @@ Summary: mpd: source signature does not verify with openpgpverify (SHA-1 key sel
 
 As part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify), `%gpgverify` (GnuPG) is being replaced by `%openpgpverify` (Sequoia `sqv`). For mpd, the switch can't be done in a simple PR: `%gpgverify` accepts the current upstream signature, but `%openpgpverify` rejects it.
 
-Failing check (dist-git commit `9f457e0afc8f`):
+Failing check (dist-git commit `4b7206992d57`):
 
 ```
-%openpgpverify --keyring=gpgkey.asc --signature=mpd-0.24.15.tar.xz.sig --data=mpd-0.24.15.tar.xz
+%openpgpverify --keyring=gpgkey.asc --signature=mpd-0.24.18.tar.xz.sig --data=mpd-0.24.18.tar.xz
 ```
 
 ```
 Signing key on 0392335A78083894A4301C43236E8A58C6DB4512 is not bound:
-           No binding signature at time 2026-08-27T09:26:51Z
+           No binding signature at time 2026-10-30T17:46:26Z
   because: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
   because: SHA1 is not considered secure
 0 of 1 signatures are valid (threshold is: 1).

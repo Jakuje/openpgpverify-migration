@@ -143,8 +143,9 @@ class Mock:
     def __call__(self, *args, timeout=3600):
         return run(self.base + list(args), self.log, timeout=timeout)
 
-    def chroot(self, script, unpriv=False):
-        return self('--unpriv', '--chroot', script) if unpriv else self('--chroot', script)
+    def chroot(self, script, unpriv=False, timeout=3600):
+        args = ('--unpriv', '--chroot', script) if unpriv else ('--chroot', script)
+        return self(*args, timeout=timeout)
 
 
 def checkout(pkg, d, log):
@@ -398,13 +399,15 @@ def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp', overlay
                 m.chroot(GNUPG2_TREE, unpriv=True)
                 m('--copyout', '/builddir/gpg-tree.txt', out)
                 full = dict(spec='%s.spec' % pkg, timeout=FULL_BUILD_TIMEOUT)
-                m.chroot(FULL_BUILD % dict(full, log='new-build.log'), unpriv=True)
+                m.chroot(FULL_BUILD % dict(full, log='new-build.log'), unpriv=True,
+                         timeout=FULL_BUILD_TIMEOUT + 600)
                 m('--copyout', '/builddir/new-build.log', out)
                 if prep_rc(os.path.join(out, 'new-build.log')) not in (0, 124):
                     # pre-existing FTBFS, or does it need gpg?
                     m('--install', *(open(os.path.join(out, 'gpg-removed.txt')).read().split()
                                      or ['gnupg2']))
-                    m.chroot(FULL_BUILD % dict(full, log='base-build.log'), unpriv=True)
+                    m.chroot(FULL_BUILD % dict(full, log='base-build.log'), unpriv=True,
+                             timeout=FULL_BUILD_TIMEOUT + 600)
                     m('--copyout', '/builddir/base-build.log', out)
         if gnupg2_check:
             res['gnupg2_check'] = gnupg2_verdict(res, out, has_check)

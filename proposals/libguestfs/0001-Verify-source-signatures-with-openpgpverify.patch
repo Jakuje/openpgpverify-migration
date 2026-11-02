@@ -1,0 +1,59 @@
+From 6498c6b447c8e2e72389483adc838103a5541cae Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 2 Nov 2026 22:22:29 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ libguestfs.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/libguestfs.spec b/libguestfs.spec
+index ddc9f4f..691b3e4 100644
+--- a/libguestfs.spec
++++ b/libguestfs.spec
+@@ -35,7 +35,7 @@ Summary:       Access and modify virtual machine disk images
+ Name:          libguestfs
+ Epoch:         1
+ Version:       1.61.5
+-Release:       1%{?dist}
++Release:       2%{?dist}
+ License:       LGPL-2.1-or-later
+ 
+ # Build only for architectures that have a kernel
+@@ -261,6 +261,7 @@ BuildRequires: xz
+ BuildRequires: zerofree
+ %endif
+ BuildRequires: zstd
++BuildRequires: openpgpverify
+ 
+ # Main package requires the appliance.  This allows the appliance to
+ # be replaced if there exists a package called
+@@ -623,7 +624,7 @@ for %{name}.
+ 
+ %prep
+ %if 0%{verify_tarball_signature}
+-%{gpgverify} --keyring='%{SOURCE7}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE7}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %endif
+ %autosetup -S git -N
+ %autopatch -p1 -M 999
+@@ -1031,6 +1032,9 @@ rm ocaml/html/.gitignore
+ 
+ 
+ %changelog
++* Mon Nov 02 2026 Jakub Jelen <jjelen@redhat.com> - 1:1.61.5-2
++- Verify upstream source signatures with openpgpverify
++
+ * Fri Oct 30 2026 Richard W.M. Jones <rich@annexia.org> - 1:1.61.5-1
+ - New upstream development version 1.61.5
+ - New signing key using SHA256 hashes.
+-- 
+2.56.0
+

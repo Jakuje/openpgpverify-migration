@@ -1,0 +1,59 @@
+From 2ed668db873cb601fd4c3767c0d81c0e80fbda04 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 2 Nov 2026 22:22:28 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ guestfs-tools.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/guestfs-tools.spec b/guestfs-tools.spec
+index 7858ab4..9cdca47 100644
+--- a/guestfs-tools.spec
++++ b/guestfs-tools.spec
+@@ -16,7 +16,7 @@
+ Summary:       Tools to access and modify virtual machine disk images
+ Name:          guestfs-tools
+ Version:       1.57.5
+-Release:       1%{?dist}
++Release:       2%{?dist}
+ License:       GPL-2.0-or-later AND LGPL-2.0-or-later
+ 
+ # Build only for architectures that have a kernel
+@@ -84,6 +84,7 @@ BuildRequires: perl(Sys::Guestfs)
+ BuildRequires: perl(Win::Hivex)
+ BuildRequires: perl(Win::Hivex::Regedit)
+ BuildRequires: perl-generators
++BuildRequires: openpgpverify
+ 
+ %if 0%{verify_tarball_signature}
+ BuildRequires: gnupg2
+@@ -230,7 +231,7 @@ for %{name}.
+ 
+ %prep
+ %if 0%{verify_tarball_signature}
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %endif
+ %setup -q
+ %autopatch -p1
+@@ -388,6 +389,9 @@ end
+ 
+ 
+ %changelog
++* Mon Nov 02 2026 Jakub Jelen <jjelen@redhat.com> - 1.57.5-2
++- Verify upstream source signatures with openpgpverify
++
+ * Fri Oct 30 2026 Richard W.M. Jones <rich@annexia.org> - 1.57.5-1
+ - New upstream development version 1.57.5
+ - New signing key using SHA256 hashes.
+-- 
+2.56.0
+
