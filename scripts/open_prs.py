@@ -22,6 +22,7 @@ import json
 import os
 import subprocess
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -58,14 +59,19 @@ def api(path, data=None, token=None):
                                  if data is not None else None)
     if token:
         req.add_header('Authorization', 'token ' + token)
-    try:
-        with urllib.request.urlopen(req, timeout=120) as r:
-            return r.status, json.load(r)
-    except urllib.error.HTTPError as e:
+    for wait in (10, 60, 180, None):
         try:
-            return e.code, json.load(e)
-        except ValueError:
-            return e.code, {}
+            with urllib.request.urlopen(req, timeout=120) as r:
+                return r.status, json.load(r)
+        except urllib.error.HTTPError as e:
+            try:
+                return e.code, json.load(e)
+            except ValueError:
+                return e.code, {}
+        except (urllib.error.URLError, OSError):
+            if wait is None or data is not None:   # never repeat a POST blindly
+                raise
+            time.sleep(wait)
 
 
 def token():
@@ -84,9 +90,14 @@ def check(pkg, rec):
         probs.append('no rendered patches')
     if rec.get('pr_url'):
         probs.append('PR already recorded: %s' % rec['pr_url'])
-    r = subprocess.run(['git', 'ls-remote', ANON_URL % pkg, 'refs/heads/rawhide'],
-                       capture_output=True, text=True, timeout=120)
-    head = r.stdout.split()[0] if r.returncode == 0 and r.stdout else None
+    head = None
+    for wait in (10, 60, 0):
+        r = subprocess.run(['git', 'ls-remote', ANON_URL % pkg, 'refs/heads/rawhide'],
+                           capture_output=True, text=True, timeout=120)
+        if r.returncode == 0 and r.stdout:
+            head = r.stdout.split()[0]
+            break
+        time.sleep(wait)
     if head != rec.get('spec_commit'):
         probs.append('rawhide at %s, tested %s' % (head and head[:12], rec.get('spec_commit', '')[:12]))
     code, d = api('/rpms/%s/pull-requests?status=all&per_page=100' % pkg)
