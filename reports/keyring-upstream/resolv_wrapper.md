@@ -1,6 +1,6 @@
 # Keyring update from upstream for resolv_wrapper
 
-**Status: still-fails**
+**Status: proposed**
 
 Failing call: `--keyring=/builddir/new/resolv_wrapper.keyring --signature=/builddir/new/resolv_wrapper-1.1.8.tar.gz.asc --data=/builddir/new/resolv_wrapper-1.1.8.tar.gz`
 
@@ -9,24 +9,30 @@ Phase 1 reason: `sha1-cert`
 ## resolv_wrapper.keyring
 
 - from: https://cryptomilk.org/0x8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D_asn_cryptomilk_org_gpgkey.asc
+- completed from keyservers/WKD, found via: WKD; hkps://keys.openpgp.org; hkps://keyserver.ubuntu.com; hkps://sks.pod01.fleetstreetops.com
 - certificates (unchanged): 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D
-- size: 3432 → 4845 bytes
+- size: 3432 → 20849 bytes
 
 ```
-curl -fsSL -o resolv_wrapper.keyring https://cryptomilk.org/0x8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D_asn_cryptomilk_org_gpgkey.asc
+curl -fsSL -o key.asc https://cryptomilk.org/0x8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D_asn_cryptomilk_org_gpgkey.asc
+sq --home=none network search --output - 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D \
+  | sq keyring filter --experimental --cert 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D --output update.pgp
+sq keyring merge key.asc update.pgp | sq packet dearmor --output resolv_wrapper.keyring.new
+mv resolv_wrapper.keyring.new resolv_wrapper.keyring
+rm -f key.asc update.pgp
 ```
 
 ```diff
 --- dist-git/resolv_wrapper.keyring
 +++ upstream/resolv_wrapper.keyring
-@@ -1,17 +1,9 @@
+@@ -1,17 +1,12 @@
        Fingerprint: 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D
--                   Invalid: No binding signature at time 2026-10-29T08:01:44Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-11-03T09:59:19Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: certification, signing
             Subkey: 9D04ADDA7B3A38E6F9E74DE1668803FBFBA5A04A
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-29T08:01:44Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-11-03T09:59:19Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: transport encryption, data-at-rest encryption
             UserID: Andreas Schneider <asn@cryptomilk.org>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
@@ -39,17 +45,18 @@ curl -fsSL -o resolv_wrapper.keyring https://cryptomilk.org/0x8DFF53E18F2ABC8D8F
 -                   because: SHA1 is not considered secure
 -self-signatures PositiveCertification: 2013-10-05, 2016-03-31
 -self-signatures SubkeyBinding: 2013-10-05
-+self-signatures PositiveCertification: 2026-10-28
-+self-signatures SubkeyBinding: 2026-10-28
++self-signatures PositiveCertification: 2013-10-05, 2016-03-31, 2019-07-16, 2026-10-28
++self-signatures SubkeyBinding: 2013-10-05, 2026-10-28
++third-party CasualCertification: 2
++third-party GenericCertification: 14
++third-party PositiveCertification: 1
 ```
 
 ## Verification with the upstream keyring
 
 ```
 $ sqv ... resolv_wrapper-1.1.8.tar.gz
-Signing key on 8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D is not bound:
-           No binding signature at time 2022-12-20T15:35:40Z
-  because: No binding signature at time 2022-12-20T15:35:40Z
-rc=1
+8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D
+rc=0
 ```
 

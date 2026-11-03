@@ -1,6 +1,6 @@
-From ef82e3dbebdce6037038166c9774e55135e2f4f0 Mon Sep 17 00:00:00 2001
+From f04f4c33f8b235e54cfdb3ddb8728abaad3a4923 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:45 +0100
+Date: Tue, 3 Nov 2026 11:00:30 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/mingw-cmocka.spec b/mingw-cmocka.spec
-index a527b58..0287776 100644
+index f655014..df7cd09 100644
 --- a/mingw-cmocka.spec
 +++ b/mingw-cmocka.spec
-@@ -20,7 +20,7 @@ Source2:        cmocka.keyring
+@@ -22,7 +22,7 @@ Source2:        cmocka.keyring
  BuildArch:      noarch
  
  BuildRequires:  make
@@ -25,7 +25,7 @@ index a527b58..0287776 100644
  BuildRequires:  mingw32-filesystem >= 95
  BuildRequires:  mingw32-gcc
  BuildRequires:  mingw32-gcc-c++
-@@ -77,7 +77,7 @@ Static version of the MinGW Windows cmocka library.
+@@ -79,7 +79,7 @@ Static version of the MinGW Windows cmocka library.
  
  
  %prep

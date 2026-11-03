@@ -1,0 +1,156 @@
+From 3c3a421d7466c1898da608ad2e30e1df9c4621c5 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Tue, 3 Nov 2026 11:00:26 +0100
+Subject: [PATCH 1/2] Update the upstream signing key
+
+Update libguestfs.keyring to the current copy at
+https://download.libguestfs.org/rich@annexia.org-pubkey.txt (same
+certificate(s)).
+The commands are in the comment above its Source line.
+
+The current key is needed to verify the release signature with
+openpgpverify (sqv), which checks that the key was valid when the
+release was signed.
+
+Assisted-by: Claude Opus 5.5
+---
+ libguestfs.keyring | Bin 2823 -> 4004 bytes
+ ocaml-augeas.spec  |   2 ++
+ 2 files changed, 2 insertions(+)
+
+diff --git a/libguestfs.keyring b/libguestfs.keyring
+index bb3eb5537b7c398a10b7e2b26ca00af011d1a73e..d475e1c0fcd6e36b768ad03456fa3746f7a92a4c 100644
+GIT binary patch
+literal 4004
+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
+J&i;@4{cp-4Ap`&b
+
+literal 2823
+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
+
+diff --git a/ocaml-augeas.spec b/ocaml-augeas.spec
+index 6e56372..eea8599 100644
+--- a/ocaml-augeas.spec
++++ b/ocaml-augeas.spec
+@@ -10,6 +10,8 @@ License:        LGPL-2.1-or-later WITH OCaml-LGPL-linking-exception
+ URL:            https://people.redhat.com/~rjones/augeas/
+ Source0:        https://download.libguestfs.org/ocaml-augeas/ocaml-augeas-%{version}.tar.gz
+ Source1:        https://download.libguestfs.org/ocaml-augeas/ocaml-augeas-%{version}.tar.gz.sig
++# Upstream signing key:
++#   curl -fsSL -o libguestfs.keyring https://download.libguestfs.org/rich@annexia.org-pubkey.txt
+ Source2:        libguestfs.keyring
+ 
+ BuildRequires:  make
+-- 
+2.56.0
+
+

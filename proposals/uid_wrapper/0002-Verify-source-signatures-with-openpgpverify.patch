@@ -1,6 +1,6 @@
-From 8449052c8004112ede19a0f9b4f7af2afab994ff Mon Sep 17 00:00:00 2001
+From b2614c172330b31a4a679cc986004b721f627e48 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:42 +0100
+Date: Tue, 3 Nov 2026 11:00:27 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/uid_wrapper.spec b/uid_wrapper.spec
-index 2ba3442..7d1cad0 100644
+index 6b4c931..38ab004 100644
 --- a/uid_wrapper.spec
 +++ b/uid_wrapper.spec
-@@ -18,6 +18,7 @@ BuildRequires:  gcc
+@@ -20,6 +20,7 @@ BuildRequires:  gcc
  BuildRequires:  cmake
  BuildRequires:  gnupg2
  BuildRequires:  libcmocka-devel >= 1.1.0
@@ -24,7 +24,7 @@ index 2ba3442..7d1cad0 100644
  
  Recommends:     cmake
  Recommends:     pkgconfig
-@@ -37,7 +38,7 @@ This package doesn't have a devel package cause this project is for
+@@ -39,7 +40,7 @@ This package doesn't have a devel package cause this project is for
  development/testing.
  
  %prep

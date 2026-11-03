@@ -1,6 +1,6 @@
-From ce555963e8b63c79a1c0063efa6da8d23dcc8a40 Mon Sep 17 00:00:00 2001
+From d4bd892fd860a8ccc6608b48f830e8fca97def22 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:42 +0100
+Date: Tue, 3 Nov 2026 11:00:26 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/pam_wrapper.spec b/pam_wrapper.spec
-index 810284d..12bf70b 100644
+index 55e01c0..eaca8b3 100644
 --- a/pam_wrapper.spec
 +++ b/pam_wrapper.spec
-@@ -15,7 +15,7 @@ Source1:        https://ftp.samba.org/pub/cwrap/%{name}-%{version}.tar.gz.asc
+@@ -17,7 +17,7 @@ Source1:        https://ftp.samba.org/pub/cwrap/%{name}-%{version}.tar.gz.asc
  Source2:        pam_wrapper.keyring
  
  BuildRequires:  gcc
@@ -25,7 +25,7 @@ index 810284d..12bf70b 100644
  BuildRequires:  cmake
  BuildRequires:  libcmocka-devel
  BuildRequires:  python3-devel
-@@ -87,7 +87,7 @@ Python module to quickly write tests in Python.
+@@ -89,7 +89,7 @@ Python module to quickly write tests in Python.
  
  
  %prep

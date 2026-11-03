@@ -1,6 +1,6 @@
-From 7c9407af773a738f794e45001533103fa4fe4a2e Mon Sep 17 00:00:00 2001
+From f8729270551bcbc4433a82fd4a3a2a8071c08f2d Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:41 +0100
+Date: Tue, 3 Nov 2026 11:00:25 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/cmocka.spec b/cmocka.spec
-index ad7d00f..239e3fd 100644
+index 9f3abcf..c8d492f 100644
 --- a/cmocka.spec
 +++ b/cmocka.spec
-@@ -19,7 +19,7 @@ BuildRequires:  gcc
+@@ -21,7 +21,7 @@ BuildRequires:  gcc
  BuildRequires:  cmake
  BuildRequires:  doxygen
  BuildRequires:  glibc-devel
@@ -25,7 +25,7 @@ index ad7d00f..239e3fd 100644
  
  Obsoletes:      libcmocka-static < %{version}
  
-@@ -104,7 +104,7 @@ This package provides the API documentation for the cmocka unit testing
+@@ -106,7 +106,7 @@ This package provides the API documentation for the cmocka unit testing
  framework.
  
  %prep

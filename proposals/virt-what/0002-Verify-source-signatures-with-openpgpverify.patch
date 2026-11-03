@@ -1,0 +1,58 @@
+From a4906739240b1d4d1a6c5cf1f40197b96dd1d7af Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Tue, 3 Nov 2026 11:00:27 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ virt-what.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/virt-what.spec b/virt-what.spec
+index 75f5ad0..f96a29d 100644
+--- a/virt-what.spec
++++ b/virt-what.spec
+@@ -1,6 +1,6 @@
+ Name:           virt-what
+ Version:        1.27
+-Release:        6%{?dist}
++Release:        7%{?dist}
+ Summary:        Detect if we are running in a virtual machine
+ License:        GPL-2.0-or-later
+ 
+@@ -32,6 +32,7 @@ BuildRequires: gnupg2
+ 
+ # Required at build time in order to do 'make check' (for getopt).
+ BuildRequires:  util-linux
++BuildRequires:  openpgpverify
+ 
+ # virt-what script uses dmidecode and getopt (from util-linux).
+ # RPM cannot detect this so make the dependencies explicit here.
+@@ -97,7 +98,7 @@ Current types of virtualization detected:
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -S git
+ 
+ # Always rebuild upstream autotools files.
+@@ -128,6 +129,9 @@ fi
+ 
+ 
+ %changelog
++* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 1.27-7
++- Verify upstream source signatures with openpgpverify
++
+ * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.27-6
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

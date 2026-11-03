@@ -1,6 +1,6 @@
-From 35fea87348851e5bc02fabab58a94b6c8d271e8f Mon Sep 17 00:00:00 2001
+From 4f948be9f09722cbdc8bce55ffa400aaabfd0fcc Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:42 +0100
+Date: Tue, 3 Nov 2026 11:00:26 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/priv_wrapper.spec b/priv_wrapper.spec
-index b977e5e..165409e 100644
+index 04213f9..1b3ec9a 100644
 --- a/priv_wrapper.spec
 +++ b/priv_wrapper.spec
 @@ -1,6 +1,6 @@
@@ -26,7 +26,7 @@ index b977e5e..165409e 100644
  
  Summary:        A library to disable resource limits and other privilege dropping
  License:        GPL-3.0-or-later
-@@ -20,6 +20,7 @@ BuildRequires:  gcc
+@@ -22,6 +22,7 @@ BuildRequires:  gcc
  BuildRequires:  cmake
  BuildRequires:  gnupg2
  BuildRequires:  libcmocka-devel >= 1.1.0
@@ -34,7 +34,7 @@ index b977e5e..165409e 100644
  
  Recommends:     cmake
  Recommends:     pkgconfig
-@@ -40,7 +41,7 @@ This package does not have a devel package, because this project is for
+@@ -42,7 +43,7 @@ This package does not have a devel package, because this project is for
  development/testing.
  
  %prep
@@ -43,7 +43,7 @@ index b977e5e..165409e 100644
  %autosetup -p1
  
  %build
-@@ -69,6 +70,9 @@ development/testing.
+@@ -71,6 +72,9 @@ development/testing.
  %{_mandir}/man1/priv_wrapper.1*
  
  %changelog

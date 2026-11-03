@@ -1,6 +1,6 @@
-From 3a55fccd36371544885045a11120aad17a0a5bb4 Mon Sep 17 00:00:00 2001
+From 6bb2bce69d168bcda3c8ab8e09e1ae97c0640c2d Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:42 +0100
+Date: Tue, 3 Nov 2026 11:00:27 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/socket_wrapper.spec b/socket_wrapper.spec
-index 8d0ffe9..cddb125 100644
+index 3ed992f..a061ea0 100644
 --- a/socket_wrapper.spec
 +++ b/socket_wrapper.spec
-@@ -18,6 +18,7 @@ BuildRequires:  cmake
+@@ -20,6 +20,7 @@ BuildRequires:  cmake
  BuildRequires:  gcc
  BuildRequires:  gnupg2
  BuildRequires:  libcmocka-devel >= 1.1.0
@@ -24,7 +24,7 @@ index 8d0ffe9..cddb125 100644
  
  Recommends:     cmake
  Recommends:     pkgconfig
-@@ -52,7 +53,7 @@ Development headers for applications with the need to call
+@@ -54,7 +55,7 @@ Development headers for applications with the need to call
  socket_wrapper_enabled().
  
  %prep

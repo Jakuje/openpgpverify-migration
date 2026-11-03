@@ -1,0 +1,59 @@
+From 4814158d2f35b92281bd2200ae09c32edb9c02a6 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Tue, 3 Nov 2026 11:00:25 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ libnbd.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/libnbd.spec b/libnbd.spec
+index 69c5dcc..e237057 100644
+--- a/libnbd.spec
++++ b/libnbd.spec
+@@ -25,7 +25,7 @@
+ 
+ Name:           libnbd
+ Version:        1.25.8
+-Release:        1%{?dist}
++Release:        2%{?dist}
+ Summary:        NBD client library in userspace
+ 
+ License:        LGPL-2.0-or-later AND BSD-3-Clause
+@@ -99,6 +99,7 @@ BuildRequires:  jq
+ BuildRequires:  nbd
+ %endif
+ BuildRequires:  util-linux
++BuildRequires:  openpgpverify
+ 
+ # On RHEL, maybe even in Fedora in future, we do not build qemu-img or
+ # nbdkit for i686.  These are only needed for the test suite so make
+@@ -223,7 +224,7 @@ for %{name}.
+ 
+ %prep
+ %if 0%{verify_tarball_signature}
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %endif
+ %autosetup -p1
+ autoreconf -i
+@@ -410,6 +411,9 @@ make %{?_smp_mflags} check || {
+ 
+ 
+ %changelog
++* Fri Oct 30 2026 Jakub Jelen <jjelen@redhat.com> - 1.25.8-2
++- Verify upstream source signatures with openpgpverify
++
+ * Tue Oct 13 2026 Richard W.M. Jones <rjones@redhat.com> - 1.25.8-1
+ - New upstream development version 1.25.8
+ - Replace TODO with TODO.md
+-- 
+2.56.0
+

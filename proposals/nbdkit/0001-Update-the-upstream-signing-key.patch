@@ -1,0 +1,128 @@
+From 9976923dfa31750b1171a539a3bfff7433a66376 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Tue, 3 Nov 2026 11:00:26 +0100
+Subject: [PATCH 1/2] Update the upstream signing key
+
+Rebuild libguestfs.keyring from the key upstream publishes at
+https://download.libguestfs.org/rich@annexia.org-pubkey.txt, merged into
+the existing keyring (same certificate(s)).
+The commands are in the comment above its Source line.
+
+The current key is needed to verify the release signature with
+openpgpverify (sqv), which checks that the key was valid when the
+release was signed.
+
+Assisted-by: Claude Opus 5.5
+---
+ libguestfs.keyring | Bin 82814 -> 83033 bytes
+ nbdkit.spec        |   5 +++++
+ 2 files changed, 5 insertions(+)
+
+diff --git a/libguestfs.keyring b/libguestfs.keyring
+index f0508c8d7008b4290b09df40ececc5dd721b5bf9..67090455249a17af9df0668e7ac36a7e875d7175 100644
+GIT binary patch
+delta 3576
+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
+
+delta 3445
+zcmZvfYiv|S6vy{Wm(o)1(g%fE7`nBA)`Hy?7wE$lY-*)eY#KsHgM{LvHUt|$jZv($
+zXhL>lDUUH+tJX&)#-t&1b804)5CcIpSaky$s05*!7?ns%_#$7b*?YU~oT2;e{`Smy
+z%*^?pdq*O(CJxL>>0wqZ#bWaY=6XD>yIaBI{03zfE6kc?%w<tlhF#t=mOhZ`Non2P
+z>KT+@rxwj%RGnVNGLl9^%)<5zi={+a0Kc0TnEs~+`tYBuKDZ||bOw@aGIT`#o7*zw
+zG718>FA$(5ayV!8Jxk8#JTqkxk%x2FC!P{DdLptecYVU0^ArUkw=dvWGv5nSF^0gx
+zj)fLLL>}ag)7Wd_4Q_cMB5#TMDcl1VKD@-5v6O|zE<%Mj2hu!C<-xqg_-Lnpx{Qdt
+z@tc#Dv%66cc5fwcl%rn9W-|3V*YraA$y5A{{$GSVz3ci;mW)-u3a4BbFoC;9gmXAk
+zpz*Q`+;o_b-8(pbKkTJei_RL$wq7?t_f-R|{Mi6^;s*HX2Ll|tK!I#*;dtm<BbV$;
+z)C!x<8=(B00glFW07Bm0$nnoF+^aCP6+6Gut(cH)TR1*<nueDRO&n`a88Eb&W8shi
+zGdFRZttiA8(jfTKNeX1VhT}J%d7Tz?a*N2~liE#YLYCBXTzZ0fmcBZUv-%A<R?G2^
+z&nd*i$A#wI4&{PhHXjd8HwzP3+^5^f(JH?j`B*anfpb2gm&@+T1dbo{(r9*@4>-Q@
+zKBZV>)3Wg|X@CnybN~WB{YZ}o!VYBs$NXdZF~T@rJ~U45yxlMtIBx6F698c^Ndu1Y
+zZn9X|6RE&4c2K7*EL#c-@cC$#))Nqxp=BYgiV#a-U-tsXqi@q#_}-g(=1kzwTY7CQ
+zEbkVCaP|SRtQ5EJFP#>SLHT&zYEy`z6!+(8MhSKC%ZnY(K~aTyVINVL;k~+w^k4JK
+z-n~IhJmY8l^6WO9?CH=hAqcy<95@DFryGEEuaL?F7QgI*q`+YJ4r*by2Z3WovtB$C
+z_Pz?>_+&e!vimB>j#nwfIWJO=INWA{6FUvCtJMIFEe5!`%K$5%H9+>$2EYa#fWX@u
+zjdSnXs#`FDZCeb`&}4wnW&>nyqCm!w<KK<Op1iYx^l$wJ?eLhul6vX{eRT#Ht2IEp
+z#sINuJ%lSGoz<E~FoE^!bQ?KZrKJG^SFEKQ<Vwit3R;XSAs?1eigl}ugyyU?z|Eiz
+zK;XGbJst=w4ihkLSEd8U%#tfJNJz&TJ%OZz++Lw~KvF_3F4rjwV@qL}$Ond&g=q{&
+zI`DoP15X9?1ew5J^7Wcn81EK@Sz7Wv2aA3mUo?YCESe~Fq9rv!^;UxWay2<(hWGmI
+zU^(awA3x)_p9m7Pr^9bwssindL8#_(pgF3MRX~yy>dS{FNm2$9?->do1if4)RC~}|
+zxv#<?2@O!0rDUZ$(p79JkZl*TYb#eJ4-i{-uq)qklQuMQHCANO&}OdU%S;+Wu8tNM
+zR6Uh%<{GczYG5Jg)7;L^hsX3;n;7TH$}^lL=DE7H*ra2%T>a=bsCq3I^gc`UqAu^F
+zRepOk$2hj^`R1{8Wg6+LHXk7%RDU*E1ww@~C>d9k=|D%YYM5*KS&~Lq2{n;Qi8Eo<
+zl@#Mh)palN#RP8pkK8tAnyNm~H)#kg<y{LFq(mX0=C6ambUXBbPpx?be30y$$?u~m
+eD7C&Cls<!@Gmx}OelbCrx~~SxAkl-)?fxH-DTP!3
+
+diff --git a/nbdkit.spec b/nbdkit.spec
+index b0b9e0b..06a1460 100644
+--- a/nbdkit.spec
++++ b/nbdkit.spec
+@@ -70,6 +70,11 @@ Source0:        http://libguestfs.org/download/nbdkit/%{source_directory}/%{name
+ %if 0%{verify_tarball_signature}
+ Source1:        http://libguestfs.org/download/nbdkit/%{source_directory}/%{name}-%{version}.tar.gz.sig
+ # Keyring used to verify tarball signature.
++# Upstream signing key from upstream, merged into this keyring:
++#   curl -fsSL -o key.asc https://download.libguestfs.org/rich@annexia.org-pubkey.txt
++#   sq keyring merge libguestfs.keyring key.asc | sq packet dearmor --output libguestfs.keyring.new
++#   mv libguestfs.keyring.new libguestfs.keyring
++#   rm -f key.asc
+ Source2:        libguestfs.keyring
+ %endif
+ 
+-- 
+2.56.0
+
+

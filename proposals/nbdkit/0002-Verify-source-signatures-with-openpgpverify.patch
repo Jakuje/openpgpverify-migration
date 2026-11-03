@@ -1,0 +1,59 @@
+From 45aae972633739a014c8fa702bfe221a13fa744c Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Tue, 3 Nov 2026 11:00:26 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ nbdkit.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/nbdkit.spec b/nbdkit.spec
+index 06a1460..643c63a 100644
+--- a/nbdkit.spec
++++ b/nbdkit.spec
+@@ -55,7 +55,7 @@
+ 
+ Name:           nbdkit
+ Version:        1.49.4
+-Release:        1%{?dist}
++Release:        2%{?dist}
+ Summary:        NBD server
+ 
+ License:        BSD-3-Clause
+@@ -191,6 +191,7 @@ BuildRequires:  /usr/bin/stat
+ # nbdkit plugins and filters.  This means nbdkit build depends on
+ # itself, but it's a simple noarch package so easy to install.
+ BuildRequires:  nbdkit-srpm-macros >= 1.30.0
++BuildRequires:  openpgpverify
+ 
+ %if 0%{?have_mingw}
+ BuildRequires:  mingw32-filesystem
+@@ -829,7 +830,7 @@ development kit for 64 bit versions of Windows.
+ 
+ %prep
+ %if 0%{verify_tarball_signature}
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %endif
+ %autosetup -p1 -S git
+ autoreconf -i
+@@ -1591,6 +1592,9 @@ fi
+ 
+ 
+ %changelog
++* Fri Oct 30 2026 Jakub Jelen <jjelen@redhat.com> - 1.49.4-2
++- Verify upstream source signatures with openpgpverify
++
+ * Sat Oct 17 2026 Richard W.M. Jones <rjones@redhat.com> - 1.49.4-1
+ - New upstream development version 1.49.4
+ 
+-- 
+2.56.0
+

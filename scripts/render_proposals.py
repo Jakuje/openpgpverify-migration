@@ -229,7 +229,17 @@ def make_commit(pkg, s, refresh_files):
                         open(path, 'w').write(''.join(l + '\n' for l in keep))
                 sh(['git', '-C', pr, 'add', '-f', f['file']])
                 moved.append(f['file'])
-            if f.get('method') == 'upstream-url':
+            if f.get('method', '').startswith('key-url'):
+                key.append('Rebuild %s from the key upstream publishes at %s%s%s (same '
+                           'certificate(s)).' % (
+                               f['file'], f['url'],
+                               ', merged into the existing keyring' if f.get('url_fingerprints')
+                               and sorted(f['url_fingerprints']) != sorted(f['fingerprints'])
+                               else '',
+                               ', completed from keyservers/WKD with the older '
+                               'self-signatures and subkey bindings the release needs'
+                               if f['method'].endswith('keyserver') else ''))
+            elif f.get('method') == 'upstream-url':
                 key.append('Update %s to the current copy at %s%s (same certificate(s)).' % (
                     f['file'], f['url'], '' if f.get('spec_commands') else
                     ', the URL the spec names for it'))
@@ -312,6 +322,12 @@ def render_pr(pkg, s, draft):
                            'it moves into git (its line in `sources` is dropped)' % f['file'])
         commented = re.search(r'(?m)^\+#   mv %s\.new ' % re.escape(os.path.basename(f['file'])),
                               diff)
+        if f.get('method', '').startswith('key-url'):
+            changes.append('- rebuilt keyring `%s` from the upstream key at %s%s (see below); '
+                           'the comment above its `Source` line shows the commands'
+                           % (f['file'], f['url'], ', completed from keyservers/WKD'
+                              if f['method'].endswith('keyserver') else ''))
+            continue
         if f.get('method') == 'upstream-url':
             changes.append('- updated `%s` to the current upstream copy from the URL in the '
                            'spec (see below)' % f['file'])
@@ -344,7 +360,30 @@ def render_pr(pkg, s, draft):
         diffs = re.findall(r'```diff\n(.*?)```', review, re.S)
         reason = (REASONS.get(res.get('failure_reason')) or GENERIC)[0]
         keybox = any(f.get('keybox') for f in files)
-    if files and kr.get('method') == 'upstream-url':
+    if files and kr.get('method', '').startswith('key-url'):
+        ks = kr['method'].endswith('keyserver')
+        refresh = ('\n### Keyring update\n\n`%%openpgpverify` rejected the signature with '
+                   'the keyring in dist-git (%s), while %s ignores that. %s'
+                   'The keyring is rebuilt from that key%s, with exactly these commands '
+                   '(also in the comment above the keyring\'s `Source` line, for the next '
+                   'update):\n\n```\n%s\n```\n\nFingerprints (unchanged):\n\n%s\n\n'
+                   'What changed in the certificate (`sq inspect`):\n\n```diff\n%s```\n'
+                   % (reason, old_tool,
+                      'Upstream publishes the current key at %s. ' % ', '.join(
+                          sorted({f['url'] for f in files})) +
+                      ('That copy has only the latest self-signatures, so it is completed from '
+                       'keyservers/WKD (looked up by fingerprint, %s), which have the older '
+                       'self-signatures and subkey bindings that were valid when the release '
+                       'was signed. ' % '; '.join(sorted({v for f in files
+                                                          for v in f.get('found_via', [])}))
+                       if ks else ''),
+                      ''.join(', merged into the existing keyring (the other keys stay)'
+                              for f in files[:1] if f.get('url_fingerprints') and
+                              sorted(f['url_fingerprints']) != sorted(f['fingerprints'])),
+                      '\n'.join(c for f in files for c in f['commands']),
+                      '\n'.join('- `%s`' % fp for f in files for fp in f['fingerprints']),
+                      ''.join(diffs)))
+    elif files and kr.get('method') == 'upstream-url':
         refresh = ('\n### Keyring update\n\n`%%openpgpverify` rejected the signature with '
                    'the keyring in dist-git (%s), while %s ignores that. Upstream has updated '
                    'the key since: the copy at the URL the spec names for it has the same '

@@ -1,0 +1,60 @@
+From 85c2cd54081d351de48fc68223ce2297e3ea5644 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Tue, 3 Nov 2026 11:00:26 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ ocaml-augeas.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/ocaml-augeas.spec b/ocaml-augeas.spec
+index eea8599..765c998 100644
+--- a/ocaml-augeas.spec
++++ b/ocaml-augeas.spec
+@@ -3,7 +3,7 @@ ExcludeArch: %{ix86}
+ 
+ Name:           ocaml-augeas
+ Version:        0.7
+-Release:        10%{?dist}
++Release:        11%{?dist}
+ Summary:        OCaml bindings for Augeas configuration API
+ License:        LGPL-2.1-or-later WITH OCaml-LGPL-linking-exception
+ 
+@@ -20,7 +20,7 @@ BuildRequires:  ocaml-findlib
+ BuildRequires:  ocaml-ocamldoc
+ BuildRequires:  ocaml-rpm-macros
+ BuildRequires:  augeas-devel >= 0.1.0
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ 
+ 
+ %description
+@@ -39,7 +39,7 @@ developing applications that use %{name}.
+ 
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ 
+@@ -87,6 +87,9 @@ ocamlfind install augeas META *.mli *.cma *.a augeas.cmi *.so
+ 
+ 
+ %changelog
++* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 0.7-11
++- Verify upstream source signatures with openpgpverify
++
+ * Tue Sep 15 2026 Richard W.M. Jones <rjones@redhat.com> - 0.7-10
+ - Bump and rebuild
+ 
+-- 
+2.56.0
+

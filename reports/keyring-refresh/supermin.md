@@ -12,6 +12,15 @@ Phase 1 reason: `sha1-cert`
 - found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
 - size: 2823 → 19398 bytes
 
+Commands (run in a copy of dist-git):
+
+```
+sq --home=none network search --output - F7774FB1AD074A7E8C8767EA91738F73E1B768A0 \
+  | sq keyring filter --experimental --cert F7774FB1AD074A7E8C8767EA91738F73E1B768A0 --output update.pgp
+sq keyring merge libguestfs.keyring update.pgp | sq packet dearmor --output libguestfs.keyring.new
+mv libguestfs.keyring.new libguestfs.keyring
+```
+
 ```diff
 --- dist-git/libguestfs.keyring
 +++ refreshed/libguestfs.keyring

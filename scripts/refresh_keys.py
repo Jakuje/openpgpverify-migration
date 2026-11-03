@@ -3,6 +3,11 @@
 
 Usage:
   refresh_keys.py propose [PKG...]      default: regressions with a refreshable reason
+  refresh_keys.py propose-upstream [--url URL] [PKG...]
+                                        the keyring file from upstream, byte for byte
+  refresh_keys.py propose-key --url URL [--keyserver] PKG...
+                                        rebuild the keyring from the key at URL,
+                                        completed from keyservers with --keyserver
   refresh_keys.py show PKG              print the review summary
   refresh_keys.py approve PKG [--note TEXT]
   refresh_keys.py reject PKG --note TEXT
@@ -39,6 +44,7 @@ import convert  # noqa: E402
 import phase1  # noqa: E402
 import state  # noqa: E402
 
+UPSTREAM_METHODS = ('upstream-url', 'key-url', 'key-url+keyserver')
 REFRESHABLE = {'expired', 'sha1-cert', 'binding-after-signature', 'policy', 'unknown'}
 FLOOD_LIMIT = 256 * 1024     # bytes; larger certificates need a closer look
 
@@ -274,7 +280,93 @@ def upstream_file(src, url, dst, tmp):
     return info
 
 
-def propose_upstream(pkg, rec, url=None):
+def key_recipe(name, url, fprs, keyserver, keep_old, armored):
+    """The commands that rebuild keyring NAME from the key published at URL:
+    optionally completed from keyservers/WKD (upstream publishes only the
+    current key there; the older self-signatures and subkeys a release may need
+    are on the keyservers), and merged into the old keyring when the URL holds
+    only some of its certificates. key_file() runs exactly these."""
+    cmds = ['curl -fsSL -o key.asc %s' % url]
+    parts = ['key.asc']
+    if keyserver:
+        cmds.append('sq --home=none network search --output - %s \\\n'
+                    '  | sq keyring filter --experimental %s --output update.pgp'
+                    % (' '.join(fprs), ' '.join('--cert %s' % f for f in fprs)))
+        parts.append('update.pgp')
+    if keep_old:
+        parts.insert(0, name)
+    if armored:
+        cmds.append('sq keyring merge --output %s.new %s' % (name, ' '.join(parts)))
+    else:
+        cmds.append('sq keyring merge %s | sq packet dearmor --output %s.new'
+                    % (' '.join(parts), name))
+    cmds.append('mv %s.new %s' % (name, name))
+    cmds.append('rm -f %s' % ' '.join(p for p in parts if p != name))
+    return cmds
+
+
+def key_file(src, url, dst, tmp, keyserver):
+    """Rebuild one keyring file from the key at URL by running key_recipe()."""
+    name = os.path.basename(src)
+    info = dict(url=url, size_old=os.path.getsize(src),
+                method='key-url+keyserver' if keyserver else 'key-url')
+    if is_keybox(src):
+        info['error'] = 'keybox in dist-git; not supported here'
+        return info
+    run = os.path.join(tmp, 'run-' + name)
+    shutil.rmtree(run, ignore_errors=True)
+    os.makedirs(run)
+    dl = os.path.join(tmp, 'download')
+    p = sh(['curl', '-fsSL', '--proto', '=https,http', '--max-time', '120',
+            '--max-filesize', str(20 * 1024 * 1024), '-o', dl, url], timeout=180)
+    if p.returncode or not os.path.exists(dl):
+        info['error'] = 'download failed (curl rc %d)' % p.returncode
+        return info
+    fo, fu = fingerprints(src), fingerprints(dl)
+    info['fingerprints'] = fo
+    if not fu:
+        info['error'] = 'no OpenPGP certificate at the URL (a web page?)'
+        return info
+    if [f for f in fu if f not in fo]:
+        info['error'] = 'the URL has certificates the keyring does not: %s' % ', '.join(
+            f for f in fu if f not in fo)
+        return info
+    keep_old = sorted(fu) != sorted(fo)
+    info['url_fingerprints'] = fu
+    armored = open(src, 'rb').read(64).lstrip().startswith(b'-----BEGIN PGP')
+    cmds = key_recipe(name, url, fu, keyserver, keep_old, armored)
+    info['commands'] = info['spec_commands'] = cmds
+    info['spec_header'] = ('# Upstream signing key from %s%s:' % (
+        'its website' if not keep_old else 'upstream, merged into this keyring',
+        ', completed from keyservers/WKD' if keyserver else ''))
+    shutil.copy(src, os.path.join(run, name))
+    for c in cmds:
+        p = sh(['bash', '-o', 'pipefail', '-c', c], cwd=run, timeout=600)
+        info.setdefault('found_via', [])
+        info['found_via'] += sorted(set(re.findall(r'found via: (.*)', p.stdout + p.stderr)))
+        if p.returncode:
+            info['error'] = 'command failed: %s: %s' % (c, (p.stderr or '').strip()[-300:])
+            return info
+    info['found_via'] = sorted({h for v in info['found_via'] for h in v.split(', ')})
+    out = os.path.join(run, name)
+    if sorted(fingerprints(out)) != sorted(fo):
+        info['error'] = 'the result has a different set of certificates'
+        return info
+    if open(out, 'rb').read() == open(src, 'rb').read():
+        info['error'] = 'the result is the same file as dist-git'
+        return info
+    shutil.copy(out, dst)
+    info['size_new'] = os.path.getsize(dst)
+    info['sha256_new'] = hashlib.sha256(open(dst, 'rb').read()).hexdigest()
+    info['changed'] = True
+    info['old_summary_base'] = False
+    if info['size_new'] > FLOOD_LIMIT:
+        info['warning'] = 'keyring is %d bytes (flooded third-party signatures?)' \
+            % info['size_new']
+    return info
+
+
+def propose_upstream(pkg, rec, url=None, keyserver=None):
     """Like propose(), but take the keyring from the URL the spec names, or
     from URL (e.g. one upstream pointed us to); a URL not in the spec is
     added to the comment above the keyring's Source line."""
@@ -290,6 +382,8 @@ def propose_upstream(pkg, rec, url=None):
     tmp = os.path.join(out, '.tmp')
     shutil.rmtree(out, ignore_errors=True)
     os.makedirs(tmp)
+    method = 'upstream-url' if keyserver is None else \
+        'key-url+keyserver' if keyserver else 'key-url'
     files, tried = [], []
     for k in keyrings:
         src = phase1.host_path(k, g)
@@ -298,9 +392,12 @@ def propose_upstream(pkg, rec, url=None):
         rel = os.path.relpath(src, g)
         os.makedirs(os.path.dirname(os.path.join(out, rel)), exist_ok=True)
         for u in [url] if url else key_urls(spec, pkg, os.path.basename(rel)):
-            info = upstream_file(src, u, os.path.join(out, rel), tmp)
+            if keyserver is not None:
+                info = key_file(src, u, os.path.join(out, rel), tmp, keyserver)
+            else:
+                info = upstream_file(src, u, os.path.join(out, rel), tmp)
             info['file'] = rel
-            if url and u not in key_urls(spec, pkg, os.path.basename(rel)):
+            if keyserver is None and url and u not in key_urls(spec, pkg, os.path.basename(rel)):
                 info['spec_header'] = '# Upstream signing key:'
                 info['spec_commands'] = info['commands']
             tried.append(info)
@@ -309,10 +406,10 @@ def propose_upstream(pkg, rec, url=None):
                 break
     if not tried:
         shutil.rmtree(out, ignore_errors=True)
-        return dict(status='no-url', method='upstream-url')
+        return dict(status='no-url', method=method)
     if not files:
         shutil.rmtree(tmp, ignore_errors=True)
-        return dict(status='not-found', method='upstream-url',
+        return dict(status='not-found', method=method,
                     tried=[dict(url=t['url'], error=t.get('error')) for t in tried])
     for f in (sig, data):
         h = phase1.host_path(f or '', g)
@@ -347,6 +444,12 @@ def propose_upstream(pkg, rec, url=None):
         p = sh(['diff', '-u', '--label', 'dist-git/' + rel, '--label', 'upstream/' + rel,
                 old_s, new_s], timeout=60)
         review += ['## %s' % rel, '', '- from: %s' % f['url'],
+                   *(['- completed from keyservers/WKD, found via: %s'
+                      % '; '.join(f['found_via'])] if f.get('found_via') else []),
+                   *(['- merged into the existing keyring (the URL has %s only)'
+                      % ', '.join(f['url_fingerprints'])]
+                     if f.get('url_fingerprints') and
+                     sorted(f['url_fingerprints']) != sorted(f['fingerprints']) else []),
                    '- certificates (unchanged): %s' % ', '.join(f['fingerprints']),
                    '- size: %s → %s bytes' % (f['size_old'], f['size_new']), '',
                    '```', *f['commands'], '```', '',
@@ -361,7 +464,7 @@ def propose_upstream(pkg, rec, url=None):
     shared = os.path.join(state.ROOT, 'reports', 'keyring-upstream')
     os.makedirs(shared, exist_ok=True)
     open(os.path.join(shared, pkg + '.md'), 'w').write(text)
-    return dict(status=status, method='upstream-url', files=files, host_verify_rc=host_rc,
+    return dict(status=status, method=method, files=files, host_verify_rc=host_rc,
                 review=os.path.relpath(os.path.join(out, 'REVIEW.md'), state.ROOT),
                 proposed=state.now())
 
@@ -460,12 +563,14 @@ def propose(pkg, rec):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('action', choices=['propose', 'propose-upstream', 'show', 'approve',
-                                       'reject'])
+    ap.add_argument('action', choices=['propose', 'propose-upstream', 'propose-key', 'show',
+                                       'approve', 'reject'])
     ap.add_argument('packages', nargs='*')
     ap.add_argument('--note', default=None)
     ap.add_argument('--url', default=None,
-                    help='propose-upstream: take the keyring from this URL')
+                    help='propose-upstream/propose-key: take the key from this URL')
+    ap.add_argument('--keyserver', action='store_true',
+                    help='propose-key: complete the key from keyservers/WKD')
     a = ap.parse_args()
     st = state.load()
     if a.action == 'propose':
@@ -484,13 +589,16 @@ def main():
                 state.save(cur)
             print('%-28s %s' % (pkg, kr['status']), flush=True)
         return 0
-    if a.action == 'propose-upstream':
+    if a.action == 'propose-key' and not (a.url and a.packages):
+        ap.error('propose-key needs --url and packages')
+    if a.action in ('propose-upstream', 'propose-key'):
         pkgs = a.packages or sorted(p for p, r in st.items() if r.get('status') == 'regression')
         for pkg in pkgs:
             try:
-                up = propose_upstream(pkg, st[pkg], a.url)
+                up = propose_upstream(pkg, st[pkg], a.url,
+                                      a.keyserver if a.action == 'propose-key' else None)
             except Exception as e:  # one broken package must not stop the run
-                up = dict(status='error', method='upstream-url', note='%r' % e)
+                up = dict(status='error', method=a.action, note='%r' % e)
             d = os.path.join(phase1.WORK, pkg)
             with phase1.LOCK:
                 cur = state.load()
@@ -498,7 +606,7 @@ def main():
                 r['upstream_key'] = {k: v for k, v in up.items() if k != 'files'}
                 if up['status'] == 'proposed':
                     # Preferred over a keyserver refresh: it is what the spec names.
-                    if r.get('keyring_refresh', {}).get('method') != 'upstream-url':
+                    if r.get('keyring_refresh', {}).get('method') not in UPSTREAM_METHODS:
                         r['keyring_refresh_keyserver'] = r.get('keyring_refresh')
                         shutil.rmtree(os.path.join(d, 'refresh-keyserver'), ignore_errors=True)
                         if os.path.isdir(os.path.join(d, 'refresh')):
