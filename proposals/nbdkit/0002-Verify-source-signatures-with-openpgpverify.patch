@@ -1,6 +1,6 @@
-From cfd18cb23cf932275250db80a7b60f27c96be98c Mon Sep 17 00:00:00 2001
+From 2d96d0ee611cb69e6ec70e74f1bc0ff2e23a69e4 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:30:54 +0100
+Date: Tue, 3 Nov 2026 11:35:58 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/nbdkit.spec b/nbdkit.spec
-index d9b8441..0de3726 100644
+index 7e39873..970e096 100644
 --- a/nbdkit.spec
 +++ b/nbdkit.spec
 @@ -55,7 +55,7 @@
@@ -27,7 +27,7 @@ index d9b8441..0de3726 100644
  Summary:        NBD server
  
  License:        BSD-3-Clause
-@@ -188,6 +188,7 @@ BuildRequires:  /usr/bin/stat
+@@ -186,6 +186,7 @@ BuildRequires:  /usr/bin/stat
  # nbdkit plugins and filters.  This means nbdkit build depends on
  # itself, but it's a simple noarch package so easy to install.
  BuildRequires:  nbdkit-srpm-macros >= 1.30.0
@@ -35,7 +35,7 @@ index d9b8441..0de3726 100644
  
  %if 0%{?have_mingw}
  BuildRequires:  mingw32-filesystem
-@@ -826,7 +827,7 @@ development kit for 64 bit versions of Windows.
+@@ -824,7 +825,7 @@ development kit for 64 bit versions of Windows.
  
  %prep
  %if 0%{verify_tarball_signature}
@@ -44,7 +44,7 @@ index d9b8441..0de3726 100644
  %endif
  %autosetup -p1 -S git
  autoreconf -i
-@@ -1588,6 +1589,9 @@ fi
+@@ -1586,6 +1587,9 @@ fi
  
  
  %changelog

@@ -1,6 +1,6 @@
-From 89c1328be3d3cc6e48a4308821f4706727defe0f Mon Sep 17 00:00:00 2001
+From 6bf47e3396d245e7ff177e99c1ba29d2846764c3 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:30:53 +0100
+Date: Tue, 3 Nov 2026 11:35:58 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/libnbd.spec b/libnbd.spec
-index 6650815..f2ae969 100644
+index 29cd00c..6d45af2 100644
 --- a/libnbd.spec
 +++ b/libnbd.spec
 @@ -25,7 +25,7 @@
@@ -27,7 +27,7 @@ index 6650815..f2ae969 100644
  Summary:        NBD client library in userspace
  
  License:        LGPL-2.0-or-later AND BSD-3-Clause
-@@ -96,6 +96,7 @@ BuildRequires:  jq
+@@ -94,6 +94,7 @@ BuildRequires:  jq
  BuildRequires:  nbd
  %endif
  BuildRequires:  util-linux
@@ -35,7 +35,7 @@ index 6650815..f2ae969 100644
  
  # On RHEL, maybe even in Fedora in future, we do not build qemu-img or
  # nbdkit for i686.  These are only needed for the test suite so make
-@@ -220,7 +221,7 @@ for %{name}.
+@@ -218,7 +219,7 @@ for %{name}.
  
  %prep
  %if 0%{verify_tarball_signature}
@@ -44,7 +44,7 @@ index 6650815..f2ae969 100644
  %endif
  %autosetup -p1
  autoreconf -i
-@@ -407,6 +408,9 @@ make %{?_smp_mflags} check || {
+@@ -405,6 +406,9 @@ make %{?_smp_mflags} check || {
  
  
  %changelog

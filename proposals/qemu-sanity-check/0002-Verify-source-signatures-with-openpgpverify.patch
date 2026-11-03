@@ -1,6 +1,6 @@
-From d6a2fefefacb3d61d1eeb7deece145343fc7b62c Mon Sep 17 00:00:00 2001
+From 6111fc6be85a58e770d95c2a89b00ed52195d897 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:00:32 +0100
+Date: Tue, 3 Nov 2026 11:35:58 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/qemu-sanity-check.spec b/qemu-sanity-check.spec
-index 2305cfc..862221b 100644
+index 85cb9cd..303b605 100644
 --- a/qemu-sanity-check.spec
 +++ b/qemu-sanity-check.spec
 @@ -10,7 +10,7 @@
@@ -27,7 +27,7 @@ index 2305cfc..862221b 100644
  Summary:        Simple qemu and Linux kernel sanity checker
  License:        GPL-2.0-or-later
  
-@@ -73,6 +73,7 @@ BuildRequires:  kernel
+@@ -71,6 +71,7 @@ BuildRequires:  kernel
  # into a /boot/<machine-id> subdirectory (in Fedora >= 23).  Read the
  # kernel-install script to understand why.
  BuildRequires:  grubby
@@ -35,7 +35,7 @@ index 2305cfc..862221b 100644
  
  %if !0%{?rhel}
  %ifarch %{ix86} x86_64
-@@ -131,7 +132,7 @@ as %{name} except that this package does not depend on qemu or kernel.
+@@ -129,7 +130,7 @@ as %{name} except that this package does not depend on qemu or kernel.
  
  
  %prep
@@ -44,7 +44,7 @@ index 2305cfc..862221b 100644
  %autosetup -p1
  autoreconf -fi
  
-@@ -178,6 +179,9 @@ make DESTDIR=$RPM_BUILD_ROOT install
+@@ -176,6 +177,9 @@ make DESTDIR=$RPM_BUILD_ROOT install
  
  
  %changelog

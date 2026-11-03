@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- replaced keyring `libguestfs.keyring` with the upstream key from https://download.libguestfs.org/rich@annexia.org-pubkey.txt; **3 other certificate(s) are dropped** (see below)
+- replaced keyring `libguestfs.keyring` with `rich@annexia.org-pubkey.txt` from https://download.libguestfs.org/rich@annexia.org-pubkey.txt; its `Source` line is now that URL; **3 other certificate(s) are dropped** (see below)
 - Release bumped (`1%{?dist}` → `2%{?dist}`) with a changelog entry
 
 ### Testing
@@ -31,10 +31,10 @@ Tested on 2026-10-30 at dist-git commit `255fbfafff9e` with sequoia-sqv 1.5.0-2.
 
 ### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (SHA-1 key self-signatures), while `%gpgverify` ignores that. Upstream has updated the key since: the copy at https://download.libguestfs.org/rich@annexia.org-pubkey.txt holds only the signing key and verifies the release with sqv. This PR replaces the file with that copy, byte for byte:
+`%openpgpverify` rejected the signature with the keyring in dist-git (SHA-1 key self-signatures), while `%gpgverify` ignores that. Upstream has updated the key since: the copy at https://download.libguestfs.org/rich@annexia.org-pubkey.txt holds only the signing key and verifies the release with sqv. This PR replaces the file with that copy, byte for byte, named like the URL, which becomes its `Source`:
 
 ```
-curl -fsSL -o libguestfs.keyring https://download.libguestfs.org/rich@annexia.org-pubkey.txt
+curl -fsSL -O https://download.libguestfs.org/rich@annexia.org-pubkey.txt
 ```
 
 Fingerprints (kept):
@@ -54,12 +54,12 @@ What changed in the certificate (`sq inspect`):
 +++ upstream/libguestfs.keyring
 @@ -1,46 +1,9 @@
        Fingerprint: F7774FB1AD074A7E8C8767EA91738F73E1B768A0
--                   Invalid: No binding signature at time 2026-11-03T10:30:27Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-11-03T10:35:57Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: certification, signing
             Subkey: 9076C237217722E17EACCA679658E5232D07308A
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-11-03T10:30:27Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-11-03T10:35:57Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +  Expiration time: 2041-10-03 12:04:18 UTC (creation time + 29years 11months 22days 21h 50m 25s)
 +        Key flags: transport encryption, data-at-rest encryption
             UserID: Richard W.M. Jones <rich@annexia.org>
@@ -69,15 +69,15 @@ What changed in the certificate (`sq inspect`):
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
 -      Fingerprint: 2B7C1A53420D4AF3BFF4738BF382AE19F4850180
--                   Invalid: No binding signature at time 2026-11-03T10:30:27Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-11-03T10:35:57Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 -           Subkey: 6A1D97FB8E2196B71BEE86CCBE9265468B672E01
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-11-03T10:30:27Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-11-03T10:35:57Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 -           Subkey: 94241CEEF03875798D0828FA4B1BA5190E52924D
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-11-03T10:30:27Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-11-03T10:35:57Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 -           UserID: Eric Blake (free software programmer) <ebb9@byu.net>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
@@ -91,7 +91,7 @@ What changed in the certificate (`sq inspect`):
 -           UserID: Eric Blake (Free Software Programmer) <ebb9@byu.net>
 -           UserID: Eric Blake <eblake@redhat.com>
 -      Fingerprint: BC2BFC18CF52DEA925F51215C9A12EDF2527436A
--                   Invalid: No binding signature at time 2026-11-03T10:30:27Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-11-03T10:35:57Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 -           UserID: Eric Blake <eblake@redhat.com>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure

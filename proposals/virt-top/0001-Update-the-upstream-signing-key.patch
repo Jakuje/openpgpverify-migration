@@ -1,12 +1,12 @@
-From 84cb72f239438724579844c39dc35efb261a9811 Mon Sep 17 00:00:00 2001
+From 3f1263b59703889cb50622606607d0f44b5e0ac6 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:00:27 +0100
+Date: Tue, 3 Nov 2026 11:35:59 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
-Update libguestfs.keyring to the current copy at
-https://download.libguestfs.org/rich@annexia.org-pubkey.txt (same
-certificate(s)).
-The commands are in the comment above its Source line.
+Replace libguestfs.keyring with rich@annexia.org-pubkey.txt, the key
+upstream publishes at
+https://download.libguestfs.org/rich@annexia.org-pubkey.txt (byte for
+byte); its Source line is now that URL.
 
 The current key is needed to verify the release signature with
 openpgpverify (sqv), which checks that the key was valid when the
@@ -14,72 +14,19 @@ release was signed.
 
 Assisted-by: Claude Opus 5.5
 ---
- libguestfs.keyring | Bin 2823 -> 4004 bytes
- virt-top.spec      |   2 ++
- 2 files changed, 2 insertions(+)
+ libguestfs.keyring          | Bin 2823 -> 0 bytes
+ rich@annexia.org-pubkey.txt |  65 ++++++++++++++++++++++++++++++++++++
+ virt-top.spec               |   2 +-
+ 3 files changed, 66 insertions(+), 1 deletion(-)
+ delete mode 100644 libguestfs.keyring
+ create mode 100644 rich@annexia.org-pubkey.txt
 
 diff --git a/libguestfs.keyring b/libguestfs.keyring
-index bb3eb5537b7c398a10b7e2b26ca00af011d1a73e..d475e1c0fcd6e36b768ad03456fa3746f7a92a4c 100644
+deleted file mode 100644
+index bb3eb5537b7c398a10b7e2b26ca00af011d1a73e..0000000000000000000000000000000000000000
 GIT binary patch
-literal 4004
-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
-J&i;@4{cp-4Ap`&b
+literal 0
+HcmV?d00001
 
 literal 2823
 zcma*o_cI%g0s!zNh@cv+7)4sDC~4KE_7;1u)D}doT2(9drl?iaDypbGOYOv{*;+Ne
@@ -137,19 +84,90 @@ zjW|_`i^xn9b9DCEvrOrD6cpeXE)tMl%g%g8133|+O&aU#Vo9Kcq<WViNMrGY<8E2D
 zk@HXw)%n{qt|eW{H*AG^oC;~$*CoZ9k0Rg|KXO+9eJn!o&Pj*4O-(B!*ip6p*_wj8
 mAr~0KYkj!ddXR=vhyG!WGpK}Pa+L{K-LdU)InmXx_WuA;2Rga{
 
+diff --git a/rich@annexia.org-pubkey.txt b/rich@annexia.org-pubkey.txt
+new file mode 100644
+index 0000000..d475e1c
+--- /dev/null
++++ b/rich@annexia.org-pubkey.txt
+@@ -0,0 +1,65 @@
++-----BEGIN PGP PUBLIC KEY BLOCK-----
++
++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
++pwviAONwaIlW0FEX2rcQqTjI
++=TElI
++-----END PGP PUBLIC KEY BLOCK-----
 diff --git a/virt-top.spec b/virt-top.spec
-index 66b50df..6016ab9 100644
+index 66b50df..f547f23 100644
 --- a/virt-top.spec
 +++ b/virt-top.spec
-@@ -22,6 +22,8 @@ Source2:        processcsv.py
+@@ -22,7 +22,7 @@ Source2:        processcsv.py
  Source3:        processcsv.py.pod
  
  # Keyring used to verify tarball signature.
-+# Upstream signing key:
-+#   curl -fsSL -o libguestfs.keyring https://download.libguestfs.org/rich@annexia.org-pubkey.txt
- Source4:        libguestfs.keyring
+-Source4:        libguestfs.keyring
++Source4:        https://download.libguestfs.org/rich@annexia.org-pubkey.txt
  
  # Adds a link to processcsv to the man page.  This patch is only
+ # included in RHEL builds.
 -- 
 2.56.0
 

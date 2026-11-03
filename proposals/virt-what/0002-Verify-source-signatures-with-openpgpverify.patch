@@ -1,6 +1,6 @@
-From a4906739240b1d4d1a6c5cf1f40197b96dd1d7af Mon Sep 17 00:00:00 2001
+From c031db56f365b770362f0fc8ea6b86faeed15852 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:00:27 +0100
+Date: Tue, 3 Nov 2026 11:35:59 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/virt-what.spec b/virt-what.spec
-index 75f5ad0..f96a29d 100644
+index e53e3a2..b21fbd6 100644
 --- a/virt-what.spec
 +++ b/virt-what.spec
 @@ -1,6 +1,6 @@
@@ -26,7 +26,7 @@ index 75f5ad0..f96a29d 100644
  Summary:        Detect if we are running in a virtual machine
  License:        GPL-2.0-or-later
  
-@@ -32,6 +32,7 @@ BuildRequires: gnupg2
+@@ -30,6 +30,7 @@ BuildRequires: gnupg2
  
  # Required at build time in order to do 'make check' (for getopt).
  BuildRequires:  util-linux
@@ -34,7 +34,7 @@ index 75f5ad0..f96a29d 100644
  
  # virt-what script uses dmidecode and getopt (from util-linux).
  # RPM cannot detect this so make the dependencies explicit here.
-@@ -97,7 +98,7 @@ Current types of virtualization detected:
+@@ -95,7 +96,7 @@ Current types of virtualization detected:
  
  
  %prep
@@ -43,7 +43,7 @@ index 75f5ad0..f96a29d 100644
  %autosetup -S git
  
  # Always rebuild upstream autotools files.
-@@ -128,6 +129,9 @@ fi
+@@ -126,6 +127,9 @@ fi
  
  
  %changelog

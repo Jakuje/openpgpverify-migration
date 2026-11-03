@@ -370,7 +370,7 @@ def key_file(src, url, dst, tmp, keyserver):
     return info
 
 
-def propose_upstream(pkg, rec, url=None, keyserver=None, replace=False):
+def propose_upstream(pkg, rec, url=None, keyserver=None, replace=False, source_url=False):
     """Like propose(), but take the keyring from the URL the spec names, or
     from URL (e.g. one upstream pointed us to); a URL not in the spec is
     added to the comment above the keyring's Source line."""
@@ -401,7 +401,15 @@ def propose_upstream(pkg, rec, url=None, keyserver=None, replace=False):
             else:
                 info = upstream_file(src, u, os.path.join(out, rel), tmp, replace)
             info['file'] = rel
-            if keyserver is None and url and u not in key_urls(spec, pkg, os.path.basename(rel)):
+            if source_url and keyserver is None and info.get('changed'):
+                # The Source line becomes the URL; the file is named like it.
+                new = os.path.join(os.path.dirname(rel), u.rsplit('/', 1)[-1])
+                if new != rel and os.path.exists(os.path.join(g, new)):
+                    info.update(changed=False, error='%s already exists in dist-git' % new)
+                else:
+                    info['source_url'], info['new_file'] = u, new
+                    info['commands'] = ['curl -fsSL -O %s' % u]
+            elif keyserver is None and url and u not in key_urls(spec, pkg, os.path.basename(rel)):
                 info['spec_header'] = '# Upstream signing key:'
                 info['spec_commands'] = info['commands']
             tried.append(info)
@@ -448,6 +456,8 @@ def propose_upstream(pkg, rec, url=None, keyserver=None, replace=False):
         p = sh(['diff', '-u', '--label', 'dist-git/' + rel, '--label', 'upstream/' + rel,
                 old_s, new_s], timeout=60)
         review += ['## %s' % rel, '', '- from: %s' % f['url'],
+                   *(['- **renamed to `%s`; its `Source` line becomes the URL**' % f['new_file']]
+                     if f.get('new_file') else []),
                    *(['- completed from keyservers/WKD, found via: %s'
                       % '; '.join(f['found_via'])] if f.get('found_via') else []),
                    *(['- merged into the existing keyring (the URL has %s only)'
@@ -576,6 +586,9 @@ def main():
     ap.add_argument('--note', default=None)
     ap.add_argument('--url', default=None,
                     help='propose-upstream/propose-key: take the key from this URL')
+    ap.add_argument('--source-url', action='store_true',
+                    help='propose-upstream: make the Source line the URL and name the file '
+                         'like it, instead of a comment with the commands')
     ap.add_argument('--replace', action='store_true',
                     help='propose-upstream: the URL file may hold fewer keys; the others go')
     ap.add_argument('--keyserver', action='store_true',
@@ -606,7 +619,7 @@ def main():
             try:
                 up = propose_upstream(pkg, st[pkg], a.url,
                                       a.keyserver if a.action == 'propose-key' else None,
-                                      a.replace)
+                                      a.replace, a.source_url)
             except Exception as e:  # one broken package must not stop the run
                 up = dict(status='error', method=a.action, note='%r' % e)
             d = os.path.join(phase1.WORK, pkg)

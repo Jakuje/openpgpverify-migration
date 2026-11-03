@@ -1,6 +1,6 @@
-From 441d36e4e2159f2a379462eac668704a04fe287a Mon Sep 17 00:00:00 2001
+From 0200dc81f5ae8a1d78af931ef3c00576ab4593fe Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:00:27 +0100
+Date: Tue, 3 Nov 2026 11:35:59 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/virt-top.spec b/virt-top.spec
-index 6016ab9..c8c2bb3 100644
+index f547f23..b3d0ff1 100644
 --- a/virt-top.spec
 +++ b/virt-top.spec
 @@ -3,7 +3,7 @@ ExcludeArch: %{ix86}
@@ -27,7 +27,7 @@ index 6016ab9..c8c2bb3 100644
  Summary:        Utility like top(1) for displaying virtualization stats
  License:        GPL-2.0-or-later
  
-@@ -48,7 +48,7 @@ BuildRequires:  libxml2-devel
+@@ -46,7 +46,7 @@ BuildRequires:  libxml2-devel
  BuildRequires:  perl-interpreter
  BuildRequires:  perl(Pod::Perldoc)
  BuildRequires:  gawk
@@ -36,7 +36,7 @@ index 6016ab9..c8c2bb3 100644
  
  
  %description
-@@ -61,7 +61,7 @@ different virtualization systems.
+@@ -59,7 +59,7 @@ different virtualization systems.
  
  
  %prep
@@ -45,7 +45,7 @@ index 6016ab9..c8c2bb3 100644
  %setup -q
  
  %if 0%{?rhel} >= 6
-@@ -119,6 +119,9 @@ install -m 0644 processcsv.py.1 $RPM_BUILD_ROOT%{_mandir}/man1/
+@@ -117,6 +117,9 @@ install -m 0644 processcsv.py.1 $RPM_BUILD_ROOT%{_mandir}/man1/
  
  
  %changelog

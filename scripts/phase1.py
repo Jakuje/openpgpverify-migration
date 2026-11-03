@@ -567,11 +567,12 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
     upd['keyring_refresh_applied'] = []
     kr = (prev or {}).get('keyring_refresh') or {}
     if new_spec and kr.get('status') == 'approved':
-        overlay = {f['file']: os.path.join(d, 'refresh', f['file'])
+        # A file whose Source becomes its URL is named like the URL (new_file).
+        overlay = {f.get('new_file') or f['file']: os.path.join(d, 'refresh', f['file'])
                    for f in kr['files'] if f.get('changed')}
         for f in kr['files']:
-            if f.get('changed') and hashlib.sha256(open(overlay[f['file']], 'rb').read()) \
-                    .hexdigest() != f.get('sha256_new'):
+            if f.get('changed') and hashlib.sha256(open(os.path.join(
+                    d, 'refresh', f['file']), 'rb').read()).hexdigest() != f.get('sha256_new'):
                 upd.update(status='error', outcome_detail='approved keyring %s changed after '
                            'review; propose and review again' % f['file'])
                 return upd
@@ -579,7 +580,12 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
         # Record how the keyring was refreshed in the spec, next to its Source.
         text = open(new_spec).read()
         for f in kr['files']:
-            if f.get('changed') and f.get('spec_commands'):
+            if f.get('changed') and f.get('source_url'):
+                text, note = convert.source_to_url(text, pkg, os.path.basename(f['file']),
+                                                   f['source_url'])
+                if note:
+                    upd.setdefault('convert_notes', []).append(note)
+            elif f.get('changed') and f.get('spec_commands'):
                 text, note = convert.refresh_comment(
                     text, pkg, os.path.basename(f['file']), f['spec_commands'],
                     *([f['spec_header']] if f.get('spec_header') else []))

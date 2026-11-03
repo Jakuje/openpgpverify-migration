@@ -168,6 +168,25 @@ def refresh_comment(text, pkg, name, cmds,
     return '\n'.join(lines), None
 
 
+
+def source_to_url(text, pkg, name, url):
+    """Point the Source line of keyring file NAME at URL (the file in dist-git
+    is then named like the URL's last component). Returns (text, note)."""
+    lines = text.split('\n')
+    macros = dict(re.findall(r'(?m)^%(?:global|define)\s+(\w+)\s+([^\s%]+)\s*$', text))
+    macros['name'] = pkg
+    for i, line in enumerate(lines):
+        m = SOURCE_TAG.match(line)
+        if not m:
+            continue
+        value = re.sub(r'%\{\??(\w+)\}|%(\w+)\b',
+                       lambda x: macros.get(x.group(1) or x.group(2), x.group(0)), m.group(2))
+        if value.rsplit('/', 1)[-1] == name:
+            lines[i] = line[:m.start(2)] + url.replace('%', '%%') + line[m.end(2):]
+            return '\n'.join(lines), None
+    return text, 'no Source line for %s' % name
+
+
 def br_key(line):
     """Sort key of a BuildRequires line: its first dependency, without macro
     wrapping ("%{py3_dist foo}" -> "foo")."""

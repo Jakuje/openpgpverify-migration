@@ -180,7 +180,10 @@ def split_series(mbox):
 def spec_comment(text, pkg, files):
     """The spec comments that go with keyring updates (see refresh_keys.py)."""
     for f in files:
-        if f.get('spec_commands'):
+        if f.get('source_url'):
+            text = convert.source_to_url(text, pkg, os.path.basename(f['file']),
+                                         f['source_url'])[0]
+        elif f.get('spec_commands'):
             text = convert.refresh_comment(
                 text, pkg, os.path.basename(f['file']), f['spec_commands'],
                 *([f['spec_header']] if f.get('spec_header') else []))[0]
@@ -214,6 +217,28 @@ def make_commit(pkg, s, refresh_files):
     if refresh_files:
         key, moved = [], []
         for f in refresh_files:
+            if f.get('new_file'):
+                # The keyring is named like its Source URL: drop the old file
+                # (from git, or from the lookaside "sources") and add the new one.
+                if sh(['git', '-C', pr, 'ls-files', '--error-unmatch', f['file']]).returncode:
+                    for meta in ('sources', '.gitignore'):
+                        path = os.path.join(pr, meta)
+                        if os.path.exists(path):
+                            keep = [l for l in open(path).read().splitlines() if not re.search(
+                                r'(^|[ (/])%s(\)|$)' % re.escape(f['file']), l)]
+                            open(path, 'w').write(''.join(l + '\n' for l in keep))
+                else:
+                    sh(['git', '-C', pr, 'rm', '-q', f['file']])
+                shutil.copy(os.path.join(d, 'refresh', f['file']), os.path.join(pr, f['new_file']))
+                sh(['git', '-C', pr, 'add', '-f', f['new_file']])
+                key.append('Replace %s with %s, the key upstream publishes at %s (byte for '
+                           'byte); its Source line is now that URL.%s' % (
+                               f['file'], os.path.basename(f['new_file']), f['url'],
+                               ' The file holds only %s; the other certificate(s) in the old '
+                               'keyring (%s) are dropped.' % (', '.join(f['fingerprints']),
+                                                               ', '.join(f['dropped']))
+                               if f.get('dropped') else ''))
+                continue
             shutil.copy(os.path.join(d, 'refresh', f['file']), os.path.join(pr, f['file']))
             if sh(['git', '-C', pr, 'ls-files', '--error-unmatch', f['file']]).returncode:
                 # In the lookaside cache, which a PR cannot upload to.
@@ -333,6 +358,13 @@ def render_pr(pkg, s, draft):
                            % (f['file'], f['url'], ', completed from keyservers/WKD'
                               if f['method'].endswith('keyserver') else ''))
             continue
+        if f.get('new_file'):
+            changes.append('- replaced keyring `%s` with `%s` from %s; its `Source` line is now '
+                           'that URL%s (see below)' % (
+                               f['file'], os.path.basename(f['new_file']), f['url'],
+                               '; **%d other certificate(s) are dropped**' % len(f['dropped'])
+                               if f.get('dropped') else ''))
+            continue
         if f.get('method') == 'upstream-url' and f.get('dropped'):
             changes.append('- replaced keyring `%s` with the upstream key from %s; **%d other '
                            'certificate(s) are dropped** (see below)'
@@ -399,11 +431,13 @@ def render_pr(pkg, s, draft):
         refresh = ('\n### Keyring update\n\n`%%openpgpverify` rejected the signature with '
                    'the keyring in dist-git (%s), while %s ignores that. Upstream has updated '
                    'the key since: the copy at %s %s and verifies the release with sqv. This '
-                   'PR replaces the file with that copy, byte for byte:\n\n```\n%s\n```\n\n'
+                   'PR replaces the file with that copy, byte for byte%s:\n\n```\n%s\n```\n\n'
                    'Fingerprints%s:\n\n%s\n\n%sWhat changed in the certificate (`sq '
                    'inspect`):\n\n```diff\n%s```\n'
                    % (reason, old_tool, urls,
                       'holds only the signing key' if dropped else 'has the same fingerprint(s)',
+                      '' if not any(f.get('new_file') for f in files) else
+                      ', named like the URL, which becomes its `Source`',
                       '\n'.join(c for f in files for c in f['commands']),
                       ' (kept)' if dropped else ' (unchanged)',
                       '\n'.join('- `%s`' % fp for f in files for fp in f['fingerprints']),
