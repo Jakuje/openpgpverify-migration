@@ -1,6 +1,6 @@
 # Proposals
 
-Generated 2026-11-03T10:00Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
+Generated 2026-11-03T19:54Z by `scripts/render_proposals.py` from the Phase 1 state. Nothing here has been opened or filed.
 
 - **PR**: `*.patch` are the commits a PR would carry (`git am` applies them to dist-git at the tested commit; a keyring update is a separate first commit); `PR.md` is the PR title and description.
 - **draft PR**: the same, but it includes a keyring refresh that hasn't been reviewed yet.
@@ -22,7 +22,7 @@ Generated 2026-11-03T10:00Z by `scripts/render_proposals.py` from the Phase 1 st
 | [python-ezgb](python-ezgb/) | PR |  |
 | [dns-root-data](dns-root-data/) | bug | sha1-sig |
 | [libstrophe](libstrophe/) | PR |  |
-| [openresolv](openresolv/) | draft PR | keyring refresh proposed |
+| [openresolv](openresolv/) | PR | with approved keyring refresh |
 | fapolicyd | skipped | superseded: converted in dist-git (snapshot 2026-10-26) |
 | [python-oslo-metrics](python-oslo-metrics/) | PR |  |
 | [mpdscribble](mpdscribble/) | bug | sha1-cert |
@@ -60,7 +60,7 @@ Generated 2026-11-03T10:00Z by `scripts/render_proposals.py` from the Phase 1 st
 | cairomm1.16 | skipped | superseded: converted in dist-git (snapshot 2026-10-26) |
 | checkpolicy | skipped | open PR exists: https://src.fedoraproject.org/rpms/checkpolicy/pull-request/12 |
 | chrony | skipped | open PR exists: https://src.fedoraproject.org/rpms/chrony/pull-request/15 |
-| [cmocka](cmocka/) | draft PR | keyring refresh proposed |
+| [cmocka](cmocka/) | PR | with approved keyring refresh |
 | conntrack-tools | skipped | open PR exists: https://src.fedoraproject.org/rpms/conntrack-tools/pull-request/5 |
 | [coreutils](coreutils/) | bug | sha1-cert |
 | [cpio](cpio/) | bug | sha1-sig |
@@ -88,7 +88,7 @@ Generated 2026-11-03T10:00Z by `scripts/render_proposals.py` from the Phase 1 st
 | [gpgme](gpgme/) | PR |  |
 | grep | skipped | open PR exists: https://src.fedoraproject.org/rpms/grep/pull-request/6 |
 | [guestfs-tools](guestfs-tools/) | PR |  |
-| [hivex](hivex/) | draft PR | keyring refresh proposed |
+| [hivex](hivex/) | PR | with approved keyring refresh |
 | [httpd](httpd/) | bug | unparseable-cert |
 | ibus-chewing | skipped | open PR exists: https://src.fedoraproject.org/rpms/ibus-chewing/pull-request/4 |
 | iotop-c | skipped | open PR exists: https://src.fedoraproject.org/rpms/iotop-c/pull-request/2 |
@@ -111,7 +111,7 @@ Generated 2026-11-03T10:00Z by `scripts/render_proposals.py` from the Phase 1 st
 | [libisofs](libisofs/) | bug | sha1-sig |
 | libmodulemd | skipped | superseded: converted in dist-git (snapshot 2026-10-26) |
 | [libmpc](libmpc/) | bug | weak-key |
-| [libnbd](libnbd/) | draft PR | keyring refresh proposed |
+| [libnbd](libnbd/) | PR | with approved keyring refresh |
 | libnetfilter_conntrack | skipped | open PR exists: https://src.fedoraproject.org/rpms/libnetfilter_conntrack/pull-request/4 |
 | libnftnl | skipped | open PR exists: https://src.fedoraproject.org/rpms/libnftnl/pull-request/3 |
 | libreswan | skipped | open PR exists: https://src.fedoraproject.org/rpms/libreswan/pull-request/14 |
@@ -140,7 +140,7 @@ Generated 2026-11-03T10:00Z by `scripts/render_proposals.py` from the Phase 1 st
 | mkfontscale | skipped | open PR exists: https://src.fedoraproject.org/rpms/mkfontscale/pull-request/2 |
 | munge | skipped | open PR exists: https://src.fedoraproject.org/rpms/munge/pull-request/11 |
 | nano | skipped | open PR exists: https://src.fedoraproject.org/rpms/nano/pull-request/9 |
-| [nbdkit](nbdkit/) | draft PR | keyring refresh proposed |
+| [nbdkit](nbdkit/) | PR | with approved keyring refresh |
 | [ncurses](ncurses/) | draft PR | keyring refresh proposed |
 | [nettle](nettle/) | bug | expired |
 | nftables | skipped | open PR exists: https://src.fedoraproject.org/rpms/nftables/pull-request/7 |
@@ -149,10 +149,10 @@ Generated 2026-11-03T10:00Z by `scripts/render_proposals.py` from the Phase 1 st
 | [nmap](nmap/) | bug | sha1-sig |
 | [nmstate](nmstate/) | PR |  |
 | npth | skipped | superseded: converted in dist-git (snapshot 2026-10-26) |
-| [nss_wrapper](nss_wrapper/) | draft PR | keyring refresh proposed |
-| [ocaml-augeas](ocaml-augeas/) | draft PR | keyring refresh proposed |
+| [nss_wrapper](nss_wrapper/) | PR | with approved keyring refresh |
+| [ocaml-augeas](ocaml-augeas/) | PR | with approved keyring refresh |
 | p11-kit | skipped | superseded: already converted or no longer verifying |
-| [pam_wrapper](pam_wrapper/) | draft PR | keyring refresh proposed |
+| [pam_wrapper](pam_wrapper/) | PR | with approved keyring refresh |
 | parted | skipped | open PR exists: https://src.fedoraproject.org/rpms/parted/pull-request/9 |
 | pcre2 | skipped | open PR exists: https://src.fedoraproject.org/rpms/pcre2/pull-request/39 |
 | [pcsc-lite](pcsc-lite/) | draft PR | keyring refresh proposed |
@@ -160,30 +160,30 @@ Generated 2026-11-03T10:00Z by `scripts/render_proposals.py` from the Phase 1 st
 | php | skipped | open PR exists: https://src.fedoraproject.org/rpms/php/pull-request/9 |
 | pkcs11-provider | skipped | superseded: converted in dist-git (snapshot 2026-10-26) |
 | policycoreutils | skipped | open PR exists: https://src.fedoraproject.org/rpms/policycoreutils/pull-request/69 |
-| [poppler](poppler/) | draft PR | keyring refresh proposed |
-| [priv_wrapper](priv_wrapper/) | draft PR | keyring refresh proposed |
+| [poppler](poppler/) | PR | with approved keyring refresh |
+| [priv_wrapper](priv_wrapper/) | PR | with approved keyring refresh |
 | [pyparted](pyparted/) | draft PR | keyring refresh proposed |
 | pyxattr | skipped | open PR exists: https://src.fedoraproject.org/rpms/pyxattr/pull-request/8 |
-| [resolv_wrapper](resolv_wrapper/) | draft PR | keyring refresh proposed |
+| [resolv_wrapper](resolv_wrapper/) | PR | with approved keyring refresh |
 | [rust](rust/) | bug | sha1-cert |
 | [s-nail](s-nail/) | bug | sha1-cert |
 | [samba](samba/) | draft PR | keyring refresh proposed |
-| [socket_wrapper](socket_wrapper/) | draft PR | keyring refresh proposed |
+| [socket_wrapper](socket_wrapper/) | PR | with approved keyring refresh |
 | squid | skipped | open PR exists: https://src.fedoraproject.org/rpms/squid/pull-request/10 |
 | sssd | skipped | open PR exists: https://src.fedoraproject.org/rpms/sssd/pull-request/94 |
 | [stunnel](stunnel/) | bug | sha1-cert |
-| [supermin](supermin/) | draft PR | keyring refresh proposed |
+| [supermin](supermin/) | PR | with approved keyring refresh |
 | teckit | skipped | skipped: fedora-rawhide-x86_64: guard-failed (old spec executed no gpgverify call (prep rc 0)) |
 | tftp | skipped | open PR exists: https://src.fedoraproject.org/rpms/tftp/pull-request/10 |
 | tomcat | skipped | open PR exists: https://src.fedoraproject.org/rpms/tomcat/pull-request/104 |
 | [tpm2-openssl](tpm2-openssl/) | PR |  |
-| [uid_wrapper](uid_wrapper/) | draft PR | keyring refresh proposed |
+| [uid_wrapper](uid_wrapper/) | PR | with approved keyring refresh |
 | unbound | skipped | open PR exists: https://src.fedoraproject.org/rpms/unbound/pull-request/41 |
 | [usbredir](usbredir/) | draft PR | keyring refresh proposed |
-| [virt-p2v](virt-p2v/) | draft PR | keyring refresh proposed |
-| [virt-top](virt-top/) | draft PR | keyring refresh proposed |
+| [virt-p2v](virt-p2v/) | PR | with approved keyring refresh |
+| [virt-top](virt-top/) | PR | with approved keyring refresh |
 | [virt-v2v](virt-v2v/) | PR |  |
-| [virt-what](virt-what/) | draft PR | keyring refresh proposed |
+| [virt-what](virt-what/) | PR | with approved keyring refresh |
 | [voikko-fi](voikko-fi/) | bug | sha1-cert |
 | [wayland](wayland/) | draft PR | keyring refresh proposed |
 | xfsdump | skipped | open PR exists: https://src.fedoraproject.org/rpms/xfsdump/pull-request/6 |
@@ -250,7 +250,7 @@ Generated 2026-11-03T10:00Z by `scripts/render_proposals.py` from the Phase 1 st
 | [lua-unbound](lua-unbound/) | PR |  |
 | [mako](mako/) | draft PR | keyring refresh proposed |
 | [maven-reporting-api](maven-reporting-api/) | draft PR | keyring refresh proposed |
-| [mingw-cmocka](mingw-cmocka/) | draft PR | keyring refresh proposed |
+| [mingw-cmocka](mingw-cmocka/) | PR | with approved keyring refresh |
 | [mingw-usbredir](mingw-usbredir/) | draft PR | keyring refresh proposed |
 | [mucalc](mucalc/) | PR |  |
 | [nginx-mod-fancyindex](nginx-mod-fancyindex/) | bug | weak-key |
@@ -302,7 +302,7 @@ Generated 2026-11-03T10:00Z by `scripts/render_proposals.py` from the Phase 1 st
 | [python-troveclient](python-troveclient/) | PR |  |
 | [python-zaqarclient](python-zaqarclient/) | PR |  |
 | [python-zstarfile](python-zstarfile/) | PR |  |
-| [qemu-sanity-check](qemu-sanity-check/) | draft PR | keyring refresh proposed |
+| [qemu-sanity-check](qemu-sanity-check/) | PR | with approved keyring refresh |
 | [qgpgme](qgpgme/) | PR |  |
 | [rhythmbox-alternative-toolbar](rhythmbox-alternative-toolbar/) | PR |  |
 | [rpminspect-data-centos](rpminspect-data-centos/) | PR |  |
@@ -398,7 +398,7 @@ Generated 2026-11-03T10:00Z by `scripts/render_proposals.py` from the Phase 1 st
 | [maven-doxia-sitetools](maven-doxia-sitetools/) | PR |  |
 | [maven-reporting-impl](maven-reporting-impl/) | draft PR | keyring refresh proposed |
 | [mimedefang](mimedefang/) | PR |  |
-| [mingw-libidn2](mingw-libidn2/) | draft PR | keyring refresh proposed |
+| [mingw-libidn2](mingw-libidn2/) | PR | with approved keyring refresh |
 | [mingw-libssh2](mingw-libssh2/) | PR |  |
 | [mingw-nettle](mingw-nettle/) | draft PR | keyring refresh proposed |
 | [mingw-objfw](mingw-objfw/) | PR |  |
@@ -483,7 +483,7 @@ Generated 2026-11-03T10:00Z by `scripts/render_proposals.py` from the Phase 1 st
 | [botan3](botan3/) | bug | sha1-cert |
 | [btrfs-progs](btrfs-progs/) | draft PR | keyring refresh proposed |
 | [budgie-desktop](budgie-desktop/) | PR |  |
-| [cgit](cgit/) | draft PR | keyring refresh proposed |
+| [cgit](cgit/) | draft PR | keyring refresh approved |
 | [cryptopp](cryptopp/) | PR |  |
 | [csdiff](csdiff/) | draft PR | keyring refresh proposed |
 | [dhcp](dhcp/) | bug | sha1-sig |
@@ -505,7 +505,7 @@ Generated 2026-11-03T10:00Z by `scripts/render_proposals.py` from the Phase 1 st
 | [john](john/) | bug | sha1-sig |
 | [kdsoap](kdsoap/) | bug | sha1-cert |
 | [keepass](keepass/) | PR |  |
-| [keepassxc](keepassxc/) | draft PR | keyring refresh proposed |
+| [keepassxc](keepassxc/) | PR | with approved keyring refresh |
 | [libextractor](libextractor/) | bug | unparseable-cert |
 | [libmodsecurity](libmodsecurity/) | PR |  |
 | [mat2](mat2/) | draft PR | keyring refresh proposed |
@@ -569,7 +569,7 @@ Generated 2026-11-03T10:00Z by `scripts/render_proposals.py` from the Phase 1 st
 | [hxtools](hxtools/) | draft PR | keyring refresh proposed |
 | [inn](inn/) | draft PR | keyring refresh proposed |
 | [knot](knot/) | PR |  |
-| [knot-resolver](knot-resolver/) | draft PR | keyring refresh proposed |
+| [knot-resolver](knot-resolver/) | PR | with approved keyring refresh |
 | [libHX](libHX/) | draft PR | keyring refresh proposed |
 | [loudmouth](loudmouth/) | bug | sha1-sig |
 | [ocserv](ocserv/) | draft PR | keyring refresh proposed |

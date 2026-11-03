@@ -8,12 +8,12 @@ Phase 1 reason: `expired`
 
 ## armored-keys.asc
 
-- from: https://pgp.surfnet.nl/pks/lookup?op=get&search=0xCA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7
+- from: https://pgp.surfnet.nl/pks/lookup?op=get&search=0xCA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7#/armored-keys.asc
 - certificates (unchanged): CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7
 - size: 26912 → 26807 bytes
 
 ```
-curl -fsSL -o armored-keys.asc https://pgp.surfnet.nl/pks/lookup?op=get&search=0xCA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7
+curl -fsSL -o armored-keys.asc 'https://pgp.surfnet.nl/pks/lookup?op=get&search=0xCA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7'
 ```
 
 ```diff

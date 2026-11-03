@@ -1,6 +1,6 @@
-From d8a4cee4ab3deb6c043269c66bc022d91352a0e7 Mon Sep 17 00:00:00 2001
+From d6f0c9eac985f8b498dfce5593aed417a8905abe Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:40 +0100
+Date: Tue, 3 Nov 2026 20:54:06 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Update roy.marples.asc to the current copy at

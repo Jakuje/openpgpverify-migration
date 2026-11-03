@@ -403,12 +403,17 @@ def propose_upstream(pkg, rec, url=None, keyserver=None, replace=False, source_u
             info['file'] = rel
             if source_url and keyserver is None and info.get('changed'):
                 # The Source line becomes the URL; the file is named like it.
-                new = os.path.join(os.path.dirname(rel), u.rsplit('/', 1)[-1])
+                # A "#/NAME" fragment names the file when the URL has no usable name.
+                base = u.split('#/')[-1] if '#/' in u else u.rsplit('/', 1)[-1]
+                new = os.path.join(os.path.dirname(rel), base)
                 if new != rel and os.path.exists(os.path.join(g, new)):
                     info.update(changed=False, error='%s already exists in dist-git' % new)
                 else:
-                    info['source_url'], info['new_file'] = u, new
-                    info['commands'] = ['curl -fsSL -O %s' % u]
+                    info['source_url'] = u
+                    if new != rel:
+                        info['new_file'] = new
+                    info['commands'] = ['curl -fsSL -o %s \'%s\'' % (base, u.split('#')[0])
+                                        if '#/' in u else 'curl -fsSL -O %s' % u]
             elif keyserver is None and url and u not in key_urls(spec, pkg, os.path.basename(rel)):
                 info['spec_header'] = '# Upstream signing key:'
                 info['spec_commands'] = info['commands']

@@ -182,7 +182,15 @@ def source_to_url(text, pkg, name, url):
         value = re.sub(r'%\{\??(\w+)\}|%(\w+)\b',
                        lambda x: macros.get(x.group(1) or x.group(2), x.group(0)), m.group(2))
         if value.rsplit('/', 1)[-1] == name:
-            lines[i] = line[:m.start(2)] + url.replace('%', '%%') + line[m.end(2):]
+            new = url.replace('%', '%%')
+            # Keep the macros the old value used (e.g. %{gpg_cgit}).
+            for mac in re.findall(r'%\{\??(\w+)\}', m.group(2)):
+                if mac in macros and macros[mac] in new:
+                    new = new.replace(macros[mac], '%%{%s}' % mac)
+            lines[i] = line[:m.start(2)] + new + line[m.end(2):]
+            # The URL is now the Source; a comment line repeating it goes.
+            if i and lines[i - 1].lstrip('# ').strip() == url.split('#')[0]:
+                del lines[i - 1]
             return '\n'.join(lines), None
     return text, 'no Source line for %s' % name
 

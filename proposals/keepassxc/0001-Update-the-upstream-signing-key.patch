@@ -1,6 +1,6 @@
-From b28890980e1c892b5221409e84b54cc08b8c1175 Mon Sep 17 00:00:00 2001
+From ce4ebf9dd547773636664b5c2178ac9081cbc489 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:56 +0100
+Date: Tue, 3 Nov 2026 20:54:22 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Update keepassxc_master_signing_key.asc to the current copy at

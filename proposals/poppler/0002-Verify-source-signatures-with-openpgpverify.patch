@@ -1,6 +1,6 @@
-From 4a2ddb9e98ee72d79e733dfc3b4a2a0dea776bf9 Mon Sep 17 00:00:00 2001
+From 30b6e4e0ebdd4770f8efdfe62fd5801cbc16b48c Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:42 +0100
+Date: Tue, 3 Nov 2026 20:54:09 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/poppler.spec b/poppler.spec
-index 8561c7a..a47135b 100644
+index 02a8b62..4283967 100644
 --- a/poppler.spec
 +++ b/poppler.spec
-@@ -74,8 +74,9 @@ BuildRequires: cmake(Qt6Widgets)
+@@ -73,8 +73,9 @@ BuildRequires: cmake(Qt6Widgets)
  BuildRequires: cmake(Qt6Xml)
  %endif
  BuildRequires: boost-devel
@@ -27,7 +27,7 @@ index 8561c7a..a47135b 100644
  
  Requires: poppler-data
  
-@@ -177,7 +178,7 @@ Command line tools for manipulating PDF files and converting them to
+@@ -176,7 +177,7 @@ Command line tools for manipulating PDF files and converting them to
  other formats.
  
  %prep

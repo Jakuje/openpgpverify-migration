@@ -1,7 +1,5 @@
 # Verify source signatures with openpgpverify
 
-> **DRAFT, not to be opened yet:** the keyring refresh below still needs a human review (`scripts/refresh_keys.py show poppler`).
-
 This switches the upstream source signature check from `%gpgverify` (GnuPG `gpgv`) to `%openpgpverify` (Sequoia `sqv`), as part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify). The macro takes the same options, so the call itself only changes its name.
 
 Why `sqv`:
@@ -24,16 +22,16 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 | Spec | Verification calls | Result |
 |---|---|---|
 | current (`%gpgverify`) | 1 | pass |
-| this PR (`%openpgpverify`) | 1 | fails with the keyring in dist-git; **passes with the refreshed keyring** (sqv run directly) |
+| this PR (`%openpgpverify`) | 1 | pass |
 
-Tested on 2026-10-12 at dist-git commit `ab357b7d0ee5` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
+Tested on 2026-11-03 at dist-git commit `ab357b7d0ee5` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
 ### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. Upstream has updated the key since: the copy at the URL the spec names for it has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte:
+`%openpgpverify` rejected the signature with the keyring in dist-git (verification fails), while `%gpgverify` ignores that. Upstream has updated the key since: the copy at https://pgp.surfnet.nl/pks/lookup?op=get&search=0xCA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7#/armored-keys.asc has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte:
 
 ```
-curl -fsSL -o armored-keys.asc https://pgp.surfnet.nl/pks/lookup?op=get&search=0xCA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7
+curl -fsSL -o armored-keys.asc 'https://pgp.surfnet.nl/pks/lookup?op=get&search=0xCA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7'
 ```
 
 Fingerprints (unchanged):
@@ -71,7 +69,7 @@ The keyring change is the first of the two commits, so it can be reviewed or mer
 ### Notes
 
 - Rawhide only. Whether to merge it into other branches is up to you; openpgpverify is available in Fedora 43 and later, EPEL 9 and EPEL 10.
-- `BuildRequires: gnupg2` is kept: the spec has a `%check` section or uses gpg elsewhere, and tests may need it. If it was only there for the signature check, it can go too.
+- `BuildRequires: gnupg2` is kept: the build log or test files mention gpg; tests may skip without it.
 - Nothing changes in the built packages, so this doesn't need a build right away; the new check runs with your next build.
 
 ### Questions

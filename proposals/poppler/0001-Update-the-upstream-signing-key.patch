@@ -1,10 +1,10 @@
-From 06891473b09dd47e14495ac20d55f85dbffde6b5 Mon Sep 17 00:00:00 2001
+From a3c902c48704ec76c7601d949e9c9dbedb3ea051 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:42 +0100
+Date: Tue, 3 Nov 2026 20:54:09 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Update armored-keys.asc to the current copy at
-https://pgp.surfnet.nl/pks/lookup?op=get&search=0xCA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7,
+https://pgp.surfnet.nl/pks/lookup?op=get&search=0xCA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7#/armored-keys.asc,
 the URL the spec names for it (same certificate(s)).
 
 The current key is needed to verify the release signature with
@@ -14,7 +14,8 @@ release was signed.
 Assisted-by: Claude Opus 5.5
 ---
  armored-keys.asc | 805 +++++++++++++++++++++++------------------------
- 1 file changed, 402 insertions(+), 403 deletions(-)
+ poppler.spec     |   3 +-
+ 2 files changed, 403 insertions(+), 405 deletions(-)
 
 diff --git a/armored-keys.asc b/armored-keys.asc
 index 85382d4..fa31b85 100644
@@ -836,6 +837,20 @@ index 85382d4..fa31b85 100644
 +Ai+VhC+sXh0NMOq4pxE=
 +=7joG
  -----END PGP PUBLIC KEY BLOCK-----
+diff --git a/poppler.spec b/poppler.spec
+index 8561c7a..02a8b62 100644
+--- a/poppler.spec
++++ b/poppler.spec
+@@ -22,8 +22,7 @@ License: (GPL-2.0-only OR GPL-3.0-only) AND GPL-2.0-or-later AND LGPL-2.0-or-lat
+ URL:     https://poppler.freedesktop.org/
+ Source0: https://poppler.freedesktop.org/poppler-%{version}.tar.xz
+ Source1: https://poppler.freedesktop.org/poppler-%{version}.tar.xz.sig
+-# https://pgp.surfnet.nl/pks/lookup?op=get&search=0xCA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7
+-Source2: armored-keys.asc
++Source2: https://pgp.surfnet.nl/pks/lookup?op=get&search=0xCA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7#/armored-keys.asc
+ # git archive --prefix test/
+ Source3: %{name}-test-%{test_date}-%{test_sha}.tar.xz
+ 
 -- 
 2.56.0
 

@@ -9,11 +9,12 @@ Phase 1 reason: `expired`
 ## gpgkey-AB9942E6D4A4CFC3412620A749FC7012A5DE03AE.asc
 
 - from: https://www.zx2c4.com/keys/AB9942E6D4A4CFC3412620A749FC7012A5DE03AE.asc
+- **renamed to `AB9942E6D4A4CFC3412620A749FC7012A5DE03AE.asc`; its `Source` line becomes the URL**
 - certificates (unchanged): AB9942E6D4A4CFC3412620A749FC7012A5DE03AE
 - size: 28765 → 3155 bytes
 
 ```
-curl -fsSL -o gpgkey-AB9942E6D4A4CFC3412620A749FC7012A5DE03AE.asc https://www.zx2c4.com/keys/AB9942E6D4A4CFC3412620A749FC7012A5DE03AE.asc
+curl -fsSL -O https://www.zx2c4.com/keys/AB9942E6D4A4CFC3412620A749FC7012A5DE03AE.asc
 ```
 
 ```diff

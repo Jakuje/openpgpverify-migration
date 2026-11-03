@@ -1,6 +1,6 @@
-From 908475f7a14e4de0a192eb842a5cf95491e32daf Mon Sep 17 00:00:00 2001
+From d91934d7a324e577fd12e7dccf6dc6994150f4c7 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:52 +0100
+Date: Tue, 3 Nov 2026 20:54:18 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Update B1D2BD1375BECB784CF4F8C4D73CF638C53C06BE to the current copy at
