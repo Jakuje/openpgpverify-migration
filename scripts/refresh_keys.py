@@ -238,7 +238,7 @@ def key_urls(text, pkg, name):
     return []
 
 
-def upstream_file(src, url, dst, tmp):
+def upstream_file(src, url, dst, tmp, replace=False):
     """Download URL; keep it only if it holds exactly the certificates of SRC."""
     name = os.path.basename(src)
     info = dict(url=url, size_old=os.path.getsize(src), method='upstream-url',
@@ -265,6 +265,10 @@ def upstream_file(src, url, dst, tmp):
     if not fn:
         info['error'] = 'no OpenPGP certificate at the URL (a web page?)'
         return info
+    if replace and fn and not [f for f in fn if f not in fo]:
+        # Asked for: the file at the URL replaces the keyring, dropping the other keys.
+        info['dropped'] = [f for f in fo if f not in fn]
+        info['fingerprints'] = fo = fn
     if sorted(fn) != sorted(fo):
         info['error'] = 'different certificates at the URL: %s' % ', '.join(
             ['+' + f for f in fn if f not in fo] + ['-' + f for f in fo if f not in fn])
@@ -366,7 +370,7 @@ def key_file(src, url, dst, tmp, keyserver):
     return info
 
 
-def propose_upstream(pkg, rec, url=None, keyserver=None):
+def propose_upstream(pkg, rec, url=None, keyserver=None, replace=False):
     """Like propose(), but take the keyring from the URL the spec names, or
     from URL (e.g. one upstream pointed us to); a URL not in the spec is
     added to the comment above the keyring's Source line."""
@@ -395,7 +399,7 @@ def propose_upstream(pkg, rec, url=None, keyserver=None):
             if keyserver is not None:
                 info = key_file(src, u, os.path.join(out, rel), tmp, keyserver)
             else:
-                info = upstream_file(src, u, os.path.join(out, rel), tmp)
+                info = upstream_file(src, u, os.path.join(out, rel), tmp, replace)
             info['file'] = rel
             if keyserver is None and url and u not in key_urls(spec, pkg, os.path.basename(rel)):
                 info['spec_header'] = '# Upstream signing key:'
@@ -450,7 +454,10 @@ def propose_upstream(pkg, rec, url=None, keyserver=None):
                       % ', '.join(f['url_fingerprints'])]
                      if f.get('url_fingerprints') and
                      sorted(f['url_fingerprints']) != sorted(f['fingerprints']) else []),
-                   '- certificates (unchanged): %s' % ', '.join(f['fingerprints']),
+                   *(['- **replaces the keyring: drops %s** (asked for)'
+                      % ', '.join(f['dropped'])] if f.get('dropped') else []),
+                   '- certificates%s: %s' % (' (kept)' if f.get('dropped') else ' (unchanged)',
+                                             ', '.join(f['fingerprints'])),
                    '- size: %s → %s bytes' % (f['size_old'], f['size_new']), '',
                    '```', *f['commands'], '```', '',
                    '```diff', p.stdout.rstrip() or '(no change in sq inspect summary)', '```', '']
@@ -569,6 +576,8 @@ def main():
     ap.add_argument('--note', default=None)
     ap.add_argument('--url', default=None,
                     help='propose-upstream/propose-key: take the key from this URL')
+    ap.add_argument('--replace', action='store_true',
+                    help='propose-upstream: the URL file may hold fewer keys; the others go')
     ap.add_argument('--keyserver', action='store_true',
                     help='propose-key: complete the key from keyservers/WKD')
     a = ap.parse_args()
@@ -596,7 +605,8 @@ def main():
         for pkg in pkgs:
             try:
                 up = propose_upstream(pkg, st[pkg], a.url,
-                                      a.keyserver if a.action == 'propose-key' else None)
+                                      a.keyserver if a.action == 'propose-key' else None,
+                                      a.replace)
             except Exception as e:  # one broken package must not stop the run
                 up = dict(status='error', method=a.action, note='%r' % e)
             d = os.path.join(phase1.WORK, pkg)

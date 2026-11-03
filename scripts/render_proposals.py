@@ -239,6 +239,11 @@ def make_commit(pkg, s, refresh_files):
                                ', completed from keyservers/WKD with the older '
                                'self-signatures and subkey bindings the release needs'
                                if f['method'].endswith('keyserver') else ''))
+            elif f.get('method') == 'upstream-url' and f.get('dropped'):
+                key.append('Replace %s with the current key at %s. That file holds only %s; '
+                           'the other certificate(s) in the keyring (%s) are dropped.' % (
+                               f['file'], f['url'], ', '.join(f['fingerprints']),
+                               ', '.join(f['dropped'])))
             elif f.get('method') == 'upstream-url':
                 key.append('Update %s to the current copy at %s%s (same certificate(s)).' % (
                     f['file'], f['url'], '' if f.get('spec_commands') else
@@ -328,6 +333,11 @@ def render_pr(pkg, s, draft):
                            % (f['file'], f['url'], ', completed from keyservers/WKD'
                               if f['method'].endswith('keyserver') else ''))
             continue
+        if f.get('method') == 'upstream-url' and f.get('dropped'):
+            changes.append('- replaced keyring `%s` with the upstream key from %s; **%d other '
+                           'certificate(s) are dropped** (see below)'
+                           % (f['file'], f['url'], len(f['dropped'])))
+            continue
         if f.get('method') == 'upstream-url':
             changes.append('- updated `%s` to the current upstream copy from the URL in the '
                            'spec (see below)' % f['file'])
@@ -384,15 +394,22 @@ def render_pr(pkg, s, draft):
                       '\n'.join('- `%s`' % fp for f in files for fp in f['fingerprints']),
                       ''.join(diffs)))
     elif files and kr.get('method') == 'upstream-url':
+        dropped = [d for f in files for d in f.get('dropped', [])]
+        urls = ', '.join(sorted({f['url'] for f in files}))
         refresh = ('\n### Keyring update\n\n`%%openpgpverify` rejected the signature with '
                    'the keyring in dist-git (%s), while %s ignores that. Upstream has updated '
-                   'the key since: the copy at the URL the spec names for it has the same '
-                   'fingerprint(s) and verifies the release with sqv. This PR replaces the '
-                   'file with that copy, byte for byte:\n\n```\n%s\n```\n\nFingerprints '
-                   '(unchanged):\n\n%s\n\nWhat changed in the certificate (`sq inspect`):'
-                   '\n\n```diff\n%s```\n'
-                   % (reason, old_tool, '\n'.join(c for f in files for c in f['commands']),
+                   'the key since: the copy at %s %s and verifies the release with sqv. This '
+                   'PR replaces the file with that copy, byte for byte:\n\n```\n%s\n```\n\n'
+                   'Fingerprints%s:\n\n%s\n\n%sWhat changed in the certificate (`sq '
+                   'inspect`):\n\n```diff\n%s```\n'
+                   % (reason, old_tool, urls,
+                      'holds only the signing key' if dropped else 'has the same fingerprint(s)',
+                      '\n'.join(c for f in files for c in f['commands']),
+                      ' (kept)' if dropped else ' (unchanged)',
                       '\n'.join('- `%s`' % fp for f in files for fp in f['fingerprints']),
+                      ('Dropped from the keyring (not used for the current release; add them '
+                       'back if releases may be signed with them):\n\n%s\n\n'
+                       % '\n'.join('- `%s`' % d for d in dropped)) if dropped else '',
                       ''.join(diffs)))
     elif files:
         refresh = ('\n### Keyring refresh\n\n%sThe same certificate, looked up '

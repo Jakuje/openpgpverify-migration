@@ -31,7 +31,7 @@ Tested on 2026-10-12 at dist-git commit `f7cbb678ec54` with sequoia-sqv 1.5.0-2.
 
 ### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (SHA-1 key self-signatures), while `%gpgverify` ignores that. Upstream has updated the key since: the copy at the URL the spec names for it has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte:
+`%openpgpverify` rejected the signature with the keyring in dist-git (SHA-1 key self-signatures), while `%gpgverify` ignores that. Upstream has updated the key since: the copy at https://download.libguestfs.org/rich@annexia.org-pubkey.txt has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte:
 
 ```
 curl -fsSL -o libguestfs.keyring https://download.libguestfs.org/rich@annexia.org-pubkey.txt
