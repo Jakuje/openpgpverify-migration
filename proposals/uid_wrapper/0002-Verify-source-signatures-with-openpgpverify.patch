@@ -1,6 +1,6 @@
-From b2614c172330b31a4a679cc986004b721f627e48 Mon Sep 17 00:00:00 2001
+From 22f98b280aed571095016c348409eb819cb320b7 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:00:27 +0100
+Date: Tue, 3 Nov 2026 13:32:17 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- uid_wrapper.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ uid_wrapper.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/uid_wrapper.spec b/uid_wrapper.spec
-index 6b4c931..38ab004 100644
+index 6b4c931..b9cdb56 100644
 --- a/uid_wrapper.spec
 +++ b/uid_wrapper.spec
-@@ -20,6 +20,7 @@ BuildRequires:  gcc
+@@ -18,7 +18,7 @@ Source2:        uid_wrapper.keyring
+ 
+ BuildRequires:  gcc
  BuildRequires:  cmake
- BuildRequires:  gnupg2
- BuildRequires:  libcmocka-devel >= 1.1.0
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
+ BuildRequires:  libcmocka-devel >= 1.1.0
  
  Recommends:     cmake
- Recommends:     pkgconfig
-@@ -39,7 +40,7 @@ This package doesn't have a devel package cause this project is for
+@@ -39,7 +39,7 @@ This package doesn't have a devel package cause this project is for
  development/testing.
  
  %prep

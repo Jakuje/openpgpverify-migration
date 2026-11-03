@@ -1,6 +1,6 @@
-From 1095392bdce538f4ac38be2d46b86a86de140172 Mon Sep 17 00:00:00 2001
+From 8ceb53ca979cffed86c7772adf6201277ad08966 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:00:26 +0100
+Date: Tue, 3 Nov 2026 13:32:17 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Rebuild priv_wrapper.keyring from the key upstream publishes at

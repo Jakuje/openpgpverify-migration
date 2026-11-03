@@ -1,6 +1,6 @@
-From 7d70d9f647a4bb724eab8607541608e49fb40a53 Mon Sep 17 00:00:00 2001
+From 628bff1f2d041a8e367c74173b98cf75ab745029 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:00:27 +0100
+Date: Tue, 3 Nov 2026 13:32:17 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- resolv_wrapper.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ resolv_wrapper.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/resolv_wrapper.spec b/resolv_wrapper.spec
-index 46e0ced..038c46d 100644
+index 46e0ced..a3ec433 100644
 --- a/resolv_wrapper.spec
 +++ b/resolv_wrapper.spec
 @@ -1,6 +1,6 @@
@@ -26,15 +26,16 @@ index 46e0ced..038c46d 100644
  
  Summary:        A wrapper for dns name resolving or dns faking
  License:        BSD-3-Clause
-@@ -23,6 +23,7 @@ BuildRequires:  gnupg2
+@@ -19,7 +19,7 @@ Source2:        resolv_wrapper.keyring
+ Patch0:         resolv_wrapper-fix-cmocka-1.1.6+-support.patch
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
  BuildRequires:  cmake
  BuildRequires:  libcmocka-devel
  BuildRequires:  socket_wrapper
-+BuildRequires:  openpgpverify
- 
- Recommends:     cmake
- Recommends:     pkgconfig
-@@ -43,7 +44,7 @@ This package doesn't have a devel package because this project is for
+@@ -43,7 +43,7 @@ This package doesn't have a devel package because this project is for
  development/testing.
  
  %prep
@@ -43,11 +44,11 @@ index 46e0ced..038c46d 100644
  %autosetup -p1
  
  %build
-@@ -73,6 +74,9 @@ LD_PRELOAD=%{__cmake_builddir}/src/libpam_wrapper.so bash -c '>/dev/null'
+@@ -73,6 +73,9 @@ LD_PRELOAD=%{__cmake_builddir}/src/libpam_wrapper.so bash -c '>/dev/null'
  %{_mandir}/man1/resolv_wrapper.1*
  
  %changelog
-+* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 1.1.8-13
++* Tue Nov 03 2026 Jakub Jelen <jjelen@redhat.com> - 1.1.8-13
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.1.8-12

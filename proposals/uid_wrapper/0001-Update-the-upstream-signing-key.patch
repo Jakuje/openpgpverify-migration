@@ -1,6 +1,6 @@
-From 96e73587b8d5147d85c059681cd3d1c501d982f8 Mon Sep 17 00:00:00 2001
+From aa593f73b28cae0dd4b1981744f1a81c02555c56 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:00:27 +0100
+Date: Tue, 3 Nov 2026 13:32:17 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Rebuild uid_wrapper.keyring from the key upstream publishes at

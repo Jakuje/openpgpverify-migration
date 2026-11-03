@@ -1,6 +1,6 @@
-From 97bfed2d46378e30f11ba495df03c829231e5ef0 Mon Sep 17 00:00:00 2001
+From 2569552e72518d8277daf700cba20a69f3503838 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:00:26 +0100
+Date: Tue, 3 Nov 2026 13:32:17 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Rebuild nss_wrapper.keyring from the key upstream publishes at

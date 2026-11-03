@@ -1,6 +1,6 @@
-From 4f948be9f09722cbdc8bce55ffa400aaabfd0fcc Mon Sep 17 00:00:00 2001
+From cc46fa0ab0080d4b98ee92542a71f0e9edad7672 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:00:26 +0100
+Date: Tue, 3 Nov 2026 13:32:17 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- priv_wrapper.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ priv_wrapper.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/priv_wrapper.spec b/priv_wrapper.spec
-index 04213f9..1b3ec9a 100644
+index 04213f9..f39e91f 100644
 --- a/priv_wrapper.spec
 +++ b/priv_wrapper.spec
 @@ -1,6 +1,6 @@
@@ -26,15 +26,16 @@ index 04213f9..1b3ec9a 100644
  
  Summary:        A library to disable resource limits and other privilege dropping
  License:        GPL-3.0-or-later
-@@ -22,6 +22,7 @@ BuildRequires:  gcc
+@@ -20,7 +20,7 @@ Patch0:         priv_wrapper-fix-cmocka-1.1.6+-support.patch
+ 
+ BuildRequires:  gcc
  BuildRequires:  cmake
- BuildRequires:  gnupg2
- BuildRequires:  libcmocka-devel >= 1.1.0
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
+ BuildRequires:  libcmocka-devel >= 1.1.0
  
  Recommends:     cmake
- Recommends:     pkgconfig
-@@ -42,7 +43,7 @@ This package does not have a devel package, because this project is for
+@@ -42,7 +42,7 @@ This package does not have a devel package, because this project is for
  development/testing.
  
  %prep
@@ -43,11 +44,11 @@ index 04213f9..1b3ec9a 100644
  %autosetup -p1
  
  %build
-@@ -71,6 +72,9 @@ development/testing.
+@@ -71,6 +71,9 @@ development/testing.
  %{_mandir}/man1/priv_wrapper.1*
  
  %changelog
-+* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 1.0.1-13
++* Tue Nov 03 2026 Jakub Jelen <jjelen@redhat.com> - 1.0.1-13
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.0.1-12

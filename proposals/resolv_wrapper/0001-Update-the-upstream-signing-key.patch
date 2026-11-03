@@ -1,6 +1,6 @@
-From 11cbd0795c57ecb32cd3e3dcd8dd2d711aa102e4 Mon Sep 17 00:00:00 2001
+From afcd3e2d6bc2cf4c686c590656f81614c43393db Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:00:27 +0100
+Date: Tue, 3 Nov 2026 13:32:17 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Rebuild resolv_wrapper.keyring from the key upstream publishes at

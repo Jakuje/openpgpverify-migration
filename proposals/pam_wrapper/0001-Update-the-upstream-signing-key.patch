@@ -1,6 +1,6 @@
-From c435a7c25e5f2851a64fd673247d78b24413fdcd Mon Sep 17 00:00:00 2001
+From d43679d58d72c74ee9c8c05b346932cfea5f3fdb Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:00:26 +0100
+Date: Tue, 3 Nov 2026 13:32:17 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Rebuild pam_wrapper.keyring from the key upstream publishes at

@@ -1,6 +1,6 @@
-From 5bde549ad3ea7046939d028027211bf8e60ff27a Mon Sep 17 00:00:00 2001
+From 13453476bddff6798cf3a3a4e6e357a14158b7bb Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:00:26 +0100
+Date: Tue, 3 Nov 2026 13:32:17 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- nss_wrapper.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ nss_wrapper.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/nss_wrapper.spec b/nss_wrapper.spec
-index ff09bdf..feae14f 100644
+index ff09bdf..376b85e 100644
 --- a/nss_wrapper.spec
 +++ b/nss_wrapper.spec
-@@ -23,6 +23,7 @@ BuildRequires:  gcc
- BuildRequires:  gnupg2
+@@ -20,7 +20,7 @@ Patch0:         nwrap-fix-tests.patch
+ 
+ BuildRequires:  cmake
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
  BuildRequires:  libcmocka-devel
  BuildRequires:  perl-generators
-+BuildRequires:  openpgpverify
  
- Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
- Recommends:     cmake
-@@ -59,7 +60,7 @@ The %{name}-libs package provides only the shared library.
+@@ -59,7 +59,7 @@ The %{name}-libs package provides only the shared library.
  For a minimal footprint, install just this package.
  
  %prep

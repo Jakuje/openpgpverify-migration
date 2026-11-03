@@ -1,7 +1,5 @@
 # Verify source signatures with openpgpverify
 
-> **DRAFT, not to be opened yet:** the keyring refresh below still needs a human review (`scripts/refresh_keys.py show pam_wrapper`).
-
 This switches the upstream source signature check from `%gpgverify` (GnuPG `gpgv`) to `%openpgpverify` (Sequoia `sqv`), as part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify). The macro takes the same options, so the call itself only changes its name.
 
 Why `sqv`:
@@ -25,13 +23,13 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 | Spec | Verification calls | Result |
 |---|---|---|
 | current (`%gpgverify`) | 1 | pass |
-| this PR (`%openpgpverify`) | 1 | fails with the keyring in dist-git; **passes with the refreshed keyring** (sqv run directly) |
+| this PR (`%openpgpverify`) | 1 | pass |
 
-Tested on 2026-10-12 at dist-git commit `4e1b82165604` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
+Tested on 2026-11-03 at dist-git commit `4e1b82165604` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
 ### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (SHA-1 key self-signatures), while `%gpgverify` ignores that. Upstream publishes the current key at https://cryptomilk.org/0x8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D_asn_cryptomilk_org_gpgkey.asc. That copy has only the latest self-signatures, so it is completed from keyservers/WKD (looked up by fingerprint, WKD; hkps://keys.openpgp.org; hkps://keyserver.ubuntu.com; hkps://sks.pod01.fleetstreetops.com), which have the older self-signatures and subkey bindings that were valid when the release was signed. The keyring is rebuilt from that key, with exactly these commands (also in the comment above the keyring's `Source` line, for the next update):
+`%openpgpverify` rejected the signature with the keyring in dist-git (verification fails), while `%gpgverify` ignores that. Upstream publishes the current key at https://cryptomilk.org/0x8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D_asn_cryptomilk_org_gpgkey.asc. That copy has only the latest self-signatures, so it is completed from keyservers/WKD (looked up by fingerprint, WKD; hkps://keys.openpgp.org; hkps://keyserver.ubuntu.com; hkps://sks.pod01.fleetstreetops.com), which have the older self-signatures and subkey bindings that were valid when the release was signed. The keyring is rebuilt from that key, with exactly these commands (also in the comment above the keyring's `Source` line, for the next update):
 
 ```
 curl -fsSL -o key.asc https://cryptomilk.org/0x8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D_asn_cryptomilk_org_gpgkey.asc

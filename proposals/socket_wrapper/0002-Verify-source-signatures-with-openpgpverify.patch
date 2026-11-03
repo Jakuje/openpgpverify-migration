@@ -1,6 +1,6 @@
-From 6bb2bce69d168bcda3c8ab8e09e1ae97c0640c2d Mon Sep 17 00:00:00 2001
+From f167d84e0f8bca8e305dbd88e2e86e8f297c0188 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:00:27 +0100
+Date: Tue, 3 Nov 2026 13:32:17 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- socket_wrapper.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ socket_wrapper.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/socket_wrapper.spec b/socket_wrapper.spec
-index 3ed992f..a061ea0 100644
+index 3ed992f..7d0020b 100644
 --- a/socket_wrapper.spec
 +++ b/socket_wrapper.spec
-@@ -20,6 +20,7 @@ BuildRequires:  cmake
+@@ -18,7 +18,7 @@ Source2:        socket_wrapper.keyring
+ 
+ BuildRequires:  cmake
  BuildRequires:  gcc
- BuildRequires:  gnupg2
- BuildRequires:  libcmocka-devel >= 1.1.0
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
+ BuildRequires:  libcmocka-devel >= 1.1.0
  
  Recommends:     cmake
- Recommends:     pkgconfig
-@@ -54,7 +55,7 @@ Development headers for applications with the need to call
+@@ -54,7 +54,7 @@ Development headers for applications with the need to call
  socket_wrapper_enabled().
  
  %prep

@@ -1,6 +1,6 @@
-From 55ee56239759e01bc1936affbce743e23433f1af Mon Sep 17 00:00:00 2001
+From 1f7f67fbe2926bcd8b66c6faedd00ef1117ed86e Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:00:30 +0100
+Date: Tue, 3 Nov 2026 13:32:17 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Rebuild cmocka.keyring from the key upstream publishes at
