@@ -1,6 +1,6 @@
-From 6bf47e3396d245e7ff177e99c1ba29d2846764c3 Mon Sep 17 00:00:00 2001
+From b8222e7ff4cb442df72b56e0271c72f1daaf6d3b Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:35:58 +0100
+Date: Tue, 3 Nov 2026 12:51:34 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- libnbd.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ libnbd.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/libnbd.spec b/libnbd.spec
-index 29cd00c..6d45af2 100644
+index 29cd00c..3a8cfb0 100644
 --- a/libnbd.spec
 +++ b/libnbd.spec
 @@ -25,7 +25,7 @@
@@ -27,15 +27,16 @@ index 29cd00c..6d45af2 100644
  Summary:        NBD client library in userspace
  
  License:        LGPL-2.0-or-later AND BSD-3-Clause
-@@ -94,6 +94,7 @@ BuildRequires:  jq
- BuildRequires:  nbd
- %endif
- BuildRequires:  util-linux
-+BuildRequires:  openpgpverify
+@@ -42,7 +42,7 @@ Source2:       https://download.libguestfs.org/rich@annexia.org-pubkey.txt
+ Source3:        copy-patches.sh
  
- # On RHEL, maybe even in Fedora in future, we do not build qemu-img or
- # nbdkit for i686.  These are only needed for the test suite so make
-@@ -218,7 +219,7 @@ for %{name}.
+ %if 0%{verify_tarball_signature}
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ %endif
+ 
+ # For rebuilding autoconf cruft.
+@@ -218,7 +218,7 @@ for %{name}.
  
  %prep
  %if 0%{verify_tarball_signature}
@@ -44,11 +45,11 @@ index 29cd00c..6d45af2 100644
  %endif
  %autosetup -p1
  autoreconf -i
-@@ -405,6 +406,9 @@ make %{?_smp_mflags} check || {
+@@ -405,6 +405,9 @@ make %{?_smp_mflags} check || {
  
  
  %changelog
-+* Fri Oct 30 2026 Jakub Jelen <jjelen@redhat.com> - 1.25.8-2
++* Tue Nov 03 2026 Jakub Jelen <jjelen@redhat.com> - 1.25.8-2
 +- Verify upstream source signatures with openpgpverify
 +
  * Tue Oct 13 2026 Richard W.M. Jones <rjones@redhat.com> - 1.25.8-1

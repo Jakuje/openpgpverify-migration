@@ -1,6 +1,6 @@
-From 2d96d0ee611cb69e6ec70e74f1bc0ff2e23a69e4 Mon Sep 17 00:00:00 2001
+From 96c30206406559816e95895a452edab8198525eb Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:35:58 +0100
+Date: Tue, 3 Nov 2026 12:51:34 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- nbdkit.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ nbdkit.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/nbdkit.spec b/nbdkit.spec
-index 7e39873..970e096 100644
+index 7e39873..c28d0e1 100644
 --- a/nbdkit.spec
 +++ b/nbdkit.spec
 @@ -55,7 +55,7 @@
@@ -27,15 +27,16 @@ index 7e39873..970e096 100644
  Summary:        NBD server
  
  License:        BSD-3-Clause
-@@ -186,6 +186,7 @@ BuildRequires:  /usr/bin/stat
- # nbdkit plugins and filters.  This means nbdkit build depends on
- # itself, but it's a simple noarch package so easy to install.
- BuildRequires:  nbdkit-srpm-macros >= 1.30.0
+@@ -152,7 +152,7 @@ BuildRequires:  pkgconfig(tcl)
+ BuildRequires:  pkgconfig(lua)
+ %endif
+ %if 0%{verify_tarball_signature}
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
+ %endif
  
- %if 0%{?have_mingw}
- BuildRequires:  mingw32-filesystem
-@@ -824,7 +825,7 @@ development kit for 64 bit versions of Windows.
+ # Only for running the test suite:
+@@ -824,7 +824,7 @@ development kit for 64 bit versions of Windows.
  
  %prep
  %if 0%{verify_tarball_signature}
@@ -44,11 +45,11 @@ index 7e39873..970e096 100644
  %endif
  %autosetup -p1 -S git
  autoreconf -i
-@@ -1586,6 +1587,9 @@ fi
+@@ -1586,6 +1586,9 @@ fi
  
  
  %changelog
-+* Fri Oct 30 2026 Jakub Jelen <jjelen@redhat.com> - 1.49.4-2
++* Tue Nov 03 2026 Jakub Jelen <jjelen@redhat.com> - 1.49.4-2
 +- Verify upstream source signatures with openpgpverify
 +
  * Sat Oct 17 2026 Richard W.M. Jones <rjones@redhat.com> - 1.49.4-1

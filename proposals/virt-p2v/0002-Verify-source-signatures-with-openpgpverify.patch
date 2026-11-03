@@ -1,6 +1,6 @@
-From dfa432bccaea09c5c449026c9f2cfd36d901f822 Mon Sep 17 00:00:00 2001
+From 1700295b28bff757b561140f6149b3801a7b5dce Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:35:59 +0100
+Date: Tue, 3 Nov 2026 12:51:34 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- virt-p2v.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ virt-p2v.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/virt-p2v.spec b/virt-p2v.spec
-index 169c46e..cdd3d4b 100644
+index 169c46e..8c6a7a1 100644
 --- a/virt-p2v.spec
 +++ b/virt-p2v.spec
 @@ -10,7 +10,7 @@ Summary:       Convert a physical machine to run on KVM
@@ -27,15 +27,16 @@ index 169c46e..cdd3d4b 100644
  License:       GPL-2.0-or-later AND LGPL-2.0-or-later
  
  # virt-p2v works only on x86_64 at the moment.  It requires porting
-@@ -50,6 +50,7 @@ BuildRequires: gnupg2
+@@ -45,7 +45,7 @@ BuildRequires: gtk3-devel
+ BuildRequires: dbus-devel
+ BuildRequires: m4
+ %if 0%{verify_tarball_signature}
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ %endif
  
  # Test suite requirements.
- BuildRequires: nbdkit
-+BuildRequires: openpgpverify
- 
- Requires:      gawk
- Requires:      gzip
-@@ -75,7 +76,7 @@ To convert virtual machines from other hypervisors, see virt-v2v.
+@@ -75,7 +75,7 @@ To convert virtual machines from other hypervisors, see virt-v2v.
  
  %prep
  %if 0%{verify_tarball_signature}
@@ -44,11 +45,11 @@ index 169c46e..cdd3d4b 100644
  %endif
  %autosetup -p1
  
-@@ -119,6 +120,9 @@ rm $RPM_BUILD_ROOT%{_mandir}/man1/p2v-release-notes.1*
+@@ -119,6 +119,9 @@ rm $RPM_BUILD_ROOT%{_mandir}/man1/p2v-release-notes.1*
  
  
  %changelog
-+* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 1:1.42.4-6
++* Tue Nov 03 2026 Jakub Jelen <jjelen@redhat.com> - 1:1.42.4-6
 +- Verify upstream source signatures with openpgpverify
 +
  * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.42.4-5

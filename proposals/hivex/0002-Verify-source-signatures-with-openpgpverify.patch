@@ -1,6 +1,6 @@
-From 9ad8e9ad7050b8091df3a0bddb89279fae05e0f5 Mon Sep 17 00:00:00 2001
+From 3357c351f1a6cd70fdd35709555e6010137f4f77 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:35:58 +0100
+Date: Tue, 3 Nov 2026 12:51:34 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- hivex.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ hivex.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/hivex.spec b/hivex.spec
-index 24ba899..19edf04 100644
+index 24ba899..f5e6782 100644
 --- a/hivex.spec
 +++ b/hivex.spec
 @@ -10,7 +10,7 @@
@@ -27,15 +27,16 @@ index 24ba899..19edf04 100644
  Summary:        Read and write Windows Registry binary hive files
  
  License:        LGPL-2.1-only AND LGPL-2.0-or-later AND GPL-2.0-or-later
-@@ -61,6 +61,7 @@ BuildRequires:  rubygem(minitest)
- BuildRequires:  rubygem(rdoc)
+@@ -62,7 +62,7 @@ BuildRequires:  rubygem(rdoc)
  BuildRequires:  readline-devel
  BuildRequires:  libxml2-devel
-+BuildRequires:  openpgpverify
  %if 0%{verify_tarball_signature}
- BuildRequires:  gnupg2
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
  %endif
-@@ -197,7 +198,7 @@ ruby-%{name} contains Ruby bindings for %{name}.
+ 
+ Requires:       %{name}-libs = %{version}-%{release}
+@@ -197,7 +197,7 @@ ruby-%{name} contains Ruby bindings for %{name}.
  
  %prep
  %if 0%{verify_tarball_signature}
@@ -44,11 +45,11 @@ index 24ba899..19edf04 100644
  %endif
  %setup -q
  %autopatch -p1
-@@ -319,6 +320,9 @@ fi
+@@ -319,6 +319,9 @@ fi
  
  
  %changelog
-+* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 1.3.24-24
++* Tue Nov 03 2026 Jakub Jelen <jjelen@redhat.com> - 1.3.24-24
 +- Verify upstream source signatures with openpgpverify
 +
  * Sat Oct 03 2026 Jerry James <loganjerry@gmail.com> - 1.3.24-23

@@ -1,6 +1,6 @@
-From 73cb9b42142c891b28f3c66c7cd01c11bf511ed6 Mon Sep 17 00:00:00 2001
+From 1df8e496d435fa2dfa85c26eed04729f7c40ab66 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:35:58 +0100
+Date: Tue, 3 Nov 2026 12:51:34 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Replace libguestfs.keyring with rich@annexia.org-pubkey.txt, the key

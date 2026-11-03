@@ -1,6 +1,6 @@
-From c031db56f365b770362f0fc8ea6b86faeed15852 Mon Sep 17 00:00:00 2001
+From 3662c26a23695bddb32d6d3a5a4562991b7a794a Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 11:35:59 +0100
+Date: Tue, 3 Nov 2026 12:51:34 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- virt-what.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ virt-what.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/virt-what.spec b/virt-what.spec
-index e53e3a2..b21fbd6 100644
+index e53e3a2..8ec6ad4 100644
 --- a/virt-what.spec
 +++ b/virt-what.spec
 @@ -1,6 +1,6 @@
@@ -26,15 +26,16 @@ index e53e3a2..b21fbd6 100644
  Summary:        Detect if we are running in a virtual machine
  License:        GPL-2.0-or-later
  
-@@ -30,6 +30,7 @@ BuildRequires: gnupg2
+@@ -26,7 +26,7 @@ BuildRequires:  autoconf, automake, libtool
+ BuildRequires:  /usr/bin/pod2man
+ 
+ # Required to verify tarball signature.
+-BuildRequires: gnupg2
++BuildRequires:  openpgpverify
  
  # Required at build time in order to do 'make check' (for getopt).
  BuildRequires:  util-linux
-+BuildRequires:  openpgpverify
- 
- # virt-what script uses dmidecode and getopt (from util-linux).
- # RPM cannot detect this so make the dependencies explicit here.
-@@ -95,7 +96,7 @@ Current types of virtualization detected:
+@@ -95,7 +95,7 @@ Current types of virtualization detected:
  
  
  %prep
@@ -43,11 +44,11 @@ index e53e3a2..b21fbd6 100644
  %autosetup -S git
  
  # Always rebuild upstream autotools files.
-@@ -126,6 +127,9 @@ fi
+@@ -126,6 +126,9 @@ fi
  
  
  %changelog
-+* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 1.27-7
++* Tue Nov 03 2026 Jakub Jelen <jjelen@redhat.com> - 1.27-7
 +- Verify upstream source signatures with openpgpverify
 +
  * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.27-6

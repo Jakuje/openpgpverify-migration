@@ -255,14 +255,25 @@ def failure_reason(diag, text):
     return 'unknown'
 
 
-def installdeps_srpm(m, spec, g, out, v):
+def installdeps_srpm(m, spec, g, out, v, overlay=None):
     """Fallback: some specs need their sources to be parsed (e.g. "%load
     %{SOURCE10}"), which --installdeps on a spec can't provide. Build an SRPM
     with the sources and install its BuildRequires instead."""
     rd = os.path.join(out, 'srpm-' + v)
     os.makedirs(rd, exist_ok=True)
-    if m('--buildsrpm', '--spec', spec, '--sources', g, '--no-clean', '--no-cleanup-after',
-         '--resultdir', rd, timeout=3600):
+    src = g
+    if overlay:
+        # Approved keyring files (possibly under a new name) are not in dist-git.
+        src = os.path.join(out, 'srpm-sources-' + v)
+        shutil.rmtree(src, ignore_errors=True)
+        shutil.copytree(g, src, symlinks=True, ignore=shutil.ignore_patterns('.git'))
+        for rel, f in overlay.items():
+            shutil.copy(f, os.path.join(src, rel))
+    rc = m('--buildsrpm', '--spec', spec, '--sources', src, '--no-clean', '--no-cleanup-after',
+           '--resultdir', rd, timeout=3600)
+    if src != g:
+        shutil.rmtree(src, ignore_errors=True)
+    if rc:
         return False
     srpms = [f for f in os.listdir(rd) if f.endswith('.src.rpm')]
     ok = bool(srpms) and m('--installdeps', os.path.join(rd, srpms[0]), timeout=7200) == 0
@@ -354,7 +365,8 @@ def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp', overlay
             variants.reverse()
         for v, spec in variants:
             if m('--installdeps', spec, timeout=7200):
-                if not installdeps_srpm(m, spec, g, out, v) or not populate():
+                if not installdeps_srpm(m, spec, g, out, v,
+                                        overlay if v == 'new' else None) or not populate():
                     res['%s_error' % v] = 'installdeps failed'
                     continue
                 res.setdefault('notes', []).append('%s: build deps installed from SRPM' % v)
