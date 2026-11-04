@@ -1,6 +1,6 @@
-From 7a373e16bfe2ade622f656a261b36f6bde37921b Mon Sep 17 00:00:00 2001
+From 3087719c40a6c130e45b424053bdee9ebddabbff Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Wed, 4 Nov 2026 17:13:44 +0100
+Date: Wed, 4 Nov 2026 18:09:11 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- wayland.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ wayland.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/wayland.spec b/wayland.spec
-index 84b1750..736e2c8 100644
+index 84b1750..47d5cde 100644
 --- a/wayland.spec
 +++ b/wayland.spec
 @@ -2,7 +2,7 @@
@@ -27,15 +27,16 @@ index 84b1750..736e2c8 100644
  Summary:        Wayland Compositor Infrastructure
  
  # SPDX
-@@ -32,6 +32,7 @@ BuildRequires:  xmlto
+@@ -31,7 +31,7 @@ BuildRequires:  pkgconfig(libffi)
+ BuildRequires:  xmlto
  
  # For origin certification
- BuildRequires:  gnupg2
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
  
  %description
  Wayland is a protocol for a compositor to talk to its clients as well as a C
-@@ -136,7 +137,7 @@ Wayland server library
+@@ -136,7 +136,7 @@ Wayland server library
  %dnl ------------------------------------------------------------------------
  
  %prep
@@ -44,11 +45,11 @@ index 84b1750..736e2c8 100644
  %autosetup -p1
  
  %conf
-@@ -152,6 +153,9 @@ Wayland server library
+@@ -152,6 +152,9 @@ Wayland server library
  %meson_test
  
  %changelog
-+* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 1.26.0-4
++* Wed Nov 04 2026 Jakub Jelen <jjelen@redhat.com> - 1.26.0-4
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Sep 10 2026 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 1.26.0-3

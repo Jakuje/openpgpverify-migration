@@ -1,6 +1,6 @@
-From 76c02129f4b0d1c5d716c7f6d255cb85cce971d1 Mon Sep 17 00:00:00 2001
+From 8677453662b44666a01872a81431839cd566fae3 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Wed, 4 Nov 2026 17:13:44 +0100
+Date: Wed, 4 Nov 2026 18:09:11 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- libdisplay-info.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ libdisplay-info.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/libdisplay-info.spec b/libdisplay-info.spec
-index bfd7bc2..aada06f 100644
+index bfd7bc2..3694ae6 100644
 --- a/libdisplay-info.spec
 +++ b/libdisplay-info.spec
 @@ -4,7 +4,7 @@
@@ -27,15 +27,16 @@ index bfd7bc2..aada06f 100644
  Summary:        EDID and DisplayID library
  
  # Main license: MIT
-@@ -20,6 +20,7 @@ BuildRequires:  gcc
- BuildRequires:  gnupg2
+@@ -17,7 +17,7 @@ Source1:        %{url}/-/releases/%{version}/downloads/%{name}-%{version}.tar.xz
+ Source2:        https://keys.openpgp.org/vks/v1/by-fingerprint/34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48#/gpgkey-0FDE7BE0E88F5E48.asc
+ 
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
  BuildRequires:  meson >= 0.57
  BuildRequires:  pkgconfig(hwdata)
-+BuildRequires:  openpgpverify
  
- %description
- %{summary}.
-@@ -41,7 +42,7 @@ developing applications that use %{name}.
+@@ -41,7 +41,7 @@ developing applications that use %{name}.
  
  
  %prep
@@ -44,11 +45,11 @@ index bfd7bc2..aada06f 100644
  %autosetup
  
  
-@@ -74,6 +75,9 @@ developing applications that use %{name}.
+@@ -74,6 +74,9 @@ developing applications that use %{name}.
  
  
  %changelog
-+* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 0.3.0-3
++* Wed Nov 04 2026 Jakub Jelen <jjelen@redhat.com> - 0.3.0-3
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.3.0-2

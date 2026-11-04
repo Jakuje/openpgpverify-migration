@@ -1,6 +1,6 @@
-From 4db2b4e1082eddcb7d5c5b6d32dbcc2afe6fb638 Mon Sep 17 00:00:00 2001
+From 70317bcfc4a30a85ceba83f9934f761c0a3b078c Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Wed, 4 Nov 2026 17:13:44 +0100
+Date: Wed, 4 Nov 2026 18:09:11 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/kanshi.spec b/kanshi.spec
-index 63dbc0a..c6d567e 100644
+index 63dbc0a..a66dcaa 100644
 --- a/kanshi.spec
 +++ b/kanshi.spec
 @@ -2,7 +2,7 @@
@@ -49,7 +49,7 @@ index 63dbc0a..c6d567e 100644
  
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 1.9.0-3
++* Wed Nov 04 2026 Jakub Jelen <jjelen@redhat.com> - 1.9.0-3
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.0-2

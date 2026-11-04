@@ -1,6 +1,6 @@
-From 738975ed8421223d4518ae2bda7054fb993bab27 Mon Sep 17 00:00:00 2001
+From 2a88715aa8c9aa10036f64362da652878f67bed4 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Wed, 4 Nov 2026 17:13:44 +0100
+Date: Wed, 4 Nov 2026 18:09:11 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/mako.spec b/mako.spec
-index afb3946..c550d12 100644
+index afb3946..62f216a 100644
 --- a/mako.spec
 +++ b/mako.spec
 @@ -1,6 +1,6 @@
@@ -48,7 +48,7 @@ index afb3946..c550d12 100644
  %{zsh_completions_dir}/_mako*
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 1.11.0-3
++* Wed Nov 04 2026 Jakub Jelen <jjelen@redhat.com> - 1.11.0-3
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.11.0-2

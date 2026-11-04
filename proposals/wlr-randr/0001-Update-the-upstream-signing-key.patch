@@ -1,6 +1,6 @@
-From 26a8fd0f578d4d004c05123cf67e9788cf6b3d3c Mon Sep 17 00:00:00 2001
+From 8cda0cdb1ac2117b7acc1b4a345440e157b52677 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Wed, 4 Nov 2026 17:13:44 +0100
+Date: Wed, 4 Nov 2026 18:09:12 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Replace gpgkey-0FDE7BE0E88F5E48.gpg with gpgkey-0FDE7BE0E88F5E48.asc,

@@ -1,6 +1,6 @@
-From cf3ee2890906e126fc16db1efb1bf4d1b203a560 Mon Sep 17 00:00:00 2001
+From c1cd3678dfc9f2588831f3b11da156d9ca530497 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Wed, 4 Nov 2026 17:13:44 +0100
+Date: Wed, 4 Nov 2026 18:09:11 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Replace emersion-gpg-key.asc with gpgkey-0FDE7BE0E88F5E48.asc, the key

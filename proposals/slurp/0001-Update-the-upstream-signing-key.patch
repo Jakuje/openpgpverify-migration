@@ -1,6 +1,6 @@
-From b874a5d4f1d2afbceaf924b3fef5d130e743a0e2 Mon Sep 17 00:00:00 2001
+From 567a0f93e17e84224560b169790000d59db84781 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Wed, 4 Nov 2026 17:13:44 +0100
+Date: Wed, 4 Nov 2026 18:09:11 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Replace dj3498u4hyyarh35rkjfnghbjxug6b19 with

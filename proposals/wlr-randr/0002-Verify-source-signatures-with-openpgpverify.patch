@@ -1,6 +1,6 @@
-From c3fdab77e118da4266e3d3cb97ca3e2cddd5cb06 Mon Sep 17 00:00:00 2001
+From 3e50d70004fc28224d0eac9f423b32bbf692bfae Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Wed, 4 Nov 2026 17:13:44 +0100
+Date: Wed, 4 Nov 2026 18:09:12 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/wlr-randr.spec b/wlr-randr.spec
-index 408c42d..17d4482 100644
+index 408c42d..ceb0b38 100644
 --- a/wlr-randr.spec
 +++ b/wlr-randr.spec
 @@ -1,6 +1,6 @@
@@ -48,7 +48,7 @@ index 408c42d..17d4482 100644
  %{_mandir}/man1/wlr-randr.1*
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 0.5.0-5
++* Wed Nov 04 2026 Jakub Jelen <jjelen@redhat.com> - 0.5.0-5
 +- Verify upstream source signatures with openpgpverify
 +
  * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.5.0-4
