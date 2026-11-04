@@ -1,6 +1,6 @@
-From 6cb091acaea88e7845383ac43746c570c1f398b5 Mon Sep 17 00:00:00 2001
+From 90a7e28c88a753b7cc812a5cb1671aff8d4ff843 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Sat, 31 Oct 2026 23:04:57 +0100
+Date: Wed, 4 Nov 2026 10:15:10 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,13 +15,13 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/mingw-SDL3.spec b/mingw-SDL3.spec
-index 75bbc41..7cdb5c7 100644
+index 8660292..826545b 100644
 --- a/mingw-SDL3.spec
 +++ b/mingw-SDL3.spec
 @@ -2,7 +2,7 @@
  
  Name:           mingw-SDL3
- Version:        3.4.18
+ Version:        3.4.20
 -Release:        1%{?dist}
 +Release:        2%{?dist}
  Summary:        MinGW Windows port of SDL3 cross-platform multimedia library
@@ -48,11 +48,11 @@ index 75bbc41..7cdb5c7 100644
  
  
  %changelog
-+* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 3.4.18-2
++* Wed Nov 04 2026 Jakub Jelen <jjelen@redhat.com> - 3.4.20-2
 +- Verify upstream source signatures with openpgpverify
 +
- * Sat Oct 03 2026 Artur Frenszek-Iwicki <fedora@svgames.pl> - 3.4.18-1
- - Update to v3.4.18
+ * Tue Nov 03 2026 Artur Frenszek-Iwicki <fedora@svgames.pl> - 3.4.20-1
+ - Update to v3.4.20
  
 -- 
 2.56.0
