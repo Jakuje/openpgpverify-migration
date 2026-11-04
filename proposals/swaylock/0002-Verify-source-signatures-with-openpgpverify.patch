@@ -1,6 +1,6 @@
-From dda7a20c00c9e40af310cd698039fbde3812df4d Mon Sep 17 00:00:00 2001
+From f55b83eb680ad196776ea4f15b328808f3d544d0 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:48 +0100
+Date: Wed, 4 Nov 2026 17:13:44 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,11 +13,11 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/swaylock.spec b/swaylock.spec
-index 9d7aa33..1e72d97 100644
+index 9196fab..3c225b2 100644
 --- a/swaylock.spec
 +++ b/swaylock.spec
-@@ -14,7 +14,7 @@ Source1:    %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz.sig
- Source2:    gpgkey-E88F5E48.asc
+@@ -10,7 +10,7 @@ Source1:    %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz.sig
+ Source2:    https://keys.openpgp.org/vks/v1/by-fingerprint/34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48#/gpgkey-0FDE7BE0E88F5E48.asc
  
  BuildRequires:  gcc
 -BuildRequires:  gnupg2
@@ -25,7 +25,7 @@ index 9d7aa33..1e72d97 100644
  BuildRequires:  meson >= 0.59.0
  BuildRequires:  pam-devel
  BuildRequires:  pkgconfig(cairo)
-@@ -29,7 +29,7 @@ BuildRequires:  scdoc
+@@ -25,7 +25,7 @@ BuildRequires:  scdoc
  swaylock is a screen locking utility for Wayland compositors.
  
  %prep

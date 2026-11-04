@@ -171,6 +171,10 @@ rpm stops depending on gpg.
       today's inventory and the dist-git PRs (`--fetch` queries Pagure) and
       writes `reports/progress-DATE.md`: converted, PR open, still to do.
       `--since INVENTORY PRS` adds what changed since an earlier report.
+   8. `scripts/sync_state.py INVENTORY PRS --write` feeds both back into the
+      state file: PRs opened by hand get recorded (`pr_url`, `existing_prs`)
+      and packages converted in rawhide become `superseded`, so they no
+      longer show up as to do. Run it after every `progress.py --fetch`.
 1b. **Keyring refresh for regressions** (`scripts/refresh_keys.py`),
    semi-automatic, with a manual review for each package:
    - `propose [PKG...]` (default: regressions with reason `expired`,

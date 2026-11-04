@@ -1,6 +1,6 @@
-From 74833762016ab114b5c1f6c4214fbf36f3e8944d Mon Sep 17 00:00:00 2001
+From 4db2b4e1082eddcb7d5c5b6d32dbcc2afe6fb638 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:45 +0100
+Date: Wed, 4 Nov 2026 17:13:44 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/kanshi.spec b/kanshi.spec
-index 6171256..18a859e 100644
+index 63dbc0a..c6d567e 100644
 --- a/kanshi.spec
 +++ b/kanshi.spec
 @@ -2,7 +2,7 @@
@@ -27,7 +27,7 @@ index 6171256..18a859e 100644
  Summary:        Dynamic display configuration for Wayland
  
  # Overall project license: MIT
-@@ -24,7 +24,7 @@ Source2:        https://emersion.fr/.well-known/openpgpkey/hu/dj3498u4hyyarh35rk
+@@ -20,7 +20,7 @@ Source2:        https://keys.openpgp.org/vks/v1/by-fingerprint/34FF9526CFEF0E97A
  Source3:        %{name}.service
  
  BuildRequires:  gcc
@@ -36,7 +36,7 @@ index 6171256..18a859e 100644
  BuildRequires:  meson >= 0.59.0
  BuildRequires:  systemd-rpm-macros
  
-@@ -46,7 +46,7 @@ on Wayland compositors supporting the wlr-output-management protocol.
+@@ -42,7 +42,7 @@ on Wayland compositors supporting the wlr-output-management protocol.
  
  
  %prep
@@ -45,7 +45,7 @@ index 6171256..18a859e 100644
  %autosetup -p1
  
  
-@@ -78,6 +78,9 @@ install -D -m 0644 -pv %{SOURCE3} %{buildroot}%{_userunitdir}/%{name}.service
+@@ -74,6 +74,9 @@ install -D -m 0644 -pv %{SOURCE3} %{buildroot}%{_userunitdir}/%{name}.service
  
  
  %changelog

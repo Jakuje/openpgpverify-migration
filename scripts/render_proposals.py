@@ -466,6 +466,8 @@ def render_pr(pkg, s, draft):
                                              '\n'.join(f['commands']))
                               for f in files if f.get('commands')),
                       ''.join(diffs)))
+    if files and kr.get('pr_note'):
+        refresh += '\n' + kr['pr_note'] + '\n'
     if files:
         refresh += ('\nThe keyring change is the first of the two commits, so it can be '
                     'reviewed or merged on its own.\n')

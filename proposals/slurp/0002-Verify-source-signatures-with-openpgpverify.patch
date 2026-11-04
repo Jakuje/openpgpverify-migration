@@ -1,6 +1,6 @@
-From e1a6d70d3aacda01a72a7d488e5804094f8ee26f Mon Sep 17 00:00:00 2001
+From be7cc3a61fe4d84e725738ecfe4224b75b99f819 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:47 +0100
+Date: Wed, 4 Nov 2026 17:13:44 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/slurp.spec b/slurp.spec
-index 180a33f..7c7ea70 100644
+index 1a1206e..8356bc0 100644
 --- a/slurp.spec
 +++ b/slurp.spec
 @@ -1,6 +1,6 @@
@@ -26,7 +26,7 @@ index 180a33f..7c7ea70 100644
  Summary:	Select a region in Sway
  
  License:	MIT
-@@ -21,14 +21,14 @@ BuildRequires:	pkgconfig(xkbcommon)
+@@ -17,14 +17,14 @@ BuildRequires:	pkgconfig(xkbcommon)
  BuildRequires:	scdoc
  BuildRequires:	meson
  BuildRequires:	gcc
@@ -43,7 +43,7 @@ index 180a33f..7c7ea70 100644
  %autosetup
  
  %build
-@@ -44,6 +44,9 @@ and prints it to the standard output.
+@@ -40,6 +40,9 @@ and prints it to the standard output.
  %{_mandir}/man1/slurp.1*
  
  %changelog

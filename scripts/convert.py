@@ -189,7 +189,10 @@ def source_to_url(text, pkg, name, url):
                     new = new.replace(macros[mac], '%%{%s}' % mac)
             lines[i] = line[:m.start(2)] + new + line[m.end(2):]
             # The URL is now the Source; a comment line repeating it goes.
-            if i and lines[i - 1].lstrip('# ').strip() == url.split('#')[0]:
+            # So does one naming the old file (how it was made, e.g. "gpg --export >NAME").
+            if i and lines[i - 1].startswith('#') and (
+                    lines[i - 1].lstrip('# ').strip() == url.split('#')[0] or
+                    re.search(r'(^|[\s>/])%s\s*$' % re.escape(name), lines[i - 1])):
                 del lines[i - 1]
             return '\n'.join(lines), None
     return text, 'no Source line for %s' % name

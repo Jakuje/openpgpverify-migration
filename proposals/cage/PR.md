@@ -16,7 +16,7 @@ Why `sqv`:
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
 - dropped `BuildRequires:	gnupg2`, only needed for `%gpgverify`
-- refreshed keyring `gpgkey-E88F5E48.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- replaced keyring `gpgkey-E88F5E48.gpg` with `gpgkey-0FDE7BE0E88F5E48.asc` from https://keys.openpgp.org/vks/v1/by-fingerprint/34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48#/gpgkey-0FDE7BE0E88F5E48.asc; its `Source` line is now that URL (see below)
 - Release bumped (`2%{?dist}` → `3%{?dist}`) with a changelog entry
 
 ### Testing
@@ -30,27 +30,24 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 Tested on 2026-10-22 at dist-git commit `6f29c6cfa40e` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
-### Keyring refresh
+### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. Upstream has updated the key since: the copy at https://keys.openpgp.org/vks/v1/by-fingerprint/34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48#/gpgkey-0FDE7BE0E88F5E48.asc has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte, named like the URL, which becomes its `Source`:
+
+```
+curl -fsSL -o gpgkey-0FDE7BE0E88F5E48.asc 'https://keys.openpgp.org/vks/v1/by-fingerprint/34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48'
+```
+
+Fingerprints (unchanged):
 
 - `34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48`
-
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
-
-```
-sq --home=none network search --output - 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 \
-  | sq keyring filter --experimental --cert 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48 --output update.pgp
-sq keyring merge --output gpgkey-E88F5E48.gpg.new gpgkey-E88F5E48.gpg update.pgp
-mv gpgkey-E88F5E48.gpg.new gpgkey-E88F5E48.gpg
-```
 
 What changed in the certificate (`sq inspect`):
 
 ```diff
 --- dist-git/gpgkey-E88F5E48.gpg
-+++ refreshed/gpgkey-E88F5E48.gpg
-@@ -1,12 +1,12 @@
++++ upstream/gpgkey-E88F5E48.gpg
+@@ -1,12 +1,10 @@
        Fingerprint: 34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48
 -                   Invalid: The primary key is not live: Expired on 2024-03-31T12:47:54Z
 -  Expiration time: 2024-03-31 12:47:54 UTC (creation time + 7years 11months 29days 46m)
@@ -67,9 +64,9 @@ What changed in the certificate (`sq inspect`):
 -self-signatures SubkeyBinding: 2016-04-01, 2017-04-01, 2018-04-02, 2019-04-08, 2020-03-04, 2021-03-10, 2022-03-30, 2023-04-01
 +self-signatures PositiveCertification: 2016-04-01, 2017-04-01, 2018-04-02, 2019-03-11, 2019-04-08, 2020-03-04, 2021-03-10, 2022-03-30, 2023-04-01, 2023-04-21, 2024-04-03, 2025-04-12, 2026-04-12
 +self-signatures SubkeyBinding: 2016-04-01, 2017-04-01, 2018-04-02, 2019-04-08, 2020-03-04, 2021-03-10, 2022-03-30, 2023-04-01, 2024-04-03, 2025-04-12, 2026-04-12
-+third-party CasualCertification: 1
-+third-party GenericCertification: 1
 ```
+
+Why keys.openpgp.org and not the WKD copy at emersion.fr: the key is extended every April, and the WKD copy carries only the newest self-signatures (now from 2026-04-12). sqv needs a binding that was valid when the release was signed, so the WKD copy fails for any release signed before the latest extension. keys.openpgp.org keeps the whole self-signature history back to 2016, so the file verifies older and newer releases alike, and it can be fetched again with the same URL after the next extension.
 
 The keyring change is the first of the two commits, so it can be reviewed or merged on its own.
 

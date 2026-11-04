@@ -1,6 +1,6 @@
-From 87a5de6d5e0796ffb871fe73d2be9c9dc54addbb Mon Sep 17 00:00:00 2001
+From 3519d366d2b8b37d9da5049f91e69c21c1fcdb67 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:54 +0100
+Date: Wed, 4 Nov 2026 17:13:44 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/wlroots0.19.spec b/wlroots0.19.spec
-index 97193dd..4a489b4 100644
+index e4f30db..60a9ad4 100644
 --- a/wlroots0.19.spec
 +++ b/wlroots0.19.spec
-@@ -79,6 +79,7 @@ BuildRequires:  pkgconfig(xcb-xfixes)
+@@ -75,6 +75,7 @@ BuildRequires:  pkgconfig(xcb-xfixes)
  BuildRequires:  pkgconfig(xcb-xinput)
  BuildRequires:  pkgconfig(xkbcommon)
  BuildRequires:  pkgconfig(xwayland)
@@ -24,7 +24,7 @@ index 97193dd..4a489b4 100644
  # libliftoff does not bump soname on API changes
  Requires:       libliftoff%{?_isa} >= %{liftoff_ver}
  
-@@ -97,7 +98,7 @@ Development files for %{name}.
+@@ -93,7 +94,7 @@ Development files for %{name}.
  
  
  %prep

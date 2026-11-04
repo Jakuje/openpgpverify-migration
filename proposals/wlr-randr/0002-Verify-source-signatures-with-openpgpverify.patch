@@ -1,6 +1,6 @@
-From 91f5b9d31c37ed1e89f41675a2e6c7bf1d46e2d4 Mon Sep 17 00:00:00 2001
+From c3fdab77e118da4266e3d3cb97ca3e2cddd5cb06 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:48 +0100
+Date: Wed, 4 Nov 2026 17:13:44 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/wlr-randr.spec b/wlr-randr.spec
-index 8203f57..c1fed09 100644
+index 408c42d..17d4482 100644
 --- a/wlr-randr.spec
 +++ b/wlr-randr.spec
 @@ -1,6 +1,6 @@
@@ -26,8 +26,8 @@ index 8203f57..c1fed09 100644
  Summary:        An xrandr clone for wlroots compositors
  
  # Overall project license: MIT
-@@ -21,7 +21,7 @@ Source1:        %{url}/-/releases/v%{version}/downloads/%{name}-%{version}.tar.g
- Source2:        https://emersion.fr/.well-known/openpgpkey/hu/dj3498u4hyyarh35rkjfnghbjxug6b19#/gpgkey-0FDE7BE0E88F5E48.gpg
+@@ -17,7 +17,7 @@ Source1:        %{url}/-/releases/v%{version}/downloads/%{name}-%{version}.tar.g
+ Source2:        https://keys.openpgp.org/vks/v1/by-fingerprint/34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48#/gpgkey-0FDE7BE0E88F5E48.asc
  
  BuildRequires:  gcc
 -BuildRequires:  gnupg2
@@ -35,7 +35,7 @@ index 8203f57..c1fed09 100644
  BuildRequires:  meson
  BuildRequires:  pkgconfig(scdoc)
  BuildRequires:  pkgconfig(wayland-client)
-@@ -31,7 +31,7 @@ BuildRequires:  pkgconfig(wayland-scanner)
+@@ -27,7 +27,7 @@ BuildRequires:  pkgconfig(wayland-scanner)
  wlr-randr is an xrandr clone for wlroots compositors
  
  %prep
@@ -44,7 +44,7 @@ index 8203f57..c1fed09 100644
  %autosetup
  
  %build
-@@ -48,6 +48,9 @@ wlr-randr is an xrandr clone for wlroots compositors
+@@ -44,6 +44,9 @@ wlr-randr is an xrandr clone for wlroots compositors
  %{_mandir}/man1/wlr-randr.1*
  
  %changelog

@@ -1,6 +1,6 @@
-From 2d8fed67efd93a66472805ade42ad9c654c9833a Mon Sep 17 00:00:00 2001
+From 76c02129f4b0d1c5d716c7f6d255cb85cce971d1 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:41 +0100
+Date: Wed, 4 Nov 2026 17:13:44 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/libdisplay-info.spec b/libdisplay-info.spec
-index 63b25aa..a6b80a1 100644
+index bfd7bc2..aada06f 100644
 --- a/libdisplay-info.spec
 +++ b/libdisplay-info.spec
 @@ -4,7 +4,7 @@
@@ -27,7 +27,7 @@ index 63b25aa..a6b80a1 100644
  Summary:        EDID and DisplayID library
  
  # Main license: MIT
-@@ -24,6 +24,7 @@ BuildRequires:  gcc
+@@ -20,6 +20,7 @@ BuildRequires:  gcc
  BuildRequires:  gnupg2
  BuildRequires:  meson >= 0.57
  BuildRequires:  pkgconfig(hwdata)
@@ -35,7 +35,7 @@ index 63b25aa..a6b80a1 100644
  
  %description
  %{summary}.
-@@ -45,7 +46,7 @@ developing applications that use %{name}.
+@@ -41,7 +42,7 @@ developing applications that use %{name}.
  
  
  %prep
@@ -44,7 +44,7 @@ index 63b25aa..a6b80a1 100644
  %autosetup
  
  
-@@ -78,6 +79,9 @@ developing applications that use %{name}.
+@@ -74,6 +75,9 @@ developing applications that use %{name}.
  
  
  %changelog

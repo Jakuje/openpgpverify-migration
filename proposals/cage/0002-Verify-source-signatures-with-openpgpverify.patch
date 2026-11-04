@@ -1,6 +1,6 @@
-From e47335bc45f8d2ddb63f9a4fe83278a629452a5c Mon Sep 17 00:00:00 2001
+From 705f43230343084fa642ab2649e70fb1dd3407f5 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:43 +0100
+Date: Wed, 4 Nov 2026 17:13:44 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/cage.spec b/cage.spec
-index 612d01c..716ec90 100644
+index 57a8dc4..29aea72 100644
 --- a/cage.spec
 +++ b/cage.spec
 @@ -2,7 +2,7 @@
@@ -27,8 +27,8 @@ index 612d01c..716ec90 100644
  Summary:		A Wayland kiosk
  
  License:		MIT
-@@ -17,7 +17,7 @@ Source1:		%{forgeurl}/releases/download/v%{version}/%{name}-%{version}.tar.gz.si
- Source2:		gpgkey-E88F5E48.gpg
+@@ -13,7 +13,7 @@ Source1:		%{forgeurl}/releases/download/v%{version}/%{name}-%{version}.tar.gz.si
+ Source2:		https://keys.openpgp.org/vks/v1/by-fingerprint/34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48#/gpgkey-0FDE7BE0E88F5E48.asc
  
  BuildRequires:	gcc
 -BuildRequires:	gnupg2
@@ -36,7 +36,7 @@ index 612d01c..716ec90 100644
  BuildRequires:	meson
  BuildRequires:	pkgconfig(scdoc)
  BuildRequires:	pkgconfig(wlroots-0.20)
-@@ -34,7 +34,7 @@ project page and the Wiki.
+@@ -30,7 +30,7 @@ project page and the Wiki.
  
  
  %prep
@@ -45,7 +45,7 @@ index 612d01c..716ec90 100644
  %autosetup
  
  
-@@ -55,6 +55,9 @@ project page and the Wiki.
+@@ -51,6 +51,9 @@ project page and the Wiki.
  
  
  %changelog

@@ -1,6 +1,6 @@
-From 8ed28320a172655b992fe7f139341d401ff682d3 Mon Sep 17 00:00:00 2001
+From 738975ed8421223d4518ae2bda7054fb993bab27 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:45 +0100
+Date: Wed, 4 Nov 2026 17:13:44 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/mako.spec b/mako.spec
-index 0eaa1f0..3de3b2f 100644
+index afb3946..c550d12 100644
 --- a/mako.spec
 +++ b/mako.spec
 @@ -1,6 +1,6 @@
@@ -26,7 +26,7 @@ index 0eaa1f0..3de3b2f 100644
  Summary:    Lightweight Wayland notification daemon
  Provides:   desktop-notification-daemon
  
-@@ -18,7 +18,7 @@ Source2:    https://emersion.fr/.well-known/openpgpkey/hu/dj3498u4hyyarh35rkjfng
+@@ -14,7 +14,7 @@ Source2:    https://keys.openpgp.org/vks/v1/by-fingerprint/34FF9526CFEF0E97A340E
  Patch0: add-systemd-service-dbus.patch
  
  BuildRequires:  gcc
@@ -35,7 +35,7 @@ index 0eaa1f0..3de3b2f 100644
  BuildRequires:  meson >= 0.60.0
  BuildRequires:  systemd-rpm-macros
  BuildRequires:  pkgconfig(cairo)
-@@ -43,7 +43,7 @@ mako is a lightweight notification daemon for Wayland compositors that support
+@@ -39,7 +39,7 @@ mako is a lightweight notification daemon for Wayland compositors that support
  the layer-shell protocol.
  
  %prep
@@ -44,7 +44,7 @@ index 0eaa1f0..3de3b2f 100644
  %autosetup -p1
  
  %build
-@@ -82,6 +82,9 @@ install -m0644 -Dt %{buildroot}%{_userunitdir}/ contrib/systemd/mako.service
+@@ -78,6 +78,9 @@ install -m0644 -Dt %{buildroot}%{_userunitdir}/ contrib/systemd/mako.service
  %{zsh_completions_dir}/_mako*
  
  %changelog
