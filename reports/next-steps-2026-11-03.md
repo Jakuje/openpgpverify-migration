@@ -50,7 +50,7 @@ The keyserver copy of the same fingerprints fixes the check (46 `expired`, 44 `s
 ## 5. Follow-ups on open PRs
 
 - **No reply for over a week (14):** SDL3#4, autoconf-archive#8, bc#9, crun#159, ldns#10, libmnl#4, libnetfilter_conntrack#4, libssh2#4, libxcrypt#23, lttng-ust#3, man-db#22, mdadm#14, pcre2#39, squid#10. A friendly ping. pcre2#39 has an LGTM, and libxcrypt#23 is waiting for someone with merge rights.
-- **ethtool#9:** conflicts with a newer dist-git commit; the rebased change passes. It needs a push to the PR branch, so it waits for your go-ahead.
+- **ethtool#9:** rebased by the owner; Pagure reports it fast-forward mergeable (checked 2026-11-04). Nothing to do.
 - **Robert's question on Fedora < 45 and EPEL:**
   - libidn2#2: no active EPEL branch, so no `%if` is needed. A follow-up may unblock it.
   - ethtool#9: Fedora only, so no `%if` is needed.
