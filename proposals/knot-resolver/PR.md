@@ -26,7 +26,7 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 | current (`gpg2`) | 2 | pass |
 | this PR (`%openpgpverify`) | 1 | pass |
 
-Tested on 2026-11-03 at dist-git commit `0d4bf2c20be1` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
+Tested on 2026-11-04 at dist-git commit `0d4bf2c20be1` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
 ### Keyring update
 

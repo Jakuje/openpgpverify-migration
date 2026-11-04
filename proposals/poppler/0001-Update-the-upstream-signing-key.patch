@@ -1,6 +1,6 @@
-From a3c902c48704ec76c7601d949e9c9dbedb3ea051 Mon Sep 17 00:00:00 2001
+From 551639df1af2354cd34e8f1691aee6a756dd8693 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 20:54:09 +0100
+Date: Wed, 4 Nov 2026 09:39:31 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Update armored-keys.asc to the current copy at

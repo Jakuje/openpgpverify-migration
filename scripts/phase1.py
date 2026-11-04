@@ -553,6 +553,15 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
     if reused:
         gnupg2_check = False
         upd['gnupg2_check'] = dict(pg, reused_from=(prev or {}).get('tested_at'))
+    # The reviewer may overrule a "keep" that rests only on gpg mentions in the
+    # log or the tests (gnupg2_override = "drop"), when the full build without
+    # gnupg2 passed at this very commit and no gpg was left installed.
+    elif gnupg2_check and (prev or {}).get('gnupg2_override') == 'drop' and \
+            pg.get('verdict') == 'keep' and pg.get('build_rc') == 0 and \
+            not pg.get('gpg_left') and (prev or {}).get('spec_commit') == upd['spec_commit']:
+        gnupg2_check, reused = False, True
+        upd['gnupg2_check'] = dict(pg, verdict='drop', overridden=pg.get('reason'),
+                                   reused_from=(prev or {}).get('tested_at'))
     keep_text = None
     if not raw or rewritten:
         try:

@@ -1,6 +1,6 @@
-From 5bca9dca96e34baaf31373d80ca12026f5554219 Mon Sep 17 00:00:00 2001
+From 2f4cce88aabb782a7de7cb9a7696821014aa8fe6 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 20:54:24 +0100
+Date: Wed, 4 Nov 2026 09:39:31 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Update kresd-keyblock.asc to the current copy at

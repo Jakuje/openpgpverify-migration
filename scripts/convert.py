@@ -239,20 +239,33 @@ def neighbour_prefix(out, i, br):
 
 
 def swap_conditional(out, br, body):
-    """A "%if COND / BuildRequires: gnupg2 / %endif" block whose only line we
-    dropped, with COND also guarding the call in %prep (OpenStack's
-    "%if 0%{?sources_gpg} == 1"), gets "BuildRequires: openpgpverify" in
-    place of the dropped line. Only for exactly one such block."""
-    hits = [k for k in range(1, len(out) - 1)
-            if out[k] == DROPPED and COND_OPEN.match(out[k - 1].strip())
-            and COND_END.match(out[k + 1].strip())]
-    if len(hits) != 1 or DROPPED in out[:hits[0]] + out[hits[0] + 1:]:
+    """A "BuildRequires: gnupg2" we dropped inside "%if COND ... %endif",
+    with COND also guarding the call in %prep (OpenStack's
+    "%if 0%{?sources_gpg} == 1", knot-resolver's "%if 0%{GPG_CHECK}"), gets
+    "BuildRequires: openpgpverify" in its place. Only for exactly one
+    dropped line, directly inside the %if (not in its %else)."""
+    hits = [k for k, l in enumerate(out) if l == DROPPED]
+    if len(hits) != 1:
         return False
     k = hits[0]
-    cond = out[k - 1].strip()
+    depth, j = 0, k - 1
+    while j >= 0:
+        t = out[j].strip()
+        if COND_END.match(t):
+            depth += 1
+        elif COND_OPEN.match(t):
+            if depth == 0:
+                break
+            depth -= 1
+        elif depth == 0 and re.match(r'%else\b', t):
+            return False
+        j -= 1
+    if j < 0:
+        return False
+    cond = out[j].strip()
     if len(re.findall(r'(?m)^\s*' + re.escape(cond) + r'\s*$', body)) < 2:
         return False
-    out[k] = br
+    out[k] = neighbour_prefix(out, k, br)
     return True
 
 

@@ -1,6 +1,6 @@
-From 30b6e4e0ebdd4770f8efdfe62fd5801cbc16b48c Mon Sep 17 00:00:00 2001
+From 43a3e762f2d170336e362c0e04a1e55c7d1f9b6b Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 3 Nov 2026 20:54:09 +0100
+Date: Wed, 4 Nov 2026 09:39:31 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,25 +9,25 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- poppler.spec | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ poppler.spec | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/poppler.spec b/poppler.spec
-index 02a8b62..4283967 100644
+index 02a8b62..52b57bc 100644
 --- a/poppler.spec
 +++ b/poppler.spec
-@@ -73,8 +73,9 @@ BuildRequires: cmake(Qt6Widgets)
+@@ -73,8 +73,8 @@ BuildRequires: cmake(Qt6Widgets)
  BuildRequires: cmake(Qt6Xml)
  %endif
  BuildRequires: boost-devel
 -# for %%gpgverify
+-BuildRequires: gnupg2
 +# for %%openpgpverify
- BuildRequires: gnupg2
 +BuildRequires: openpgpverify
  
  Requires: poppler-data
  
-@@ -176,7 +177,7 @@ Command line tools for manipulating PDF files and converting them to
+@@ -176,7 +176,7 @@ Command line tools for manipulating PDF files and converting them to
  other formats.
  
  %prep
