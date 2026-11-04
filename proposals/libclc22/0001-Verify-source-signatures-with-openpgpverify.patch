@@ -1,6 +1,6 @@
-From e512aca78d7b422faa92c5debc1df5ae0a8a63e7 Mon Sep 17 00:00:00 2001
+From dc1e6884476ebd132afc7c99ad29715ff2d6ef92 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Sat, 31 Oct 2026 23:04:59 +0100
+Date: Wed, 4 Nov 2026 10:49:20 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- libclc22.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ libclc22.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/libclc22.spec b/libclc22.spec
-index c1ff333..76ce0ba 100644
+index c1ff333..476bc34 100644
 --- a/libclc22.spec
 +++ b/libclc22.spec
 @@ -8,7 +8,7 @@
@@ -27,15 +27,16 @@ index c1ff333..76ce0ba 100644
  Summary:        An open source implementation of the OpenCL 1.1 library requirements
  
  License:        Apache-2.0 WITH LLVM-exception OR NCSA OR MIT
-@@ -27,6 +27,7 @@ BuildRequires:  spirv-llvm-translator-tools
+@@ -26,7 +26,7 @@ BuildRequires:  cmake
+ BuildRequires:  spirv-llvm-translator-tools
  
  # For signature verification
- BuildRequires:  gnupg2
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
  
  Requires:       %{name}-spirv%{?_isa} = %{version}-%{release}
  
-@@ -75,7 +76,7 @@ The %{name}-devel package contains libraries and header files for
+@@ -75,7 +75,7 @@ The %{name}-devel package contains libraries and header files for
  developing applications that use %{name}.
  
  %prep
@@ -44,11 +45,11 @@ index c1ff333..76ce0ba 100644
  %autosetup -n %{src_tarball_dir}
  
  %build
-@@ -116,6 +117,9 @@ cd libclc
+@@ -116,6 +116,9 @@ cd libclc
  %{_libdir}/pkgconfig/libclc.pc
  
  %changelog
-+* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 22.1.8-5
++* Wed Nov 04 2026 Jakub Jelen <jjelen@redhat.com> - 22.1.8-5
 +- Verify upstream source signatures with openpgpverify
 +
  * Fri Sep 11 2026 Timm Baeder <tbaeder@redhat.com> - 22.1.8-4

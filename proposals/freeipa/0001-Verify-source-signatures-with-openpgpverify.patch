@@ -1,6 +1,6 @@
-From 0fb99abd35f819916327b714f499e6eabec70bea Mon Sep 17 00:00:00 2001
+From da1974f0ceda5c43123d82183e94430f82371408 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Sat, 31 Oct 2026 23:04:59 +0100
+Date: Wed, 4 Nov 2026 10:49:19 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- freeipa.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ freeipa.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/freeipa.spec b/freeipa.spec
-index 431a000..5e26242 100644
+index 431a000..1fa7f19 100644
 --- a/freeipa.spec
 +++ b/freeipa.spec
 @@ -211,7 +211,7 @@
@@ -27,15 +27,16 @@ index 431a000..5e26242 100644
  Summary:        The Identity, Policy and Audit system
  
  License:        GPL-3.0-or-later
-@@ -273,6 +273,7 @@ BuildRequires:  jansson-devel
+@@ -272,7 +272,7 @@ BuildRequires:  jansson-devel
+ %endif
  BuildRequires:  popt-devel
  BuildRequires:  gcc
- BuildRequires:  gnupg2
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
  BuildRequires:  make
  BuildRequires:  pkgconfig
  BuildRequires:  pkgconf
-@@ -1082,7 +1083,7 @@ Custom SELinux policy module for Thales Luna HSMs
+@@ -1082,7 +1082,7 @@ Custom SELinux policy module for Thales Luna HSMs
  %prep
  # Verify release signature
  %if %{NON_DEVELOPER_BUILD}
@@ -44,11 +45,11 @@ index 431a000..5e26242 100644
  %endif
  
  %autosetup -n freeipa-%{TARBALL_IPA_VERSION}%{?rc_version} -N -p1
-@@ -1973,6 +1974,9 @@ fi
+@@ -1973,6 +1973,9 @@ fi
  %endif
  
  %changelog
-+* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 4.13.4-4.1
++* Wed Nov 04 2026 Jakub Jelen <jjelen@redhat.com> - 4.13.4-4.1
 +- Verify upstream source signatures with openpgpverify
 +
  * Mon Oct 26 2026 David Hanina <dhanina@redhat.com> - 4.13.4-4

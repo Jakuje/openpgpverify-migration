@@ -474,7 +474,12 @@ def render_pr(pkg, s, draft):
              ('. It is not in EPEL 8, so if this spec is still used there, keep '
               '`%gpgverify` on that branch.' if s.get('rhel_conditional') else '.')]
     chk = s.get('gnupg2_check')
-    if chk and chk['verdict'] == 'drop' and chk.get('overridden'):
+    if chk and chk['verdict'] == 'drop' and chk.get('unchecked'):
+        notes.append('- `BuildRequires: gnupg2` is dropped too, without a full build: the '
+                     'sources are too large for the test machine. Nothing in the spec uses gpg '
+                     'besides the signature check. If the build turns out to need it, it can '
+                     'come back.')
+    elif chk and chk['verdict'] == 'drop' and chk.get('overridden'):
         notes.append('- `BuildRequires: gnupg2` is dropped too. The changed spec was built '
                      'completely (`rpmbuild -bb`%s) in a chroot with gnupg2 and gpgverify '
                      'removed, and the build passed. The build log or test files mention gpg '

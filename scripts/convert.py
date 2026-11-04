@@ -287,6 +287,7 @@ def convert(text, rec, drop_gnupg2=None):
     section = 'preamble'
     depth = 0
     insert_at = None          # index in out where BR: openpgpverify goes
+    drop_prefix = None
     uncond = []               # indexes in out of unconditional preamble BR lines
     gnupg2_kept = None        # index in out of a kept "BR: gnupg2" line
     last_uncond_br = None
@@ -335,6 +336,7 @@ def convert(text, rec, drop_gnupg2=None):
             continue
         if depth == 0 and insert_at is None:
             insert_at = len(out)
+            drop_prefix = prefix          # the replaced line's "BuildRequires:" spacing
         if depth:
             notes.append('dropped conditional BR: %s' % s)
         if keep:
@@ -358,7 +360,8 @@ def convert(text, rec, drop_gnupg2=None):
             else:
                 raise Unconvertible('could not find a place for BuildRequires')
         if not swapped:
-            out.insert(insert_at, neighbour_prefix(out, insert_at, br_new))
+            out.insert(insert_at, drop_prefix + 'openpgpverify' if drop_prefix else
+                       neighbour_prefix(out, insert_at, br_new))
     out = drop_empty_branches(out)
     body, ncalls = rewrite_calls('\n'.join(out))
     if ncalls == 0:

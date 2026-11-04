@@ -1,6 +1,6 @@
-From 2475f7808070a531e5b86b142c9c4868cc1cb6df Mon Sep 17 00:00:00 2001
+From e9adc690557e0d911c44c3e146fd5343fcfe9782 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Sat, 31 Oct 2026 23:04:59 +0100
+Date: Wed, 4 Nov 2026 10:49:20 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- llvm21.spec | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ llvm21.spec | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/llvm21.spec b/llvm21.spec
-index 32432f6..000b62a 100644
+index 32432f6..57e8ff3 100644
 --- a/llvm21.spec
 +++ b/llvm21.spec
-@@ -638,6 +638,7 @@ BuildRequires:	python%{python3_pkgversion}-rpm-macros
+@@ -637,7 +637,7 @@ BuildRequires:	python%{python3_pkgversion}-rpm-macros
+ %endif
  
  # For gpg source verification
- BuildRequires:	gnupg2
+-BuildRequires:	gnupg2
 +BuildRequires:	openpgpverify
  
  BuildRequires:	swig
  BuildRequires:	libxml2-devel
-@@ -1307,11 +1308,11 @@ Flang runtime libraries.
+@@ -1307,11 +1307,11 @@ Flang runtime libraries.
  %prep
  %if %{without snapshot_build}
  # llvm

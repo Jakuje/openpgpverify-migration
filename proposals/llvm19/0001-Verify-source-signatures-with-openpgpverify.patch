@@ -1,6 +1,6 @@
-From 45beba233dc2bf4113ceb2837d47f9e51f67b1e4 Mon Sep 17 00:00:00 2001
+From 485e0bd5c876e6340bd304af85d1d0118c614bb3 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Sat, 31 Oct 2026 23:04:59 +0100
+Date: Wed, 4 Nov 2026 10:52:17 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- llvm19.spec | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ llvm19.spec | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/llvm19.spec b/llvm19.spec
-index 9d7f104..65d66bc 100644
+index 9d7f104..cbf854f 100644
 --- a/llvm19.spec
 +++ b/llvm19.spec
 @@ -246,7 +246,7 @@
@@ -27,15 +27,16 @@ index 9d7f104..65d66bc 100644
  Summary:	The Low Level Virtual Machine
  
  License:	Apache-2.0 WITH LLVM-exception OR NCSA
-@@ -447,6 +447,7 @@ BuildRequires:	python%{python3_pkgversion}-rpm-macros
+@@ -446,7 +446,7 @@ BuildRequires:	python%{python3_pkgversion}-rpm-macros
+ %endif
  
  # For gpg source verification
- BuildRequires:	gnupg2
+-BuildRequires:	gnupg2
 +BuildRequires:	openpgpverify
  
  BuildRequires:	swig
  BuildRequires:	libxml2-devel
-@@ -1078,11 +1079,11 @@ Polly header files.
+@@ -1078,11 +1078,11 @@ Polly header files.
  %prep
  %if %{without snapshot_build}
  # llvm
@@ -49,11 +50,11 @@ index 9d7f104..65d66bc 100644
  %setup -T -q -b 3000 -n llvm-project-%{compat_ver}.src
  
  # Apply all patches with number < 500 (unconditionally)
-@@ -3153,6 +3154,9 @@ fi
+@@ -3153,6 +3153,9 @@ fi
  
  #region changelog
  %changelog
-+* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 19.1.7-21
++* Wed Nov 04 2026 Jakub Jelen <jjelen@redhat.com> - 19.1.7-21
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Sep 10 2026 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 19.1.7-20

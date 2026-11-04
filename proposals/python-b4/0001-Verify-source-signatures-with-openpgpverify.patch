@@ -1,6 +1,6 @@
-From c87c685253c9913787e681c60524e8e7bea773d3 Mon Sep 17 00:00:00 2001
+From a776f218b1db0e2d25e48d0afe22f2fff7bf5c25 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Sat, 31 Oct 2026 23:04:54 +0100
+Date: Wed, 4 Nov 2026 10:49:19 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- python-b4.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ python-b4.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/python-b4.spec b/python-b4.spec
-index e654e98..314d717 100644
+index e654e98..605c086 100644
 --- a/python-b4.spec
 +++ b/python-b4.spec
-@@ -26,6 +26,7 @@ Patch4:         0005-b4-Drop-shebang-lines-from-library-modules.patch
+@@ -25,7 +25,7 @@ Patch4:         0005-b4-Drop-shebang-lines-from-library-modules.patch
+ 
  BuildArch:      noarch
  
- BuildRequires:  gnupg2
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
  BuildRequires:  python%{python3_pkgversion}-devel
  BuildRequires:  python3dist(pytest)
  BuildRequires:  python3dist(shtab)
-@@ -46,7 +47,7 @@ Provides:       python%{python3_pkgversion}-%{srcname} = %{version}-%{release}
+@@ -46,7 +46,7 @@ Provides:       python%{python3_pkgversion}-%{srcname} = %{version}-%{release}
  
  
  %prep

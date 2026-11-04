@@ -539,7 +539,15 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
     gnupg2_check = GNUPG2_CHECK and (not raw or rewritten) and \
         rec['gnupg2_action'] in ('remove', 'review')
     too_big = ((inv_rec or {}).get('srpm_size') or 0) > FULL_BUILD_MAX_MB * 1e6
-    if gnupg2_check and too_big:
+    # The reviewer may drop "BR: gnupg2" without the full build (gnupg2_override
+    # = "drop-unchecked"), e.g. LLVM compat versions where llvm already builds
+    # without it; the PR says it was not checked.
+    unchecked_drop = gnupg2_check and (prev or {}).get('gnupg2_override') == 'drop-unchecked'
+    if unchecked_drop:
+        gnupg2_check = False
+        upd['gnupg2_check'] = dict(verdict='drop', unchecked=True, has_check=rec['has_check'],
+                                   reason='not checked; dropped on review')
+    elif gnupg2_check and too_big:
         gnupg2_check = False
         upd['gnupg2_check'] = dict(verdict='keep', has_check=rec['has_check'],
                                    reason='not checked: sources over %d MB, too large for '
@@ -567,7 +575,8 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
         try:
             # None (legacy, --no-gnupg2-check): drop only without %check
             new_text, notes = convert.convert(
-                src_text, rec, drop_gnupg2=(gnupg2_check or reused) if GNUPG2_CHECK else None)
+                src_text, rec, drop_gnupg2=(gnupg2_check or reused or unchecked_drop)
+                if GNUPG2_CHECK else None)
             if gnupg2_check:
                 keep_text, _ = convert.convert(src_text, rec, drop_gnupg2=False)
                 open(os.path.join(d, pkg + '.opv-unbumped.spec'), 'w').write(new_text)
