@@ -1,6 +1,6 @@
-From c294bb80f22ed41356025855cb662032453c2878 Mon Sep 17 00:00:00 2001
+From 5eb96d3e95df055f4920fcf9704e2756b5287fbd Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 10:38:42 +0100
+Date: Thu, 5 Nov 2026 13:58:44 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Replace gpgkey-aide.gpg with gpgkey-aide.asc, the key upstream publishes
@@ -22,10 +22,10 @@ Assisted-by: Claude Opus 5.5
  delete mode 100644 gpgkey-aide.gpg
 
 diff --git a/aide.spec b/aide.spec
-index 1d57c3e..49bcfd1 100644
+index 0b5b29a..434c29a 100644
 --- a/aide.spec
 +++ b/aide.spec
-@@ -7,9 +7,7 @@ License:        GPL-2.0-or-later
+@@ -10,9 +10,7 @@ License:        GPL-2.0-or-later AND (LGPL-3.0-or-later OR GPL-2.0-or-later)
  
  Source0:        %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz
  Source1:        %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz.asc

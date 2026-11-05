@@ -1,6 +1,6 @@
-From 4b950052a95793ce62bd93b8ef5f6bcad2f4cbef Mon Sep 17 00:00:00 2001
+From 2e0ed79045ae137447e9cadbc94a65844d3ee889 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 10:38:42 +0100
+Date: Thu, 5 Nov 2026 13:58:44 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- borgbackup.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ borgbackup.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/borgbackup.spec b/borgbackup.spec
-index 0f9bcb8..1bdb65e 100644
+index 0f9bcb8..1a42f43 100644
 --- a/borgbackup.spec
 +++ b/borgbackup.spec
 @@ -2,7 +2,7 @@
@@ -27,15 +27,16 @@ index 0f9bcb8..1bdb65e 100644
  Summary:        A deduplicating backup program with compression and authenticated encryption
  # zlib:         src/borg/algorithms/{crc32_clmul.c, crc32_slice_by_8.c}
  # Apache-2.0:   src/borg/cache_sync/{sysdep.h, unpack.h, unpack_template.h, unpack_define.h}
-@@ -43,6 +43,7 @@ BuildRequires:  libacl-devel
- BuildRequires:  lz4-devel >= 1.7.0
- BuildRequires:  libzstd-devel >= 1.3.0
- BuildRequires:  xxhash-devel >= 0.7.3
-+BuildRequires:  openpgpverify
+@@ -19,7 +19,7 @@ Source2:        https://keys.openpgp.org/vks/v1/by-fingerprint/6D5BEF9ADD2075805
+ # we don't need the guzzley_sphinx theme for only man page generation
+ Patch1:         borgbackup-disable-guzzle-theme.patch
  
- # msgpack dependency is detected automatically
- Requires:       python3-llfuse >= 1.3.8
-@@ -53,7 +54,7 @@ BorgBackup (short: Borg) is a deduplicating backup program. Optionally, it
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ # build
+ BuildRequires:  python3-Cython
+ BuildRequires:  python3-devel
+@@ -53,7 +53,7 @@ BorgBackup (short: Borg) is a deduplicating backup program. Optionally, it
  supports compression and authenticated encryption.
  
  %prep
@@ -44,11 +45,11 @@ index 0f9bcb8..1bdb65e 100644
  %autosetup -p1
  rm -rf %{srcname}.egg-info
  
-@@ -135,6 +136,9 @@ TEST_SELECTOR="not test_fuse and not test_readonly_mount and not benchmark"
+@@ -135,6 +135,9 @@ TEST_SELECTOR="not test_fuse and not test_readonly_mount and not benchmark"
  
  
  %changelog
-+* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 1.4.5-2
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 1.4.5-2
 +- Verify upstream source signatures with openpgpverify
 +
  * Tue Jul 28 2026 Felix Schwarz <fschwarz@fedoraproject.org> - 1.4.5-1

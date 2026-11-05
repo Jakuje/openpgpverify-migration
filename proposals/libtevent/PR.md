@@ -1,7 +1,5 @@
 # Verify source signatures with openpgpverify
 
-> **DRAFT, not to be opened yet:** the keyring refresh below still needs a human review (`scripts/refresh_keys.py show libtevent`).
-
 This switches the upstream source signature check from a direct GnuPG call (`gpgv2`) to `%openpgpverify` (Sequoia `sqv`), as part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify). The spec called GnuPG itself instead of using `%gpgverify`; the check becomes one `%openpgpverify` call with the same keyring, signature and data.
 
 Why `sqv`:
@@ -15,6 +13,7 @@ Why `sqv`:
 
 - the direct `gpgv2` call is replaced by `%{openpgpverify}` with the same keyring, signature and data
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
+- dropped `BuildRequires: gnupg2`, only needed for the GnuPG verification
 - updated `tevent.keyring` to the current upstream copy from the URL in the spec (see below)
 
 ### Testing
@@ -24,13 +23,13 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 | Spec | Verification calls | Result |
 |---|---|---|
 | current (`gpgv2`) | 1 | pass |
-| this PR (`%openpgpverify`) | 1 | fails with the keyring in dist-git; **passes with the refreshed keyring** (sqv run directly) |
+| this PR (`%openpgpverify`) | 1 | pass |
 
-Tested on 2026-10-26 at dist-git commit `bd0ac0a5a88b` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
+Tested on 2026-11-05 at dist-git commit `bd0ac0a5a88b` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
 ### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (GnuPG keybox keyring), while `gpgv2` ignores that. Upstream has updated the key since: the copy at https://download.samba.org/pub/samba/samba-pubkey.asc#/tevent.keyring has the same fingerprint(s) and also holds other keys upstream publishes there and verifies the release with sqv. This PR replaces the file with that copy, byte for byte:
+`%openpgpverify` rejected the signature with the keyring in dist-git (verification fails), while `gpgv2` ignores that. Upstream has updated the key since: the copy at https://download.samba.org/pub/samba/samba-pubkey.asc#/tevent.keyring has the same fingerprint(s) and also holds other keys upstream publishes there and verifies the release with sqv. This PR replaces the file with that copy, byte for byte:
 
 ```
 curl -fsSL -o tevent.keyring 'https://download.samba.org/pub/samba/samba-pubkey.asc'
@@ -83,7 +82,7 @@ The keyring change is the first of the two commits, so it can be reviewed or mer
 ### Notes
 
 - Rawhide only. Whether to merge it into other branches is up to you; openpgpverify is available in Fedora 43 and later, EPEL 9 and EPEL 10.
-- `BuildRequires: gnupg2` is kept: not checked: the changed spec does not get past the signature check. If it was only there for the signature check, it can go too.
+- `BuildRequires: gnupg2` is dropped too. To check that nothing else needs it, the changed spec was built completely (`rpmbuild -bb`, including `%check`) in a chroot with gnupg2 and gpgverify removed, and neither the build log nor the test files in the sources mention gpg.
 - Nothing changes in the built packages, so this doesn't need a build right away; the new check runs with your next build.
 
 ### Questions

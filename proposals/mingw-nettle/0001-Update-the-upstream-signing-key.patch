@@ -1,6 +1,6 @@
-From 1a797c2d56c0ddac6d9f071dc9486846cb43c1d1 Mon Sep 17 00:00:00 2001
+From 103ffdc751a1487cf67fa2ac2850f26913b9f361 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 10:38:42 +0100
+Date: Thu, 5 Nov 2026 13:58:44 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Replace nettle-release-keyring.gpg with nettle-release-keyring.asc, the

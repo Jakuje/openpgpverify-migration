@@ -1,6 +1,6 @@
-From 8d34d75c967208e39f1f54aeea43bbefd906c2b7 Mon Sep 17 00:00:00 2001
+From c14baa02ceeaaf98d21d3d6f42776d46d994146e Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 10:38:42 +0100
+Date: Thu, 5 Nov 2026 13:58:44 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Replace newsboat.pgp with newsboat.asc, the key upstream publishes at

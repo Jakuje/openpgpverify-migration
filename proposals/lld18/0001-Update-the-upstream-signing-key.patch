@@ -1,6 +1,6 @@
-From bb61f85c6c9a7e01052848bf29a7b79ebd742fc5 Mon Sep 17 00:00:00 2001
+From d29ef7f5b2dc9b8d9ed46504d706b61f3ec7b785 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 10:38:41 +0100
+Date: Thu, 5 Nov 2026 13:58:44 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Update release-keys.asc to the current copy at

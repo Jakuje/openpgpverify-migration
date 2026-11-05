@@ -1,6 +1,6 @@
-From 69154ec35883d1fe157cde0872f382a4b5cbc26b Mon Sep 17 00:00:00 2001
+From dac8c0c8930b019b8bb3ad2dad7c6cd14a4c23b7 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 10:38:42 +0100
+Date: Thu, 5 Nov 2026 13:58:44 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- ntpsec.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ ntpsec.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/ntpsec.spec b/ntpsec.spec
-index 3e1584f..9c806bf 100644
+index 3e1584f..7fdeca8 100644
 --- a/ntpsec.spec
 +++ b/ntpsec.spec
 @@ -1,6 +1,6 @@
@@ -26,15 +26,16 @@ index 3e1584f..9c806bf 100644
  Summary:        NTP daemon and utilities
  
  License:        NTP AND BSD-2-Clause AND BSD-3-Clause AND BSD-4-Clause AND ISC AND Apache-2.0 AND Beerware
-@@ -22,6 +22,7 @@ BuildRequires:  python3-devel
- BuildRequires:  rubygem-asciidoctor
- BuildRequires:  systemd
- BuildRequires:  waf
+@@ -12,7 +12,7 @@ Source3:        ntp.conf
+ 
+ BuildRequires:  bison
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
- 
- %{?systemd_requires}
- 
-@@ -55,7 +56,7 @@ NTPsec is a more secure and improved implementation of the Network Time
+ BuildRequires:  libbsd-devel
+ BuildRequires:  libcap-devel
+ BuildRequires:  m4
+@@ -55,7 +55,7 @@ NTPsec is a more secure and improved implementation of the Network Time
  Protocol derived from the original NTP project.
  
  %prep
@@ -43,11 +44,11 @@ index 3e1584f..9c806bf 100644
  %autosetup -p1
  
  # Fix egg info to use a shorter version which will work as an rpm provide
-@@ -209,6 +210,9 @@ sed -i.bak -E '/^restrict/s/no(e?peer|trap)//g' %{_sysconfdir}/ntp.conf
+@@ -209,6 +209,9 @@ sed -i.bak -E '/^restrict/s/no(e?peer|trap)//g' %{_sysconfdir}/ntp.conf
  %{_sysusersdir}/ntpsec.conf
  
  %changelog
-+* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 1.2.6-2
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 1.2.6-2
 +- Verify upstream source signatures with openpgpverify
 +
  * Wed Oct 21 2026 Miroslav Lichvar <mlichvar@redhat.com> 1.2.6-1

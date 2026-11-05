@@ -1,6 +1,6 @@
-From f8873efb64235c3d093dfbf8f5bde45e965666be Mon Sep 17 00:00:00 2001
+From b22af7d6a9a42c9a2cf242ac39c5314a2f415ca0 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 10:38:41 +0100
+Date: Thu, 5 Nov 2026 13:58:43 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- llvm18.spec | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ llvm18.spec | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/llvm18.spec b/llvm18.spec
-index 6b55c6c..938370e 100644
+index 6b55c6c..d088c7d 100644
 --- a/llvm18.spec
 +++ b/llvm18.spec
 @@ -93,7 +93,7 @@
@@ -27,15 +27,16 @@ index 6b55c6c..938370e 100644
  Summary:	The Low Level Virtual Machine
  
  License:	Apache-2.0 WITH LLVM-exception OR NCSA
-@@ -150,6 +150,7 @@ BuildRequires:	python3-setuptools
+@@ -149,7 +149,7 @@ BuildRequires:	python3-devel
+ BuildRequires:	python3-setuptools
  
  # For origin certification
- BuildRequires:	gnupg2
+-BuildRequires:	gnupg2
 +BuildRequires:	openpgpverify
  
  
  Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
-@@ -238,9 +239,9 @@ Summary: LLVM's modified googletest sources
+@@ -238,9 +238,9 @@ Summary: LLVM's modified googletest sources
  LLVM's modified googletest sources.
  
  %prep
@@ -48,11 +49,11 @@ index 6b55c6c..938370e 100644
  %setup -T -q -b 2 -n %{cmake_srcdir}
  # TODO: It would be more elegant to set -DLLVM_COMMON_CMAKE_UTILS=%{_builddir}/%{cmake_srcdir},
  # but this is not a CACHED variable, so we can't actually set it externally :(
-@@ -595,6 +596,9 @@ fi
+@@ -595,6 +595,9 @@ fi
  
  
  %changelog
-+* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 18.1.8-10
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 18.1.8-10
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 18.1.8-9

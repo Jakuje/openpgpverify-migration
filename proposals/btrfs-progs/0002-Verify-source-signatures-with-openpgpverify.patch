@@ -1,6 +1,6 @@
-From 3ad5af56f6fa44251e1aa5ad8b7a2f0ec2589e47 Mon Sep 17 00:00:00 2001
+From 5f430de17cf01d8c170ac722048fc54a849a19dd Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 10:38:41 +0100
+Date: Thu, 5 Nov 2026 13:58:43 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/btrfs-progs.spec b/btrfs-progs.spec
-index 85ca865..0256646 100644
+index 85ca865..74568eb 100644
 --- a/btrfs-progs.spec
 +++ b/btrfs-progs.spec
 @@ -3,7 +3,7 @@
@@ -49,7 +49,7 @@ index 85ca865..0256646 100644
  
  
  %changelog
-+* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 7.1-4
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 7.1-4
 +- Verify upstream source signatures with openpgpverify
 +
  * Fri Oct 09 2026 Neal Gompa <ngompa@fedoraproject.org> - 7.1-3

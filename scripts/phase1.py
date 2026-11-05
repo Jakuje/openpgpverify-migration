@@ -367,6 +367,11 @@ def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp', overlay
             if m('--installdeps', spec, timeout=7200):
                 if not installdeps_srpm(m, spec, g, out, v,
                                         overlay if v == 'new' else None) or not populate():
+                    with open(log, errors='replace') as fh:
+                        if 'more space on the' in fh.read():
+                            # the test machine's problem, says nothing about the spec
+                            res['error'] = 'out of disk space installing build dependencies'
+                            return res
                     res['%s_error' % v] = 'installdeps failed'
                     continue
                 res.setdefault('notes', []).append('%s: build deps installed from SRPM' % v)
@@ -784,6 +789,7 @@ def main():
         upd['updated'] = state.now()
         transient = upd['status'] == 'error' and (
             upd.get('outcome_detail', '').startswith('harness:') or
+            'out of disk space' in upd.get('outcome_detail', '') or
             upd.get('outcome_detail') in ('git clone/fetch failed', 'fedpkg sources failed'))
         if transient and prev and prev.get('status') not in (None, 'error'):
             # Don't throw away an earlier result for a network or harness hiccup.

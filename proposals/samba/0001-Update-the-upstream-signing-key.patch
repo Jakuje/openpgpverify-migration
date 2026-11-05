@@ -1,6 +1,6 @@
-From 96ac97f7618e2710a8a6226c644491e48d67c1a7 Mon Sep 17 00:00:00 2001
+From ad3f2d58c33c8bca3f9647ecbd4a7c282b1e4bb4 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 10:38:41 +0100
+Date: Thu, 5 Nov 2026 13:58:43 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Replace samba-pubkey_AA99442FB680B620.gpg with samba-pubkey.asc, the key

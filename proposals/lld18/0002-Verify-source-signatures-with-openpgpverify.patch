@@ -1,6 +1,6 @@
-From ccd95ec1bc6279721d57db41ede92d80ee17a236 Mon Sep 17 00:00:00 2001
+From 8828a211159ddd8947ee5ec21fd4f2726b44e426 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 10:38:41 +0100
+Date: Thu, 5 Nov 2026 13:58:44 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- lld18.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ lld18.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/lld18.spec b/lld18.spec
-index e514ec8..a6ef93c 100644
+index e514ec8..94b55d5 100644
 --- a/lld18.spec
 +++ b/lld18.spec
 @@ -49,7 +49,7 @@
@@ -27,15 +27,16 @@ index e514ec8..a6ef93c 100644
  Summary:	The LLVM Linker
  
  License:	Apache-2.0 WITH LLVM-exception OR NCSA
-@@ -87,6 +87,7 @@ BuildRequires:	python3-lit
+@@ -86,7 +86,7 @@ BuildRequires:	python3-rpm-macros
+ BuildRequires:	python3-lit
  
  # For gpg source verification
- BuildRequires:	gnupg2
+-BuildRequires:	gnupg2
 +BuildRequires:	openpgpverify
  
  Requires(post): /usr/sbin/update-alternatives
  Requires(preun): /usr/sbin/update-alternatives
-@@ -117,7 +118,7 @@ Shared libraries for LLD.
+@@ -117,7 +117,7 @@ Shared libraries for LLD.
  
  %prep
  %if %{without snapshot_build}
@@ -44,11 +45,11 @@ index e514ec8..a6ef93c 100644
  %endif
  
  %autosetup -n %{lld_srcdir} -p2
-@@ -218,6 +219,9 @@ export LD_LIBRARY_PATH=%{buildroot}/%{install_libdir}
+@@ -218,6 +218,9 @@ export LD_LIBRARY_PATH=%{buildroot}/%{install_libdir}
  %{install_libdir}/liblld*.so.*
  
  %changelog
-+* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 18.1.8-11
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 18.1.8-11
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 18.1.8-10

@@ -1,6 +1,6 @@
-From 7cb601050a92e87b50e1d9759beb50df424e95ce Mon Sep 17 00:00:00 2001
+From 23befaf8a71d4d7557972bf29f3107b5eeba46c5 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 10:38:42 +0100
+Date: Thu, 5 Nov 2026 13:58:44 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- i3.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ i3.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/i3.spec b/i3.spec
-index e1c289b..0893593 100644
+index e1c289b..07b2e5f 100644
 --- a/i3.spec
 +++ b/i3.spec
-@@ -81,6 +81,7 @@ BuildRequires:  xorg-x11-drv-dummy
+@@ -80,7 +80,7 @@ BuildRequires:  xorg-x11-drv-dummy
+ %endif
  
  # gpg verification
- BuildRequires:  gnupg2
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
  
  Requires:       xorg-x11-fonts-misc
  # packages autostarted by the config
-@@ -151,7 +152,7 @@ Requires:       %{name} = %{version}-%{release}
+@@ -151,7 +151,7 @@ Requires:       %{name} = %{version}-%{release}
  Header files for %{name}.
  
  %prep

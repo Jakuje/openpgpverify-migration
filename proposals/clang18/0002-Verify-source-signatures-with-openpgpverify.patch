@@ -1,6 +1,6 @@
-From 6852e889375f497a380122425c5957410d8e0e9b Mon Sep 17 00:00:00 2001
+From a580b12b4bad81794778c976b98cf4924bd38a26 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 10:38:41 +0100
+Date: Thu, 5 Nov 2026 13:58:43 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- clang18.spec | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ clang18.spec | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/clang18.spec b/clang18.spec
-index 80cfe90..f3c5bb1 100644
+index 80cfe90..bda72d1 100644
 --- a/clang18.spec
 +++ b/clang18.spec
 @@ -75,7 +75,7 @@
@@ -27,15 +27,16 @@ index 80cfe90..f3c5bb1 100644
  Summary:	A C language family front-end for LLVM
  
  License:	Apache-2.0 WITH LLVM-exception OR NCSA
-@@ -181,6 +181,7 @@ BuildRequires: perl(lib)
- BuildRequires: perl(Term::ANSIColor)
- BuildRequires: perl(Text::ParseWords)
- BuildRequires: perl(Sys::Hostname)
+@@ -166,7 +166,7 @@ BuildRequires: /usr/bin/marshalparser
+ BuildRequires:	multilib-rpm-config
+ 
+ # For origin certification
+-BuildRequires:	gnupg2
 +BuildRequires:	openpgpverify
  
- Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
- 
-@@ -302,12 +303,12 @@ Requires:      python3
+ # scan-build uses these perl modules so they need to be installed in order
+ # to run the tests.
+@@ -302,12 +302,12 @@ Requires:      python3
  
  %prep
  %if %{without snapshot_build}
@@ -50,11 +51,11 @@ index 80cfe90..f3c5bb1 100644
  %endif
  
  %setup -T -q -b 1 -n %{clang_tools_srcdir}
-@@ -731,6 +732,9 @@ LD_LIBRARY_PATH=%{buildroot}/%{install_libdir} %{__ninja} check-all -C %{__cmake
+@@ -731,6 +731,9 @@ LD_LIBRARY_PATH=%{buildroot}/%{install_libdir} %{__ninja} check-all -C %{__cmake
  
  %endif
  %changelog
-+* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 18.1.8-12
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 18.1.8-12
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Sep 10 2026 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 18.1.8-11

@@ -1,6 +1,6 @@
-From c27b747d526cb79922573ea110b9f8b1fb1e6765 Mon Sep 17 00:00:00 2001
+From 800ed37f25fe3e9535f54af4231bc5a81b7ff78e Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 10:38:42 +0100
+Date: Thu, 5 Nov 2026 13:58:44 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- aide.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ aide.spec | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/aide.spec b/aide.spec
-index 49bcfd1..555d503 100644
+index 434c29a..e8f0b7c 100644
 --- a/aide.spec
 +++ b/aide.spec
-@@ -34,6 +34,7 @@ BuildRequires:  systemd-rpm-macros
- BuildRequires:  gnupg2
+@@ -44,7 +44,7 @@ BuildRequires:  audit-libs-devel
+ BuildRequires:  autoconf automake libtool
+ BuildRequires:  systemd-rpm-macros
+ # For verifying signatures
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
  # For being able to run 'make check'
  BuildRequires:  check-devel
-+BuildRequires:  openpgpverify
  
- 
- Requires:       logrotate
-@@ -43,7 +44,7 @@ AIDE (Advanced Intrusion Detection Environment) is a file integrity
+@@ -56,12 +56,12 @@ AIDE (Advanced Intrusion Detection Environment) is a file integrity
  checker and intrusion detection program.
  
  %prep
@@ -33,6 +34,12 @@ index 49bcfd1..555d503 100644
  %autosetup -p1
  cp -a %{SOURCE4} .
  
+ %if %{with bundled_nettle}
+-%{gpgverify} --keyring='%{SOURCE202}' --signature='%{SOURCE201}' --data='%{SOURCE200}'
++%{openpgpverify} --keyring='%{SOURCE202}' --signature='%{SOURCE201}' --data='%{SOURCE200}'
+ 
+ mkdir -p bundled_nettle
+ pushd bundled_nettle
 -- 
 2.56.0
 

@@ -1,6 +1,6 @@
-From f3eaeec162c16f03e84121bbc98dc716a4e3c30c Mon Sep 17 00:00:00 2001
+From fd131773beb5eddfa7c56ff35c777b344301667c Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 10:38:42 +0100
+Date: Thu, 5 Nov 2026 13:58:44 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Update keyring.asc to the current copy at

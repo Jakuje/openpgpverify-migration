@@ -1,6 +1,6 @@
-From c178ced97860ad21786106509e76293e16a6e734 Mon Sep 17 00:00:00 2001
+From 504e65535bc126db3da059a082f2928546294be3 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 10:39:04 +0100
+Date: Thu, 5 Nov 2026 13:58:44 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Update arunisaac.pub to the current copy at

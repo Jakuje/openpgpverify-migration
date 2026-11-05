@@ -1,6 +1,6 @@
-From 6b13b32502823ebd4be24e4bb3e1a45a3c24e9ee Mon Sep 17 00:00:00 2001
+From b781d19e05dcd13bc982da268b46e1277184affd Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 10:38:42 +0100
+Date: Thu, 5 Nov 2026 13:58:44 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Update tevent.keyring to the current copy at

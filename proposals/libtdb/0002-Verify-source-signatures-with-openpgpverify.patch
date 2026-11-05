@@ -1,6 +1,6 @@
-From 83824ce510e26c30d0ce45d9818c462aeb709c32 Mon Sep 17 00:00:00 2001
+From fb0a6766b1c03c9bcb190ff523fdea54bd51ff38 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 10:38:42 +0100
+Date: Thu, 5 Nov 2026 13:58:44 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- libtdb.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ libtdb.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/libtdb.spec b/libtdb.spec
-index fc419d5..47ce06a 100644
+index fc419d5..81d707e 100644
 --- a/libtdb.spec
 +++ b/libtdb.spec
-@@ -15,6 +15,7 @@ BuildRequires: gnupg2
+@@ -11,7 +11,7 @@ Source2:         https://download.samba.org/pub/samba/samba-pubkey.asc#/tdb.keyr
+ 
+ BuildRequires: make
+ BuildRequires: gcc
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
  BuildRequires: libxslt
  BuildRequires: docbook-style-xsl
  BuildRequires: python3-devel
-+BuildRequires: openpgpverify
- 
- Provides: bundled(libreplace)
- Obsoletes: python2-tdb < 1.4.2-1
-@@ -50,7 +51,7 @@ Python3 bindings for libtdb
+@@ -50,7 +50,7 @@ Python3 bindings for libtdb
  %autosetup -n tdb-%{version} -p1
  
  %build

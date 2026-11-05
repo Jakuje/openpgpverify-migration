@@ -1,6 +1,6 @@
-From 8705945592919fc4da0066b78c5eb928ff85b812 Mon Sep 17 00:00:00 2001
+From b75a4a2e4cde0186ea91ea20a1ddc54d25aef3a2 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 10:38:42 +0100
+Date: Thu, 5 Nov 2026 13:58:44 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/oath-toolkit.spec b/oath-toolkit.spec
-index c6f8f3a..2c31d5c 100644
+index c6f8f3a..0dbe6ef 100644
 --- a/oath-toolkit.spec
 +++ b/oath-toolkit.spec
 @@ -1,6 +1,6 @@
@@ -48,7 +48,7 @@ index c6f8f3a..2c31d5c 100644
  %{_libdir}/security/pam_oath.so
  
  %changelog
-+* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 2.6.15-2
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 2.6.15-2
 +- Verify upstream source signatures with openpgpverify
 +
  * Mon Oct 19 2026 Jaroslav Škarvada <jskarvad@redhat.com> - 2.6.15-1

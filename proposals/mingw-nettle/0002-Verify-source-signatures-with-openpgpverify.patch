@@ -1,6 +1,6 @@
-From c35f6bf35754a9c25810a018686d664ac4f8177e Mon Sep 17 00:00:00 2001
+From 97fdb7c419b47980070d8d82c694ff00da3ecc39 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 10:38:42 +0100
+Date: Thu, 5 Nov 2026 13:58:44 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/mingw-nettle.spec b/mingw-nettle.spec
-index a5ac005..30c3a80 100644
+index a5ac005..8ec8e93 100644
 --- a/mingw-nettle.spec
 +++ b/mingw-nettle.spec
 @@ -2,7 +2,7 @@
@@ -31,7 +31,7 @@ index a5ac005..30c3a80 100644
  BuildRequires:  autoconf, automake
  BuildRequires:  gcc
  BuildRequires:  m4
-+BuildRequires: openpgpverify
++BuildRequires:  openpgpverify
  
  
  %description
@@ -48,7 +48,7 @@ index a5ac005..30c3a80 100644
  
  
  %changelog
-+* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 3.10.2-4
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 3.10.2-4
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 3.10.2-3
