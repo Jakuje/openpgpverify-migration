@@ -9,16 +9,13 @@ Phase 1 reason: `expired`
 ## victortoso-E37A484F.keyring
 
 - certificates: 206D3B352F566F3B0E6572E997D9123DE37A484F
-- found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
-- size: 19943 → 46814 bytes
+- found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
+- size: 19943 → 63678 bytes
 
 Commands (run in a copy of dist-git):
 
 ```
-sq --home=none network search --output - 206D3B352F566F3B0E6572E997D9123DE37A484F \
-  | sq keyring filter --experimental --cert 206D3B352F566F3B0E6572E997D9123DE37A484F --output update.pgp
-sq keyring merge victortoso-E37A484F.keyring update.pgp | sq packet dearmor --output victortoso-E37A484F.keyring.new
-mv victortoso-E37A484F.keyring.new victortoso-E37A484F.keyring
+sq --home=none network keyserver search 206D3B352F566F3B0E6572E997D9123DE37A484F --output victortoso-E37A484F.keyring --overwrite
 ```
 
 ```diff

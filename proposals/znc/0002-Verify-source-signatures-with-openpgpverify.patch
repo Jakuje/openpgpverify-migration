@@ -1,6 +1,6 @@
-From 225ca1965ee3e17a9f5057300f3a175bccb462b4 Mon Sep 17 00:00:00 2001
+From 6ea8d1161f698bd5a524d5d62623c0e8caaa0cac Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:59 +0100
+Date: Thu, 5 Nov 2026 19:21:01 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/znc.spec b/znc.spec
-index 8888f77..6b52384 100644
+index 9d03c90..32f7cac 100644
 --- a/znc.spec
 +++ b/znc.spec
 @@ -13,7 +13,7 @@
@@ -27,7 +27,7 @@ index 8888f77..6b52384 100644
  Summary:        An advanced IRC bouncer
  
  # Automatically converted from old format: ASL 2.0 - review is highly recommended.
-@@ -60,6 +60,7 @@ Obsoletes:      znc-extra <= %{version}-%{release}
+@@ -58,6 +58,7 @@ Obsoletes:      znc-extra <= %{version}-%{release}
  %endif # 0%{?rhel} && 0%{?rhel} <= 9
  
  BuildRequires:  systemd
@@ -35,7 +35,7 @@ index 8888f77..6b52384 100644
  %{?systemd_requires}
  
  %description
-@@ -127,12 +128,8 @@ Requires:      python%{python3_pkgversion}
+@@ -125,12 +126,8 @@ Requires:      python%{python3_pkgversion}
  
  
  %prep
@@ -50,7 +50,7 @@ index 8888f77..6b52384 100644
  
  %autosetup -p1
  
-@@ -247,6 +244,9 @@ install -m0644 -D znc.sysusers.conf %{buildroot}%{_sysusersdir}/znc.conf
+@@ -245,6 +242,9 @@ install -m0644 -D znc.sysusers.conf %{buildroot}%{_sysusersdir}/znc.conf
  
  
  %changelog

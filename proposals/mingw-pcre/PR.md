@@ -17,7 +17,7 @@ Why `sqv`:
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
 - dropped `BuildRequires:  gnupg2`, only needed for `%gpgverify`
 - `Public-Key` was in the lookaside cache, which a PR cannot update, so it moves into git (its line in `sources` is dropped)
-- refreshed keyring `Public-Key` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- refreshed keyring `Public-Key` (see below)
 - Release bumped (`11%{?dist}` → `12%{?dist}`) with a changelog entry
 
 ### Testing
@@ -33,17 +33,14 @@ Tested on 2026-10-23 at dist-git commit `8ae0b5d93ea0` with sequoia-sqv 1.5.0-2.
 
 ### Keyring refresh
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (SHA-1 key self-signatures), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (SHA-1 key self-signatures), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR replaces the keyring with the keyserver copy. No key was added or removed. Please check the fingerprint against upstream:
 
 - `45F68D54BBE23FB3039B46E59766E084FB0F43D8`
 
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+The refresh, as run (the spec comment above the `Source` line has the same command, for the next refresh):
 
 ```
-sq --home=none network search --output - 45F68D54BBE23FB3039B46E59766E084FB0F43D8 \
-  | sq keyring filter --experimental --cert 45F68D54BBE23FB3039B46E59766E084FB0F43D8 --output update.pgp
-sq keyring merge Public-Key update.pgp | sq packet dearmor --output Public-Key.new
-mv Public-Key.new Public-Key
+sq --home=none network keyserver search 45F68D54BBE23FB3039B46E59766E084FB0F43D8 --output Public-Key --overwrite
 ```
 
 What changed in the certificate (`sq inspect`):
@@ -53,12 +50,12 @@ What changed in the certificate (`sq inspect`):
 +++ refreshed/Public-Key
 @@ -1,14 +1,21 @@
        Fingerprint: 45F68D54BBE23FB3039B46E59766E084FB0F43D8
--                   Invalid: No binding signature at time 2026-10-27T11:00:39Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-11-05T18:19:54Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: certification, signing
             Subkey: 5B4A38D79D4DBC571BCEB95D243A73A0ECFA4A69
                     Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
                     because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-27T11:00:39Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-11-05T18:19:54Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance: SHA1 is not considered secure
 +           UserID: Philip Hazel <Philip.Hazel@gmail.com>
             UserID: Philip Hazel <ph10@cam.ac.uk>

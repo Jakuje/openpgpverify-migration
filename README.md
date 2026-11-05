@@ -178,18 +178,16 @@ rpm stops depending on gpg.
 1b. **Keyring refresh for regressions** (`scripts/refresh_keys.py`),
    semi-automatic, with a manual review for each package:
    - `propose [PKG...]` (default: regressions with reason `expired`,
-     `sha1-cert`, `policy` or `unknown`): looks up only the fingerprints
-     already in the keyring (keyservers + WKD via `sq network search`) and
-     keeps only exact matches. It merges them into the existing certificates,
-     checks the set of certificates is unchanged, keeps the armored/binary
-     format and re-runs sqv on the host. Writes `work/PKG/refresh/FILE` and
+     `sha1-cert`, `policy` or `unknown`): replaces the keyring with what
+     the keyservers have for the fingerprints already in it (`sq network
+     keyserver search`, armored), checks the set of certificates is unchanged
+     and re-runs sqv on the host (also when the spec pipes decompressed data
+     to it). Writes `work/PKG/refresh/FILE` and
      `REVIEW.md` (a before/after `sq inspect` diff). A GnuPG keybox, which
-     sqv cannot read, is first exported to a plain OpenPGP keyring with gpg
-     (data only, on the host) and always counts as changed. The refresh is a
-     fixed recipe of shell commands (`sq network search` | `sq keyring filter
-     --cert FPR`, `sq keyring merge` with the old keyring, `sq packet dearmor`
-     for binary keyrings), run literally and recorded; the PR quotes them, and
-     once approved, phase1.py puts them in the comment above the keyring's
+     sqv cannot read, is exported with gpg (data only, on the host) to read its
+     fingerprints and always counts as changed. The refresh is that one
+     command, run literally and recorded; the PR quotes it, and
+     once approved, phase1.py puts it in the comment above the keyring's
      `Source` line, replacing older gpg/curl fetch commands. Results: `proposed`,
      `no-update`, `not-found`, `still-fails`.
    - `propose-upstream [PKG...]` (default: all regressions) is the preferred,

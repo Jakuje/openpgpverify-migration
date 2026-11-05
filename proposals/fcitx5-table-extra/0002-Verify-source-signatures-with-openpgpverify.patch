@@ -1,6 +1,6 @@
-From dcd79d727804a7c7050ce53db735fc4d2f6ee9c9 Mon Sep 17 00:00:00 2001
+From 82e5874602e5630f59e289955673f75f12715329 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:55 +0100
+Date: Thu, 5 Nov 2026 19:20:59 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/fcitx5-table-extra.spec b/fcitx5-table-extra.spec
-index e818f09..ef01f50 100644
+index ba5cc80..987dbb4 100644
 --- a/fcitx5-table-extra.spec
 +++ b/fcitx5-table-extra.spec
-@@ -16,7 +16,7 @@ Patch1:     0001-tell-CMAKE-no-compiler-will-be-used.patch
+@@ -14,7 +14,7 @@ Patch1:     0001-tell-CMAKE-no-compiler-will-be-used.patch
  
  BuildArch:  noarch
  
@@ -25,7 +25,7 @@ index e818f09..ef01f50 100644
  BuildRequires:  cmake
  BuildRequires:  extra-cmake-modules
  BuildRequires:  ninja-build
-@@ -35,7 +35,7 @@ Fcitx5, including Boshiamy, Zhengma, Cangjie,
+@@ -33,7 +33,7 @@ Fcitx5, including Boshiamy, Zhengma, Cangjie,
  and Quick.
  
  %prep

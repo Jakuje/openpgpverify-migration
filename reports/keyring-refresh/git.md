@@ -1,6 +1,6 @@
 # Keyring refresh for git
 
-**Status: proposed**
+**Status: still-fails**
 
 Failing call: `--keyring=/builddir/new/gpgkey-junio.asc --signature=/builddir/new/git-2.56.0.tar.sign --data=-`
 
@@ -9,16 +9,13 @@ Phase 1 reason: `sha1-cert`
 ## gpgkey-junio.asc
 
 - certificates: 96E07AF25771955980DAD10020D04E5A713660A7
-- found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
-- size: 9171 → 68809 bytes
+- found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
+- size: 9171 → 68869 bytes
 
 Commands (run in a copy of dist-git):
 
 ```
-sq --home=none network search --output - 96E07AF25771955980DAD10020D04E5A713660A7 \
-  | sq keyring filter --experimental --cert 96E07AF25771955980DAD10020D04E5A713660A7 --output update.pgp
-sq keyring merge --output gpgkey-junio.asc.new gpgkey-junio.asc update.pgp
-mv gpgkey-junio.asc.new gpgkey-junio.asc
+sq --home=none network keyserver search 96E07AF25771955980DAD10020D04E5A713660A7 --output gpgkey-junio.asc --overwrite
 ```
 
 ```diff
@@ -35,5 +32,15 @@ mv gpgkey-junio.asc.new gpgkey-junio.asc
 +third-party PositiveCertification: 1
 ```
 
-Host verification skipped (data from stdin or a generated file); run phase1.py after approval.
+## Verification with the refreshed keyring
+
+```
+$ xzcat git-2.56.0.tar.xz | sqv ... -
+Signing key on 96E07AF25771955980DAD10020D04E5A713660A7 is not bound:
+           primary key
+  because: No binding signature at time 2026-09-28T04:57:02Z
+  because: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
+  because: SHA1 is not considered secure
+rc=1
+```
 

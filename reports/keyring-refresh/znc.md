@@ -10,15 +10,12 @@ Phase 1 reason: `sha1-cert`
 
 - certificates: D5823CACB477191CAC0075555AE420CC0209989E
 - found via: hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
-- size: 5576 → 31840 bytes
+- size: 5576 → 32145 bytes
 
 Commands (run in a copy of dist-git):
 
 ```
-sq --home=none network search --output - D5823CACB477191CAC0075555AE420CC0209989E \
-  | sq keyring filter --experimental --cert D5823CACB477191CAC0075555AE420CC0209989E --output update.pgp
-sq keyring merge --output gpgkey-5AE420CC0209989E.asc.new gpgkey-5AE420CC0209989E.asc update.pgp
-mv gpgkey-5AE420CC0209989E.asc.new gpgkey-5AE420CC0209989E.asc
+sq --home=none network keyserver search D5823CACB477191CAC0075555AE420CC0209989E --output gpgkey-5AE420CC0209989E.asc --overwrite
 ```
 
 ```diff
@@ -26,13 +23,13 @@ mv gpgkey-5AE420CC0209989E.asc.new gpgkey-5AE420CC0209989E.asc
 +++ refreshed/gpgkey-5AE420CC0209989E.asc
 @@ -1,21 +1,19 @@
        Fingerprint: D5823CACB477191CAC0075555AE420CC0209989E
--                   Invalid: No binding signature at time 2026-10-27T11:07:40Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-11-05T18:20:33Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +  Expiration time: 2030-02-17 23:55:54 UTC (creation time + 18years 3months 9days 12h 24m 10s)
 +        Key flags: certification, signing
             Subkey: A1951C9AE193C618F082AE7F17611B1A40BDEDED
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-27T11:07:40Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-11-05T18:20:33Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +  Expiration time: 2030-02-17 23:55:36 UTC (creation time + 18years 3months 9days 12h 23m 52s)
 +        Key flags: transport encryption, data-at-rest encryption
             UserID: Alexey Sokolov (ZNC) <alexey+znc@asokolov.org>
@@ -41,7 +38,7 @@ mv gpgkey-5AE420CC0209989E.asc.new gpgkey-5AE420CC0209989E.asc
 +           UserID: Alexey Sokolov <alexey+gentoo@asokolov.org>
             UserID: Alexey Sokolov <alexey@alexeysokolov.co.cc>
                     Revoked:
--                   Invalid: No binding signature at time 2026-10-27T11:07:40Z
+-                   Invalid: No binding signature at time 2026-11-05T18:20:33Z
 -           UserID: Alexey Sokolov <alexey@asokolov.org>
                     Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
                     because: SHA1 is not considered secure

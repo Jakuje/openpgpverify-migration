@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `webkitgtk-keys.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- refreshed keyring `webkitgtk-keys.gpg` (see below)
 
 ### Testing
 
@@ -30,18 +30,18 @@ Tested on 2026-10-30 at dist-git commit `8b2ae96377ae` with sequoia-sqv 1.5.0-2.
 
 ### Keyring refresh
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com; hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com; hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR replaces the keyring with the keyserver copy. No key was added or removed. Please check the fingerprint against upstream:
 
 - `013A0127AC9C65B34FFA62526C1009B693975393`
 - `5AA3BC334FD7E3369E7C77B291C559DBE4C9123B`
 
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+The refresh, as run (the spec comment above the `Source` line has the same command, for the next refresh):
 
 ```
-sq --home=none network search --output - 013A0127AC9C65B34FFA62526C1009B693975393 5AA3BC334FD7E3369E7C77B291C559DBE4C9123B \
-  | sq keyring filter --experimental --cert 013A0127AC9C65B34FFA62526C1009B693975393 --cert 5AA3BC334FD7E3369E7C77B291C559DBE4C9123B --output update.pgp
-sq keyring merge webkitgtk-keys.gpg update.pgp | sq packet dearmor --output webkitgtk-keys.gpg.new
-mv webkitgtk-keys.gpg.new webkitgtk-keys.gpg
+sq --home=none network keyserver search \
+  013A0127AC9C65B34FFA62526C1009B693975393 \
+  5AA3BC334FD7E3369E7C77B291C559DBE4C9123B \
+  --output webkitgtk-keys.gpg --overwrite
 ```
 
 What changed in the certificate (`sq inspect`):

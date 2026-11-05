@@ -1,10 +1,10 @@
-From dea107e05fb4c23703a438ea7cf41dfadac5b0c0 Mon Sep 17 00:00:00 2001
+From b91285f5d05467e79a4f03f19b9cec1199750388 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:41 +0100
+Date: Thu, 5 Nov 2026 19:21:00 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
-Refresh dickey@invisible-island.net-rsa3072.asc from keyservers/WKD:
-same certificate(s), with self-signatures our copy was missing.
+Refresh dickey@invisible-island.net-rsa3072.asc from keyservers: same
+certificate(s), with self-signatures our copy was missing.
 The commands are in the comment above its Source line.
 
 The current key is needed to verify the release signature with
@@ -13,23 +13,26 @@ release was signed.
 
 Assisted-by: Claude Opus 5.5
 ---
- dickey@invisible-island.net-rsa3072.asc | 225 ++++++++++++++++++++----
- ncurses.spec                            |   4 +
- 2 files changed, 197 insertions(+), 32 deletions(-)
+ dickey@invisible-island.net-rsa3072.asc | 228 ++++++++++++++++++++----
+ ncurses.spec                            |   2 +
+ 2 files changed, 198 insertions(+), 32 deletions(-)
 
 diff --git a/dickey@invisible-island.net-rsa3072.asc b/dickey@invisible-island.net-rsa3072.asc
-index 33a8ce3..cafcef9 100644
+index 33a8ce3..2b675f1 100644
 --- a/dickey@invisible-island.net-rsa3072.asc
 +++ b/dickey@invisible-island.net-rsa3072.asc
-@@ -1,6 +1,6 @@
+@@ -1,6 +1,9 @@
  -----BEGIN PGP PUBLIC KEY BLOCK-----
++Comment: 1988 2D92 DDA4 C400 C22C  0D56 CC2A F447 2167 BE03
++Comment: Thomas E. Dickey (self-signed w/o SHA1) <dickey@invisib
++Comment: Thomas E. Dickey (use for email) <dickey@his.com>
  
 -mQGNBGEEhmgBDAD3TTylJvq42rjYW1ISL2bXcNDvvqOyzhacLayhgHwe90yHPRtH
 +xsDNBGEEhmgBDAD3TTylJvq42rjYW1ISL2bXcNDvvqOyzhacLayhgHwe90yHPRtH
  6v4kyOnltv3txWmbHpqSPFKOj+hi6SYO5o0iIc81p0BCtqu6za8WoGqfvyZ/N5V/
  dNkKcU3dRVBgub62ZlRMagWWBvHY8Hu6FqDHwlaQqJtckUIfbVbUDteMYOhIZ6Fb
  rdT4d4n1TMIN6pqgNcs6yHSrqfZUkgWkRMVtxf+nu6X0H1ntbn/9X0UqOG/vcoMD
-@@ -8,35 +8,196 @@ j5QQK8s1xItCovjy69UNRDV+bvtb9YOXTkv1tDgqPCBGidOr9oznN91S5hbUjoUu
+@@ -8,35 +11,196 @@ j5QQK8s1xItCovjy69UNRDV+bvtb9YOXTkv1tDgqPCBGidOr9oznN91S5hbUjoUu
  rZNwlZsQZ7GGz5MXt2I4aL6sPyvKSj7IdVa3R2g+z8QLxvQWCN6V2FOcrziZ/EK+
  Rpnaw3C7+siz+lWGxVo1CJBks+V0lviA9Sd9MLJBJoxgJSao1YLkBSE9UXTBx1Va
  RU1buTg/0+2BrxEdX+9qIb4Qp/kaa33+Jw1IDauO6TQALilw2D1idkLZwlzMcfH0
@@ -258,17 +261,15 @@ index 33a8ce3..cafcef9 100644
 +=p/hP
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/ncurses.spec b/ncurses.spec
-index 701705c..a42431e 100644
+index 701705c..b1c9cfb 100644
 --- a/ncurses.spec
 +++ b/ncurses.spec
-@@ -9,6 +9,10 @@ License: MIT-open-group
+@@ -9,6 +9,8 @@ License: MIT-open-group
  URL: https://invisible-island.net/ncurses/ncurses.html
  Source0: https://invisible-mirror.net/archives/ncurses/ncurses-%{version}.tar.gz
  Source1: https://invisible-mirror.net/archives/ncurses/ncurses-%{version}.tar.gz.asc
-+# Refreshed from keyservers/WKD (same keys, newer signatures):
-+#   sq --home=none network search --output - 19882D92DDA4C400C22C0D56CC2AF4472167BE03 | sq keyring filter --experimental --cert 19882D92DDA4C400C22C0D56CC2AF4472167BE03 --output update.pgp
-+#   sq keyring merge --output dickey@invisible-island.net-rsa3072.asc.new dickey@invisible-island.net-rsa3072.asc update.pgp
-+#   mv dickey@invisible-island.net-rsa3072.asc.new dickey@invisible-island.net-rsa3072.asc
++# Refreshed from keyservers (same keys, newer signatures):
++#   sq --home=none network keyserver search 19882D92DDA4C400C22C0D56CC2AF4472167BE03 --output dickey@invisible-island.net-rsa3072.asc --overwrite
  Source2: https://invisible-island.net/public/dickey@invisible-island.net-rsa3072.asc
  
  Patch8: ncurses-config.patch

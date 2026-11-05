@@ -1,6 +1,6 @@
-From 54684b9722724e827f0210ee5132edb3d40ac56f Mon Sep 17 00:00:00 2001
+From 0bc76c212df4bed48b17fdfe0d2547d2b86ed9aa Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 30 Oct 2026 13:47:08 +0100
+Date: Thu, 5 Nov 2026 19:20:59 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/fcitx5-qt.spec b/fcitx5-qt.spec
-index 3bd978e..1124401 100644
+index 8621926..d183ac3 100644
 --- a/fcitx5-qt.spec
 +++ b/fcitx5-qt.spec
-@@ -36,6 +36,7 @@ BuildRequires:  gettext
+@@ -34,6 +34,7 @@ BuildRequires:  gettext
  BuildRequires:  qt5-qtbase-private-devel
  BuildRequires:  pkgconfig(Qt6)
  BuildRequires:  qt6-qtbase-private-devel
@@ -24,7 +24,7 @@ index 3bd978e..1124401 100644
  Requires:       ((fcitx5-qt6%{?_isa} = %{version}-%{release}) if qt6-qtbase)
  
  # pull in im-modules for existing qt version
-@@ -110,7 +111,7 @@ Requires:       cmake-filesystem%{?_isa}
+@@ -108,7 +109,7 @@ Requires:       cmake-filesystem%{?_isa}
  Development files for %{name}
  
  %prep

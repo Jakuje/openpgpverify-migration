@@ -16,7 +16,7 @@ Why `sqv`:
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
 - dropped `BuildRequires: gcc gcc-c++ gnupg2 make pkgconfig`, only needed for `%gpgverify`
-- refreshed keyring `dickey@invisible-island.net-rsa3072.asc` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- refreshed keyring `dickey@invisible-island.net-rsa3072.asc` (see below)
 - Release bumped (`3%{?dist}` → `4%{?dist}`) with a changelog entry
 
 ### Testing
@@ -32,17 +32,14 @@ Tested on 2026-10-12 at dist-git commit `b2310702e7f6` with sequoia-sqv 1.5.0-2.
 
 ### Keyring refresh
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR replaces the keyring with the keyserver copy. No key was added or removed. Please check the fingerprint against upstream:
 
 - `19882D92DDA4C400C22C0D56CC2AF4472167BE03`
 
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+The refresh, as run (the spec comment above the `Source` line has the same command, for the next refresh):
 
 ```
-sq --home=none network search --output - 19882D92DDA4C400C22C0D56CC2AF4472167BE03 \
-  | sq keyring filter --experimental --cert 19882D92DDA4C400C22C0D56CC2AF4472167BE03 --output update.pgp
-sq keyring merge --output dickey@invisible-island.net-rsa3072.asc.new dickey@invisible-island.net-rsa3072.asc update.pgp
-mv dickey@invisible-island.net-rsa3072.asc.new dickey@invisible-island.net-rsa3072.asc
+sq --home=none network keyserver search 19882D92DDA4C400C22C0D56CC2AF4472167BE03 --output dickey@invisible-island.net-rsa3072.asc --overwrite
 ```
 
 What changed in the certificate (`sq inspect`):

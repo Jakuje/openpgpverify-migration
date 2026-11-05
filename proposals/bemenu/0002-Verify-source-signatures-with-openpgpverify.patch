@@ -1,6 +1,6 @@
-From d641311d42a77bd625c758c05ba13ac1862e714c Mon Sep 17 00:00:00 2001
+From 2448743291dd99316dc68756a547a810d036d080 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:43 +0100
+Date: Thu, 5 Nov 2026 19:20:58 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/bemenu.spec b/bemenu.spec
-index 5d4a1a0..1c0d871 100644
+index 0fd82ba..44c2319 100644
 --- a/bemenu.spec
 +++ b/bemenu.spec
-@@ -20,7 +20,7 @@ Source2:    https://cloudef.pw/bemenu-pgp.txt
+@@ -18,7 +18,7 @@ Source2:    https://cloudef.pw/bemenu-pgp.txt
  Patch:      respect-env-build-flags.patch
  
  BuildRequires:  gcc
@@ -25,7 +25,7 @@ index 5d4a1a0..1c0d871 100644
  BuildRequires:  make
  BuildRequires:  pkgconfig(cairo)
  BuildRequires:  pkgconfig(ncursesw)
-@@ -46,7 +46,7 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
+@@ -44,7 +44,7 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
  Development files for extending %{name}.
  
  %prep

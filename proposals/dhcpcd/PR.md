@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `rsmarples.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- refreshed keyring `rsmarples.gpg` (see below)
 
 ### Testing
 
@@ -30,17 +30,14 @@ Tested on 2026-10-22 at dist-git commit `051387c2a373` with sequoia-sqv 1.5.0-2.
 
 ### Keyring refresh
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (SHA-1 key self-signatures), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (SHA-1 key self-signatures), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR replaces the keyring with the keyserver copy. No key was added or removed. Please check the fingerprint against upstream:
 
 - `A785ED2755955D9E93EA59F6597F97EA9AD45549`
 
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+The refresh, as run (the spec comment above the `Source` line has the same command, for the next refresh):
 
 ```
-sq --home=none network search --output - A785ED2755955D9E93EA59F6597F97EA9AD45549 \
-  | sq keyring filter --experimental --cert A785ED2755955D9E93EA59F6597F97EA9AD45549 --output update.pgp
-sq keyring merge --output rsmarples.gpg.new rsmarples.gpg update.pgp
-mv rsmarples.gpg.new rsmarples.gpg
+sq --home=none network keyserver search A785ED2755955D9E93EA59F6597F97EA9AD45549 --output rsmarples.gpg --overwrite
 ```
 
 What changed in the certificate (`sq inspect`):
@@ -50,12 +47,12 @@ What changed in the certificate (`sq inspect`):
 +++ refreshed/rsmarples.gpg
 @@ -1,15 +1,10 @@
        Fingerprint: A785ED2755955D9E93EA59F6597F97EA9AD45549
--                   Invalid: No binding signature at time 2026-10-27T10:50:55Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-11-05T18:18:08Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: certification, signing
             Subkey: E9EE92F5F6D5DBE878B3C2690B0EEE0F057A64CF
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-27T10:50:55Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-11-05T18:18:08Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: transport encryption, data-at-rest encryption
             UserID: Roy Marples (NetBSD) <roy@NetBSD.org>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance

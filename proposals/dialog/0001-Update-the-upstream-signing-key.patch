@@ -1,10 +1,10 @@
-From 5c4a0294383532197d92d8c488e49c430599a7b6 Mon Sep 17 00:00:00 2001
+From 20ebbc0bcb4d9bfc986c7a74f3f2e49cd44619e9 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:41 +0100
+Date: Thu, 5 Nov 2026 19:20:58 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
-Refresh dickey@invisible-island.net-rsa3072.asc from keyservers/WKD:
-same certificate(s), with self-signatures our copy was missing.
+Refresh dickey@invisible-island.net-rsa3072.asc from keyservers: same
+certificate(s), with self-signatures our copy was missing.
 The commands are in the comment above its Source line.
 
 The current key is needed to verify the release signature with
@@ -13,38 +13,39 @@ release was signed.
 
 Assisted-by: Claude Opus 5.5
 ---
- dialog.spec                             |   4 +
- dickey@invisible-island.net-rsa3072.asc | 225 ++++++++++++++++++++----
- 2 files changed, 197 insertions(+), 32 deletions(-)
+ dialog.spec                             |   2 +
+ dickey@invisible-island.net-rsa3072.asc | 228 ++++++++++++++++++++----
+ 2 files changed, 198 insertions(+), 32 deletions(-)
 
 diff --git a/dialog.spec b/dialog.spec
-index 368c633..d85b548 100644
+index 368c633..4d62072 100644
 --- a/dialog.spec
 +++ b/dialog.spec
-@@ -7,6 +7,10 @@ License: LGPL-2.1-only
+@@ -7,6 +7,8 @@ License: LGPL-2.1-only
  URL: https://invisible-island.net/dialog/dialog.html
  Source0: https://invisible-mirror.net/archives/dialog/dialog-%{version}-%{dialogsubversion}.tgz
  Source1: https://invisible-mirror.net/archives/dialog/dialog-%{version}-%{dialogsubversion}.tgz.asc
-+# Refreshed from keyservers/WKD (same keys, newer signatures):
-+#   sq --home=none network search --output - 19882D92DDA4C400C22C0D56CC2AF4472167BE03 | sq keyring filter --experimental --cert 19882D92DDA4C400C22C0D56CC2AF4472167BE03 --output update.pgp
-+#   sq keyring merge --output dickey@invisible-island.net-rsa3072.asc.new dickey@invisible-island.net-rsa3072.asc update.pgp
-+#   mv dickey@invisible-island.net-rsa3072.asc.new dickey@invisible-island.net-rsa3072.asc
++# Refreshed from keyservers (same keys, newer signatures):
++#   sq --home=none network keyserver search 19882D92DDA4C400C22C0D56CC2AF4472167BE03 --output dickey@invisible-island.net-rsa3072.asc --overwrite
  Source2: https://invisible-island.net/public/dickey@invisible-island.net-rsa3072.asc
  BuildRequires: ncurses-devel gcc gettext findutils libtool gnupg2
  BuildRequires: make
 diff --git a/dickey@invisible-island.net-rsa3072.asc b/dickey@invisible-island.net-rsa3072.asc
-index 33a8ce3..cafcef9 100644
+index 33a8ce3..2b675f1 100644
 --- a/dickey@invisible-island.net-rsa3072.asc
 +++ b/dickey@invisible-island.net-rsa3072.asc
-@@ -1,6 +1,6 @@
+@@ -1,6 +1,9 @@
  -----BEGIN PGP PUBLIC KEY BLOCK-----
++Comment: 1988 2D92 DDA4 C400 C22C  0D56 CC2A F447 2167 BE03
++Comment: Thomas E. Dickey (self-signed w/o SHA1) <dickey@invisib
++Comment: Thomas E. Dickey (use for email) <dickey@his.com>
  
 -mQGNBGEEhmgBDAD3TTylJvq42rjYW1ISL2bXcNDvvqOyzhacLayhgHwe90yHPRtH
 +xsDNBGEEhmgBDAD3TTylJvq42rjYW1ISL2bXcNDvvqOyzhacLayhgHwe90yHPRtH
  6v4kyOnltv3txWmbHpqSPFKOj+hi6SYO5o0iIc81p0BCtqu6za8WoGqfvyZ/N5V/
  dNkKcU3dRVBgub62ZlRMagWWBvHY8Hu6FqDHwlaQqJtckUIfbVbUDteMYOhIZ6Fb
  rdT4d4n1TMIN6pqgNcs6yHSrqfZUkgWkRMVtxf+nu6X0H1ntbn/9X0UqOG/vcoMD
-@@ -8,35 +8,196 @@ j5QQK8s1xItCovjy69UNRDV+bvtb9YOXTkv1tDgqPCBGidOr9oznN91S5hbUjoUu
+@@ -8,35 +11,196 @@ j5QQK8s1xItCovjy69UNRDV+bvtb9YOXTkv1tDgqPCBGidOr9oznN91S5hbUjoUu
  rZNwlZsQZ7GGz5MXt2I4aL6sPyvKSj7IdVa3R2g+z8QLxvQWCN6V2FOcrziZ/EK+
  Rpnaw3C7+siz+lWGxVo1CJBks+V0lviA9Sd9MLJBJoxgJSao1YLkBSE9UXTBx1Va
  RU1buTg/0+2BrxEdX+9qIb4Qp/kaa33+Jw1IDauO6TQALilw2D1idkLZwlzMcfH0

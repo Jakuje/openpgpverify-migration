@@ -1,10 +1,10 @@
-From e739f2ea09f2fa8367003268f22b7a5328285063 Mon Sep 17 00:00:00 2001
+From 621600ce9c24d1e90b3b1b5449e6b4e018436d5c Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:44 +0100
+Date: Thu, 5 Nov 2026 19:20:59 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
-Refresh 0x8E8B898CBF2412F9 from keyservers/WKD: same certificate(s),
-with self-signatures our copy was missing.
+Refresh 0x8E8B898CBF2412F9 from keyservers: same certificate(s), with
+self-signatures our copy was missing.
 The commands are in the comment above its Source line.
 
 The current key is needed to verify the release signature with
@@ -13,18 +13,20 @@ release was signed.
 
 Assisted-by: Claude Opus 5.5
 ---
- 0x8E8B898CBF2412F9 | 282 +++++++++++++++++++++++++++------------------
- fcitx5-skk.spec    |   4 +
+ 0x8E8B898CBF2412F9 | 284 +++++++++++++++++++++++++++------------------
+ fcitx5-skk.spec    |   2 +
  2 files changed, 176 insertions(+), 110 deletions(-)
 
 diff --git a/0x8E8B898CBF2412F9 b/0x8E8B898CBF2412F9
-index d9449d8..43b0e60 100644
+index d9449d8..3288561 100644
 --- a/0x8E8B898CBF2412F9
 +++ b/0x8E8B898CBF2412F9
-@@ -1,112 +1,174 @@
+@@ -1,112 +1,176 @@
  -----BEGIN PGP PUBLIC KEY BLOCK-----
 -Version: SKS 1.1.6
 -Comment: Hostname: carles.tubio.sks-database_1
++Comment: 2CC8 A060 9AD2 A479 C65B  6D5C 8E8B 898C BF24 12F9
++Comment: Weng Xuetian <wengxt@gmail.com>
  
 -mQENBEyUvwkBCAD0P0fGutq6L7iixhhOMCaxvTwmT84oEcNP816hNo2+YSEws8Xp6uv94czW
 -DyC1ibzh++mStReE7RioieiKtH/sYrfS1M2Gwv3kGYzekx5qKx92ncztEd08ufho3s3Qcw4Q
@@ -307,17 +309,15 @@ index d9449d8..43b0e60 100644
 +=8BEE
 +-----END PGP PUBLIC KEY BLOCK-----
 diff --git a/fcitx5-skk.spec b/fcitx5-skk.spec
-index a1cd814..0e656b8 100644
+index a1cd814..b9d4bb2 100644
 --- a/fcitx5-skk.spec
 +++ b/fcitx5-skk.spec
-@@ -9,6 +9,10 @@ License:    GPL-3.0-or-later
+@@ -9,6 +9,8 @@ License:    GPL-3.0-or-later
  URL:        https://github.com/fcitx/fcitx5-skk
  Source:     https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.tar.zst
  Source1:    https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.tar.zst.sig
-+# Refreshed from keyservers/WKD (same keys, newer signatures):
-+#   sq --home=none network search --output - 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9 | sq keyring filter --experimental --cert 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9 --output update.pgp
-+#   sq keyring merge --output 0x8E8B898CBF2412F9.new 0x8E8B898CBF2412F9 update.pgp
-+#   mv 0x8E8B898CBF2412F9.new 0x8E8B898CBF2412F9
++# Refreshed from keyservers (same keys, newer signatures):
++#   sq --home=none network keyserver search 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9 --output 0x8E8B898CBF2412F9 --overwrite
  Source2:    https://pgp.key-server.io/download/0x8E8B898CBF2412F9
  
  BuildRequires:  gnupg2

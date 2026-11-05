@@ -1,6 +1,6 @@
-From 397d26f5c6b7960c66431753002540b0440fd63a Mon Sep 17 00:00:00 2001
+From 69b5ad135c6df83f711883dec66354cb6b242b10 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:58 +0100
+Date: Thu, 5 Nov 2026 19:20:57 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/asterisk.spec b/asterisk.spec
-index 5c997b2..b1ed8de 100644
+index a8f97eb..b226852 100644
 --- a/asterisk.spec
 +++ b/asterisk.spec
 @@ -57,7 +57,7 @@
@@ -27,7 +27,7 @@ index 5c997b2..b1ed8de 100644
  # Automatically converted from old format: GPLv2 - review is highly recommended.
  License:          GPL-2.0-only
  URL:              http://www.asterisk.org/
-@@ -253,6 +253,7 @@ Provides:         bundled(jansson) = %{jansson_version}
+@@ -251,6 +251,7 @@ Provides:         bundled(jansson) = %{jansson_version}
  # for gpg to be able to verify the signature
  BuildRequires:    libgcrypt
  BuildRequires:    make
@@ -35,7 +35,7 @@ index 5c997b2..b1ed8de 100644
  
  
  Requires(post):   systemd-units
-@@ -616,7 +617,7 @@ Jabber/XMPP resources for Asterisk.
+@@ -614,7 +615,7 @@ Jabber/XMPP resources for Asterisk.
  %if 0%{?fedora} || 0%{?rhel} >=8
  # only verifying on Fedora and RHEL >=8 due to version of gpg
  rpm -q libgcrypt
@@ -44,7 +44,7 @@ index 5c997b2..b1ed8de 100644
  %endif
  %setup -q -n asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}
  
-@@ -1640,6 +1641,9 @@ fi
+@@ -1638,6 +1639,9 @@ fi
  %endif
  
  %changelog

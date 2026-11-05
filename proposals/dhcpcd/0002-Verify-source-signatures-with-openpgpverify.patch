@@ -1,6 +1,6 @@
-From 1e7b7a518f4b0b239ed2181989c2c382318df07c Mon Sep 17 00:00:00 2001
+From 8277fcc6567affa15a20732b4254ecff8731d3db Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:41 +0100
+Date: Thu, 5 Nov 2026 19:20:58 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/dhcpcd.spec b/dhcpcd.spec
-index 6c52308..7ab36c1 100644
+index 7ef9c33..b43ce12 100644
 --- a/dhcpcd.spec
 +++ b/dhcpcd.spec
-@@ -35,6 +35,7 @@ BuildRequires: systemd-devel
+@@ -33,6 +33,7 @@ BuildRequires: systemd-devel
  BuildRequires: ypbind
  %endif
  BuildRequires: make
@@ -24,7 +24,7 @@ index 6c52308..7ab36c1 100644
  %if 0%{?fedora} || 0%{?rhel} > 8
  BuildRequires: gnupg2
  %endif
-@@ -46,7 +47,7 @@ through NDP, DHCPv4 and DHCPv6 protocols.
+@@ -44,7 +45,7 @@ through NDP, DHCPv4 and DHCPv6 protocols.
  
  %prep
  %if 0%{?fedora} || 0%{?rhel} > 8

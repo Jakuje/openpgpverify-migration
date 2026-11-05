@@ -1,6 +1,6 @@
-From 807a1ca6a41a30a9fb18db12d173dc1dda7d19ec Mon Sep 17 00:00:00 2001
+From c1f08e8339e00b9c6cf1b5d63d87d1b41c115546 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:41 +0100
+Date: Thu, 5 Nov 2026 19:20:58 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/dialog.spec b/dialog.spec
-index d85b548..ec8a2ee 100644
+index 4d62072..36805b5 100644
 --- a/dialog.spec
 +++ b/dialog.spec
 @@ -2,7 +2,7 @@ Summary: A utility for creating TTY dialog boxes
@@ -27,9 +27,9 @@ index d85b548..ec8a2ee 100644
  License: LGPL-2.1-only
  URL: https://invisible-island.net/dialog/dialog.html
  Source0: https://invisible-mirror.net/archives/dialog/dialog-%{version}-%{dialogsubversion}.tgz
-@@ -12,7 +12,8 @@ Source1: https://invisible-mirror.net/archives/dialog/dialog-%{version}-%{dialog
- #   sq keyring merge --output dickey@invisible-island.net-rsa3072.asc.new dickey@invisible-island.net-rsa3072.asc update.pgp
- #   mv dickey@invisible-island.net-rsa3072.asc.new dickey@invisible-island.net-rsa3072.asc
+@@ -10,7 +10,8 @@ Source1: https://invisible-mirror.net/archives/dialog/dialog-%{version}-%{dialog
+ # Refreshed from keyservers (same keys, newer signatures):
+ #   sq --home=none network keyserver search 19882D92DDA4C400C22C0D56CC2AF4472167BE03 --output dickey@invisible-island.net-rsa3072.asc --overwrite
  Source2: https://invisible-island.net/public/dickey@invisible-island.net-rsa3072.asc
 -BuildRequires: ncurses-devel gcc gettext findutils libtool gnupg2
 +BuildRequires: ncurses-devel gcc gettext findutils libtool
@@ -37,7 +37,7 @@ index d85b548..ec8a2ee 100644
  BuildRequires: make
  Patch2: dialog-multilib.patch
  Patch3: dialog-libs.patch
-@@ -37,7 +38,7 @@ contains the files needed for developing applications, which use the
+@@ -35,7 +36,7 @@ contains the files needed for developing applications, which use the
  dialog library.
  
  %prep
@@ -46,7 +46,7 @@ index d85b548..ec8a2ee 100644
  %setup -q -n dialog-%{version}-%{dialogsubversion}
  %patch -P2 -p1 -b .multilib
  %patch -P3 -p1 -b .libs
-@@ -84,6 +85,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libdialog.{,l}a
+@@ -82,6 +83,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libdialog.{,l}a
  %{_mandir}/man3/dialog.*
  
  %changelog

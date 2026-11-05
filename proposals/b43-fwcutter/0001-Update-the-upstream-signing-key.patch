@@ -1,11 +1,10 @@
-From da39a8553368cb5520ddf622c8d8c39d4871ee2e Mon Sep 17 00:00:00 2001
+From 1a933d493443552c053ee8be42a8e01211642031 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:43 +0100
+Date: Thu, 5 Nov 2026 19:20:58 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
-Refresh 757FAB7CED1814AE15B4836E5FB027474203454C.gpg from
-keyservers/WKD: same certificate(s), with self-signatures our copy was
-missing.
+Refresh 757FAB7CED1814AE15B4836E5FB027474203454C.gpg from keyservers:
+same certificate(s), with self-signatures our copy was missing.
 The commands are in the comment above its Source line.
 
 The current key is needed to verify the release signature with
@@ -14,23 +13,32 @@ release was signed.
 
 Assisted-by: Claude Opus 5.5
 ---
- 757FAB7CED1814AE15B4836E5FB027474203454C.gpg | 961 +++++++++++--------
- b43-fwcutter.spec                            |   6 +-
- 2 files changed, 582 insertions(+), 385 deletions(-)
+ 757FAB7CED1814AE15B4836E5FB027474203454C.gpg | 970 +++++++++++--------
+ b43-fwcutter.spec                            |   4 +-
+ 2 files changed, 589 insertions(+), 385 deletions(-)
 
 diff --git a/757FAB7CED1814AE15B4836E5FB027474203454C.gpg b/757FAB7CED1814AE15B4836E5FB027474203454C.gpg
-index a985550..0c63042 100644
+index a985550..e7d94e3 100644
 --- a/757FAB7CED1814AE15B4836E5FB027474203454C.gpg
 +++ b/757FAB7CED1814AE15B4836E5FB027474203454C.gpg
-@@ -1,6 +1,6 @@
+@@ -1,6 +1,15 @@
  -----BEGIN PGP PUBLIC KEY BLOCK-----
++Comment: Key #0
++Comment: 0392 335A 7808 3894 A430  1C43 236E 8A58 C6DB 4512
++Comment: Key #1
++Comment: 6910 0FFB 90E8 7A32 0DF8  643C BEC3 9009 E832 1A61
++Comment: Ivan Alonso [Kaian] <kaian@irontec.com>
++Comment: Key #2
++Comment: 757F AB7C ED18 14AE 15B4  836E 5FB0 2747 4203 454C
++Comment: Michael Büsch (Git tag signing key) <m@bues.ch>
++Comment: Michael Büsch (Release signing key) <m@bues.ch>
  
 -mQINBFIF8KsBEACqe90N9wwjYw4QCPJ8HV47d4Vo8yUZ0gSgpWYIBocK9Zs0yqOJ
 +xsFNBFIF8KsBEACqe90N9wwjYw4QCPJ8HV47d4Vo8yUZ0gSgpWYIBocK9Zs0yqOJ
  ek+bA2Z+0sI7CxO1NYfg7xJE6GpdUL9QFOK4cbJoBlZ0YuZlKFKvRiG+rsevY9FJ
  SZtKTwciW68pU2W5ixtW4g9FPq2LrqsrkGthNtSeL7uiK0SHtFGqz3k167aGfG8i
  l/VXkLRL8Vbl5/6mzE4FUwNcomS+dyOgaJHg2C4V/Lio0R4MjY8Lp6PVIPfKqa1d
-@@ -11,7 +11,7 @@ HXoxn3s7ieA+4D5PjRB/8r+LMYOTxw78eEhJna6Ijvyew4FKWvvPgoFAOl9SNyOi
+@@ -11,7 +20,7 @@ HXoxn3s7ieA+4D5PjRB/8r+LMYOTxw78eEhJna6Ijvyew4FKWvvPgoFAOl9SNyOi
  5lTtwEzY1nxtYOZEBU5Bh/iFrzq6afwRmXUjsHnmb9MIgbSiep4IECwosBRRhvWu
  aRMgIOTbGiawt7/9/w2XUXgeMm3ZYotAm7ApawDSuFYVYJAATDTwHnYE15eK13Jh
  qeahCY4FMZXbc4WxD3anGj5ACAqdwK7nU/REU67eUGsxz/x3qrfEr5ol1QARAQAB
@@ -39,7 +47,7 @@ index a985550..0c63042 100644
  AwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQI26KWMbbRRItHxAAkAzF57av
  9FOLKOx1f/moQjUS7sWpYDDyAFLximo2CamFz3PupByKeZ/0g27j9YS7Jp7gbqo/
  Trp7cTY06lU5iaHHiaJxZlm1jK0MZuvzbAPQvRGj/kfaIiiEKq0ZwX0I1CcTaD8s
-@@ -23,45 +23,45 @@ GublyBLmITCThRQZq5JZr7OI/zyrKfOYCjTL+yz6Yh8hqhJtNOpeLJRxfnjLURIN
+@@ -23,45 +32,45 @@ GublyBLmITCThRQZq5JZr7OI/zyrKfOYCjTL+yz6Yh8hqhJtNOpeLJRxfnjLURIN
  cTpd7fHEYBKG4FTn+p+81sGNJBTIh0avl0ScK7laygznis6lUFBI9cwfCXGVgbPx
  3xrEj9PSAogobWoIZvOPovrdvNvJht0VlHWoQ5P87w6jgbplzJAcsbSN2T8wPYfE
  DIP5UV59W7NruPQs8LYsAgMXTz0x18wiTWjPZNneZRfVZBQfe+RRtw6jCSyWR2kI
@@ -124,7 +132,7 @@ index a985550..0c63042 100644
  NcJtYYr8VJrkro680DLp3zv23oDn0Oe4dwuhZOAdD5Mgb4xTzRIgdIU5iSCj5son
  GKlCEF2qyVsxOWUvpFoB/y/c3kPuKkP5YobL8EHIdIz0FTjA/115hYNusN+Z7BOq
  xThVmIgvpV3GP4BRt/f9UWyWIcXQ7pGNTP9BE1H7DWnCMccG+lp+X9Pod3KHx7qc
-@@ -72,7 +72,7 @@ jL09P1WBvFSgFoAetxa1cm/rrVMVm2vzJjR27t0Nu6Fx1WlQxelw7JilB2nl8Bpb
+@@ -72,7 +81,7 @@ jL09P1WBvFSgFoAetxa1cm/rrVMVm2vzJjR27t0Nu6Fx1WlQxelw7JilB2nl8Bpb
  RHYyj3WyccYxiSNbYVzYC+f63Q+a9tx6nSOLlA6ZMreOX2IbIj1+jq77kAWiQkOt
  +8EwsYj8s4qs0oVpiRxD0P8Tl0KOcZdE5EzSqTV8qkmug1qNcSZXn7tBDg1ZcnUZ
  pDOG7pxVCxYmB7euSGfibJIlJCDioWOnQynZtWkNrfaoH0oU565R0LfI6/WQvBrH
@@ -133,7 +141,7 @@ index a985550..0c63042 100644
  EACR7ZcXaXhe7FjBfashp5UD3ZbI8ck1XlmnOqYH8bdFnuwTW2eI0aW3EiJUX8XA
  QPjfeYuQItj8GGMwFxWaQjatdMQX8E3X0V/FENu5pfUuHQAXZSbLaDgbBe4+eD6m
  JVENIgOhFNV2FX+grdjiYf+oXSCCP5NW6ASAtVX2NPHStRZweOI7kcGdcVZv63No
-@@ -83,378 +83,573 @@ xDhP/q+5XuWK+Ka5qy0RoO4GlVWtmVbYYJl3GLOtLIVAVugIofGqbCYxG1v4HJli
+@@ -83,378 +92,573 @@ xDhP/q+5XuWK+Ka5qy0RoO4GlVWtmVbYYJl3GLOtLIVAVugIofGqbCYxG1v4HJli
  P0z79q8oJ6J5Iy9/X4bklnGvzA1mSKwUa1pPSxEsxJC0iAi6oGIfkEgebBmbmH4i
  jQKM9jMyJdE/0nZfAz+lvYvF04fu+68uizKEFULnCo8U3pXWhjV9Q6YSy/MhkK86
  myrb6+DIT34ug3mLh6rxynhWFEiTXbUVgx5rLkLLwqmqKj6YIStdskmq6TJwQ3En
@@ -1049,19 +1057,17 @@ index a985550..0c63042 100644
 +=pcdu
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/b43-fwcutter.spec b/b43-fwcutter.spec
-index 7485b46..1ac8572 100644
+index 7485b46..7e7a390 100644
 --- a/b43-fwcutter.spec
 +++ b/b43-fwcutter.spec
-@@ -6,8 +6,10 @@ License:        BSD-2-Clause
+@@ -6,8 +6,8 @@ License:        BSD-2-Clause
  URL:            https://bues.ch/b43/fwcutter/
  Source0:        https://bues.ch/b43/fwcutter/%{name}-%{version}.tar.xz
  Source1:        https://bues.ch/b43/fwcutter/%{name}-%{version}.tar.xz.asc
 -# gpg --no-default-keyring --keyring ./keyring.gpg --keyserver keyserver.ubuntu.com --recv-key 757FAB7CED1814AE15B4836E5FB027474203454C
 -# gpg --no-default-keyring --keyring ./keyring.gpg  --output 757FAB7CED1814AE15B4836E5FB027474203454C.gpg --export --armor
-+# Refreshed from keyservers/WKD (same keys, newer signatures):
-+#   sq --home=none network search --output - 0392335A78083894A4301C43236E8A58C6DB4512 69100FFB90E87A320DF8643CBEC39009E8321A61 757FAB7CED1814AE15B4836E5FB027474203454C | sq keyring filter --experimental --cert 0392335A78083894A4301C43236E8A58C6DB4512 --cert 69100FFB90E87A320DF8643CBEC39009E8321A61 --cert 757FAB7CED1814AE15B4836E5FB027474203454C --output update.pgp
-+#   sq keyring merge --output 757FAB7CED1814AE15B4836E5FB027474203454C.gpg.new 757FAB7CED1814AE15B4836E5FB027474203454C.gpg update.pgp
-+#   mv 757FAB7CED1814AE15B4836E5FB027474203454C.gpg.new 757FAB7CED1814AE15B4836E5FB027474203454C.gpg
++# Refreshed from keyservers (same keys, newer signatures):
++#   sq --home=none network keyserver search 0392335A78083894A4301C43236E8A58C6DB4512 69100FFB90E87A320DF8643CBEC39009E8321A61 757FAB7CED1814AE15B4836E5FB027474203454C --output 757FAB7CED1814AE15B4836E5FB027474203454C.gpg --overwrite
  Source2:        757FAB7CED1814AE15B4836E5FB027474203454C.gpg
  Source100:      README.too
  BuildRequires:  gcc

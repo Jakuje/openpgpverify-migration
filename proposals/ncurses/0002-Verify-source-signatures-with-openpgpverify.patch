@@ -1,6 +1,6 @@
-From de16689de84c2b9e852faef790408f1e6ca232fb Mon Sep 17 00:00:00 2001
+From fcf2995ac1ff38e77056c294d807d6d4eb736aa3 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:41 +0100
+Date: Thu, 5 Nov 2026 19:21:00 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/ncurses.spec b/ncurses.spec
-index a42431e..9a0239c 100644
+index b1c9cfb..7dc4f4d 100644
 --- a/ncurses.spec
 +++ b/ncurses.spec
 @@ -4,7 +4,7 @@
@@ -27,7 +27,7 @@ index a42431e..9a0239c 100644
  License: MIT-open-group
  URL: https://invisible-island.net/ncurses/ncurses.html
  Source0: https://invisible-mirror.net/archives/ncurses/ncurses-%{version}.tar.gz
-@@ -18,7 +18,8 @@ Source2: https://invisible-island.net/public/dickey@invisible-island.net-rsa3072
+@@ -16,7 +16,8 @@ Source2: https://invisible-island.net/public/dickey@invisible-island.net-rsa3072
  Patch8: ncurses-config.patch
  Patch9: ncurses-libs.patch
  Patch11: ncurses-urxvt.patch
@@ -37,7 +37,7 @@ index a42431e..9a0239c 100644
  %{?with_gpm:BuildRequires: gpm-devel}
  
  Requires: %{name}-libs%{?_isa} = %{version}-%{release}
-@@ -110,7 +111,7 @@ Requires: %{name}-devel%{?_isa} = %{version}-%{release}
+@@ -108,7 +109,7 @@ Requires: %{name}-devel%{?_isa} = %{version}-%{release}
  The ncurses-static package includes static libraries of the ncurses library.
  
  %prep
@@ -46,7 +46,7 @@ index a42431e..9a0239c 100644
  
  %setup -q -n %{name}-%{version}
  
-@@ -289,6 +290,9 @@ xz NEWS
+@@ -287,6 +288,9 @@ xz NEWS
  %{_libdir}/lib*.a
  
  %changelog

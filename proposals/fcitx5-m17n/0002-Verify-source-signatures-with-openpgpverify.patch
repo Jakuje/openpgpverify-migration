@@ -1,6 +1,6 @@
-From 3a6558d9fa866bcf994146d9520501273d3da5e4 Mon Sep 17 00:00:00 2001
+From 240ee3afba0367a40e3df177e2b3be8578600c54 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:44 +0100
+Date: Thu, 5 Nov 2026 19:20:59 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,11 +13,11 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/fcitx5-m17n.spec b/fcitx5-m17n.spec
-index 3c8792e..84088d8 100644
+index c911bb3..00dd22e 100644
 --- a/fcitx5-m17n.spec
 +++ b/fcitx5-m17n.spec
-@@ -15,7 +15,7 @@ Source1:    https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.tar.
- #   mv 0x8E8B898CBF2412F9.new 0x8E8B898CBF2412F9
+@@ -13,7 +13,7 @@ Source1:    https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.tar.
+ #   sq --home=none network keyserver search 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9 --output 0x8E8B898CBF2412F9 --overwrite
  Source2:    https://pgp.key-server.io/download/0x8E8B898CBF2412F9
  
 -BuildRequires:  gnupg2
@@ -25,7 +25,7 @@ index 3c8792e..84088d8 100644
  BuildRequires:  cmake
  BuildRequires:  extra-cmake-modules
  BuildRequires:  gcc-c++
-@@ -36,7 +36,7 @@ quite a lot languages in the world, including Latin, Arabic,
+@@ -34,7 +34,7 @@ quite a lot languages in the world, including Latin, Arabic,
  etc.
  
  %prep

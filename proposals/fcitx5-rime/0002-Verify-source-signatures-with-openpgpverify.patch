@@ -1,6 +1,6 @@
-From e55c3c58f73ed3e8624544dbf073cde1dd2f1f79 Mon Sep 17 00:00:00 2001
+From c3517b58213bcd64d8d30516d36b19f6ee6f1246 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:44 +0100
+Date: Thu, 5 Nov 2026 19:20:59 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/fcitx5-rime.spec b/fcitx5-rime.spec
-index d9e9dbd..5d9785e 100644
+index 63998b1..290d119 100644
 --- a/fcitx5-rime.spec
 +++ b/fcitx5-rime.spec
-@@ -27,6 +27,7 @@ BuildRequires:  pkgconfig(Fcitx5Core)
+@@ -25,6 +25,7 @@ BuildRequires:  pkgconfig(Fcitx5Core)
  BuildRequires:  pkgconfig(Fcitx5Module)
  BuildRequires:  pkgconfig(rime)
  BuildRequires:  /usr/bin/appstream-util
@@ -24,7 +24,7 @@ index d9e9dbd..5d9785e 100644
  Requires:       hicolor-icon-theme
  Requires:       fcitx5-data
  Requires:       brise
-@@ -36,7 +37,7 @@ RIME(中州韻輸入法引擎) is mainly a Traditional Chinese
+@@ -34,7 +35,7 @@ RIME(中州韻輸入法引擎) is mainly a Traditional Chinese
  input method engine.
  
  %prep

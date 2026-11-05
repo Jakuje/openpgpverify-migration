@@ -1,9 +1,9 @@
-From c3ab8f32452db69facc5db864bf002a53dc76044 Mon Sep 17 00:00:00 2001
+From ce2b959822f4e3f1ef386a72bb9cccb92796277b Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:55 +0100
+Date: Thu, 5 Nov 2026 19:20:58 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
-Refresh kdudka.pgp from keyservers/WKD: same certificate(s), with
+Refresh kdudka.pgp from keyservers: same certificate(s), with
 self-signatures our copy was missing.
 The commands are in the comment above its Source line.
 
@@ -13,40 +13,40 @@ release was signed.
 
 Assisted-by: Claude Opus 5.5
 ---
- csdiff.spec |   6 ++-
- kdudka.pgp  | 137 +++++++++++++++++++++++++++++++++++++---------------
+ csdiff.spec |   4 +-
+ kdudka.pgp  | 139 +++++++++++++++++++++++++++++++++++++---------------
  2 files changed, 102 insertions(+), 41 deletions(-)
 
 diff --git a/csdiff.spec b/csdiff.spec
-index 3c9290e..7287972 100644
+index 3c9290e..8c431e2 100644
 --- a/csdiff.spec
 +++ b/csdiff.spec
-@@ -27,8 +27,10 @@ License:    GPL-3.0-or-later
+@@ -27,8 +27,8 @@ License:    GPL-3.0-or-later
  URL:        https://github.com/csutils/csdiff
  Source0:    https://github.com/csutils/csdiff/releases/download/%{name}-%{version}/%{name}-%{version}.tar.xz
  Source1:    https://github.com/csutils/csdiff/releases/download/%{name}-%{version}/%{name}-%{version}.tar.xz.asc
 -# gpg --keyserver pgp.mit.edu --recv-key 992A96E075056E79CD8214F9873DB37572A37B36
 -# gpg --output kdudka.pgp --armor --export kdudka@redhat.com
-+# Refreshed from keyservers/WKD (same keys, newer signatures):
-+#   sq --home=none network search --output - 992A96E075056E79CD8214F9873DB37572A37B36 | sq keyring filter --experimental --cert 992A96E075056E79CD8214F9873DB37572A37B36 --output update.pgp
-+#   sq keyring merge --output kdudka.pgp.new kdudka.pgp update.pgp
-+#   mv kdudka.pgp.new kdudka.pgp
++# Refreshed from keyservers (same keys, newer signatures):
++#   sq --home=none network keyserver search 992A96E075056E79CD8214F9873DB37572A37B36 --output kdudka.pgp --overwrite
  Source2:    kdudka.pgp
  
  # the following upstream commit is needed to work with up2date csdiff/csgrep
 diff --git a/kdudka.pgp b/kdudka.pgp
-index ee89e90..adb591c 100644
+index ee89e90..1eab481 100644
 --- a/kdudka.pgp
 +++ b/kdudka.pgp
-@@ -1,6 +1,6 @@
+@@ -1,6 +1,8 @@
  -----BEGIN PGP PUBLIC KEY BLOCK-----
++Comment: 992A 96E0 7505 6E79 CD82  14F9 873D B375 72A3 7B36
++Comment: Kamil Dudka <kdudka@redhat.com>
  
 -mQINBFgjU54BEACwGTSIP9AVBahlfv/y4snLRvlU4UWWqn8bxjh/GFTVs+l8gqOD
 +xsFNBFgjU54BEACwGTSIP9AVBahlfv/y4snLRvlU4UWWqn8bxjh/GFTVs+l8gqOD
  3dT9AhbnMWfvr94nA6dXVVx8t8akn3ybVLKeii3vOSel8ayAnIXYjtowPh/TlheO
  BSo4EcVo0IFLtiUhC0XHMngITkr6mGphzKOAjS5Kur1j09tawhWMtgeDWw9dZnvc
  mH7f03mwvFv49YYqztaKcGvWlrLjj1O18Un5euGx18L+udG3RfeWMpzinwvcv2n7
-@@ -11,42 +11,101 @@ E61RI+7SJKr4yeboWSfYJbV6RQJyu8X77H9L0F6O+LHoLSoHIRmkcniwEMwl5THV
+@@ -11,42 +13,101 @@ E61RI+7SJKr4yeboWSfYJbV6RQJyu8X77H9L0F6O+LHoLSoHIRmkcniwEMwl5THV
  tUl9Daxgey+qNq1twLLV6vx8f8eyuPCdeP6ZhhUhOH4sAyh0oGZMHxiNhAFeyRdo
  JqTXfgqLX39jwH54eJ3Cbhndwu47glipMO1HQX1XS5Rt7LfEMCTLUGSFW1xljLOI
  8d9fExEyTzJMVIsQJoaAvPEX4cfhcAUFQLijPkt29Wvv3WsAIVFEgoLMNwARAQAB

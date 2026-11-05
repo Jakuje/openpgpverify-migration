@@ -1,6 +1,6 @@
-From 2e48333daafbf2e715c28ce6c3f743a9cddeffe7 Mon Sep 17 00:00:00 2001
+From 3ab7a1119e5cc6424090f14145e83ff51ccd5e38 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:51 +0100
+Date: Thu, 5 Nov 2026 19:21:00 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/libgsasl.spec b/libgsasl.spec
-index ef07b70..c814a7f 100644
+index 22b1f34..a6ffc44 100644
 --- a/libgsasl.spec
 +++ b/libgsasl.spec
 @@ -1,6 +1,6 @@
@@ -26,7 +26,7 @@ index ef07b70..c814a7f 100644
  Summary:        GNU SASL library
  License:        LGPL-2.1-or-later
  URL:            https://www.gnu.org/software/gsasl/
-@@ -14,8 +14,8 @@ Source2:        https://josefsson.org/54265e8c.txt
+@@ -12,8 +12,8 @@ Source2:        https://josefsson.org/54265e8c.txt
  Patch:          0001-GSSAPI-server-Boundary-check-gss_wrap-token-read-OOB.patch
  Patch:          0002-Fix-NULL-pointer-dereference-in-DIGEST-MD5-parser.patch
  BuildRequires:  gcc
@@ -37,7 +37,7 @@ index ef07b70..c814a7f 100644
  BuildRequires:  krb5-devel
  BuildRequires:  libgcrypt-devel
  BuildRequires:  libidn-devel
-@@ -39,7 +39,7 @@ The %{name}-devel package contains libraries and header files for
+@@ -37,7 +37,7 @@ The %{name}-devel package contains libraries and header files for
  developing applications that use %{name}.
  
  %prep
@@ -46,7 +46,7 @@ index ef07b70..c814a7f 100644
  %autosetup -p2
  
  %build
-@@ -65,6 +65,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
+@@ -63,6 +63,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
  %{_libdir}/pkgconfig/libgsasl.pc
  
  %changelog

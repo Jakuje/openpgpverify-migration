@@ -128,7 +128,7 @@ KEY_CMD = re.compile(r'^#\s*(\$\s*)?(gpg2?|gpgv2?|sq|curl|wget|gpg-wks-client)\s
 
 
 def refresh_comment(text, pkg, name, cmds,
-                    header='# Refreshed from keyservers/WKD (same keys, newer signatures):'):
+                    header='# Refreshed from keyservers (same keys, newer signatures):'):
     """Put the keyring refresh commands CMDS in the comment above the Source
     line of keyring file NAME, replacing commands that fetched or exported the
     key before (descriptive comment lines stay). Returns (text, note)."""

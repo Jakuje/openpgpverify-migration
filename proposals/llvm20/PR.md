@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `release-keys.asc` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- refreshed keyring `release-keys.asc` (see below)
 
 ### Testing
 
@@ -30,18 +30,18 @@ Tested on 2026-10-26 at dist-git commit `2f0c10550890` with sequoia-sqv 1.5.0-2.
 
 ### Keyring refresh
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR replaces the keyring with the keyserver copy. No key was added or removed. Please check the fingerprint against upstream:
 
 - `D574BD5D1D0E98895E3BF90044F2485E45D59042`
 - `474E22316ABF4785A88C6E8EA2C794A986419D8A`
 
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+The refresh, as run (the spec comment above the `Source` line has the same command, for the next refresh):
 
 ```
-sq --home=none network search --output - D574BD5D1D0E98895E3BF90044F2485E45D59042 474E22316ABF4785A88C6E8EA2C794A986419D8A \
-  | sq keyring filter --experimental --cert D574BD5D1D0E98895E3BF90044F2485E45D59042 --cert 474E22316ABF4785A88C6E8EA2C794A986419D8A --output update.pgp
-sq keyring merge --output release-keys.asc.new release-keys.asc update.pgp
-mv release-keys.asc.new release-keys.asc
+sq --home=none network keyserver search \
+  D574BD5D1D0E98895E3BF90044F2485E45D59042 \
+  474E22316ABF4785A88C6E8EA2C794A986419D8A \
+  --output release-keys.asc --overwrite
 ```
 
 What changed in the certificate (`sq inspect`):
@@ -49,23 +49,32 @@ What changed in the certificate (`sq inspect`):
 ```diff
 --- dist-git/release-keys.asc
 +++ refreshed/release-keys.asc
-@@ -6,13 +6,13 @@
-         Key flags: transport encryption, data-at-rest encryption
-            UserID: Tobias Hieta <tobias@hieta.se>
-       Fingerprint: 474E22316ABF4785A88C6E8EA2C794A986419D8A
--                   Invalid: The primary key is not live: Expired on 2023-05-05T23:33:51Z
--  Expiration time: 2023-05-05 23:33:51 UTC (creation time + 5years 2days 14h 8m 2s)
+@@ -1,3 +1,12 @@
++      Fingerprint: 474E22316ABF4785A88C6E8EA2C794A986419D8A
 +                   Invalid: The primary key is not live: Expired on 2026-05-06T21:16:35Z
 +  Expiration time: 2026-05-06 21:16:35 UTC (creation time + 8years 3days 17h 50m 46s)
-         Key flags: certification, signing
-            Subkey: 6717A17756AD71AA42B7E6660AE0D586997F0D1F
--                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
--                   because: SHA1 is not considered secure
--                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance: SHA1 is not considered secure
++        Key flags: certification, signing
++           Subkey: 6717A17756AD71AA42B7E6660AE0D586997F0D1F
 +                   Invalid: The certificate is not live: The primary key is not live, because Expired on 2026-05-06T21:16:35Z
 +  Expiration time: 2026-05-06 22:13:22 UTC (creation time + 8years 3days 18h 47m 33s)
 +        Key flags: transport encryption, data-at-rest encryption
-            UserID: Tom Stellard <tstellar@redhat.com>
++           UserID: Tom Stellard <tstellar@redhat.com>
+       Fingerprint: D574BD5D1D0E98895E3BF90044F2485E45D59042
+   Expiration time: 2032-08-02 20:15:33 UTC (creation time + 9years 11months 27days 21h 50m 24s)
+         Key flags: certification, signing
+@@ -5,14 +14,5 @@
+   Expiration time: 2032-08-02 20:15:33 UTC (creation time + 9years 11months 27days 21h 50m 24s)
+         Key flags: transport encryption, data-at-rest encryption
+            UserID: Tobias Hieta <tobias@hieta.se>
+-      Fingerprint: 474E22316ABF4785A88C6E8EA2C794A986419D8A
+-                   Invalid: The primary key is not live: Expired on 2023-05-05T23:33:51Z
+-  Expiration time: 2023-05-05 23:33:51 UTC (creation time + 5years 2days 14h 8m 2s)
+-        Key flags: certification, signing
+-           Subkey: 6717A17756AD71AA42B7E6660AE0D586997F0D1F
+-                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
+-                   because: SHA1 is not considered secure
+-                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance: SHA1 is not considered secure
+-           UserID: Tom Stellard <tstellar@redhat.com>
 -self-signatures PositiveCertification: 2018-05-03, 2021-05-05, 2022-08-05
 -self-signatures SubkeyBinding: 2018-05-03, 2022-08-05
 +self-signatures PositiveCertification: 2018-05-03, 2019-05-02, 2021-05-05, 2022-08-05, 2023-05-17, 2024-05-02, 2025-05-06

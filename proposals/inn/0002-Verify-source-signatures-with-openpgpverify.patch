@@ -1,6 +1,6 @@
-From 62b9b3864e1c0d81bab56fac6746fd25f9ae46d1 Mon Sep 17 00:00:00 2001
+From 5ff062d84310b8ab453fbe8771245db6fc311126 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:58 +0100
+Date: Thu, 5 Nov 2026 19:20:59 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/inn.spec b/inn.spec
-index 07ec69b..b49213e 100644
+index e15b60b..42a11c2 100644
 --- a/inn.spec
 +++ b/inn.spec
 @@ -3,7 +3,7 @@
@@ -27,7 +27,7 @@ index 07ec69b..b49213e 100644
  # most files are under ISC, except:
  # contrib/analyze-traffic.in: public-domain
  # contrib/mm_ckpasswd: GPL-2.0-or-later
-@@ -74,7 +74,7 @@ BuildRequires: sqlite-devel
+@@ -72,7 +72,7 @@ BuildRequires: sqlite-devel
  BuildRequires: systemd-rpm-macros
  BuildRequires: wget
  BuildRequires: zlib-devel
@@ -36,7 +36,7 @@ index 07ec69b..b49213e 100644
  BuildRequires: make
  %if 0%{?fedora} || 0%{?rhel} >= 8
  Recommends: perl(GD)
-@@ -136,7 +136,7 @@ Summary: Libraries provided by INN
+@@ -134,7 +134,7 @@ Summary: Libraries provided by INN
  This package contains dynamic libraries provided by INN project
  
  %prep
@@ -45,7 +45,7 @@ index 07ec69b..b49213e 100644
  %autosetup -p1
  
  # Create a sysusers.d config file
-@@ -580,6 +580,9 @@ fi
+@@ -578,6 +578,9 @@ fi
  %{_sysusersdir}/inn.conf
  
  %changelog

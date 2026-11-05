@@ -274,7 +274,7 @@ def make_commit(pkg, s, refresh_files):
                     f['file'], f['url'], '' if f.get('spec_commands') else
                     ', the URL the spec names for it'))
             else:
-                key.append('Refresh %s from keyservers/WKD: same certificate(s), with '
+                key.append('Refresh %s from keyservers: same certificate(s), with '
                            'self-signatures our copy was missing.%s' % (
                                f['file'], ' The GnuPG keybox becomes a plain OpenPGP '
                                'keyring, which sqv can read.' if f.get('keybox') else ''))
@@ -455,22 +455,20 @@ def render_pr(pkg, s, draft):
     elif files:
         refresh = ('\n### Keyring refresh\n\n%sThe same certificate, looked up '
                    'by fingerprint (%s), has self-signatures our copy is missing (a renewed '
-                   'expiry, modern hashes or the older binding history), so this PR updates '
-                   'the keyring. No key was added or removed. Please check the fingerprint '
+                   'expiry, modern hashes or the older binding history), so this PR replaces '
+                   'the keyring with the keyserver copy. No key was added or removed. Please check the fingerprint '
                    'against upstream:\n\n%s\n\n%sWhat changed in the certificate (`sq '
                    'inspect`):\n\n```diff\n%s```\n'
                    % (('`%%openpgpverify` cannot read the keyring in dist-git: it is a GnuPG '
-                       'keybox, which %s reads but sqv does not, so it is exported to a '
+                       'keybox, which %s reads but sqv does not, so it is replaced with a '
                        'plain OpenPGP keyring. ' % old_tool) if keybox else
                       ('`%%openpgpverify` rejected the signature with the keyring in dist-git '
                        '(%s), while %s ignores that. ' % (reason, old_tool)),
                       '; '.join(sorted({v for f in files for v in f['found_via']})),
                       '\n'.join('- `%s`' % fp for f in files for fp in f['fingerprints']),
                       ''.join('The refresh, as run (the spec comment above the `Source` line '
-                              'has the same commands%s, for the next refresh):\n\n```\n%s\n'
-                              '```\n\n' % (' without the one-time keybox export'
-                                             if f.get('keybox') else '',
-                                             '\n'.join(f['commands']))
+                              'has the same command, for the next refresh):\n\n```\n%s\n'
+                              '```\n\n' % '\n'.join(f['commands'])
                               for f in files if f.get('commands')),
                       ''.join(diffs)))
     if files and kr.get('pr_note'):

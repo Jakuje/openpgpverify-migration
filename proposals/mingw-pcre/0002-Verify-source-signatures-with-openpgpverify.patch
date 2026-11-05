@@ -1,6 +1,6 @@
-From f3f91b28a6f2d407e15eda419ee6cc27dd20ae06 Mon Sep 17 00:00:00 2001
+From f3f3f19f4239bb9e652a9e0d64702aa31b342d7d Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:52 +0100
+Date: Thu, 5 Nov 2026 19:21:00 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/mingw-pcre.spec b/mingw-pcre.spec
-index 240af3e..3d5e0de 100644
+index eb1a221..20e4d89 100644
 --- a/mingw-pcre.spec
 +++ b/mingw-pcre.spec
 @@ -7,7 +7,7 @@
@@ -27,7 +27,7 @@ index 240af3e..3d5e0de 100644
  Summary:	MinGW Windows pcre library
  
  License:	BSD-3-Clause
-@@ -42,7 +42,7 @@ BuildArch:	noarch
+@@ -40,7 +40,7 @@ BuildArch:	noarch
  BuildRequires:  make
  BuildRequires:  git
  BuildRequires:	redhat-rpm-config
@@ -36,7 +36,7 @@ index 240af3e..3d5e0de 100644
  BuildRequires:  autoconf
  BuildRequires:  automake
  BuildRequires:  libtool
-@@ -117,7 +117,7 @@ Static version of the mingw64-pcre library.
+@@ -115,7 +115,7 @@ Static version of the mingw64-pcre library.
  
  
  %prep
@@ -45,7 +45,7 @@ index 240af3e..3d5e0de 100644
  %autosetup -S git_am -n pcre-%{version}
  autoreconf -vif
  
-@@ -211,6 +211,9 @@ find $RPM_BUILD_ROOT -name "*.la" -delete
+@@ -209,6 +209,9 @@ find $RPM_BUILD_ROOT -name "*.la" -delete
  
  
  %changelog

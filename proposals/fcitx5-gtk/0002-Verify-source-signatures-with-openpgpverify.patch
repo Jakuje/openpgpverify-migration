@@ -1,6 +1,6 @@
-From 1b6c5006ebf7e5a2db07cdf2e09eee953491e6ea Mon Sep 17 00:00:00 2001
+From 362080b74bbc2213451b3a2ef16befa55f247798 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:44 +0100
+Date: Thu, 5 Nov 2026 19:20:58 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,11 +13,11 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/fcitx5-gtk.spec b/fcitx5-gtk.spec
-index 30046eb..762f812 100644
+index 8f39e50..8d62e28 100644
 --- a/fcitx5-gtk.spec
 +++ b/fcitx5-gtk.spec
-@@ -13,7 +13,7 @@ Source1:        https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.
- #   mv 0x8E8B898CBF2412F9.new 0x8E8B898CBF2412F9
+@@ -11,7 +11,7 @@ Source1:        https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.
+ #   sq --home=none network keyserver search 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9 --output 0x8E8B898CBF2412F9 --overwrite
  Source2:        https://pgp.key-server.io/download/0x8E8B898CBF2412F9
  
 -BuildRequires:  gnupg2
@@ -25,7 +25,7 @@ index 30046eb..762f812 100644
  BuildRequires:  cmake
  BuildRequires:  extra-cmake-modules
  BuildRequires:  gcc-c++
-@@ -69,7 +69,7 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
+@@ -67,7 +67,7 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
  fcitx5 gtk module for gtk4.
  
  %prep

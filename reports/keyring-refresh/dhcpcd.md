@@ -9,16 +9,13 @@ Phase 1 reason: `sha1-cert`
 ## rsmarples.gpg
 
 - certificates: A785ED2755955D9E93EA59F6597F97EA9AD45549
-- found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
-- size: 3783 → 6470 bytes
+- found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
+- size: 3783 → 6617 bytes
 
 Commands (run in a copy of dist-git):
 
 ```
-sq --home=none network search --output - A785ED2755955D9E93EA59F6597F97EA9AD45549 \
-  | sq keyring filter --experimental --cert A785ED2755955D9E93EA59F6597F97EA9AD45549 --output update.pgp
-sq keyring merge --output rsmarples.gpg.new rsmarples.gpg update.pgp
-mv rsmarples.gpg.new rsmarples.gpg
+sq --home=none network keyserver search A785ED2755955D9E93EA59F6597F97EA9AD45549 --output rsmarples.gpg --overwrite
 ```
 
 ```diff
@@ -26,12 +23,12 @@ mv rsmarples.gpg.new rsmarples.gpg
 +++ refreshed/rsmarples.gpg
 @@ -1,15 +1,10 @@
        Fingerprint: A785ED2755955D9E93EA59F6597F97EA9AD45549
--                   Invalid: No binding signature at time 2026-10-27T10:50:55Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: No binding signature at time 2026-11-05T18:18:08Z: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: certification, signing
             Subkey: E9EE92F5F6D5DBE878B3C2690B0EEE0F057A64CF
 -                   Invalid: Policy rejected non-revocation signature (SubkeyBinding) requiring second pre-image resistance
 -                   because: SHA1 is not considered secure
--                   Invalid: primary key: No binding signature at time 2026-10-27T10:50:55Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
+-                   Invalid: primary key: No binding signature at time 2026-11-05T18:18:08Z, because Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance, because SHA1 is not considered secure
 +        Key flags: transport encryption, data-at-rest encryption
             UserID: Roy Marples (NetBSD) <roy@NetBSD.org>
 -                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance

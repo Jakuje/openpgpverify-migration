@@ -1,9 +1,9 @@
-From 0058a828fef00d87827cb694cae79a4aa6ca8cee Mon Sep 17 00:00:00 2001
+From e565430d0b591a2a1f6fe1c3293fe5dd8dd3d83b Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:45 +0100
+Date: Thu, 5 Nov 2026 19:21:00 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
-Refresh kdudka.pgp from keyservers/WKD: same certificate(s), with
+Refresh kdudka.pgp from keyservers: same certificate(s), with
 self-signatures our copy was missing.
 The commands are in the comment above its Source line.
 
@@ -13,23 +13,25 @@ release was signed.
 
 Assisted-by: Claude Opus 5.5
 ---
- kdudka.pgp   | 137 ++++++++++++++++++++++++++++++++++++---------------
- nss-pem.spec |   6 ++-
+ kdudka.pgp   | 139 ++++++++++++++++++++++++++++++++++++---------------
+ nss-pem.spec |   4 +-
  2 files changed, 102 insertions(+), 41 deletions(-)
 
 diff --git a/kdudka.pgp b/kdudka.pgp
-index ee89e90..adb591c 100644
+index ee89e90..1eab481 100644
 --- a/kdudka.pgp
 +++ b/kdudka.pgp
-@@ -1,6 +1,6 @@
+@@ -1,6 +1,8 @@
  -----BEGIN PGP PUBLIC KEY BLOCK-----
++Comment: 992A 96E0 7505 6E79 CD82  14F9 873D B375 72A3 7B36
++Comment: Kamil Dudka <kdudka@redhat.com>
  
 -mQINBFgjU54BEACwGTSIP9AVBahlfv/y4snLRvlU4UWWqn8bxjh/GFTVs+l8gqOD
 +xsFNBFgjU54BEACwGTSIP9AVBahlfv/y4snLRvlU4UWWqn8bxjh/GFTVs+l8gqOD
  3dT9AhbnMWfvr94nA6dXVVx8t8akn3ybVLKeii3vOSel8ayAnIXYjtowPh/TlheO
  BSo4EcVo0IFLtiUhC0XHMngITkr6mGphzKOAjS5Kur1j09tawhWMtgeDWw9dZnvc
  mH7f03mwvFv49YYqztaKcGvWlrLjj1O18Un5euGx18L+udG3RfeWMpzinwvcv2n7
-@@ -11,42 +11,101 @@ E61RI+7SJKr4yeboWSfYJbV6RQJyu8X77H9L0F6O+LHoLSoHIRmkcniwEMwl5THV
+@@ -11,42 +13,101 @@ E61RI+7SJKr4yeboWSfYJbV6RQJyu8X77H9L0F6O+LHoLSoHIRmkcniwEMwl5THV
  tUl9Daxgey+qNq1twLLV6vx8f8eyuPCdeP6ZhhUhOH4sAyh0oGZMHxiNhAFeyRdo
  JqTXfgqLX39jwH54eJ3Cbhndwu47glipMO1HQX1XS5Rt7LfEMCTLUGSFW1xljLOI
  8d9fExEyTzJMVIsQJoaAvPEX4cfhcAUFQLijPkt29Wvv3WsAIVFEgoLMNwARAQAB
@@ -170,19 +172,17 @@ index ee89e90..adb591c 100644
 +=JK8P
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/nss-pem.spec b/nss-pem.spec
-index 13b2460..729030f 100644
+index 13b2460..52e8b18 100644
 --- a/nss-pem.spec
 +++ b/nss-pem.spec
-@@ -13,8 +13,10 @@ URL:        https://github.com/kdudka/nss-pem
+@@ -13,8 +13,8 @@ URL:        https://github.com/kdudka/nss-pem
  Source0:    https://github.com/kdudka/nss-pem/releases/download/%{name}-%{version}/%{name}-%{version}.tar.xz
  Source1:    https://github.com/kdudka/nss-pem/releases/download/%{name}-%{version}/%{name}-%{version}.tar.xz.asc
  
 -# gpg --keyserver pgp.mit.edu --recv-key 992A96E075056E79CD8214F9873DB37572A37B36
 -# gpg --output kdudka.pgp --armor --export kdudka@redhat.com
-+# Refreshed from keyservers/WKD (same keys, newer signatures):
-+#   sq --home=none network search --output - 992A96E075056E79CD8214F9873DB37572A37B36 | sq keyring filter --experimental --cert 992A96E075056E79CD8214F9873DB37572A37B36 --output update.pgp
-+#   sq keyring merge --output kdudka.pgp.new kdudka.pgp update.pgp
-+#   mv kdudka.pgp.new kdudka.pgp
++# Refreshed from keyservers (same keys, newer signatures):
++#   sq --home=none network keyserver search 992A96E075056E79CD8214F9873DB37572A37B36 --output kdudka.pgp --overwrite
  Source2:    kdudka.pgp
  
  BuildRequires: cmake

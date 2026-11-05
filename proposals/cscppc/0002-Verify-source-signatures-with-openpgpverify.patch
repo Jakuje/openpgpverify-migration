@@ -1,6 +1,6 @@
-From de109a55b229f8b0735f62614fd0fadeac0e4806 Mon Sep 17 00:00:00 2001
+From 5260a6636c84b3743fc6cbfd43434311e77fd66f Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:43 +0100
+Date: Thu, 5 Nov 2026 19:20:58 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/cscppc.spec b/cscppc.spec
-index acdf3c2..8981d95 100644
+index 7a711d9..167d0e9 100644
 --- a/cscppc.spec
 +++ b/cscppc.spec
 @@ -3,7 +3,7 @@
@@ -27,7 +27,7 @@ index acdf3c2..8981d95 100644
  Summary:    A compiler wrapper that runs Cppcheck in background
  
  License:    GPL-3.0-or-later
-@@ -27,6 +27,7 @@ BuildRequires: gnupg2
+@@ -25,6 +25,7 @@ BuildRequires: gnupg2
  # against the old version of glibc if it was built against a newer one.
  # Therefore, we link glibc statically.
  BuildRequires: glibc-static
@@ -35,7 +35,7 @@ index acdf3c2..8981d95 100644
  
  # The test-suite runs automatically trough valgrind if valgrind is available
  # on the system.  By not installing valgrind into mock's chroot, we disable
-@@ -79,7 +80,7 @@ This package contains the csmatch compiler wrapper that runs the Smatch analyzer
+@@ -77,7 +78,7 @@ This package contains the csmatch compiler wrapper that runs the Smatch analyzer
  in background fully transparently.
  
  %prep
@@ -44,7 +44,7 @@ index acdf3c2..8981d95 100644
  %autosetup
  
  %build
-@@ -141,6 +142,9 @@ done
+@@ -139,6 +140,9 @@ done
  %{_mandir}/man1/csmatch.1*
  
  %changelog

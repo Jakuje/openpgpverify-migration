@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- refreshed keyring `gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg` (see below)
 - Release bumped (`29%{?dist}` → `30%{?dist}`) with a changelog entry
 
 ### Testing
@@ -31,17 +31,14 @@ Tested on 2026-10-09 at dist-git commit `c59b262763d1` with sequoia-sqv 1.5.0-2.
 
 ### Keyring refresh
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (keyring lacks older self-signatures), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (keyring lacks older self-signatures), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR replaces the keyring with the keyserver copy. No key was added or removed. Please check the fingerprint against upstream:
 
 - `F576AAAC1B0FF849792D8CB129A794FD2272BC86`
 
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+The refresh, as run (the spec comment above the `Source` line has the same command, for the next refresh):
 
 ```
-sq --home=none network search --output - F576AAAC1B0FF849792D8CB129A794FD2272BC86 \
-  | sq keyring filter --experimental --cert F576AAAC1B0FF849792D8CB129A794FD2272BC86 --output update.pgp
-sq keyring merge gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg update.pgp | sq packet dearmor --output gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg.new
-mv gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg.new gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg
+sq --home=none network keyserver search F576AAAC1B0FF849792D8CB129A794FD2272BC86 --output gpgkey-F576AAAC1B0FF849792D8CB129A794FD2272BC86.gpg --overwrite
 ```
 
 What changed in the certificate (`sq inspect`):
@@ -53,7 +50,7 @@ What changed in the certificate (`sq inspect`):
          Key flags: transport encryption, data-at-rest encryption
             UserID: Assaf Gordon <agordon@wi.mit.edu>
                     Revoked:
--                   Invalid: No binding signature at time 2026-10-27T11:06:28Z
+-                   Invalid: No binding signature at time 2026-11-05T18:20:14Z
             UserID: Assaf Gordon <assafgordon@gmail.com>
  self-signatures CertificationRevocation: 2015-08-13
 -self-signatures PositiveCertification: 2020-02-24

@@ -1,6 +1,6 @@
-From bd0f22a1f6a3c4519d34fff9cd3a862f05cf34b9 Mon Sep 17 00:00:00 2001
+From f87079090f7c1b5fdb6fbb762820401e5138bf47 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:43 +0100
+Date: Thu, 5 Nov 2026 19:20:58 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/b43-fwcutter.spec b/b43-fwcutter.spec
-index 1ac8572..8797b7b 100644
+index 7e7a390..13dc23f 100644
 --- a/b43-fwcutter.spec
 +++ b/b43-fwcutter.spec
-@@ -13,7 +13,7 @@ Source1:        https://bues.ch/b43/fwcutter/%{name}-%{version}.tar.xz.asc
+@@ -11,7 +11,7 @@ Source1:        https://bues.ch/b43/fwcutter/%{name}-%{version}.tar.xz.asc
  Source2:        757FAB7CED1814AE15B4836E5FB027474203454C.gpg
  Source100:      README.too
  BuildRequires:  gcc
@@ -25,7 +25,7 @@ index 1ac8572..8797b7b 100644
  BuildRequires:  make
  
  %description
-@@ -24,7 +24,7 @@ See the README.too file shipped in the package's documentation for
+@@ -22,7 +22,7 @@ See the README.too file shipped in the package's documentation for
  instructions on using this tool.
  
  %prep

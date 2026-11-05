@@ -1,9 +1,9 @@
-From 7e8ac587a47204645dab185c071d6921a0cd2d60 Mon Sep 17 00:00:00 2001
+From 8718a051d2b03c82d2ba5305daa4d5f0a4619f68 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:59 +0100
+Date: Thu, 5 Nov 2026 19:21:01 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
-Refresh gpgkey-5AE420CC0209989E.asc from keyservers/WKD: same
+Refresh gpgkey-5AE420CC0209989E.asc from keyservers: same
 certificate(s), with self-signatures our copy was missing.
 The commands are in the comment above its Source line.
 
@@ -13,23 +13,29 @@ release was signed.
 
 Assisted-by: Claude Opus 5.5
 ---
- gpgkey-5AE420CC0209989E.asc | 556 +++++++++++++++++++++++++++++++-----
- znc.spec                    |   4 +
- 2 files changed, 484 insertions(+), 76 deletions(-)
+ gpgkey-5AE420CC0209989E.asc | 562 +++++++++++++++++++++++++++++++-----
+ znc.spec                    |   2 +
+ 2 files changed, 488 insertions(+), 76 deletions(-)
 
 diff --git a/gpgkey-5AE420CC0209989E.asc b/gpgkey-5AE420CC0209989E.asc
-index bc8a0f5..bc1b4a4 100644
+index bc8a0f5..4639e33 100644
 --- a/gpgkey-5AE420CC0209989E.asc
 +++ b/gpgkey-5AE420CC0209989E.asc
-@@ -1,6 +1,6 @@
+@@ -1,6 +1,12 @@
  -----BEGIN PGP PUBLIC KEY BLOCK-----
++Comment: D582 3CAC B477 191C AC00  7555 5AE4 20CC 0209 989E
++Comment: Alexey Sokolov (ZNC) <alexey+znc@asokolov.org>
++Comment: Alexey Sokolov <alexey+gentoo@asokolov.org>
++Comment: Alexey Sokolov <alexey@asokolov.org>
++Comment: Alexey Sokolov <ktonibud@gmail.com>
++Comment: Alexey Sokolov <sokolov@google.com>
  
 -mQINBE66oWABEADT/ix/xviuWpwAeySocHnYozbjO4L1lKzaj4OMfAZfP+KvwX8H
 +xsFNBE66oWABEADT/ix/xviuWpwAeySocHnYozbjO4L1lKzaj4OMfAZfP+KvwX8H
  jy0Ymf4KwxVkub0R2znLlmYiSjHaelMNwK9EDaY48uodV7EMHBostP6u+tjUJQsZ
  tQI3ErUYOv0Qlx3xfZ8UvlCT6AWdvlZQha8oAs3EzaUPrBD5dsnUFE6wq0UsBBoA
  5xCh/2eGEqKjtSNTf1ZtSCF1StfRPPX8bqkEMpBsTTak3G6+3yt9GYRAqDwSTkB2
-@@ -11,79 +11,483 @@ nns4oyQqfjRGyCC9kw7hmUDQ0LBMPaoxAf5IOuXQlLc7RHmdcwvML6nBzIV2ueJG
+@@ -11,79 +17,483 @@ nns4oyQqfjRGyCC9kw7hmUDQ0LBMPaoxAf5IOuXQlLc7RHmdcwvML6nBzIV2ueJG
  AMWnNh4G8Ms4N6buZHHAipZ8EzL9itbNVjvKdh2K02wq6M8/QvRKlp1kcmpJsDAC
  501tUXMyPA1K9FppWRrXjmAzYvSSXXRcXT8U6RXxVA48JI6UaO4AL2iV1MjmsXo6
  SdaPCFg4oiziTGgCdNcdKqSJU7N8oYDwHRZ7wSOeVI1b7ZB6cXbrQAHBUQARAQAB
@@ -589,17 +595,15 @@ index bc8a0f5..bc1b4a4 100644
 +=UIxp
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/znc.spec b/znc.spec
-index 1c03452..8888f77 100644
+index 1c03452..9d03c90 100644
 --- a/znc.spec
 +++ b/znc.spec
-@@ -22,6 +22,10 @@ URL:            https://znc.in
+@@ -22,6 +22,8 @@ URL:            https://znc.in
  Source0:        %{url}/releases/archive/%{name}-%{version}.tar.gz
  Source1:        %{url}/releases/archive/%{name}-%{version}.tar.gz.sig
  
-+# Refreshed from keyservers/WKD (same keys, newer signatures):
-+#   sq --home=none network search --output - D5823CACB477191CAC0075555AE420CC0209989E | sq keyring filter --experimental --cert D5823CACB477191CAC0075555AE420CC0209989E --output update.pgp
-+#   sq keyring merge --output gpgkey-5AE420CC0209989E.asc.new gpgkey-5AE420CC0209989E.asc update.pgp
-+#   mv gpgkey-5AE420CC0209989E.asc.new gpgkey-5AE420CC0209989E.asc
++# Refreshed from keyservers (same keys, newer signatures):
++#   sq --home=none network keyserver search D5823CACB477191CAC0075555AE420CC0209989E --output gpgkey-5AE420CC0209989E.asc --overwrite
  Source2:        gpgkey-5AE420CC0209989E.asc
  # Use system-wide crypto policy
  # https://fedoraproject.org/wiki/Packaging:CryptoPolicies

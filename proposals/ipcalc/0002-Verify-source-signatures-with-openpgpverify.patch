@@ -1,6 +1,6 @@
-From d0adee5ba1aa74bdbc1ba5d357d72ee8efd98c2d Mon Sep 17 00:00:00 2001
+From aa5ea72c8495cbb881e90659c87e8ae02ad0f7f2 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 30 Oct 2026 13:47:05 +0100
+Date: Thu, 5 Nov 2026 19:20:59 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/ipcalc.spec b/ipcalc.spec
-index ffa4f7e..aeb9b6c 100644
+index 13cfb94..71d3dbe 100644
 --- a/ipcalc.spec
 +++ b/ipcalc.spec
-@@ -16,6 +16,7 @@ BuildRequires: gcc, libmaxminddb-devel, meson, rubygem-ronn-ng
+@@ -14,6 +14,7 @@ BuildRequires: gcc, libmaxminddb-devel, meson, rubygem-ronn-ng
  BuildRequires: gnupg2
  # for the test suite (JsonEscapeHostname)
  BuildRequires: jq
@@ -24,7 +24,7 @@ index ffa4f7e..aeb9b6c 100644
  Recommends:    libmaxminddb, geolite2-city, geolite2-country, geolite2-asn
  
  # Explicitly conflict with older initscript packages that ship ipcalc
-@@ -32,7 +33,7 @@ parsing in scripts, generate random private addresses, resolve an IP address,
+@@ -30,7 +31,7 @@ parsing in scripts, generate random private addresses, resolve an IP address,
  or check the validity of an address.
  
  %prep

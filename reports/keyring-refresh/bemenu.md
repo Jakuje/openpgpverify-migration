@@ -10,15 +10,12 @@ Phase 1 reason: `expired`
 
 - certificates: 16B6B7CACAF339DECE9F154729317348D687B86B
 - found via: hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
-- size: 2850 → 4077 bytes
+- size: 2850 → 4162 bytes
 
 Commands (run in a copy of dist-git):
 
 ```
-sq --home=none network search --output - 16B6B7CACAF339DECE9F154729317348D687B86B \
-  | sq keyring filter --experimental --cert 16B6B7CACAF339DECE9F154729317348D687B86B --output update.pgp
-sq keyring merge --output bemenu-pgp.txt.new bemenu-pgp.txt update.pgp
-mv bemenu-pgp.txt.new bemenu-pgp.txt
+sq --home=none network keyserver search 16B6B7CACAF339DECE9F154729317348D687B86B --output bemenu-pgp.txt --overwrite
 ```
 
 ```diff

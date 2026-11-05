@@ -9,16 +9,13 @@ Phase 1 reason: `expired`
 ## dickey@invisible-island.net-rsa3072.asc
 
 - certificates: 19882D92DDA4C400C22C0D56CC2AF4472167BE03
-- found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
-- size: 2505 → 12978 bytes
+- found via: hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
+- size: 2505 → 13162 bytes
 
 Commands (run in a copy of dist-git):
 
 ```
-sq --home=none network search --output - 19882D92DDA4C400C22C0D56CC2AF4472167BE03 \
-  | sq keyring filter --experimental --cert 19882D92DDA4C400C22C0D56CC2AF4472167BE03 --output update.pgp
-sq keyring merge --output dickey@invisible-island.net-rsa3072.asc.new dickey@invisible-island.net-rsa3072.asc update.pgp
-mv dickey@invisible-island.net-rsa3072.asc.new dickey@invisible-island.net-rsa3072.asc
+sq --home=none network keyserver search 19882D92DDA4C400C22C0D56CC2AF4472167BE03 --output dickey@invisible-island.net-rsa3072.asc --overwrite
 ```
 
 ```diff

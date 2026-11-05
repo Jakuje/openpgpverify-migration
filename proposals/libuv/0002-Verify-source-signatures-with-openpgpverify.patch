@@ -1,6 +1,6 @@
-From 6bc940fb2e03df80e1e7947064ad7ebaa0730d01 Mon Sep 17 00:00:00 2001
+From ab774f07474b5a2a1095df11440f52e806da19ca Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:41 +0100
+Date: Thu, 5 Nov 2026 19:21:00 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/libuv.spec b/libuv.spec
-index 7b2c360..5175e1b 100644
+index cf2e827..9382523 100644
 --- a/libuv.spec
 +++ b/libuv.spec
-@@ -36,6 +36,7 @@ BuildRequires:  gnupg2
+@@ -34,6 +34,7 @@ BuildRequires:  gnupg2
  # Documentation
  BuildRequires:  make
  BuildRequires:  python3-sphinx
@@ -24,7 +24,7 @@ index 7b2c360..5175e1b 100644
  
  
  %description
-@@ -61,7 +62,7 @@ Static library (.a) version of libuv.
+@@ -59,7 +60,7 @@ Static library (.a) version of libuv.
  
  
  %prep

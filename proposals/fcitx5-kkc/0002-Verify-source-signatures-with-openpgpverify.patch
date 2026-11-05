@@ -1,6 +1,6 @@
-From 5bbc7b6052b93510eaba8404f224906c354c45aa Mon Sep 17 00:00:00 2001
+From 61707ce7db5223a11a2d428dc028f110e937db97 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:44 +0100
+Date: Thu, 5 Nov 2026 19:20:59 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,11 +13,11 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/fcitx5-kkc.spec b/fcitx5-kkc.spec
-index 4da5b5b..3ed3e0b 100644
+index 2f996c5..d8f108d 100644
 --- a/fcitx5-kkc.spec
 +++ b/fcitx5-kkc.spec
-@@ -15,7 +15,7 @@ Source1:        https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.
- #   mv 0x8E8B898CBF2412F9.new 0x8E8B898CBF2412F9
+@@ -13,7 +13,7 @@ Source1:        https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.
+ #   sq --home=none network keyserver search 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9 --output 0x8E8B898CBF2412F9 --overwrite
  Source2:        https://pgp.key-server.io/download/0x8E8B898CBF2412F9
  
 -BuildRequires:  gnupg2
@@ -25,7 +25,7 @@ index 4da5b5b..3ed3e0b 100644
  BuildRequires:  cmake
  BuildRequires:  gcc-c++
  BuildRequires:  ninja-build
-@@ -40,7 +40,7 @@ Requires:       libkkc-data
+@@ -38,7 +38,7 @@ Requires:       libkkc-data
  This provides libkkc input method support for fcitx5. Released under GPL3+.
  
  %prep

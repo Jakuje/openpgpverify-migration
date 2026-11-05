@@ -1,6 +1,6 @@
-From 99e3ca47af2290764317dca268099c52faa8fbb5 Mon Sep 17 00:00:00 2001
+From 40bd9bce9da70ad946a168efe7df047fc2cfebb4 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:43 +0100
+Date: Thu, 5 Nov 2026 19:20:58 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/cswrap.spec b/cswrap.spec
-index 51471ed..0a364ea 100644
+index 06857f8..db8f6df 100644
 --- a/cswrap.spec
 +++ b/cswrap.spec
 @@ -5,7 +5,7 @@
@@ -27,7 +27,7 @@ index 51471ed..0a364ea 100644
  Summary:    Generic compiler wrapper
  
  License:    GPL-3.0-or-later
-@@ -29,6 +29,7 @@ BuildRequires: gnupg2
+@@ -27,6 +27,7 @@ BuildRequires: gnupg2
  # against the old version of glibc if it was built against a newer one.
  # Therefore, we link glibc statically.
  BuildRequires: glibc-static
@@ -35,7 +35,7 @@ index 51471ed..0a364ea 100644
  
  # The test-suite runs automatically trough valgrind if valgrind is available
  # on the system.  By not installing valgrind into mock's chroot, we disable
-@@ -56,7 +57,7 @@ fully automatically.
+@@ -54,7 +55,7 @@ fully automatically.
  %endif
  
  %prep
@@ -44,7 +44,7 @@ index 51471ed..0a364ea 100644
  %autosetup
  
  %build
-@@ -98,6 +99,9 @@ done
+@@ -96,6 +97,9 @@ done
  %endif
  
  %changelog

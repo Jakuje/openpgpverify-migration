@@ -1,6 +1,6 @@
-From d4556265df6f8d0c1a8c69c9ecbf8f0ffa4fcf24 Mon Sep 17 00:00:00 2001
+From ad4ad96794f975006800f0698aeec337de7ab939 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:54 +0100
+Date: Thu, 5 Nov 2026 19:21:01 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/xcb-imdkit.spec b/xcb-imdkit.spec
-index 7047451..ddc16f1 100644
+index 4017c7e..1ef1db3 100644
 --- a/xcb-imdkit.spec
 +++ b/xcb-imdkit.spec
-@@ -21,6 +21,7 @@ BuildRequires:  gcc-c++
+@@ -19,6 +19,7 @@ BuildRequires:  gcc-c++
  BuildRequires:  pkgconfig(xcb)
  BuildRequires:  pkgconfig(xcb-keysyms)
  BuildRequires:  pkgconfig(xcb-util)
@@ -24,7 +24,7 @@ index 7047451..ddc16f1 100644
  
  %description
  xcb-imdkit is an implementation of xim protocol in xcb, 
-@@ -36,7 +37,7 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
+@@ -34,7 +35,7 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
  Devel files for xcb-imdkit
  
  %prep

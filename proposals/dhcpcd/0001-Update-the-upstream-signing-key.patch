@@ -1,9 +1,9 @@
-From d8ceac632064289d7d0e220ab1b0e0d5fd33ad64 Mon Sep 17 00:00:00 2001
+From 9a5d892d9ad4b7770f261ea5d0b709f328774cc0 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:41 +0100
+Date: Thu, 5 Nov 2026 19:20:58 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
-Refresh rsmarples.gpg from keyservers/WKD: same certificate(s), with
+Refresh rsmarples.gpg from keyservers: same certificate(s), with
 self-signatures our copy was missing.
 The commands are in the comment above its Source line.
 
@@ -13,31 +13,32 @@ release was signed.
 
 Assisted-by: Claude Opus 5.5
 ---
- dhcpcd.spec   |   4 ++
- rsmarples.gpg | 142 ++++++++++++++++++++++++++++++++------------------
- 2 files changed, 96 insertions(+), 50 deletions(-)
+ dhcpcd.spec   |   2 +
+ rsmarples.gpg | 145 +++++++++++++++++++++++++++++++++-----------------
+ 2 files changed, 97 insertions(+), 50 deletions(-)
 
 diff --git a/dhcpcd.spec b/dhcpcd.spec
-index 5b803d4..6c52308 100644
+index 5b803d4..7ef9c33 100644
 --- a/dhcpcd.spec
 +++ b/dhcpcd.spec
-@@ -10,6 +10,10 @@ URL: http://roy.marples.name/projects/%{name}/
+@@ -10,6 +10,8 @@ URL: http://roy.marples.name/projects/%{name}/
  VCS: git:%{forgeurl0}
  Source0: %{forgeurl0}/releases/download/v%{version}/%{name}-%{version}.tar.xz
  Source1: %{forgeurl0}/releases/download/v%{version}/%{name}-%{version}.tar.xz.asc
-+# Refreshed from keyservers/WKD (same keys, newer signatures):
-+#   sq --home=none network search --output - A785ED2755955D9E93EA59F6597F97EA9AD45549 | sq keyring filter --experimental --cert A785ED2755955D9E93EA59F6597F97EA9AD45549 --output update.pgp
-+#   sq keyring merge --output rsmarples.gpg.new rsmarples.gpg update.pgp
-+#   mv rsmarples.gpg.new rsmarples.gpg
++# Refreshed from keyservers (same keys, newer signatures):
++#   sq --home=none network keyserver search A785ED2755955D9E93EA59F6597F97EA9AD45549 --output rsmarples.gpg --overwrite
  Source2: https://github.com/rsmarples.gpg
  Source3: %{name}.service
  Source4: %{name}@.service
 diff --git a/rsmarples.gpg b/rsmarples.gpg
-index ea32ae7..f868929 100644
+index ea32ae7..68b71f9 100644
 --- a/rsmarples.gpg
 +++ b/rsmarples.gpg
-@@ -1,61 +1,103 @@
+@@ -1,61 +1,106 @@
  -----BEGIN PGP PUBLIC KEY BLOCK-----
++Comment: A785 ED27 5595 5D9E 93EA  59F6 597F 97EA 9AD4 5549
++Comment: Roy Marples (NetBSD) <roy@NetBSD.org>
++Comment: Roy Marples <roy@marples.name>
  
 -mQENBEkrCoIBCACyCfZ4qEaFPi33OT1EYDziIOb5KnvW3E9zP7O8oHGmhzi+v11X
 +xsBNBEkrCoIBCACyCfZ4qEaFPi33OT1EYDziIOb5KnvW3E9zP7O8oHGmhzi+v11X

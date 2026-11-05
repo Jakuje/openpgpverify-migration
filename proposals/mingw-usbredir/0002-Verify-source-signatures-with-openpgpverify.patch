@@ -1,6 +1,6 @@
-From 1b3dc0d34286c6833804f60ccc7b134ed850f35b Mon Sep 17 00:00:00 2001
+From 28143dc63f2def71fca51b11eab95d205e3a38f2 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:45 +0100
+Date: Thu, 5 Nov 2026 19:21:00 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/mingw-usbredir.spec b/mingw-usbredir.spec
-index fb6b228..bbd74ef 100644
+index e4228c9..27632f1 100644
 --- a/mingw-usbredir.spec
 +++ b/mingw-usbredir.spec
 @@ -2,7 +2,7 @@
@@ -27,7 +27,7 @@ index fb6b228..bbd74ef 100644
  Summary:        MinGW USB network redirection protocol libraries
  
  # Automatically converted from old format: LGPLv2+ - review is highly recommended.
-@@ -29,6 +29,7 @@ BuildRequires:  mingw64-glib2
+@@ -27,6 +27,7 @@ BuildRequires:  mingw64-glib2
  BuildRequires:  git-core
  BuildRequires:  meson
  BuildRequires:  gnupg2
@@ -35,7 +35,7 @@ index fb6b228..bbd74ef 100644
  
  %description
  The usbredir libraries allow USB devices to be used on remote and/or virtual
-@@ -80,7 +81,7 @@ applications that use usbredir with MinGW.
+@@ -78,7 +79,7 @@ applications that use usbredir with MinGW.
  
  
  %prep
@@ -44,7 +44,7 @@ index fb6b228..bbd74ef 100644
  %autosetup -S git_am -p1 -n usbredir-%{version}
  
  %build
-@@ -139,6 +140,9 @@ find $RPM_BUILD_ROOT -name "*.la" -delete
+@@ -137,6 +138,9 @@ find $RPM_BUILD_ROOT -name "*.la" -delete
  
  
  %changelog

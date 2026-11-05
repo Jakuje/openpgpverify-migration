@@ -1,6 +1,6 @@
-From 30644e0a4dd82b4fdc947b72863a9638a84f670d Mon Sep 17 00:00:00 2001
+From e5eb63dfbf5f2de47abcc69efce9d5259f4778b9 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:44 +0100
+Date: Thu, 5 Nov 2026 19:20:59 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,11 +13,11 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/fcitx5-sayura.spec b/fcitx5-sayura.spec
-index 3f5414b..ba63479 100644
+index a0d962c..d8cc8eb 100644
 --- a/fcitx5-sayura.spec
 +++ b/fcitx5-sayura.spec
-@@ -15,7 +15,7 @@ Source1:    https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.tar.
- #   mv 0x8E8B898CBF2412F9.new 0x8E8B898CBF2412F9
+@@ -13,7 +13,7 @@ Source1:    https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.tar.
+ #   sq --home=none network keyserver search 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9 --output 0x8E8B898CBF2412F9 --overwrite
  Source2:    https://pgp.key-server.io/download/0x8E8B898CBF2412F9
  
 -BuildRequires:  gnupg2
@@ -25,7 +25,7 @@ index 3f5414b..ba63479 100644
  BuildRequires:  cmake
  BuildRequires:  extra-cmake-modules
  BuildRequires:  gcc-c++
-@@ -32,7 +32,7 @@ for Fcitx input method framework ported
+@@ -30,7 +30,7 @@ for Fcitx input method framework ported
  from IBus-Sayura.
  
  %prep

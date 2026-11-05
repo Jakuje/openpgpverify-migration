@@ -1,6 +1,6 @@
-From f1452dcba6f2577419eb0be2fd5935f7b9608b17 Mon Sep 17 00:00:00 2001
+From 9c92837e35be56ebe2393ac32f8207e0b82a134f Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:44 +0100
+Date: Thu, 5 Nov 2026 19:20:59 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,11 +13,11 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/fcitx5-skk.spec b/fcitx5-skk.spec
-index 0e656b8..98ee9b2 100644
+index b9d4bb2..98a867d 100644
 --- a/fcitx5-skk.spec
 +++ b/fcitx5-skk.spec
-@@ -15,7 +15,7 @@ Source1:    https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.tar.
- #   mv 0x8E8B898CBF2412F9.new 0x8E8B898CBF2412F9
+@@ -13,7 +13,7 @@ Source1:    https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.tar.
+ #   sq --home=none network keyserver search 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9 --output 0x8E8B898CBF2412F9 --overwrite
  Source2:    https://pgp.key-server.io/download/0x8E8B898CBF2412F9
  
 -BuildRequires:  gnupg2
@@ -25,7 +25,7 @@ index 0e656b8..98ee9b2 100644
  BuildRequires:  gcc-c++
  BuildRequires:  cmake
  BuildRequires:  ninja-build
-@@ -39,7 +39,7 @@ Fcitx5-skk is an SKK (Simple Kana Kanji) engine for Fcitx.  It provides
+@@ -37,7 +37,7 @@ Fcitx5-skk is an SKK (Simple Kana Kanji) engine for Fcitx.  It provides
  Japanese input method using libskk.
  
  %prep

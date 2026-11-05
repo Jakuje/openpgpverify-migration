@@ -1,6 +1,6 @@
-From 17990ead0a990680a5f727cc3c36b6dc20478020 Mon Sep 17 00:00:00 2001
+From da57262a80ea0820950b34b3f9ee649369602802 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:49 +0100
+Date: Thu, 5 Nov 2026 19:20:58 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/babeltrace.spec b/babeltrace.spec
-index 44e9787..cd1bc4c 100644
+index 2463383..c501f0a 100644
 --- a/babeltrace.spec
 +++ b/babeltrace.spec
 @@ -1,6 +1,6 @@
@@ -26,7 +26,7 @@ index 44e9787..cd1bc4c 100644
  Summary:        Trace Viewer and Converter, mainly for the Common Trace Format
  License:        MIT AND GPL-3.0-or-later WITH Bison-exception-2.2 AND LGPL-2.1-only AND BSD-4-Clause-UC
  URL:            https://www.efficios.com/babeltrace
-@@ -27,6 +27,7 @@ BuildRequires:  elfutils-devel >= 0.154
+@@ -25,6 +25,7 @@ BuildRequires:  elfutils-devel >= 0.154
  BuildRequires:  autoconf automake libtool
  BuildRequires:  gnupg2
  BuildRequires:  make
@@ -34,7 +34,7 @@ index 44e9787..cd1bc4c 100644
  
  Requires:       lib%{name}%{?_isa} = %{version}-%{release}
  
-@@ -69,7 +70,7 @@ to/from another trace format.
+@@ -67,7 +68,7 @@ to/from another trace format.
  
  
  %prep
@@ -43,7 +43,7 @@ index 44e9787..cd1bc4c 100644
  %autosetup -p1
  
  %build
-@@ -122,6 +123,9 @@ rm -f %{buildroot}/%{_pkgdocdir}/std-ext-lib.txt
+@@ -120,6 +121,9 @@ rm -f %{buildroot}/%{_pkgdocdir}/std-ext-lib.txt
  
  
  %changelog

@@ -18,13 +18,11 @@ for openpgpverify to reject what gpgverify accepted. For each keyring used
 by a failing call this:
 
   1. lists the certificate fingerprints already in the keyring,
-  2. looks up exactly those fingerprints (`sq network search`: keyservers and
-     WKD) and keeps only certificates with the same fingerprints,
-  3. merges the result into the existing certificates (a merge can only add
-     self-signatures, subkeys and revocations made by the same primary key),
-  4. checks that the set of certificates did not change, keeps the original
-     armored/binary format, and re-runs sqv on the host,
-  5. writes work/PKG/refresh/FILE and work/PKG/refresh/REVIEW.md.
+  2. replaces the keyring with what the keyservers have for exactly those
+     fingerprints (`sq network keyserver search`, armored output),
+  3. checks that the set of certificates did not change, and re-runs sqv on
+     the host,
+  4. writes work/PKG/refresh/FILE and work/PKG/refresh/REVIEW.md.
 
 Nothing is used until a human approves it. Approved refreshes are applied to
 the new variant by phase1.py and go into the PR.
@@ -34,6 +32,7 @@ import getpass
 import hashlib
 import os
 import re
+import shlex
 import shutil
 import signal
 import subprocess
@@ -123,28 +122,19 @@ def is_keybox(path):
     return len(head) == 12 and head[8:12] == b'KBXf'
 
 
-def recipe(name, fprs, keybox, armored):
+def keybox_export(name, base):
+    """Plain export of GnuPG keybox NAME, only to read its fingerprints: gpgv
+    reads keyboxes, sqv does not. The new file itself comes from the keyservers."""
+    return ('gpg --homedir "$(mktemp -d)" --batch --no-default-keyring '
+            '--keyring ./%s --export --output %s' % (name, base))
+
+
+def recipe(name, fprs):
     """The shell commands that refresh keyring file NAME in the current
     directory. refresh_file() runs exactly these, and the PR and the spec
     comment quote them, so anyone can repeat the refresh."""
-    cmds = []
-    base = name
-    if keybox:
-        # gpgv reads GnuPG keyboxes, sqv does not: export to a plain keyring first.
-        base = name + '.pgp'
-        cmds.append('gpg --homedir "$(mktemp -d)" --batch --no-default-keyring '
-                    '--keyring ./%s --export --output %s' % (name, base))
-    certs = ' '.join('--cert %s' % f for f in fprs)
-    cmds.append('sq --home=none network search --output - %s \\\n'
-                '  | sq keyring filter --experimental %s --output update.pgp'
-                % (' '.join(fprs), certs))
-    if armored:
-        cmds.append('sq keyring merge --output %s.new %s update.pgp' % (name, base))
-    else:
-        cmds.append('sq keyring merge %s update.pgp | sq packet dearmor --output %s.new'
-                    % (base, name))
-    cmds.append('mv %s.new %s' % (name, name))
-    return cmds
+    keys = fprs[0] if len(fprs) == 1 else '\\\n  ' + ' \\\n  '.join(fprs) + ' \\\n '
+    return ['sq --home=none network keyserver search %s --output %s --overwrite' % (keys, name)]
 
 
 def refresh_file(src, dst, tmp):
@@ -159,7 +149,7 @@ def refresh_file(src, dst, tmp):
                 keybox=keybox)
     base = src
     if keybox:
-        export = recipe(name, [], True, False)[0]
+        export = keybox_export(name, name + '.pgp')
         if sh(['bash', '-o', 'pipefail', '-c', export], cwd=run).returncode:
             info['error'] = 'keybox export failed'
             return info
@@ -170,27 +160,19 @@ def refresh_file(src, dst, tmp):
     if not fprs:
         info['error'] = 'no certificates found in keyring (malformed?)'
         return info
-    armored = open(src, 'rb').read(64).lstrip().startswith(b'-----BEGIN PGP')
-    cmds = recipe(name, fprs, keybox, armored)
+    cmds = recipe(name, fprs)
     info['commands'] = cmds
-    # For the spec comment: the next refresh starts from the plain keyring.
-    info['spec_commands'] = recipe(name, fprs, False, armored)
-    for c in cmds[1 if keybox else 0:]:
+    info['spec_commands'] = cmds
+    for c in cmds:
         p = sh(['bash', '-o', 'pipefail', '-c', c], cwd=run, timeout=600)
         info['found_via'] += sorted(set(re.findall(r'found via: (.*)', p.stdout + p.stderr)))
         if p.returncode:
-            if 'network search' in c and not keybox:
-                info['error'] = 'no updates found on keyservers/WKD'
-                return info
-            if 'network search' in c:
-                # Nothing newer, but the exported keyring alone may be enough.
-                open(os.path.join(run, 'update.pgp'), 'wb').close()
-                continue
-            info['error'] = 'refresh command failed: %s: %s' % (c, (p.stderr or '').strip()[-300:])
+            info['error'] = 'no updates found on keyservers'
             return info
     out = os.path.join(run, name)
+    # sq succeeds when only some of the keys are found.
     if sorted(fingerprints(out)) != sorted(fprs):
-        info['error'] = 'merge changed the set of certificates'
+        info['error'] = 'keyservers returned a different set of certificates'
         return info
     shutil.copy(out, dst)
     info['size_new'] = os.path.getsize(dst)
@@ -257,7 +239,7 @@ def upstream_file(src, url, dst, tmp, replace=False, superset=False):
         shutil.rmtree(run, ignore_errors=True)
         os.makedirs(run)
         shutil.copy(src, os.path.join(run, name))
-        sh(['bash', '-c', recipe(name, [], True, False)[0]], cwd=run)
+        sh(['bash', '-c', keybox_export(name, name + '.pgp')], cwd=run)
         old = os.path.join(run, name + '.pgp')
         info['keybox'] = True
     fo, fn = fingerprints(old), fingerprints(dl)
@@ -558,7 +540,26 @@ def propose(pkg, rec):
     # Re-run sqv on the host with the refreshed keyrings (data only, no spec code).
     host_rc = None
     sig_h, data_h = phase1.host_path(sig or '', g), phase1.host_path(data or '', g)
-    if changed and sig_h and data_h and os.path.isfile(sig_h) and os.path.isfile(data_h):
+    # Data on stdin: the spec decompresses the source file next to the signature.
+    unpack = None
+    if data == '-' and sig_h and os.path.isfile(sig_h):
+        base = sig_h.rsplit('.', 1)[0]
+        for ext, tool in (('.xz', 'xzcat'), ('.gz', 'zcat'), ('.bz2', 'bzcat'), ('.zst', 'zstdcat')):
+            if os.path.isfile(base + ext):
+                unpack, data_h = tool, base + ext
+                break
+    if changed and unpack:
+        rings = [os.path.join(out, f['file']) if f.get('changed') else os.path.join(g, f['file'])
+                 for f in files if 'fingerprints' in f]
+        c = 'set -o pipefail; %s %s | sqv %s --signature-file %s -' % (
+            unpack, shlex.quote(data_h), ' '.join('--keyring=' + shlex.quote(r) for r in rings),
+            shlex.quote(sig_h))
+        p = sh(['bash', '-c', c], timeout=900)
+        host_rc = p.returncode
+        review += ['## Verification with the refreshed keyring', '',
+                   '```', '$ %s %s | sqv ... -' % (unpack, os.path.basename(data_h)),
+                   (p.stdout + p.stderr).strip(), 'rc=%d' % host_rc, '```', '']
+    elif changed and sig_h and data_h and os.path.isfile(sig_h) and os.path.isfile(data_h):
         rings = [os.path.join(out, f['file']) if f.get('changed') else os.path.join(g, f['file'])
                  for f in files if 'fingerprints' in f]
         cmd = ['sqv'] + ['--keyring=' + r for r in rings] + ['--signature-file', sig_h, data_h]

@@ -10,17 +10,13 @@ Phase 1 reason: `keybox`
 
 - **format: GnuPG keybox, converted to an OpenPGP keyring (sqv does not read keyboxes)**
 - certificates: 08F7C8B3C621950C138F766162977BB9C841B965
-- found via: hkps://keyserver.ubuntu.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
-- size: 4556 → 8104 bytes
+- found via: hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com
+- size: 4556 → 11367 bytes
 
 Commands (run in a copy of dist-git):
 
 ```
-gpg --homedir "$(mktemp -d)" --batch --no-default-keyring --keyring ./keyring.gpg --export --output keyring.gpg.pgp
-sq --home=none network search --output - 08F7C8B3C621950C138F766162977BB9C841B965 \
-  | sq keyring filter --experimental --cert 08F7C8B3C621950C138F766162977BB9C841B965 --output update.pgp
-sq keyring merge keyring.gpg.pgp update.pgp | sq packet dearmor --output keyring.gpg.new
-mv keyring.gpg.new keyring.gpg
+sq --home=none network keyserver search 08F7C8B3C621950C138F766162977BB9C841B965 --output keyring.gpg --overwrite
 ```
 
 ```diff

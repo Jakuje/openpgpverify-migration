@@ -17,7 +17,7 @@ Why `sqv`:
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
 - dropped `BuildRequires:  gnupg2`, only needed for `%gpgverify`
 - `bemenu-pgp.txt` was in the lookaside cache, which a PR cannot update, so it moves into git (its line in `sources` is dropped)
-- refreshed keyring `bemenu-pgp.txt` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- refreshed keyring `bemenu-pgp.txt` (see below)
 
 ### Testing
 
@@ -32,17 +32,14 @@ Tested on 2026-10-22 at dist-git commit `b8be10f8d655` with sequoia-sqv 1.5.0-2.
 
 ### Keyring refresh
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR replaces the keyring with the keyserver copy. No key was added or removed. Please check the fingerprint against upstream:
 
 - `16B6B7CACAF339DECE9F154729317348D687B86B`
 
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+The refresh, as run (the spec comment above the `Source` line has the same command, for the next refresh):
 
 ```
-sq --home=none network search --output - 16B6B7CACAF339DECE9F154729317348D687B86B \
-  | sq keyring filter --experimental --cert 16B6B7CACAF339DECE9F154729317348D687B86B --output update.pgp
-sq keyring merge --output bemenu-pgp.txt.new bemenu-pgp.txt update.pgp
-mv bemenu-pgp.txt.new bemenu-pgp.txt
+sq --home=none network keyserver search 16B6B7CACAF339DECE9F154729317348D687B86B --output bemenu-pgp.txt --overwrite
 ```
 
 What changed in the certificate (`sq inspect`):

@@ -1,9 +1,9 @@
-From eff974eed721adfa1608882f82ef8b3916281307 Mon Sep 17 00:00:00 2001
+From 1d3d54b93730fb900ccec0d60fcffa9bb0920b8e Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:43 +0100
+Date: Thu, 5 Nov 2026 19:20:58 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
-Refresh bemenu-pgp.txt from keyservers/WKD: same certificate(s), with
+Refresh bemenu-pgp.txt from keyservers: same certificate(s), with
 self-signatures our copy was missing.
 The commands are in the comment above its Source line.
 bemenu-pgp.txt was in the lookaside cache, which a pull request cannot
@@ -16,8 +16,8 @@ release was signed.
 Assisted-by: Claude Opus 5.5
 ---
  .gitignore     |  1 -
- bemenu-pgp.txt | 66 ++++++++++++++++++++++++++++++++++++++++++++++++++
- bemenu.spec    |  4 +++
+ bemenu-pgp.txt | 68 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ bemenu.spec    |  2 ++
  sources        |  1 -
  4 files changed, 70 insertions(+), 2 deletions(-)
  create mode 100644 bemenu-pgp.txt
@@ -32,11 +32,13 @@ index e57078c..3419c5a 100644
 -/bemenu-pgp.txt
 diff --git a/bemenu-pgp.txt b/bemenu-pgp.txt
 new file mode 100644
-index 0000000..f88c1f0
+index 0000000..17e87bc
 --- /dev/null
 +++ b/bemenu-pgp.txt
-@@ -0,0 +1,66 @@
+@@ -0,0 +1,68 @@
 +-----BEGIN PGP PUBLIC KEY BLOCK-----
++Comment: 16B6 B7CA CAF3 39DE CE9F  1547 2931 7348 D687 B86B
++Comment: Bemenu Upstream
 +
 +xsDNBGCls98BDADsr7GyaKPMsWeQm1dcyjnhOTgYNX/twpQln5tIkWx0pCnGZOjy
 +S+7zVqZVhUbO85ngOVjFWjia4tj2tkZjKlYdfkdlRtfSGL2QXY4ca6jZ1mLjIFRH
@@ -103,17 +105,15 @@ index 0000000..f88c1f0
 +=74n/
 +-----END PGP PUBLIC KEY BLOCK-----
 diff --git a/bemenu.spec b/bemenu.spec
-index dd98f2c..5d4a1a0 100644
+index dd98f2c..0fd82ba 100644
 --- a/bemenu.spec
 +++ b/bemenu.spec
-@@ -11,6 +11,10 @@ License:    GPL-3.0-or-later AND LGPL-3.0-or-later
+@@ -11,6 +11,8 @@ License:    GPL-3.0-or-later AND LGPL-3.0-or-later
  URL:        https://github.com/Cloudef/bemenu
  Source0:    %{url}/releases/download/%{version}/%{name}-%{version}.tar.gz
  Source1:    %{url}/releases/download/%{version}/%{name}-%{version}.tar.gz.asc
-+# Refreshed from keyservers/WKD (same keys, newer signatures):
-+#   sq --home=none network search --output - 16B6B7CACAF339DECE9F154729317348D687B86B | sq keyring filter --experimental --cert 16B6B7CACAF339DECE9F154729317348D687B86B --output update.pgp
-+#   sq keyring merge --output bemenu-pgp.txt.new bemenu-pgp.txt update.pgp
-+#   mv bemenu-pgp.txt.new bemenu-pgp.txt
++# Refreshed from keyservers (same keys, newer signatures):
++#   sq --home=none network keyserver search 16B6B7CACAF339DECE9F154729317348D687B86B --output bemenu-pgp.txt --overwrite
  Source2:    https://cloudef.pw/bemenu-pgp.txt
  
  Patch:      respect-env-build-flags.patch

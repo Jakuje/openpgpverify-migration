@@ -1,6 +1,6 @@
-From 1b695af9d1c3359c9bcc4bec4cb7b4525eae85b1 Mon Sep 17 00:00:00 2001
+From fddbf4740e369ae87f8ede96d255b7a3afb10e3d Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:50 +0100
+Date: Thu, 5 Nov 2026 19:20:58 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/fcitx5-chinese-addons.spec b/fcitx5-chinese-addons.spec
-index 25e013e..1e9ab71 100644
+index cf3890f..17047c5 100644
 --- a/fcitx5-chinese-addons.spec
 +++ b/fcitx5-chinese-addons.spec
-@@ -42,6 +42,7 @@ BuildRequires:  pkgconfig(opencc)
+@@ -40,6 +40,7 @@ BuildRequires:  pkgconfig(opencc)
  BuildRequires:  pkgconfig(Fcitx5Core)
  BuildRequires:  pkgconfig(Fcitx5Module)
  BuildRequires:  /usr/bin/appstream-util
@@ -24,7 +24,7 @@ index 25e013e..1e9ab71 100644
  Requires:       hicolor-icon-theme
  Requires:       %{name}-data = %{version}-%{release}
  Requires:       fcitx5-lua
-@@ -74,7 +75,7 @@ Requires:       fcitx5-devel
+@@ -72,7 +73,7 @@ Requires:       fcitx5-devel
  devel files for fcitx5-chinese-addons
  
  %prep

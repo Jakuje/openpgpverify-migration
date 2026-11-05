@@ -1,6 +1,6 @@
-From 25491e30078317c6ecd85978ff73e3fdce169e53 Mon Sep 17 00:00:00 2001
+From 36871f6dfc59ecd344c26a7783017f648c3fe239 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:57 +0100
+Date: Thu, 5 Nov 2026 19:21:00 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/libime.spec b/libime.spec
-index 8440d91..219d4d8 100644
+index 7668ff0..87d0b13 100644
 --- a/libime.spec
 +++ b/libime.spec
-@@ -26,6 +26,7 @@ BuildRequires: pkgconfig(zlib)
+@@ -24,6 +24,7 @@ BuildRequires: pkgconfig(zlib)
  BuildRequires: pkgconfig(bzip2)
  BuildRequires: pkgconfig(libzstd)
  BuildRequires: pkgconfig(eigen3)
@@ -24,7 +24,7 @@ index 8440d91..219d4d8 100644
  Requires:      %{name}-data
  
  
-@@ -50,7 +51,7 @@ Requires:       boost-devel%{?_isa}
+@@ -48,7 +49,7 @@ Requires:       boost-devel%{?_isa}
  Development files for %{name}
  
  %prep
