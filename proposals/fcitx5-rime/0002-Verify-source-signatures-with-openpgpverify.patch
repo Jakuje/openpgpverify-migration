@@ -1,6 +1,6 @@
-From c3517b58213bcd64d8d30516d36b19f6ee6f1246 Mon Sep 17 00:00:00 2001
+From 5ee9c0bd91b1326d46a87569f6fa26d336e3bfec Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:20:59 +0100
+Date: Thu, 5 Nov 2026 21:20:34 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- fcitx5-rime.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fcitx5-rime.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/fcitx5-rime.spec b/fcitx5-rime.spec
-index 63998b1..290d119 100644
+index 63998b1..a1cc8ee 100644
 --- a/fcitx5-rime.spec
 +++ b/fcitx5-rime.spec
-@@ -25,6 +25,7 @@ BuildRequires:  pkgconfig(Fcitx5Core)
- BuildRequires:  pkgconfig(Fcitx5Module)
- BuildRequires:  pkgconfig(rime)
- BuildRequires:  /usr/bin/appstream-util
+@@ -13,7 +13,7 @@ Source1:        https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.
+ #   sq --home=none network keyserver search 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9 --output 0x8E8B898CBF2412F9 --overwrite
+ Source2:        https://pgp.key-server.io/download/0x8E8B898CBF2412F9
+ 
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
- Requires:       hicolor-icon-theme
- Requires:       fcitx5-data
- Requires:       brise
-@@ -34,7 +35,7 @@ RIME(中州韻輸入法引擎) is mainly a Traditional Chinese
+ BuildRequires:  brise 
+ BuildRequires:  cmake
+ BuildRequires:  extra-cmake-modules
+@@ -34,7 +34,7 @@ RIME(中州韻輸入法引擎) is mainly a Traditional Chinese
  input method engine.
  
  %prep

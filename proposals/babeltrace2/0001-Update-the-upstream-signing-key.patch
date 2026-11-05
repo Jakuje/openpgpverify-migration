@@ -1,6 +1,6 @@
-From b6d31449c16b4b435394755c3e7ceac7d838a8f0 Mon Sep 17 00:00:00 2001
+From 6e7bb9209e8fe338a8cd088ea59f85b6f9d2bbaf Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:20:58 +0100
+Date: Thu, 5 Nov 2026 21:20:33 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Refresh gpgkey-7F49314A26E0DE78427680E05F1B2A0789F12B11.gpg from

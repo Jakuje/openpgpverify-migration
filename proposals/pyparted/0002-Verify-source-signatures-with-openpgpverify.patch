@@ -1,6 +1,6 @@
-From 4f1d9bb6808df5fc862e6207cc725c60c682f589 Mon Sep 17 00:00:00 2001
+From 5e1778e1d96c352950a187cc12d915d3c177ce2a Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:21:00 +0100
+Date: Thu, 5 Nov 2026 21:20:35 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- pyparted.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ pyparted.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/pyparted.spec b/pyparted.spec
-index 2770fdd..b211d84 100644
+index 2770fdd..098a6e5 100644
 --- a/pyparted.spec
 +++ b/pyparted.spec
 @@ -2,7 +2,7 @@ Summary:       Python module for GNU parted
@@ -27,15 +27,16 @@ index 2770fdd..b211d84 100644
  License:       GPL-2.0-or-later
  URL:           https://github.com/dcantrell/pyparted
  
-@@ -21,6 +21,7 @@ BuildRequires: e2fsprogs
- BuildRequires: gnupg2
+@@ -18,7 +18,7 @@ BuildRequires: gcc
+ BuildRequires: parted-devel >= 3.4
+ BuildRequires: pkgconfig
+ BuildRequires: e2fsprogs
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
  BuildRequires: python3-devel
  BuildRequires: python3-setuptools
-+BuildRequires: openpgpverify
  
- %description
- Python module for the parted library.  It is used for manipulating
-@@ -35,7 +36,7 @@ partition tables. This package provides Python 3 bindings for parted.
+@@ -35,7 +35,7 @@ partition tables. This package provides Python 3 bindings for parted.
  
  %prep
  # Verify source archive signature
@@ -44,11 +45,11 @@ index 2770fdd..b211d84 100644
  
  %autosetup
  
-@@ -56,6 +57,9 @@ make test
+@@ -56,6 +56,9 @@ make test
  %{python3_sitearch}/%{name}-%{version}-*.egg-info
  
  %changelog
-+* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 1:3.13.0-18
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 1:3.13.0-18
 +- Verify upstream source signatures with openpgpverify
 +
  * Wed Jul 22 2026 Python Maint <python-maint@redhat.com> - 1:3.13.0-17

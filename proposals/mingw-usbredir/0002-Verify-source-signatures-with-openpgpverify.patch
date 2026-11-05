@@ -1,6 +1,6 @@
-From 28143dc63f2def71fca51b11eab95d205e3a38f2 Mon Sep 17 00:00:00 2001
+From b7570377939352aaa4fc0d181cb7e3b0a86d8e7c Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:21:00 +0100
+Date: Thu, 5 Nov 2026 21:20:34 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- mingw-usbredir.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ mingw-usbredir.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/mingw-usbredir.spec b/mingw-usbredir.spec
-index e4228c9..27632f1 100644
+index e4228c9..07dbd35 100644
 --- a/mingw-usbredir.spec
 +++ b/mingw-usbredir.spec
 @@ -2,7 +2,7 @@
@@ -27,15 +27,16 @@ index e4228c9..27632f1 100644
  Summary:        MinGW USB network redirection protocol libraries
  
  # Automatically converted from old format: LGPLv2+ - review is highly recommended.
-@@ -27,6 +27,7 @@ BuildRequires:  mingw64-glib2
+@@ -26,7 +26,7 @@ BuildRequires:  mingw32-glib2
+ BuildRequires:  mingw64-glib2
  BuildRequires:  git-core
  BuildRequires:  meson
- BuildRequires:  gnupg2
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
  
  %description
  The usbredir libraries allow USB devices to be used on remote and/or virtual
-@@ -78,7 +79,7 @@ applications that use usbredir with MinGW.
+@@ -78,7 +78,7 @@ applications that use usbredir with MinGW.
  
  
  %prep
@@ -44,11 +45,11 @@ index e4228c9..27632f1 100644
  %autosetup -S git_am -p1 -n usbredir-%{version}
  
  %build
-@@ -137,6 +138,9 @@ find $RPM_BUILD_ROOT -name "*.la" -delete
+@@ -137,6 +137,9 @@ find $RPM_BUILD_ROOT -name "*.la" -delete
  
  
  %changelog
-+* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 0.14.0-7
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 0.14.0-7
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.14.0-6

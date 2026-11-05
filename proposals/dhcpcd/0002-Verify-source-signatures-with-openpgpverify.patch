@@ -1,6 +1,6 @@
-From 8277fcc6567affa15a20732b4254ecff8731d3db Mon Sep 17 00:00:00 2001
+From 4f251a664b0877ff008bfc3b0fa4e2c854790d74 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:20:58 +0100
+Date: Thu, 5 Nov 2026 21:20:33 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- dhcpcd.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ dhcpcd.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/dhcpcd.spec b/dhcpcd.spec
-index 7ef9c33..b43ce12 100644
+index 7ef9c33..8fae98f 100644
 --- a/dhcpcd.spec
 +++ b/dhcpcd.spec
-@@ -33,6 +33,7 @@ BuildRequires: systemd-devel
- BuildRequires: ypbind
+@@ -34,7 +34,7 @@ BuildRequires: ypbind
  %endif
  BuildRequires: make
-+BuildRequires: openpgpverify
  %if 0%{?fedora} || 0%{?rhel} > 8
- BuildRequires: gnupg2
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
  %endif
-@@ -44,7 +45,7 @@ through NDP, DHCPv4 and DHCPv6 protocols.
+ %{?systemd_requires}
+ %description
+@@ -44,7 +44,7 @@ through NDP, DHCPv4 and DHCPv6 protocols.
  
  %prep
  %if 0%{?fedora} || 0%{?rhel} > 8

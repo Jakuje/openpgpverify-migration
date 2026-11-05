@@ -1,6 +1,6 @@
-From d2c73210df7fefe2d1d84dca064504a3ca2fab56 Mon Sep 17 00:00:00 2001
+From caba5ee9872f6727bbbb3345ddcf7a2a29264653 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:21:00 +0100
+Date: Thu, 5 Nov 2026 21:20:34 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Refresh victortoso-E37A484F.keyring from keyservers: same

@@ -1,6 +1,6 @@
-From 9a5d892d9ad4b7770f261ea5d0b709f328774cc0 Mon Sep 17 00:00:00 2001
+From c61dc9beeb5fe50ace875229996f2459337aac8a Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:20:58 +0100
+Date: Thu, 5 Nov 2026 21:20:33 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Refresh rsmarples.gpg from keyservers: same certificate(s), with

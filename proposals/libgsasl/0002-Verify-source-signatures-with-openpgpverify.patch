@@ -1,6 +1,6 @@
-From 3ab7a1119e5cc6424090f14145e83ff51ccd5e38 Mon Sep 17 00:00:00 2001
+From aaaf20e404c8d000bdb9ddf0db761c6bf0b89d43 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:21:00 +0100
+Date: Thu, 5 Nov 2026 21:20:34 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/libgsasl.spec b/libgsasl.spec
-index 22b1f34..a6ffc44 100644
+index 22b1f34..ef03e4e 100644
 --- a/libgsasl.spec
 +++ b/libgsasl.spec
 @@ -1,6 +1,6 @@
@@ -50,7 +50,7 @@ index 22b1f34..a6ffc44 100644
  %{_libdir}/pkgconfig/libgsasl.pc
  
  %changelog
-+* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 1.10.0-18
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 1.10.0-18
 +- Verify upstream source signatures with openpgpverify
 +
  * Fri Aug  7 2026 Peter Lemenkov <lemenkov@gmail.com> - 1.10.0-17

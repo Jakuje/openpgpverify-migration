@@ -1,7 +1,5 @@
 # Verify source signatures with openpgpverify
 
-> **DRAFT, not to be opened yet:** the keyring refresh below still needs a human review (`scripts/refresh_keys.py show asterisk`).
-
 This switches the upstream source signature check from a direct GnuPG call (`gpgv2`) to `%openpgpverify` (Sequoia `sqv`), as part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify). The spec called GnuPG itself instead of using `%gpgverify`; the check becomes one `%openpgpverify` call with the same keyring, signature and data.
 
 Why `sqv`:
@@ -16,18 +14,18 @@ Why `sqv`:
 - the direct `gpgv2` call is replaced by `%{openpgpverify}` with the same keyring, signature and data
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
 - refreshed keyring `asterisk-gpgkeys.gpg` (see below)
-- Release bumped (`%{?_rc||?_beta:0.}5%{?_rc:.rc%{_rc}}%{?_beta:.beta%{_beta}}%{?dist}` → `%{?_rc||?_beta:0.}5%{?_rc:.rc%{_rc}}%{?_beta:.beta%{_beta}}%{?dist}.1`) with a changelog entry
+- Release bumped (`%{?_rc||?_beta:0.}1%{?_rc:.rc%{_rc}}%{?_beta:.beta%{_beta}}%{?dist}` → `%{?_rc||?_beta:0.}1%{?_rc:.rc%{_rc}}%{?_beta:.beta%{_beta}}%{?dist}.1`) with a changelog entry
 
 ### Testing
 
-The current and the changed spec were both run through `rpmbuild -bp` in a clean mock chroot without network access (fedora-rawhide-x86_64). Every call of the verification tool was logged:
+The current and the changed spec were both run through `rpmbuild -bp` in a clean mock chroot without network access (fedora-rawhide-x86_64, fedora-eln-x86_64, where even the current spec cannot install its build dependencies). Every call of the verification tool was logged:
 
 | Spec | Verification calls | Result |
 |---|---|---|
 | current (`gpgv2`) | 1 | pass |
-| this PR (`%openpgpverify`) | 1 | fails with the keyring in dist-git; **passes with the refreshed keyring** (sqv run directly) |
+| this PR (`%openpgpverify`) | 1 | pass |
 
-Tested on 2026-10-26 at dist-git commit `32470577e513` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
+Tested on 2026-11-05 at dist-git commit `40030608bf82` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
 ### Keyring refresh
 

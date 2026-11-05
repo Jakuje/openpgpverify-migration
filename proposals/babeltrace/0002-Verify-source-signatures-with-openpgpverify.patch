@@ -1,6 +1,6 @@
-From da57262a80ea0820950b34b3f9ee649369602802 Mon Sep 17 00:00:00 2001
+From bd05e1bbc07828065df7c1962d29b4bc0a42c017 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:20:58 +0100
+Date: Thu, 5 Nov 2026 21:20:33 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- babeltrace.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ babeltrace.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/babeltrace.spec b/babeltrace.spec
-index 2463383..c501f0a 100644
+index 2463383..55fb7a5 100644
 --- a/babeltrace.spec
 +++ b/babeltrace.spec
 @@ -1,6 +1,6 @@
@@ -26,15 +26,16 @@ index 2463383..c501f0a 100644
  Summary:        Trace Viewer and Converter, mainly for the Common Trace Format
  License:        MIT AND GPL-3.0-or-later WITH Bison-exception-2.2 AND LGPL-2.1-only AND BSD-4-Clause-UC
  URL:            https://www.efficios.com/babeltrace
-@@ -25,6 +25,7 @@ BuildRequires:  elfutils-devel >= 0.154
+@@ -23,7 +23,7 @@ BuildRequires:  python3-setuptools
+ BuildRequires:  swig >= 2.0
+ BuildRequires:  elfutils-devel >= 0.154
  BuildRequires:  autoconf automake libtool
- BuildRequires:  gnupg2
- BuildRequires:  make
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
+ BuildRequires:  make
  
  Requires:       lib%{name}%{?_isa} = %{version}-%{release}
- 
-@@ -67,7 +68,7 @@ to/from another trace format.
+@@ -67,7 +67,7 @@ to/from another trace format.
  
  
  %prep
@@ -43,11 +44,11 @@ index 2463383..c501f0a 100644
  %autosetup -p1
  
  %build
-@@ -120,6 +121,9 @@ rm -f %{buildroot}/%{_pkgdocdir}/std-ext-lib.txt
+@@ -120,6 +120,9 @@ rm -f %{buildroot}/%{_pkgdocdir}/std-ext-lib.txt
  
  
  %changelog
-+* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 1.5.11-23
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 1.5.11-23
 +- Verify upstream source signatures with openpgpverify
 +
  * Wed Jul 22 2026 Python Maint <python-maint@redhat.com> - 1.5.11-22

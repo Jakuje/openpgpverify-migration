@@ -1,6 +1,6 @@
-From ad4ad96794f975006800f0698aeec337de7ab939 Mon Sep 17 00:00:00 2001
+From 92d87865b2a23c314aaf7038dd0f06efea55c958 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:21:01 +0100
+Date: Thu, 5 Nov 2026 21:20:35 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- xcb-imdkit.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ xcb-imdkit.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/xcb-imdkit.spec b/xcb-imdkit.spec
-index 4017c7e..1ef1db3 100644
+index 4017c7e..0695b19 100644
 --- a/xcb-imdkit.spec
 +++ b/xcb-imdkit.spec
-@@ -19,6 +19,7 @@ BuildRequires:  gcc-c++
- BuildRequires:  pkgconfig(xcb)
- BuildRequires:  pkgconfig(xcb-keysyms)
- BuildRequires:  pkgconfig(xcb-util)
-+BuildRequires:  openpgpverify
+@@ -12,7 +12,7 @@ Source1:    https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.tar.
+ #   sq --home=none network keyserver search 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9 --output 0x8E8B898CBF2412F9 --overwrite
+ Source2:    https://pgp.key-server.io/download/0x8E8B898CBF2412F9
  
- %description
- xcb-imdkit is an implementation of xim protocol in xcb, 
-@@ -34,7 +35,7 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  cmake
+ BuildRequires:  extra-cmake-modules
+ BuildRequires:  gcc-c++
+@@ -34,7 +34,7 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
  Devel files for xcb-imdkit
  
  %prep

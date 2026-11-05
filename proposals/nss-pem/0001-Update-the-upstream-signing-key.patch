@@ -1,6 +1,6 @@
-From e565430d0b591a2a1f6fe1c3293fe5dd8dd3d83b Mon Sep 17 00:00:00 2001
+From 878a4888d04547a73a2c0ce960fb2c113b72ce4d Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:21:00 +0100
+Date: Thu, 5 Nov 2026 21:20:34 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Refresh kdudka.pgp from keyservers: same certificate(s), with

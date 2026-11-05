@@ -1,6 +1,6 @@
-From 5ff062d84310b8ab453fbe8771245db6fc311126 Mon Sep 17 00:00:00 2001
+From 6bc4c92f73903c804a29368186084cc6ef8af7df Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:20:59 +0100
+Date: Thu, 5 Nov 2026 21:20:34 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/inn.spec b/inn.spec
-index e15b60b..42a11c2 100644
+index e15b60b..83e3358 100644
 --- a/inn.spec
 +++ b/inn.spec
 @@ -3,7 +3,7 @@
@@ -49,7 +49,7 @@ index e15b60b..42a11c2 100644
  %{_sysusersdir}/inn.conf
  
  %changelog
-+* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 2.7.4-6
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 2.7.4-6
 +- Verify upstream source signatures with openpgpverify
 +
  * Fri Jul 24 2026 Python Maint <python-maint@redhat.com> - 2.7.4-5

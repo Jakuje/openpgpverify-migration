@@ -1,6 +1,6 @@
-From 22d37bec468f765274e976538b6229aeddc454ca Mon Sep 17 00:00:00 2001
+From e98975a36f063ebd7f79a87fb37400c0c70954be Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:21:00 +0100
+Date: Thu, 5 Nov 2026 21:20:35 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -13,14 +13,14 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/ocserv.spec b/ocserv.spec
-index a7e4b88..74e76fe 100644
+index a7e4b88..9883aee 100644
 --- a/ocserv.spec
 +++ b/ocserv.spec
 @@ -38,6 +38,7 @@ BuildRequires:	libnl3-devel, krb5-devel, libtasn1-devel, gperf, libtalloc-devel
  BuildRequires:	libev-devel, llhttp-devel, radcli-devel, lz4-devel, readline-devel
  
  BuildRequires:	libmaxminddb-devel
-+BuildRequires: openpgpverify
++BuildRequires:	openpgpverify
  
  %if %{use_systemd}
  BuildRequires:	systemd

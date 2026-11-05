@@ -1,6 +1,6 @@
-From 40bd9bce9da70ad946a168efe7df047fc2cfebb4 Mon Sep 17 00:00:00 2001
+From cd9e1817050d44a9a972c4b8c84acbbb2aed6906 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:20:58 +0100
+Date: Thu, 5 Nov 2026 21:20:33 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- cswrap.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ cswrap.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/cswrap.spec b/cswrap.spec
-index 06857f8..db8f6df 100644
+index 06857f8..54e73e2 100644
 --- a/cswrap.spec
 +++ b/cswrap.spec
 @@ -5,7 +5,7 @@
@@ -27,15 +27,16 @@ index 06857f8..db8f6df 100644
  Summary:    Generic compiler wrapper
  
  License:    GPL-3.0-or-later
-@@ -27,6 +27,7 @@ BuildRequires: gnupg2
- # against the old version of glibc if it was built against a newer one.
- # Therefore, we link glibc statically.
- BuildRequires: glibc-static
+@@ -20,7 +20,7 @@ Source2:    kdudka.pgp
+ BuildRequires: asciidoc
+ BuildRequires: cmake
+ BuildRequires: gcc
+-BuildRequires: gnupg2
 +BuildRequires: openpgpverify
  
- # The test-suite runs automatically trough valgrind if valgrind is available
- # on the system.  By not installing valgrind into mock's chroot, we disable
-@@ -54,7 +55,7 @@ fully automatically.
+ # csmock copies the resulting cswrap binary into mock chroot, which may contain
+ # an older (e.g. RHEL-7) version of glibc, and it would not dynamically link
+@@ -54,7 +54,7 @@ fully automatically.
  %endif
  
  %prep
@@ -44,11 +45,11 @@ index 06857f8..db8f6df 100644
  %autosetup
  
  %build
-@@ -96,6 +97,9 @@ done
+@@ -96,6 +96,9 @@ done
  %endif
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 2.2.6-3
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 2.2.6-3
 +- Verify upstream source signatures with openpgpverify
 +
  * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 2.2.6-2

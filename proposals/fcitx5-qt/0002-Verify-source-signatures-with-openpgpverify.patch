@@ -1,6 +1,6 @@
-From 0bc76c212df4bed48b17fdfe0d2547d2b86ed9aa Mon Sep 17 00:00:00 2001
+From ef9343162574b4b4a8393867d579844e84327853 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:20:59 +0100
+Date: Thu, 5 Nov 2026 21:20:34 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- fcitx5-qt.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fcitx5-qt.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/fcitx5-qt.spec b/fcitx5-qt.spec
-index 8621926..d183ac3 100644
+index 8621926..687d8fd 100644
 --- a/fcitx5-qt.spec
 +++ b/fcitx5-qt.spec
-@@ -34,6 +34,7 @@ BuildRequires:  gettext
- BuildRequires:  qt5-qtbase-private-devel
- BuildRequires:  pkgconfig(Qt6)
- BuildRequires:  qt6-qtbase-private-devel
-+BuildRequires:  openpgpverify
- Requires:       ((fcitx5-qt6%{?_isa} = %{version}-%{release}) if qt6-qtbase)
+@@ -15,7 +15,7 @@ Source1:        https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.
+ Source2:        https://pgp.key-server.io/download/0x8E8B898CBF2412F9
  
- # pull in im-modules for existing qt version
-@@ -108,7 +109,7 @@ Requires:       cmake-filesystem%{?_isa}
+ 
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  cmake
+ BuildRequires:  extra-cmake-modules
+ BuildRequires:  gcc-c++
+@@ -108,7 +108,7 @@ Requires:       cmake-filesystem%{?_isa}
  Development files for %{name}
  
  %prep

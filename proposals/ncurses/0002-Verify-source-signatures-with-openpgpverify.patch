@@ -1,6 +1,6 @@
-From fcf2995ac1ff38e77056c294d807d6d4eb736aa3 Mon Sep 17 00:00:00 2001
+From f0861842ca21235e6ac442f52623cccd9bed5139 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:21:00 +0100
+Date: Thu, 5 Nov 2026 21:20:34 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/ncurses.spec b/ncurses.spec
-index b1c9cfb..7dc4f4d 100644
+index b1c9cfb..1a4bf04 100644
 --- a/ncurses.spec
 +++ b/ncurses.spec
 @@ -4,7 +4,7 @@
@@ -50,7 +50,7 @@ index b1c9cfb..7dc4f4d 100644
  %{_libdir}/lib*.a
  
  %changelog
-+* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 6.6-4
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 6.6-4
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 6.6-3

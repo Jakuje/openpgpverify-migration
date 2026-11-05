@@ -1,6 +1,6 @@
-From 5260a6636c84b3743fc6cbfd43434311e77fd66f Mon Sep 17 00:00:00 2001
+From e146f034adbff60811b58071a1fd51d799e62795 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:20:58 +0100
+Date: Thu, 5 Nov 2026 21:20:33 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- cscppc.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ cscppc.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/cscppc.spec b/cscppc.spec
-index 7a711d9..167d0e9 100644
+index 7a711d9..d4fa54e 100644
 --- a/cscppc.spec
 +++ b/cscppc.spec
 @@ -3,7 +3,7 @@
@@ -27,15 +27,16 @@ index 7a711d9..167d0e9 100644
  Summary:    A compiler wrapper that runs Cppcheck in background
  
  License:    GPL-3.0-or-later
-@@ -25,6 +25,7 @@ BuildRequires: gnupg2
- # against the old version of glibc if it was built against a newer one.
- # Therefore, we link glibc statically.
- BuildRequires: glibc-static
+@@ -18,7 +18,7 @@ Source2:    kdudka.pgp
+ BuildRequires: asciidoc
+ BuildRequires: cmake
+ BuildRequires: gcc
+-BuildRequires: gnupg2
 +BuildRequires: openpgpverify
  
- # The test-suite runs automatically trough valgrind if valgrind is available
- # on the system.  By not installing valgrind into mock's chroot, we disable
-@@ -77,7 +78,7 @@ This package contains the csmatch compiler wrapper that runs the Smatch analyzer
+ # csmock copies the resulting cscppc binary into mock chroot, which may contain
+ # an older (e.g. RHEL-7) version of glibc, and it would not dynamically link
+@@ -77,7 +77,7 @@ This package contains the csmatch compiler wrapper that runs the Smatch analyzer
  in background fully transparently.
  
  %prep
@@ -44,11 +45,11 @@ index 7a711d9..167d0e9 100644
  %autosetup
  
  %build
-@@ -139,6 +140,9 @@ done
+@@ -139,6 +139,9 @@ done
  %{_mandir}/man1/csmatch.1*
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 2.2.8-3
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 2.2.8-3
 +- Verify upstream source signatures with openpgpverify
 +
  * Wed Jul 15 2026 Fedora Release Engineering <releng@fedoraproject.org> - 2.2.8-2

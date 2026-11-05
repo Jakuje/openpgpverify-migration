@@ -1,6 +1,6 @@
-From b99fceb81df0249e6490d344cb721b1dec320b27 Mon Sep 17 00:00:00 2001
+From 3739ab2c22d378d733428bfb74e77cdc5a730147 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:21:00 +0100
+Date: Thu, 5 Nov 2026 21:20:34 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Refresh keysuv.gpg from keyservers: same certificate(s), with

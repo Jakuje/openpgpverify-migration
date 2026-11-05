@@ -1,6 +1,6 @@
-From 63b9575c54d1490aa435c09b05a6eff3ba4a7789 Mon Sep 17 00:00:00 2001
+From aac3be302b30ebdd6a9223c22586d5e6cff7c284 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:21:01 +0100
+Date: Thu, 5 Nov 2026 21:20:35 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,17 +13,17 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/webkitgtk.spec b/webkitgtk.spec
-index 3e761aa..62b6100 100644
+index 3e761aa..590ffb4 100644
 --- a/webkitgtk.spec
 +++ b/webkitgtk.spec
-@@ -164,6 +164,7 @@ BuildRequires:  pkgconfig(wayland-egl)
- BuildRequires:  pkgconfig(wayland-protocols)
- BuildRequires:  pkgconfig(wayland-server)
- BuildRequires:  pkgconfig(xt)
+@@ -104,6 +104,7 @@ BuildRequires:  gettext
+ BuildRequires:  gi-docgen
+ BuildRequires:  git
+ BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
- 
- %description
- WebKitGTK is the port of the WebKit web rendering engine to the
+ BuildRequires:  gperf
+ BuildRequires:  hyphen-devel
+ BuildRequires:  libatomic
 @@ -305,7 +306,7 @@ The javascriptcoregtk4.1-devel package contains libraries, build data, and heade
  files for developing applications that use JavaScript engine from webkit2gtk-4.1.
  

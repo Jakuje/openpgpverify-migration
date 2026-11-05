@@ -1,6 +1,6 @@
-From ab774f07474b5a2a1095df11440f52e806da19ca Mon Sep 17 00:00:00 2001
+From acbb81c0e564da557d8af4523ef56af2dcbd87d1 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:21:00 +0100
+Date: Thu, 5 Nov 2026 21:20:34 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- libuv.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ libuv.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/libuv.spec b/libuv.spec
-index cf2e827..9382523 100644
+index cf2e827..3fd2b1a 100644
 --- a/libuv.spec
 +++ b/libuv.spec
-@@ -34,6 +34,7 @@ BuildRequires:  gnupg2
+@@ -30,7 +30,7 @@ Source3:        libuv.abignore
+ 
+ BuildRequires:  cmake
+ BuildRequires:  gcc
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
  # Documentation
  BuildRequires:  make
  BuildRequires:  python3-sphinx
-+BuildRequires:  openpgpverify
- 
- 
- %description
-@@ -59,7 +60,7 @@ Static library (.a) version of libuv.
+@@ -59,7 +59,7 @@ Static library (.a) version of libuv.
  
  
  %prep

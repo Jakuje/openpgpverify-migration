@@ -1,6 +1,6 @@
-From 69b5ad135c6df83f711883dec66354cb6b242b10 Mon Sep 17 00:00:00 2001
+From dd4973995fd7d11d22b08408e978a3a851c6c67f Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:20:57 +0100
+Date: Thu, 5 Nov 2026 21:20:32 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -15,19 +15,19 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/asterisk.spec b/asterisk.spec
-index a8f97eb..b226852 100644
+index 896cb68..abdb4a6 100644
 --- a/asterisk.spec
 +++ b/asterisk.spec
-@@ -57,7 +57,7 @@
+@@ -42,7 +42,7 @@
  Summary:          The Open Source PBX
  Name:             asterisk
- Version:          23.5.0
--Release:          %{?_rc||?_beta:0.}5%{?_rc:.rc%{_rc}}%{?_beta:.beta%{_beta}}%{?dist}
-+Release:          %{?_rc||?_beta:0.}5%{?_rc:.rc%{_rc}}%{?_beta:.beta%{_beta}}%{?dist}.1
+ Version:          23.6.0
+-Release:          %{?_rc||?_beta:0.}1%{?_rc:.rc%{_rc}}%{?_beta:.beta%{_beta}}%{?dist}
++Release:          %{?_rc||?_beta:0.}1%{?_rc:.rc%{_rc}}%{?_beta:.beta%{_beta}}%{?dist}.1
  # Automatically converted from old format: GPLv2 - review is highly recommended.
  License:          GPL-2.0-only
  URL:              http://www.asterisk.org/
-@@ -251,6 +251,7 @@ Provides:         bundled(jansson) = %{jansson_version}
+@@ -225,6 +225,7 @@ Provides:         bundled(jansson) = %{jansson_version}
  # for gpg to be able to verify the signature
  BuildRequires:    libgcrypt
  BuildRequires:    make
@@ -35,24 +35,24 @@ index a8f97eb..b226852 100644
  
  
  Requires(post):   systemd-units
-@@ -614,7 +615,7 @@ Jabber/XMPP resources for Asterisk.
+@@ -588,7 +589,7 @@ Jabber/XMPP resources for Asterisk.
  %if 0%{?fedora} || 0%{?rhel} >=8
  # only verifying on Fedora and RHEL >=8 due to version of gpg
  rpm -q libgcrypt
 -gpgv2 --keyring %{SOURCE7} %{SOURCE1} %{SOURCE0}
 +%{openpgpverify} --keyring='%{SOURCE7}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
  %endif
- %setup -q -n asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}
+ %autosetup -p1 -n asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}
  
-@@ -1638,6 +1639,9 @@ fi
+@@ -1604,6 +1605,9 @@ fi
  %endif
  
  %changelog
-+* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 23.5.0-5.1
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 23.6.0-1.1
 +- Verify upstream source signatures with openpgpverify
 +
- * Wed Sep 23 2026 Peter Lemenkov <lemenkov@gmail.com> - 23.5.0-5
- - Fix for CVE-2026-84975
+ * Thu Nov  5 2026 Peter Lemenkov <lemenkov@gmail.com> - 23.6.0-1
+ - update to 23.6.0
  
 -- 
 2.56.0

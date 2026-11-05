@@ -1,6 +1,6 @@
-From 20ebbc0bcb4d9bfc986c7a74f3f2e49cd44619e9 Mon Sep 17 00:00:00 2001
+From c43883e87a606bcfb0f44d8c83dbab762fe4708b Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:20:58 +0100
+Date: Thu, 5 Nov 2026 21:20:33 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Refresh dickey@invisible-island.net-rsa3072.asc from keyservers: same

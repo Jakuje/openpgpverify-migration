@@ -1,6 +1,6 @@
-From 40cd41e1af48f8057d2aecd93901e4374717024b Mon Sep 17 00:00:00 2001
+From af60e7ff249a212aa4432310d4506d97b98d63d5 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:20:59 +0100
+Date: Thu, 5 Nov 2026 21:20:33 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- fcitx5-lua.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fcitx5-lua.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/fcitx5-lua.spec b/fcitx5-lua.spec
-index f211eeb..1a59d75 100644
+index f211eeb..611fd8a 100644
 --- a/fcitx5-lua.spec
 +++ b/fcitx5-lua.spec
-@@ -25,6 +25,7 @@ BuildRequires:  pkgconfig(Fcitx5Module)
- BuildRequires:  /usr/bin/appstream-util
- # to make testing happy
- BuildRequires:  fcitx5
-+BuildRequires:  openpgpverify
- Requires:       fcitx5-data
+@@ -13,7 +13,7 @@ Source1:        https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}.
+ #   sq --home=none network keyserver search 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9 --output 0x8E8B898CBF2412F9 --overwrite
+ Source2:        https://pgp.key-server.io/download/0x8E8B898CBF2412F9
  
- %description
-@@ -39,7 +40,7 @@ Requires:       fcitx5-devel
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  cmake
+ BuildRequires:  extra-cmake-modules
+ BuildRequires:  gcc-c++
+@@ -39,7 +39,7 @@ Requires:       fcitx5-devel
  Devel files for fcitx5-lua
  
  %prep

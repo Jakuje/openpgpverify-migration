@@ -1,6 +1,6 @@
-From 07b0e5907ce75d796fbf22aa752c62451eee56da Mon Sep 17 00:00:00 2001
+From f4196d44f4724dc8375d368cc6e3df3befbbb9d0 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:20:58 +0100
+Date: Thu, 5 Nov 2026 21:20:33 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- csdiff.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ csdiff.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/csdiff.spec b/csdiff.spec
-index 8c431e2..4f2a0fd 100644
+index 8c431e2..c07f364 100644
 --- a/csdiff.spec
 +++ b/csdiff.spec
 @@ -20,7 +20,7 @@
@@ -27,15 +27,16 @@ index 8c431e2..4f2a0fd 100644
  Summary:    Non-interactive tools for processing code scan results in plain-text
  
  License:    GPL-3.0-or-later
-@@ -57,6 +57,7 @@ BuildRequires: gcc-c++
- BuildRequires: gnupg2
+@@ -54,7 +54,7 @@ BuildRequires: cmake3
+ BuildRequires: cmake
+ %endif
+ BuildRequires: gcc-c++
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
  BuildRequires: help2man
  BuildRequires: make
-+BuildRequires: openpgpverify
  
- %if 0%{?rhel} == 7
- Provides: bundled(boost_json)
-@@ -115,7 +116,7 @@ code scan defect lists to find out added or fixed defects.
+@@ -115,7 +115,7 @@ code scan defect lists to find out added or fixed defects.
  %endif
  
  %prep
@@ -44,11 +45,11 @@ index 8c431e2..4f2a0fd 100644
  %autosetup
  
  %build
-@@ -197,6 +198,9 @@ make version.cc
+@@ -197,6 +197,9 @@ make version.cc
  %endif
  
  %changelog
-+* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 3.5.7-5
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 3.5.7-5
 +- Verify upstream source signatures with openpgpverify
 +
  * Wed Jul 22 2026 Python Maint <python-maint@redhat.com> - 3.5.7-4

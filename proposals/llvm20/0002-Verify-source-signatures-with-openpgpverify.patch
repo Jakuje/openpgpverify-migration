@@ -1,6 +1,6 @@
-From 53106e9fe3619137644f9c359a05f6f935276be2 Mon Sep 17 00:00:00 2001
+From c4c3ca96e5c6e266dc971a9aa89e51bc434099b3 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:21:00 +0100
+Date: Thu, 5 Nov 2026 21:20:34 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,17 +13,17 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/llvm20.spec b/llvm20.spec
-index 15fff89..289ed97 100644
+index 15fff89..f06df9d 100644
 --- a/llvm20.spec
 +++ b/llvm20.spec
-@@ -593,6 +593,7 @@ BuildRequires:	graphviz
+@@ -548,6 +548,7 @@ BuildRequires:	python%{python3_pkgversion}-rpm-macros
  
- # This is required because we need "ps" when running LLDB tests
- BuildRequires: procps-ng
-+BuildRequires: openpgpverify
+ # For gpg source verification
+ BuildRequires:	gnupg2
++BuildRequires:	openpgpverify
  
- # For reproducible pyc file generation
- # See https://docs.fedoraproject.org/en-US/packaging-guidelines/Python_Appendix/#_byte_compilation_reproducibility
+ BuildRequires:	swig
+ BuildRequires:	libxml2-devel
 @@ -1178,11 +1179,11 @@ Polly header files.
  %prep
  %if %{without snapshot_build}

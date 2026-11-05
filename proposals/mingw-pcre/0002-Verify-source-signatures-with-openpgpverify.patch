@@ -1,6 +1,6 @@
-From f3f3f19f4239bb9e652a9e0d64702aa31b342d7d Mon Sep 17 00:00:00 2001
+From 28bd61d057c44e12c1d7d6f5dc48a7885e949560 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:21:00 +0100
+Date: Thu, 5 Nov 2026 21:20:34 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/mingw-pcre.spec b/mingw-pcre.spec
-index eb1a221..20e4d89 100644
+index eb1a221..f4f2641 100644
 --- a/mingw-pcre.spec
 +++ b/mingw-pcre.spec
 @@ -7,7 +7,7 @@
@@ -49,7 +49,7 @@ index eb1a221..20e4d89 100644
  
  
  %changelog
-+* Fri Oct 23 2026 Jakub Jelen <jjelen@redhat.com> - 8.45-12
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 8.45-12
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 8.45-11

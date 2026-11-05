@@ -1,6 +1,6 @@
-From 6ea8d1161f698bd5a524d5d62623c0e8caaa0cac Mon Sep 17 00:00:00 2001
+From 05954f04734527360b20374b37e5e91b9838e2ca Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:21:01 +0100
+Date: Thu, 5 Nov 2026 21:20:35 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- znc.spec | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ znc.spec | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
 diff --git a/znc.spec b/znc.spec
-index 9d03c90..32f7cac 100644
+index 9d03c90..37d66e6 100644
 --- a/znc.spec
 +++ b/znc.spec
 @@ -13,7 +13,7 @@
@@ -27,15 +27,16 @@ index 9d03c90..32f7cac 100644
  Summary:        An advanced IRC bouncer
  
  # Automatically converted from old format: ASL 2.0 - review is highly recommended.
-@@ -58,6 +58,7 @@ Obsoletes:      znc-extra <= %{version}-%{release}
- %endif # 0%{?rhel} && 0%{?rhel} <= 9
- 
- BuildRequires:  systemd
+@@ -39,7 +39,7 @@ BuildRequires:  cyrus-sasl-devel
+ BuildRequires:  gcc-c++
+ BuildRequires:  gettext
+ BuildRequires:  gettext-devel
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
- %{?systemd_requires}
- 
- %description
-@@ -125,12 +126,8 @@ Requires:      python%{python3_pkgversion}
+ BuildRequires:  libargon2-devel
+ BuildRequires:  libicu-devel
+ BuildRequires:  make
+@@ -125,12 +125,8 @@ Requires:      python%{python3_pkgversion}
  
  
  %prep
@@ -50,11 +51,11 @@ index 9d03c90..32f7cac 100644
  
  %autosetup -p1
  
-@@ -245,6 +242,9 @@ install -m0644 -D znc.sysusers.conf %{buildroot}%{_sysusersdir}/znc.conf
+@@ -245,6 +241,9 @@ install -m0644 -D znc.sysusers.conf %{buildroot}%{_sysusersdir}/znc.conf
  
  
  %changelog
-+* Mon Oct 26 2026 Jakub Jelen <jjelen@redhat.com> - 1.10.3-2
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 1.10.3-2
 +- Verify upstream source signatures with openpgpverify
 +
  * Sun Sep 13 2026 Nick Bebout <nb@fedoraproject.org> - 1.10.3-1

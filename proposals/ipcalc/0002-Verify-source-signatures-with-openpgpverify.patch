@@ -1,6 +1,6 @@
-From aa5ea72c8495cbb881e90659c87e8ae02ad0f7f2 Mon Sep 17 00:00:00 2001
+From 107f6a2820464e612236f0657a819b1780455908 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:20:59 +0100
+Date: Thu, 5 Nov 2026 21:20:34 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- ipcalc.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ ipcalc.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/ipcalc.spec b/ipcalc.spec
-index 13cfb94..71d3dbe 100644
+index 13cfb94..1be8914 100644
 --- a/ipcalc.spec
 +++ b/ipcalc.spec
-@@ -14,6 +14,7 @@ BuildRequires: gcc, libmaxminddb-devel, meson, rubygem-ronn-ng
- BuildRequires: gnupg2
+@@ -11,7 +11,7 @@ Source1: https://gitlab.com/api/v4/projects/ipcalc%%2Fipcalc/packages/generic/ip
+ Source2: gpgkey-1F42418905D8206AA754CCDC29EE58B996865171.gpg
+ 
+ BuildRequires: gcc, libmaxminddb-devel, meson, rubygem-ronn-ng
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
  # for the test suite (JsonEscapeHostname)
  BuildRequires: jq
-+BuildRequires: openpgpverify
  Recommends:    libmaxminddb, geolite2-city, geolite2-country, geolite2-asn
- 
- # Explicitly conflict with older initscript packages that ship ipcalc
-@@ -30,7 +31,7 @@ parsing in scripts, generate random private addresses, resolve an IP address,
+@@ -30,7 +30,7 @@ parsing in scripts, generate random private addresses, resolve an IP address,
  or check the validity of an address.
  
  %prep

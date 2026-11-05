@@ -1,6 +1,6 @@
-From 8c40841a541cef773a24f1d4c897cecc74c5059e Mon Sep 17 00:00:00 2001
+From f5ae31f33a181c8dfcb5cb0ec53cead6067e5a62 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 19:21:00 +0100
+Date: Thu, 5 Nov 2026 21:20:35 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- nss-pem.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ nss-pem.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/nss-pem.spec b/nss-pem.spec
-index 52e8b18..509967a 100644
+index 52e8b18..ca856e3 100644
 --- a/nss-pem.spec
 +++ b/nss-pem.spec
 @@ -2,7 +2,7 @@
@@ -27,15 +27,16 @@ index 52e8b18..509967a 100644
  Summary:    PEM file reader for Network Security Services (NSS)
  
  # See README for details
-@@ -22,6 +22,7 @@ BuildRequires: gcc
- BuildRequires: gnupg2
+@@ -19,7 +19,7 @@ Source2:    kdudka.pgp
+ 
+ BuildRequires: cmake
+ BuildRequires: gcc
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
  BuildRequires: make
  BuildRequires: nss-pkcs11-devel
-+BuildRequires: openpgpverify
  
- # require at least the version of nss that nss-pem was built against (#1428965)
- Requires: nss%{?_isa} >= %(nss-config --version 2>/dev/null || echo 0)
-@@ -31,7 +32,7 @@ PEM file reader for Network Security Services (NSS), implemented as a PKCS#11
+@@ -31,7 +31,7 @@ PEM file reader for Network Security Services (NSS), implemented as a PKCS#11
  module.
  
  %prep
@@ -44,11 +45,11 @@ index 52e8b18..509967a 100644
  %setup -q
  
  %build
-@@ -49,6 +50,9 @@ module.
+@@ -49,6 +49,9 @@ module.
  %license COPYING.{GPL,MPL}
  
  %changelog
-+* Thu Oct 22 2026 Jakub Jelen <jjelen@redhat.com> - 1.1.1-6
++* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 1.1.1-6
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 23 2026 Marcin Juszkiewicz <mjuszkiewicz@redhat.com> - 1.1.1-5
