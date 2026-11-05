@@ -192,8 +192,14 @@ def source_to_url(text, pkg, name, url):
             # So does one naming the old file (how it was made, e.g. "gpg --export >NAME").
             if i and lines[i - 1].startswith('#') and (
                     lines[i - 1].lstrip('# ').strip() == url.split('#')[0] or
-                    re.search(r'(^|[\s>/])%s\s*$' % re.escape(name), lines[i - 1])):
+                    ('://' not in lines[i - 1] and
+                     re.search(r'(^|[\s>/])%s\s*$' % re.escape(name), lines[i - 1]))):
                 del lines[i - 1]
+                i -= 1
+                # ... and the commands before it that fetched the key for that file.
+                while i and re.match(r'#\s*gpg2?\s+--(recv|keyserver|fetch)', lines[i - 1]):
+                    del lines[i - 1]
+                    i -= 1
             return '\n'.join(lines), None
     return text, 'no Source line for %s' % name
 

@@ -427,15 +427,19 @@ def render_pr(pkg, s, draft):
                       ''.join(diffs)))
     elif files and kr.get('method') == 'upstream-url':
         dropped = [d for f in files for d in f.get('dropped', [])]
+        added = [d for f in files for d in f.get('added', [])]
         urls = ', '.join(sorted({f['url'] for f in files}))
         refresh = ('\n### Keyring update\n\n`%%openpgpverify` rejected the signature with '
-                   'the keyring in dist-git (%s), while %s ignores that. Upstream has updated '
+                   'the keyring in dist-git (%s), while %s ignores that. %s has updated '
                    'the key since: the copy at %s %s and verifies the release with sqv. This '
                    'PR replaces the file with that copy, byte for byte%s:\n\n```\n%s\n```\n\n'
                    'Fingerprints%s:\n\n%s\n\n%sWhat changed in the certificate (`sq '
                    'inspect`):\n\n```diff\n%s```\n'
-                   % (reason, old_tool, urls,
-                      'holds only the signing key' if dropped else 'has the same fingerprint(s)',
+                   % (reason, old_tool,
+                      'The key owner' if 'keys.openpgp.org' in urls else 'Upstream', urls,
+                      'holds only the signing key' if dropped else
+                      'has the same fingerprint(s) and also holds other keys upstream publishes '
+                      'there' if added else 'has the same fingerprint(s)',
                       '' if not any(f.get('new_file') for f in files) else
                       ', named like the URL, which becomes its `Source`',
                       '\n'.join(c for f in files for c in f['commands']),
@@ -443,7 +447,10 @@ def render_pr(pkg, s, draft):
                       '\n'.join('- `%s`' % fp for f in files for fp in f['fingerprints']),
                       ('Dropped from the keyring (not used for the current release; add them '
                        'back if releases may be signed with them):\n\n%s\n\n'
-                       % '\n'.join('- `%s`' % d for d in dropped)) if dropped else '',
+                       % '\n'.join('- `%s`' % d for d in dropped)) if dropped else
+                      ('Added to the keyring, because upstream\'s file holds them too; this '
+                       'also means a release signed with one of them will verify:\n\n%s\n\n'
+                       % '\n'.join('- `%s`' % d for d in added)) if added else '',
                       ''.join(diffs)))
     elif files:
         refresh = ('\n### Keyring refresh\n\n%sThe same certificate, looked up '

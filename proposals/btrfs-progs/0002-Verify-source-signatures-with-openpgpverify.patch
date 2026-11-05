@@ -1,6 +1,6 @@
-From 46f70fcfd45f0d68d412bac370e64101c924fe3e Mon Sep 17 00:00:00 2001
+From 3ad5af56f6fa44251e1aa5ad8b7a2f0ec2589e47 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:55 +0100
+Date: Thu, 5 Nov 2026 10:38:41 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/btrfs-progs.spec b/btrfs-progs.spec
-index 1862be9..00b8782 100644
+index 85ca865..0256646 100644
 --- a/btrfs-progs.spec
 +++ b/btrfs-progs.spec
 @@ -3,7 +3,7 @@
@@ -27,7 +27,7 @@ index 1862be9..00b8782 100644
  Summary:        Userspace programs for btrfs
  
  License:        GPL-2.0-only
-@@ -20,7 +20,7 @@ Source2:        gpgkey-F2B41200C54EFB30380C1756C565D5F9D76D583B.gpg
+@@ -16,7 +16,7 @@ Source2:        https://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git/plain/key
  ## Disable RAID56 modes (RHEL-only)
  Source1001:     1001-balance-mkfs-Disable-raid56-modes.patch
  
@@ -36,7 +36,7 @@ index 1862be9..00b8782 100644
  BuildRequires:  gcc, autoconf, automake, make
  BuildRequires:  git-core
  BuildRequires:  e2fsprogs-devel
-@@ -96,7 +96,7 @@ btrfs filesystem-specific programs in Python.
+@@ -92,7 +92,7 @@ btrfs filesystem-specific programs in Python.
  
  
  %prep
@@ -45,7 +45,7 @@ index 1862be9..00b8782 100644
  %autosetup -n %{name}-v%{version_no_tilde} -S git_am
  
  %if 0%{?rhel}
-@@ -173,6 +173,9 @@ popd >/dev/null
+@@ -169,6 +169,9 @@ popd >/dev/null
  
  
  %changelog

@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `gpgkey-6D5B_EF9A_DD20_7580_5747_B70F_9F88_FB52_FAF7_B393.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- replaced keyring `gpgkey-6D5B_EF9A_DD20_7580_5747_B70F_9F88_FB52_FAF7_B393.gpg` with `gpgkey-6D5B_EF9A_DD20_7580_5747_B70F_9F88_FB52_FAF7_B393.asc` from https://keys.openpgp.org/vks/v1/by-fingerprint/6D5BEF9ADD2075805747B70F9F88FB52FAF7B393#/gpgkey-6D5B_EF9A_DD20_7580_5747_B70F_9F88_FB52_FAF7_B393.asc; its `Source` line is now that URL (see below)
 - Release bumped (`1%{?dist}` → `2%{?dist}`) with a changelog entry
 
 ### Testing
@@ -29,27 +29,24 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 Tested on 2026-10-26 at dist-git commit `d2613c8484b3` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
-### Keyring refresh
+### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The key owner has updated the key since: the copy at https://keys.openpgp.org/vks/v1/by-fingerprint/6D5BEF9ADD2075805747B70F9F88FB52FAF7B393#/gpgkey-6D5B_EF9A_DD20_7580_5747_B70F_9F88_FB52_FAF7_B393.asc has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte, named like the URL, which becomes its `Source`:
+
+```
+curl -fsSL -o gpgkey-6D5B_EF9A_DD20_7580_5747_B70F_9F88_FB52_FAF7_B393.asc 'https://keys.openpgp.org/vks/v1/by-fingerprint/6D5BEF9ADD2075805747B70F9F88FB52FAF7B393'
+```
+
+Fingerprints (unchanged):
 
 - `6D5BEF9ADD2075805747B70F9F88FB52FAF7B393`
-
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
-
-```
-sq --home=none network search --output - 6D5BEF9ADD2075805747B70F9F88FB52FAF7B393 \
-  | sq keyring filter --experimental --cert 6D5BEF9ADD2075805747B70F9F88FB52FAF7B393 --output update.pgp
-sq keyring merge gpgkey-6D5B_EF9A_DD20_7580_5747_B70F_9F88_FB52_FAF7_B393.gpg update.pgp | sq packet dearmor --output gpgkey-6D5B_EF9A_DD20_7580_5747_B70F_9F88_FB52_FAF7_B393.gpg.new
-mv gpgkey-6D5B_EF9A_DD20_7580_5747_B70F_9F88_FB52_FAF7_B393.gpg.new gpgkey-6D5B_EF9A_DD20_7580_5747_B70F_9F88_FB52_FAF7_B393.gpg
-```
 
 What changed in the certificate (`sq inspect`):
 
 ```diff
 --- dist-git/gpgkey-6D5B_EF9A_DD20_7580_5747_B70F_9F88_FB52_FAF7_B393.gpg
-+++ refreshed/gpgkey-6D5B_EF9A_DD20_7580_5747_B70F_9F88_FB52_FAF7_B393.gpg
-@@ -1,22 +1,25 @@
++++ upstream/gpgkey-6D5B_EF9A_DD20_7580_5747_B70F_9F88_FB52_FAF7_B393.gpg
+@@ -1,22 +1,22 @@
        Fingerprint: 6D5BEF9ADD2075805747B70F9F88FB52FAF7B393
 -                   Invalid: The primary key is not live: Expired on 2019-12-24T00:03:19Z
 -  Expiration time: 2019-12-24 00:03:19 UTC (creation time + 9years 11months 27days 22h 38m 26s)
@@ -84,10 +81,9 @@ What changed in the certificate (`sq inspect`):
 -self-signatures SubkeyBinding: 2019-03-02
 +self-signatures PositiveCertification: 2009-12-26, 2014-06-01, 2014-08-12, 2020-01-06, 2021-02-14, 2022-02-15, 2024-02-15
 +self-signatures SubkeyBinding: 2009-12-25, 2014-12-25, 2015-12-30, 2017-01-06, 2017-11-22, 2019-03-02, 2021-02-14, 2022-02-15, 2024-02-15, 2026-02-18
-+third-party CasualCertification: 15
-+third-party GenericCertification: 52
-+third-party PositiveCertification: 25
 ```
+
+This copy is from keys.openpgp.org, looked up by fingerprint, so it is the same key the old file held. If the project publishes the key somewhere you prefer, that URL works as well, as long as the copy verifies this release.
 
 The keyring change is the first of the two commits, so it can be reviewed or merged on its own.
 

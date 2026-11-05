@@ -1,6 +1,6 @@
-From db2bd6cb5551a370adaf551d6b22b86daa7f30c8 Mon Sep 17 00:00:00 2001
+From be1bbb6b6632ea5dbc1a5dabe3503cf9ca4aa596 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:41 +0100
+Date: Thu, 5 Nov 2026 10:38:42 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/libtalloc.spec b/libtalloc.spec
-index b74cd69..1a59bcc 100644
+index 400d3ae..d8c0a84 100644
 --- a/libtalloc.spec
 +++ b/libtalloc.spec
-@@ -20,6 +20,7 @@ BuildRequires: docbook-style-xsl
+@@ -16,6 +16,7 @@ BuildRequires: docbook-style-xsl
  BuildRequires: python3-devel
  BuildRequires: doxygen
  BuildRequires: gnupg2
@@ -24,7 +24,7 @@ index b74cd69..1a59bcc 100644
  
  Provides: bundled(libreplace)
  Obsoletes: python2-talloc < 2.2.0-1
-@@ -58,7 +59,7 @@ Development libraries for python3-talloc
+@@ -54,7 +55,7 @@ Development libraries for python3-talloc
  %autosetup -n talloc-%{version} -p1
  
  %build

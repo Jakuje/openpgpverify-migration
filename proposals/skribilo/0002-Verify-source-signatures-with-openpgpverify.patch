@@ -1,6 +1,6 @@
-From 7af0882441ecccbb684dd9030c7ffc56aa8f5cf3 Mon Sep 17 00:00:00 2001
+From 7e0b8efcedf210bdeeddd81de593f7f5e97306ae Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:54 +0100
+Date: Thu, 5 Nov 2026 10:39:04 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/skribilo.spec b/skribilo.spec
-index e2fb4d3..5ca8bb3 100644
+index fc8da20..72f5815 100644
 --- a/skribilo.spec
 +++ b/skribilo.spec
 @@ -5,7 +5,7 @@
@@ -27,7 +27,7 @@ index e2fb4d3..5ca8bb3 100644
  Summary:      A free document production tool
  
  License:      GPL-3.0-or-later
-@@ -33,6 +33,7 @@ BuildRequires:  texlive-collection-context
+@@ -29,6 +29,7 @@ BuildRequires:  texlive-collection-context
  BuildRequires:  glibc-common
  # needed to check signing
  BuildRequires:  gnupg2
@@ -35,7 +35,7 @@ index e2fb4d3..5ca8bb3 100644
  Requires:       guile30
  Requires:       lomt-junction-fonts
  Requires:       linux-libertine-biolinum-fonts
-@@ -70,7 +71,7 @@ Configuration files for writing Skribilo documents using
+@@ -66,7 +67,7 @@ Configuration files for writing Skribilo documents using
  Emacs.
  
  %prep
@@ -44,7 +44,7 @@ index e2fb4d3..5ca8bb3 100644
  %autosetup
  
  iconv -f ISO-8859-1 -t UTF-8 ChangeLog.Skribe > ChangeLog.Skribe.tmp
-@@ -199,6 +200,9 @@ make check
+@@ -195,6 +196,9 @@ make check
  %{_datadir}/emacs/site-lisp/skribe.el
  
  %changelog

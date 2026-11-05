@@ -16,7 +16,7 @@ Why `sqv`:
 - the direct `gpgv2` call is replaced by `%{openpgpverify}` with the same keyring, signature and data
 - `%gpgverify` → `%openpgpverify` for the existing macro call
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `samba-pubkey_AA99442FB680B620.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- replaced keyring `samba-pubkey_AA99442FB680B620.gpg` with `samba-pubkey.asc` from https://download.samba.org/pub/samba/samba-pubkey.asc; its `Source` line is now that URL (see below)
 
 ### Testing
 
@@ -29,27 +29,28 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 Tested on 2026-10-26 at dist-git commit `0e3f8ac9c02a` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
-### Keyring refresh
+### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `gpgv2` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `gpgv2` ignores that. Upstream has updated the key since: the copy at https://download.samba.org/pub/samba/samba-pubkey.asc has the same fingerprint(s) and also holds other keys upstream publishes there and verifies the release with sqv. This PR replaces the file with that copy, byte for byte, named like the URL, which becomes its `Source`:
+
+```
+curl -fsSL -O https://download.samba.org/pub/samba/samba-pubkey.asc
+```
+
+Fingerprints (unchanged):
 
 - `81F5E2832BD2545A1897B713AA99442FB680B620`
 
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
+Added to the keyring, because upstream's file holds them too; this also means a release signed with one of them will verify:
 
-```
-sq --home=none network search --output - 81F5E2832BD2545A1897B713AA99442FB680B620 \
-  | sq keyring filter --experimental --cert 81F5E2832BD2545A1897B713AA99442FB680B620 --output update.pgp
-sq keyring merge samba-pubkey_AA99442FB680B620.gpg update.pgp | sq packet dearmor --output samba-pubkey_AA99442FB680B620.gpg.new
-mv samba-pubkey_AA99442FB680B620.gpg.new samba-pubkey_AA99442FB680B620.gpg
-```
+- `9147A339719518EE9011BCB54793916113084025`
 
 What changed in the certificate (`sq inspect`):
 
 ```diff
 --- dist-git/samba-pubkey_AA99442FB680B620.gpg
-+++ refreshed/samba-pubkey_AA99442FB680B620.gpg
-@@ -1,11 +1,10 @@
++++ upstream/samba-pubkey_AA99442FB680B620.gpg
+@@ -1,11 +1,18 @@
        Fingerprint: 81F5E2832BD2545A1897B713AA99442FB680B620
 -                   Invalid: The primary key is not live: Expired on 2022-12-21T12:11:00Z
 -  Expiration time: 2022-12-21 12:11:00 UTC (creation time + 1year 11months 29days 21h 50m 24s)
@@ -63,9 +64,17 @@ What changed in the certificate (`sq inspect`):
             UserID: Samba Distribution Verification Key <samba-bugs@samba.org>
 -self-signatures PositiveCertification: 2020-12-21
 -self-signatures SubkeyBinding: 2020-12-21
-+self-signatures PositiveCertification: 2020-12-21, 2022-12-19, 2023-12-18, 2024-10-15, 2025-12-12
-+self-signatures SubkeyBinding: 2020-12-21, 2022-12-19, 2023-12-18, 2024-10-15, 2025-12-12
-+third-party GenericCertification: 1
++      Fingerprint: 9147A339719518EE9011BCB54793916113084025
++  Expiration time: 2027-12-13 12:18:24 UTC (creation time + 16years 10months 30days 6h 51m 33s)
++        Key flags: certification, signing
++           Subkey: 541FB94987D491A3C201D8B1B1DD08BF65F64DAB
++  Expiration time: 2027-12-13 12:18:38 UTC (creation time + 16years 10months 30days 6h 51m 47s)
++        Key flags: transport encryption, data-at-rest encryption
++           UserID: Samba Library Distribution Key <samba-bugs@samba.org>
++self-signatures PositiveCertification: 2011-01-12, 2012-01-21, 2013-01-27, 2014-03-20, 2015-04-29, 2016-05-06, 2017-06-02, 2018-06-26, 2019-07-03, 2020-07-09, 2020-12-21, 2022-12-19, 2023-12-18, 2024-10-15, 2025-12-12, 2025-12-13
++self-signatures SubkeyBinding: 2025-12-12, 2025-12-13
++third-party GenericCertification: 3
++third-party PositiveCertification: 1
 ```
 
 The keyring change is the first of the two commits, so it can be reviewed or merged on its own.

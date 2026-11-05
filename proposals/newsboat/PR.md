@@ -16,7 +16,7 @@ Why `sqv`:
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
 - `newsboat.pgp` was in the lookaside cache, which a PR cannot update, so it moves into git (its line in `sources` is dropped)
-- refreshed keyring `newsboat.pgp` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- replaced keyring `newsboat.pgp` with `newsboat.asc` from https://keys.openpgp.org/vks/v1/by-fingerprint/B8B1756A0DDBF0760CE67CCF4ED6CD61932B9EBE#/newsboat.asc; its `Source` line is now that URL (see below)
 
 ### Testing
 
@@ -29,37 +29,35 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 Tested on 2026-10-23 at dist-git commit `4a30565a89ba` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
-### Keyring refresh
+### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The key owner has updated the key since: the copy at https://keys.openpgp.org/vks/v1/by-fingerprint/B8B1756A0DDBF0760CE67CCF4ED6CD61932B9EBE#/newsboat.asc has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte, named like the URL, which becomes its `Source`:
+
+```
+curl -fsSL -o newsboat.asc 'https://keys.openpgp.org/vks/v1/by-fingerprint/B8B1756A0DDBF0760CE67CCF4ED6CD61932B9EBE'
+```
+
+Fingerprints (unchanged):
 
 - `B8B1756A0DDBF0760CE67CCF4ED6CD61932B9EBE`
-
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
-
-```
-sq --home=none network search --output - B8B1756A0DDBF0760CE67CCF4ED6CD61932B9EBE \
-  | sq keyring filter --experimental --cert B8B1756A0DDBF0760CE67CCF4ED6CD61932B9EBE --output update.pgp
-sq keyring merge --output newsboat.pgp.new newsboat.pgp update.pgp
-mv newsboat.pgp.new newsboat.pgp
-```
 
 What changed in the certificate (`sq inspect`):
 
 ```diff
 --- dist-git/newsboat.pgp
-+++ refreshed/newsboat.pgp
-@@ -5,6 +5,7 @@
++++ upstream/newsboat.pgp
+@@ -5,6 +5,5 @@
    Expiration time: 2027-10-17 12:06:26 UTC (creation time + 10years 29days 10h 4m 55s)
          Key flags: transport encryption, data-at-rest encryption
             UserID: Newsboat project <newsboat@googlegroups.com>
 -self-signatures PositiveCertification: 2017-09-17, 2020-09-20, 2021-09-20, 2022-09-25, 2026-10-04
 -self-signatures SubkeyBinding: 2026-10-04
+-third-party PositiveCertification: 1
 +self-signatures PositiveCertification: 2017-09-17, 2020-09-20, 2021-09-20, 2022-09-25, 2023-09-28, 2025-09-21, 2026-10-04
-+self-signatures SubkeyBinding: 2017-09-17, 2020-09-20, 2021-09-20, 2022-09-25, 2023-09-28, 2025-09-21, 2026-10-04
-+third-party GenericCertification: 3
- third-party PositiveCertification: 1
++self-signatures SubkeyBinding: 2023-09-28, 2025-09-21, 2026-10-04
 ```
+
+This copy is from keys.openpgp.org, looked up by fingerprint, so it is the same key the old file held. If the project publishes the key somewhere you prefer, that URL works as well, as long as the copy verifies this release. The copy at https://newsboat.org/newsboat.pgp, the old `Source`, expired on 2023-09-25 and does not verify this release.
 
 The keyring change is the first of the two commits, so it can be reviewed or merged on its own.
 

@@ -78,7 +78,7 @@ def check(pkg):
     with tempfile.TemporaryDirectory() as tmp:
         for i, (kind, u) in enumerate(dict.fromkeys(urls)):
             dl = os.path.join(tmp, 'k%d' % i)
-            p = run(['curl', '-A', 'Mozilla/5.0', '-fsSL', '--max-time', '30', '-o', dl, u])
+            p = run(['curl', '-fsSL', '--max-time', '30', '-o', dl, u])
             if p.returncode or not os.path.exists(dl):
                 res['tried'].append(dict(kind=kind, url=u, result='fetch failed'))
                 continue

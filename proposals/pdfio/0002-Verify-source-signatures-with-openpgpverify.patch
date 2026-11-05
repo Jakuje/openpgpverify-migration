@@ -1,6 +1,6 @@
-From c6785fb7f9eb37f2a6b6dd121c2911f18a32bfb1 Mon Sep 17 00:00:00 2001
+From f246c085d2f9dc7d89ef10d9d402b699324e9950 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:42 +0100
+Date: Thu, 5 Nov 2026 10:38:42 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/pdfio.spec b/pdfio.spec
-index 9d40ecd..9ade8a4 100644
+index a9af35b..003038b 100644
 --- a/pdfio.spec
 +++ b/pdfio.spec
 @@ -2,7 +2,7 @@
@@ -27,7 +27,7 @@ index 9d40ecd..9ade8a4 100644
  Summary: C library for PDF I/O
  # Apache 2.0 with exception - pdfio code
  # GPL-2.0-or-later - code128 font from examples
-@@ -29,7 +29,7 @@ BuildRequires: git-core
+@@ -25,7 +25,7 @@ BuildRequires: git-core
  # builds with gcc
  BuildRequires: gcc
  # for verifying the tarball signature
@@ -36,7 +36,7 @@ index 9d40ecd..9ade8a4 100644
  # use make for Makefile
  BuildRequires: make
  # uses pkg-config in SPEC and in configure
-@@ -68,7 +68,7 @@ The package contains HTML documentation and man page for PDFIO library.
+@@ -64,7 +64,7 @@ The package contains HTML documentation and man page for PDFIO library.
  
  
  %prep
@@ -45,7 +45,7 @@ index 9d40ecd..9ade8a4 100644
  %autosetup -S git
  
  
-@@ -134,6 +134,9 @@ make test
+@@ -130,6 +130,9 @@ make test
  
  
  %changelog

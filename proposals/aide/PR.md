@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `gpgkey-aide.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- replaced keyring `gpgkey-aide.gpg` with `gpgkey-aide.asc` from https://keys.openpgp.org/vks/v1/by-fingerprint/2BBBD30FAAB29B3253BCFBA6F6947DAB68E7B931#/gpgkey-aide.asc; its `Source` line is now that URL (see below)
 
 ### Testing
 
@@ -28,27 +28,24 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 Tested on 2026-10-12 at dist-git commit `37a89e90ec4c` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
-### Keyring refresh
+### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD; hkps://keys.openpgp.org, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The key owner has updated the key since: the copy at https://keys.openpgp.org/vks/v1/by-fingerprint/2BBBD30FAAB29B3253BCFBA6F6947DAB68E7B931#/gpgkey-aide.asc has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte, named like the URL, which becomes its `Source`:
+
+```
+curl -fsSL -o gpgkey-aide.asc 'https://keys.openpgp.org/vks/v1/by-fingerprint/2BBBD30FAAB29B3253BCFBA6F6947DAB68E7B931'
+```
+
+Fingerprints (unchanged):
 
 - `2BBBD30FAAB29B3253BCFBA6F6947DAB68E7B931`
-
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
-
-```
-sq --home=none network search --output - 2BBBD30FAAB29B3253BCFBA6F6947DAB68E7B931 \
-  | sq keyring filter --experimental --cert 2BBBD30FAAB29B3253BCFBA6F6947DAB68E7B931 --output update.pgp
-sq keyring merge gpgkey-aide.gpg update.pgp | sq packet dearmor --output gpgkey-aide.gpg.new
-mv gpgkey-aide.gpg.new gpgkey-aide.gpg
-```
 
 What changed in the certificate (`sq inspect`):
 
 ```diff
 --- dist-git/gpgkey-aide.gpg
-+++ refreshed/gpgkey-aide.gpg
-@@ -1,20 +1,19 @@
++++ upstream/gpgkey-aide.gpg
+@@ -1,20 +1,16 @@
        Fingerprint: 2BBBD30FAAB29B3253BCFBA6F6947DAB68E7B931
 -                   Invalid: The primary key is not live: Expired on 2026-06-27T05:58:55Z
 -  Expiration time: 2026-06-27 05:58:55 UTC (creation time + 14years 11months 29days 5h 43m 31s)
@@ -75,10 +72,9 @@ What changed in the certificate (`sq inspect`):
 -self-signatures SubkeyBinding: 2023-06-04
 +self-signatures PositiveCertification: 2011-06-28, 2013-10-27, 2015-06-25, 2019-01-12, 2021-02-14, 2023-06-04, 2025-04-28, 2026-06-07
 +self-signatures SubkeyBinding: 2011-06-28, 2013-05-09, 2015-06-25, 2017-07-01, 2019-01-12, 2021-02-14, 2023-06-04, 2025-04-28, 2026-06-07
-+third-party CasualCertification: 2
-+third-party GenericCertification: 20
-+third-party PositiveCertification: 3
 ```
+
+This copy is from keys.openpgp.org, looked up by fingerprint, so it is the same key the old file held. If the project publishes the key somewhere you prefer, that URL works as well, as long as the copy verifies this release.
 
 The keyring change is the first of the two commits, so it can be reviewed or merged on its own.
 

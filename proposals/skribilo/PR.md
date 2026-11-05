@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `arunisaac.pub` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- updated `arunisaac.pub` to the current upstream copy from the URL in the spec (see below)
 - Release bumped (`3%{?dist}` → `4%{?dist}`) with a changelog entry
 
 ### Testing
@@ -29,49 +29,50 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 Tested on 2026-10-23 at dist-git commit `1eb78a8eb562` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
-### Keyring refresh
+### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The key owner has updated the key since: the copy at https://keys.openpgp.org/vks/v1/by-fingerprint/7F730343F2F09F3C77BF79D32E25EE8B61802BB3#/arunisaac.pub has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte:
+
+```
+curl -fsSL -o arunisaac.pub 'https://keys.openpgp.org/vks/v1/by-fingerprint/7F730343F2F09F3C77BF79D32E25EE8B61802BB3'
+```
+
+Fingerprints (unchanged):
 
 - `7F730343F2F09F3C77BF79D32E25EE8B61802BB3`
-
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
-
-```
-sq --home=none network search --output - 7F730343F2F09F3C77BF79D32E25EE8B61802BB3 \
-  | sq keyring filter --experimental --cert 7F730343F2F09F3C77BF79D32E25EE8B61802BB3 --output update.pgp
-sq keyring merge --output arunisaac.pub.new arunisaac.pub update.pgp
-mv arunisaac.pub.new arunisaac.pub
-```
 
 What changed in the certificate (`sq inspect`):
 
 ```diff
 --- dist-git/arunisaac.pub
-+++ refreshed/arunisaac.pub
-@@ -1,10 +1,8 @@
++++ upstream/arunisaac.pub
+@@ -1,17 +1,11 @@
        Fingerprint: 7F730343F2F09F3C77BF79D32E25EE8B61802BB3
 -                   Invalid: The primary key is not live: Expired on 2024-03-01T09:44:40Z
 -  Expiration time: 2024-03-01 09:44:40 UTC (creation time + 10years 5months 23days 1m 52s)
-+  Expiration time: 2027-03-01 22:11:41 UTC (creation time + 13years 5months 22days 18h 28m 53s)
++                   Invalid: The primary key is not live: Expired on 2026-03-01T19:09:07Z
++  Expiration time: 2026-03-01 19:09:07 UTC (creation time + 12years 5months 22days 21h 26m 19s)
          Key flags: certification, signing
             Subkey: B7ACCF781EB7E021FD8CB1CAA6E8C999B91F5347
 -                   Invalid: The certificate is not live: The primary key is not live, because Expired on 2024-03-01T09:44:40Z
 -  Expiration time: 2024-03-01 09:45:10 UTC (creation time + 10years 5months 23days 2m 22s)
-+  Expiration time: 2027-03-01 22:13:10 UTC (creation time + 13years 5months 22days 18h 30m 22s)
++                   Invalid: The certificate is not live: The primary key is not live, because Expired on 2026-03-01T19:09:07Z
++  Expiration time: 2026-03-01 19:09:57 UTC (creation time + 12years 5months 22days 21h 27m 9s)
          Key flags: transport encryption, data-at-rest encryption
-            UserID: Arun I (My personal key) <theroarofthedragon@gmail.com>
-                    Revoked:
-@@ -12,6 +10,6 @@
-                    because: SHA1 is not considered secure
+-           UserID: Arun I (My personal key) <theroarofthedragon@gmail.com>
+-                   Revoked:
+-                   Invalid: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
+-                   because: SHA1 is not considered secure
             UserID: Arun I <arunisaac@systemreboot.net>
- self-signatures CertificationRevocation: 2016-09-23
+-self-signatures CertificationRevocation: 2016-09-23
 -self-signatures PositiveCertification: 2013-09-07, 2015-10-25, 2017-03-20, 2018-03-21, 2020-03-19, 2023-03-02
 -self-signatures SubkeyBinding: 2023-03-02
-+self-signatures PositiveCertification: 2013-09-07, 2015-10-25, 2017-03-20, 2018-03-21, 2019-03-19, 2020-03-19, 2021-03-19, 2022-03-12, 2023-03-02, 2024-03-01, 2025-03-01, 2026-03-01
-+self-signatures SubkeyBinding: 2013-09-07, 2015-03-20, 2016-03-20, 2017-03-20, 2018-03-21, 2019-03-19, 2020-03-19, 2021-03-19, 2022-03-12, 2023-03-02, 2024-03-01, 2025-03-01, 2026-03-01
- third-party GenericCertification: 1
+-third-party GenericCertification: 1
++self-signatures PositiveCertification: 2015-10-25, 2017-03-20, 2018-03-21, 2020-03-19, 2025-03-01
++self-signatures SubkeyBinding: 2025-03-01
 ```
+
+This copy is from keys.openpgp.org, looked up by fingerprint, so it is the same key the old file held. If the project publishes the key somewhere you prefer, that URL works as well, as long as the copy verifies this release.
 
 The keyring change is the first of the two commits, so it can be reviewed or merged on its own.
 

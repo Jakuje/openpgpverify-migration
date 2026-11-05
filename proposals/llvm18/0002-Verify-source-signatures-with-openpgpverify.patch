@@ -1,6 +1,6 @@
-From 501ab7889824b0facff2bad6d541d620fa9e40b2 Mon Sep 17 00:00:00 2001
+From f8873efb64235c3d093dfbf8f5bde45e965666be Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:57 +0100
+Date: Thu, 5 Nov 2026 10:38:41 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/llvm18.spec b/llvm18.spec
-index c030c92..57ca3a8 100644
+index 6b55c6c..938370e 100644
 --- a/llvm18.spec
 +++ b/llvm18.spec
 @@ -93,7 +93,7 @@
@@ -27,7 +27,7 @@ index c030c92..57ca3a8 100644
  Summary:	The Low Level Virtual Machine
  
  License:	Apache-2.0 WITH LLVM-exception OR NCSA
-@@ -154,6 +154,7 @@ BuildRequires:	python3-setuptools
+@@ -150,6 +150,7 @@ BuildRequires:	python3-setuptools
  
  # For origin certification
  BuildRequires:	gnupg2
@@ -35,7 +35,7 @@ index c030c92..57ca3a8 100644
  
  
  Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
-@@ -242,9 +243,9 @@ Summary: LLVM's modified googletest sources
+@@ -238,9 +239,9 @@ Summary: LLVM's modified googletest sources
  LLVM's modified googletest sources.
  
  %prep
@@ -48,7 +48,7 @@ index c030c92..57ca3a8 100644
  %setup -T -q -b 2 -n %{cmake_srcdir}
  # TODO: It would be more elegant to set -DLLVM_COMMON_CMAKE_UTILS=%{_builddir}/%{cmake_srcdir},
  # but this is not a CACHED variable, so we can't actually set it externally :(
-@@ -599,6 +600,9 @@ fi
+@@ -595,6 +596,9 @@ fi
  
  
  %changelog

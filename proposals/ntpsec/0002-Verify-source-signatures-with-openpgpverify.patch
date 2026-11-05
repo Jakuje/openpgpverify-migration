@@ -1,6 +1,6 @@
-From 3079e24d1450396103ef93ca5664dba9c9cb2a47 Mon Sep 17 00:00:00 2001
+From 69154ec35883d1fe157cde0872f382a4b5cbc26b Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:52 +0100
+Date: Thu, 5 Nov 2026 10:38:42 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/ntpsec.spec b/ntpsec.spec
-index bf6a5b3..5844789 100644
+index 3e1584f..9c806bf 100644
 --- a/ntpsec.spec
 +++ b/ntpsec.spec
 @@ -1,6 +1,6 @@
@@ -26,7 +26,7 @@ index bf6a5b3..5844789 100644
  Summary:        NTP daemon and utilities
  
  License:        NTP AND BSD-2-Clause AND BSD-3-Clause AND BSD-4-Clause AND ISC AND Apache-2.0 AND Beerware
-@@ -26,6 +26,7 @@ BuildRequires:  python3-devel
+@@ -22,6 +22,7 @@ BuildRequires:  python3-devel
  BuildRequires:  rubygem-asciidoctor
  BuildRequires:  systemd
  BuildRequires:  waf
@@ -34,7 +34,7 @@ index bf6a5b3..5844789 100644
  
  %{?systemd_requires}
  
-@@ -59,7 +60,7 @@ NTPsec is a more secure and improved implementation of the Network Time
+@@ -55,7 +56,7 @@ NTPsec is a more secure and improved implementation of the Network Time
  Protocol derived from the original NTP project.
  
  %prep
@@ -43,7 +43,7 @@ index bf6a5b3..5844789 100644
  %autosetup -p1
  
  # Fix egg info to use a shorter version which will work as an rpm provide
-@@ -213,6 +214,9 @@ sed -i.bak -E '/^restrict/s/no(e?peer|trap)//g' %{_sysconfdir}/ntp.conf
+@@ -209,6 +210,9 @@ sed -i.bak -E '/^restrict/s/no(e?peer|trap)//g' %{_sysconfdir}/ntp.conf
  %{_sysusersdir}/ntpsec.conf
  
  %changelog

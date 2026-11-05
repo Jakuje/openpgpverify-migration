@@ -15,7 +15,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- refreshed keyring `gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- replaced keyring `gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg` with `gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.asc` from https://keys.openpgp.org/vks/v1/by-fingerprint/424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D#/gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.asc; its `Source` line is now that URL (see below)
 
 ### Testing
 
@@ -28,27 +28,24 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 Tested on 2026-10-23 at dist-git commit `3ea5a2fe5a9c` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
-### Keyring refresh
+### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The key owner has updated the key since: the copy at https://keys.openpgp.org/vks/v1/by-fingerprint/424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D#/gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.asc has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte, named like the URL, which becomes its `Source`:
+
+```
+curl -fsSL -o gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.asc 'https://keys.openpgp.org/vks/v1/by-fingerprint/424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D'
+```
+
+Fingerprints (unchanged):
 
 - `424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D`
-
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
-
-```
-sq --home=none network search --output - 424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D \
-  | sq keyring filter --experimental --cert 424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D --output update.pgp
-sq keyring merge gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg update.pgp | sq packet dearmor --output gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg.new
-mv gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg.new gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg
-```
 
 What changed in the certificate (`sq inspect`):
 
 ```diff
 --- dist-git/gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg
-+++ refreshed/gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg
-@@ -1,8 +1,10 @@
++++ upstream/gpgkey-424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D.gpg
+@@ -1,8 +1,7 @@
        Fingerprint: 424E14D703E7C6D43D9D6F364E7160ED4AC8EE1D
 -                   Invalid: The primary key is not live: Expired on 2022-05-05T11:36:21Z
 -  Expiration time: 2022-05-05 11:36:21 UTC (creation time + 12years 11months 14days 6h 11m 58s)
@@ -59,10 +56,9 @@ What changed in the certificate (`sq inspect`):
             UserID: Michael Stapelberg <stapelberg@debian.org>
 -self-signatures PositiveCertification: 2017-05-06
 +self-signatures PositiveCertification: 2009-05-21, 2012-03-28, 2014-04-27, 2017-05-06, 2020-05-21, 2025-01-22
-+third-party CasualCertification: 19
-+third-party GenericCertification: 85
-+third-party PositiveCertification: 20
 ```
+
+This copy is from keys.openpgp.org, looked up by fingerprint, so it is the same key the old file held. If the project publishes the key somewhere you prefer, that URL works as well, as long as the copy verifies this release.
 
 The keyring change is the first of the two commits, so it can be reviewed or merged on its own.
 

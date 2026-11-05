@@ -1,6 +1,6 @@
-From 3ad2819ea3f3f3b2c78c08f28141cceba236f907 Mon Sep 17 00:00:00 2001
+From c35f6bf35754a9c25810a018686d664ac4f8177e Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:52 +0100
+Date: Thu, 5 Nov 2026 10:38:42 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/mingw-nettle.spec b/mingw-nettle.spec
-index 55dfcdb..0dda9ad 100644
+index a5ac005..30c3a80 100644
 --- a/mingw-nettle.spec
 +++ b/mingw-nettle.spec
 @@ -2,7 +2,7 @@
@@ -27,7 +27,7 @@ index 55dfcdb..0dda9ad 100644
  
  Summary: MinGW package for nettle cryptographic library
  # Automatically converted from old format: LGPLv3+ or GPLv2+ - review is highly recommended.
-@@ -37,6 +37,7 @@ BuildRequires:  mingw64-openssl
+@@ -33,6 +33,7 @@ BuildRequires:  mingw64-openssl
  BuildRequires:  autoconf, automake
  BuildRequires:  gcc
  BuildRequires:  m4
@@ -35,7 +35,7 @@ index 55dfcdb..0dda9ad 100644
  
  
  %description
-@@ -75,7 +76,7 @@ or even in kernel space.
+@@ -71,7 +72,7 @@ or even in kernel space.
  
  %prep
  %autosetup -Tb 0 -p1 -n nettle-%{version}
@@ -44,7 +44,7 @@ index 55dfcdb..0dda9ad 100644
  
  
  %build
-@@ -136,6 +137,9 @@ rm -rf $RPM_BUILD_ROOT%{mingw64_infodir}/
+@@ -132,6 +133,9 @@ rm -rf $RPM_BUILD_ROOT%{mingw64_infodir}/
  
  
  %changelog

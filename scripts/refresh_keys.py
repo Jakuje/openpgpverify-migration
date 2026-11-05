@@ -238,7 +238,7 @@ def key_urls(text, pkg, name):
     return []
 
 
-def upstream_file(src, url, dst, tmp, replace=False):
+def upstream_file(src, url, dst, tmp, replace=False, superset=False):
     """Download URL; keep it only if it holds exactly the certificates of SRC."""
     name = os.path.basename(src)
     info = dict(url=url, size_old=os.path.getsize(src), method='upstream-url',
@@ -269,6 +269,10 @@ def upstream_file(src, url, dst, tmp, replace=False):
         # Asked for: the file at the URL replaces the keyring, dropping the other keys.
         info['dropped'] = [f for f in fo if f not in fn]
         info['fingerprints'] = fo = fn
+    if superset and not [f for f in fo if f not in fn]:
+        # Asked for: upstream's file also holds other keys of the project.
+        info['added'] = [f for f in fn if f not in fo]
+        fn = fo
     if sorted(fn) != sorted(fo):
         info['error'] = 'different certificates at the URL: %s' % ', '.join(
             ['+' + f for f in fn if f not in fo] + ['-' + f for f in fo if f not in fn])
@@ -370,7 +374,8 @@ def key_file(src, url, dst, tmp, keyserver):
     return info
 
 
-def propose_upstream(pkg, rec, url=None, keyserver=None, replace=False, source_url=False):
+def propose_upstream(pkg, rec, url=None, keyserver=None, replace=False, source_url=False,
+                     superset=False):
     """Like propose(), but take the keyring from the URL the spec names, or
     from URL (e.g. one upstream pointed us to); a URL not in the spec is
     added to the comment above the keyring's Source line."""
@@ -399,7 +404,7 @@ def propose_upstream(pkg, rec, url=None, keyserver=None, replace=False, source_u
             if keyserver is not None:
                 info = key_file(src, u, os.path.join(out, rel), tmp, keyserver)
             else:
-                info = upstream_file(src, u, os.path.join(out, rel), tmp, replace)
+                info = upstream_file(src, u, os.path.join(out, rel), tmp, replace, superset)
             info['file'] = rel
             if source_url and keyserver is None and info.get('changed'):
                 # The Source line becomes the URL; the file is named like it.
@@ -471,6 +476,8 @@ def propose_upstream(pkg, rec, url=None, keyserver=None, replace=False, source_u
                      sorted(f['url_fingerprints']) != sorted(f['fingerprints']) else []),
                    *(['- **replaces the keyring: drops %s** (asked for)'
                       % ', '.join(f['dropped'])] if f.get('dropped') else []),
+                   *(['- **adds keys the URL also holds: %s** (asked for)'
+                      % ', '.join(f['added'])] if f.get('added') else []),
                    '- certificates%s: %s' % (' (kept)' if f.get('dropped') else ' (unchanged)',
                                              ', '.join(f['fingerprints'])),
                    '- size: %s → %s bytes' % (f['size_old'], f['size_new']), '',
@@ -596,6 +603,8 @@ def main():
                          'like it, instead of a comment with the commands')
     ap.add_argument('--replace', action='store_true',
                     help='propose-upstream: the URL file may hold fewer keys; the others go')
+    ap.add_argument('--superset', action='store_true',
+                    help='propose-upstream: the URL file may hold more keys; they are added')
     ap.add_argument('--keyserver', action='store_true',
                     help='propose-key: complete the key from keyservers/WKD')
     a = ap.parse_args()
@@ -624,7 +633,7 @@ def main():
             try:
                 up = propose_upstream(pkg, st[pkg], a.url,
                                       a.keyserver if a.action == 'propose-key' else None,
-                                      a.replace, a.source_url)
+                                      a.replace, a.source_url, a.superset)
             except Exception as e:  # one broken package must not stop the run
                 up = dict(status='error', method=a.action, note='%r' % e)
             d = os.path.join(phase1.WORK, pkg)

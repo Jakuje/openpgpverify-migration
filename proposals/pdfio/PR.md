@@ -16,7 +16,7 @@ Why `sqv`:
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
 - dropped `BuildRequires: gpgverify`, only needed for `%gpgverify`
-- refreshed keyring `msweet-pub.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- replaced keyring `msweet-pub.gpg` with `msweet-pub.asc` from https://keys.openpgp.org/vks/v1/by-fingerprint/9086C3CDC66C3F563CF8F405BE67C75EC81F3244#/msweet-pub.asc; its `Source` line is now that URL (see below)
 - Release bumped (`1%{?dist}` → `2%{?dist}`) with a changelog entry
 
 ### Testing
@@ -30,27 +30,24 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 Tested on 2026-10-12 at dist-git commit `ade398c26602` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
-### Keyring refresh
+### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The key owner has updated the key since: the copy at https://keys.openpgp.org/vks/v1/by-fingerprint/9086C3CDC66C3F563CF8F405BE67C75EC81F3244#/msweet-pub.asc has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte, named like the URL, which becomes its `Source`:
+
+```
+curl -fsSL -o msweet-pub.asc 'https://keys.openpgp.org/vks/v1/by-fingerprint/9086C3CDC66C3F563CF8F405BE67C75EC81F3244'
+```
+
+Fingerprints (unchanged):
 
 - `9086C3CDC66C3F563CF8F405BE67C75EC81F3244`
-
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
-
-```
-sq --home=none network search --output - 9086C3CDC66C3F563CF8F405BE67C75EC81F3244 \
-  | sq keyring filter --experimental --cert 9086C3CDC66C3F563CF8F405BE67C75EC81F3244 --output update.pgp
-sq keyring merge --output msweet-pub.gpg.new msweet-pub.gpg update.pgp
-mv msweet-pub.gpg.new msweet-pub.gpg
-```
 
 What changed in the certificate (`sq inspect`):
 
 ```diff
 --- dist-git/msweet-pub.gpg
-+++ refreshed/msweet-pub.gpg
-@@ -1,11 +1,9 @@
++++ upstream/msweet-pub.gpg
+@@ -1,11 +1,10 @@
        Fingerprint: 9086C3CDC66C3F563CF8F405BE67C75EC81F3244
 -                   Invalid: The primary key is not live: Expired on 2024-10-30T22:06:43Z
 -  Expiration time: 2024-10-30 22:06:43 UTC (creation time + 4years)
@@ -59,6 +56,7 @@ What changed in the certificate (`sq inspect`):
             Subkey: C53DB51FF598C6F84B524FBEA692FD1B4D815AE0
 -                   Invalid: The certificate is not live: The primary key is not live, because Expired on 2024-10-30T22:06:43Z
 -  Expiration time: 2024-10-30 22:06:43 UTC (creation time + 4years)
++                   Invalid: The subkey is not live: Expired on 2026-11-01T20:05:46Z
 +  Expiration time: 2026-11-01 20:05:46 UTC (creation time + 6years 1day 9h 59m 3s)
          Key flags: transport encryption, data-at-rest encryption
             UserID: Michael R Sweet <msweet@msweet.org>
@@ -67,6 +65,8 @@ What changed in the certificate (`sq inspect`):
 +self-signatures PositiveCertification: 2020-10-30, 2024-11-01, 2025-11-11
 +self-signatures SubkeyBinding: 2020-10-30, 2024-11-01
 ```
+
+This copy is from keys.openpgp.org, looked up by fingerprint, so it is the same key the old file held. If the project publishes the key somewhere you prefer, that URL works as well, as long as the copy verifies this release.
 
 The keyring change is the first of the two commits, so it can be reviewed or merged on its own.
 

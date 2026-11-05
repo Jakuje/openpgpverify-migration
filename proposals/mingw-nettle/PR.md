@@ -16,7 +16,7 @@ Why `sqv`:
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
 - `nettle-release-keyring.gpg` was in the lookaside cache, which a PR cannot update, so it moves into git (its line in `sources` is dropped)
-- refreshed keyring `nettle-release-keyring.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- replaced keyring `nettle-release-keyring.gpg` with `nettle-release-keyring.asc` from https://keys.openpgp.org/vks/v1/by-fingerprint/343C2FF0FBEE5EC2EDBEF399F3599FF828C67298#/nettle-release-keyring.asc; its `Source` line is now that URL (see below)
 - Release bumped (`3%{?dist}` → `4%{?dist}`) with a changelog entry
 
 ### Testing
@@ -30,27 +30,24 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 Tested on 2026-10-23 at dist-git commit `99f0fd0fa8fc` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
-### Keyring refresh
+### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The key owner has updated the key since: the copy at https://keys.openpgp.org/vks/v1/by-fingerprint/343C2FF0FBEE5EC2EDBEF399F3599FF828C67298#/nettle-release-keyring.asc has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte, named like the URL, which becomes its `Source`:
+
+```
+curl -fsSL -o nettle-release-keyring.asc 'https://keys.openpgp.org/vks/v1/by-fingerprint/343C2FF0FBEE5EC2EDBEF399F3599FF828C67298'
+```
+
+Fingerprints (unchanged):
 
 - `343C2FF0FBEE5EC2EDBEF399F3599FF828C67298`
-
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
-
-```
-sq --home=none network search --output - 343C2FF0FBEE5EC2EDBEF399F3599FF828C67298 \
-  | sq keyring filter --experimental --cert 343C2FF0FBEE5EC2EDBEF399F3599FF828C67298 --output update.pgp
-sq keyring merge --output nettle-release-keyring.gpg.new nettle-release-keyring.gpg update.pgp
-mv nettle-release-keyring.gpg.new nettle-release-keyring.gpg
-```
 
 What changed in the certificate (`sq inspect`):
 
 ```diff
 --- dist-git/nettle-release-keyring.gpg
-+++ refreshed/nettle-release-keyring.gpg
-@@ -1,16 +1,14 @@
++++ upstream/nettle-release-keyring.gpg
+@@ -1,16 +1,10 @@
        Fingerprint: 343C2FF0FBEE5EC2EDBEF399F3599FF828C67298
 -                   Invalid: The primary key is not live: Expired on 2025-01-15T17:12:43Z
 -  Expiration time: 2025-01-15 17:12:43 UTC (creation time + 12years 7days 21h 46m 16s)
@@ -64,15 +61,16 @@ What changed in the certificate (`sq inspect`):
             UserID: Niels Möller <nisse@lysator.liu.se>
 -self-signatures PositiveCertification: 2013-01-07, 2020-01-17
 -self-signatures SubkeyBinding: 2013-01-07, 2020-01-17
+-third-party CasualCertification: 7
 +self-signatures PositiveCertification: 2013-01-07, 2020-01-17, 2025-06-26
 +self-signatures SubkeyBinding: 2013-01-07, 2020-01-17, 2025-06-26
- third-party CasualCertification: 7
  third-party CertificationRevocation: 1
 -third-party GenericCertification: 16
-+third-party GenericCertification: 18
- third-party PersonaCertification: 1
- third-party PositiveCertification: 3
+-third-party PersonaCertification: 1
+-third-party PositiveCertification: 3
 ```
+
+This copy is from keys.openpgp.org, looked up by fingerprint, so it is the same key the old file held. If the project publishes the key somewhere you prefer, that URL works as well, as long as the copy verifies this release.
 
 The keyring change is the first of the two commits, so it can be reviewed or merged on its own.
 

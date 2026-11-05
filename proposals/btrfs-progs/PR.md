@@ -16,7 +16,7 @@ Why `sqv`:
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
 - dropped `BuildRequires:  gnupg2`, only needed for `%gpgverify`
-- refreshed keyring `gpgkey-F2B41200C54EFB30380C1756C565D5F9D76D583B.gpg` (see below); the comment above its `Source` line now shows the commands for refreshing it
+- replaced keyring `gpgkey-F2B41200C54EFB30380C1756C565D5F9D76D583B.gpg` with `C565D5F9D76D583B.asc` from https://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git/plain/keys/C565D5F9D76D583B.asc; its `Source` line is now that URL (see below)
 - Release bumped (`3%{?dist}` → `4%{?dist}`) with a changelog entry
 
 ### Testing
@@ -30,27 +30,24 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 Tested on 2026-10-26 at dist-git commit `35030463c68f` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
-### Keyring refresh
+### Keyring update
 
-`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. The same certificate, looked up by fingerprint (hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com; hkps://keys.openpgp.org, hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com, WKD; hkps://keyserver.ubuntu.com, hkps://sks.pod01.fleetstreetops.com), has self-signatures our copy is missing (a renewed expiry, modern hashes or the older binding history), so this PR updates the keyring. No key was added or removed. Please check the fingerprint against upstream:
+`%openpgpverify` rejected the signature with the keyring in dist-git (key expired before signing), while `%gpgverify` ignores that. Upstream has updated the key since: the copy at https://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git/plain/keys/C565D5F9D76D583B.asc has the same fingerprint(s) and verifies the release with sqv. This PR replaces the file with that copy, byte for byte, named like the URL, which becomes its `Source`:
+
+```
+curl -fsSL -O https://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git/plain/keys/C565D5F9D76D583B.asc
+```
+
+Fingerprints (unchanged):
 
 - `F2B41200C54EFB30380C1756C565D5F9D76D583B`
-
-The refresh, as run (the spec comment above the `Source` line has the same commands, for the next refresh):
-
-```
-sq --home=none network search --output - F2B41200C54EFB30380C1756C565D5F9D76D583B \
-  | sq keyring filter --experimental --cert F2B41200C54EFB30380C1756C565D5F9D76D583B --output update.pgp
-sq keyring merge gpgkey-F2B41200C54EFB30380C1756C565D5F9D76D583B.gpg update.pgp | sq packet dearmor --output gpgkey-F2B41200C54EFB30380C1756C565D5F9D76D583B.gpg.new
-mv gpgkey-F2B41200C54EFB30380C1756C565D5F9D76D583B.gpg.new gpgkey-F2B41200C54EFB30380C1756C565D5F9D76D583B.gpg
-```
 
 What changed in the certificate (`sq inspect`):
 
 ```diff
 --- dist-git/gpgkey-F2B41200C54EFB30380C1756C565D5F9D76D583B.gpg
-+++ refreshed/gpgkey-F2B41200C54EFB30380C1756C565D5F9D76D583B.gpg
-@@ -1,13 +1,13 @@
++++ upstream/gpgkey-F2B41200C54EFB30380C1756C565D5F9D76D583B.gpg
+@@ -1,13 +1,12 @@
        Fingerprint: F2B41200C54EFB30380C1756C565D5F9D76D583B
 -                   Invalid: The primary key is not live: Expired on 2024-08-24T18:40:54Z
 -  Expiration time: 2024-08-24 18:40:54 UTC (creation time + 9years 11months 27days 21h 50m 24s)
@@ -64,11 +61,12 @@ What changed in the certificate (`sq inspect`):
             UserID: David Sterba <dsterba@suse.cz>
             UserID: David Sterba <kdave@kernel.org>
 -self-signatures PositiveCertification: 2014-08-27, 2014-09-12
-+self-signatures PositiveCertification: 2014-08-27, 2014-09-12, 2023-09-14, 2024-01-12
++self-signatures PositiveCertification: 2024-01-12
  self-signatures SubkeyBinding: 2014-08-27
-+third-party GenericCertification: 5
 +third-party PositiveCertification: 1
 ```
+
+The URL is the pgpkeys repository of kernel.org. Browsers may get an anti-bot page there; curl and spectool get the key file.
 
 The keyring change is the first of the two commits, so it can be reviewed or merged on its own.
 

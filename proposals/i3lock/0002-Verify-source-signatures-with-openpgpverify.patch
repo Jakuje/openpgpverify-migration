@@ -1,6 +1,6 @@
-From 8636a37eab17a54f7fe803c99df181defabf9453 Mon Sep 17 00:00:00 2001
+From bc9050572ef4c2cc9c674dc7c76d9aa04a25ac7d Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:44 +0100
+Date: Thu, 5 Nov 2026 10:38:42 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/i3lock.spec b/i3lock.spec
-index 3095be5..d7545b1 100644
+index ee6bfa9..808bbd5 100644
 --- a/i3lock.spec
 +++ b/i3lock.spec
-@@ -34,7 +34,7 @@ BuildRequires:  libev-devel
+@@ -30,7 +30,7 @@ BuildRequires:  libev-devel
  BuildRequires:  pam-devel
  
  # gpg verification
@@ -25,7 +25,7 @@ index 3095be5..d7545b1 100644
  BuildRequires:  make
  
  %description
-@@ -57,7 +57,7 @@ Many little improvements have been made to i3lock over time:
+@@ -53,7 +53,7 @@ Many little improvements have been made to i3lock over time:
    uses the bsd_auth(3) framework.
  
  %prep

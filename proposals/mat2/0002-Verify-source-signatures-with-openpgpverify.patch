@@ -1,6 +1,6 @@
-From 3b9fa1d6f1a5b6501d924e62b520efbc9cbb4cc4 Mon Sep 17 00:00:00 2001
+From d5922578c3e0811923337728f47ceb96ae938290 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:56 +0100
+Date: Thu, 5 Nov 2026 10:38:42 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/mat2.spec b/mat2.spec
-index d67de49..333ee45 100644
+index 406ee1c..1c76a45 100644
 --- a/mat2.spec
 +++ b/mat2.spec
-@@ -43,6 +43,7 @@ BuildRequires:  poppler-glib
+@@ -39,6 +39,7 @@ BuildRequires:  poppler-glib
  # Test dependencies
  BuildRequires:  ffmpeg-free
  BuildRequires:  perl-Image-ExifTool
@@ -24,7 +24,7 @@ index d67de49..333ee45 100644
  
  Requires:       python3-%{modname} = %{version}-%{release}
  
-@@ -110,7 +111,7 @@ Requires:       python3-%{modname} = %{version}-%{release}
+@@ -106,7 +107,7 @@ Requires:       python3-%{modname} = %{version}-%{release}
  Dolphin integration for %{name}.
  
  %prep
