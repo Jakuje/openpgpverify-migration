@@ -311,7 +311,10 @@ def make_commit(pkg, s, refresh_files):
                 extra_body=('\n' + '\n'.join(wrap(extra)) + '\n') if extra else '')
     commit(body)
     n = 2 if refresh_files else 1
-    patch = sh(['git', '-C', pr, 'format-patch', '-%d' % n, '--stdout', '--binary']).stdout
+    # bytes, not text: universal newlines would turn a keyring's CRLF into LF
+    # and the patch would no longer apply
+    patch = subprocess.run(['git', '-C', pr, 'format-patch', '-%d' % n, '--stdout', '--binary'],
+                           capture_output=True).stdout.decode('utf-8', 'surrogateescape')
     diff = sh(['git', '-C', pr, 'diff', s['spec_commit'], 'HEAD', '--', pkg + '.spec']).stdout
     return patch, diff
 
@@ -610,7 +613,8 @@ def main():
                 print('%-24s %s' % (pkg, index[-1][1]), flush=True)
                 continue
             for name, text_ in split_series(patch):
-                open(os.path.join(d, name), 'w').write(text_)
+                with open(os.path.join(d, name), 'w', newline='', errors='surrogateescape') as fh:
+                    fh.write(text_)
             open(os.path.join(d, 'PR.md'), 'w').write(text)
             what = 'draft PR' if draft else 'PR'
             why = 'keyring refresh %s' % kr if draft else (

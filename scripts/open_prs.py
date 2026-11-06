@@ -120,7 +120,7 @@ def prepare(pkg, rec):
         return 'rawhide moved to %s' % head[:12]
     git(d, 'checkout', '-q', '-b', BRANCH)
     patches = sorted(glob.glob(os.path.join(state.ROOT, 'proposals', pkg, '*.patch')))
-    r = git(d, 'am', '-q', *patches, check=False)
+    r = git(d, 'am', '-q', '--keep-cr', *patches, check=False)
     if r.returncode:
         git(d, 'am', '--abort', check=False)
         return 'git am failed: %s' % r.stderr.strip()[:200]

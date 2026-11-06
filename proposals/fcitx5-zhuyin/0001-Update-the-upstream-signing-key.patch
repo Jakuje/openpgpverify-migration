@@ -1,6 +1,6 @@
-From 12b7c329b6711d5a911dd7f727ef24c8f8da44b1 Mon Sep 17 00:00:00 2001
+From 3c37c4055b02c0c38cafd95a9341dfb7d83d7d30 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 21:20:34 +0100
+Date: Fri, 6 Nov 2026 09:07:07 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Refresh 0x8E8B898CBF2412F9 from keyservers: same certificate(s), with
