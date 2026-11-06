@@ -1,6 +1,6 @@
-From e98975a36f063ebd7f79a87fb37400c0c70954be Mon Sep 17 00:00:00 2001
+From f5b94f765d940f5a79da8d2789c88a868e3315f2 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 21:20:35 +0100
+Date: Fri, 6 Nov 2026 09:01:14 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- ocserv.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ ocserv.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/ocserv.spec b/ocserv.spec
-index a7e4b88..9883aee 100644
+index a7e4b88..cefd05c 100644
 --- a/ocserv.spec
 +++ b/ocserv.spec
-@@ -38,6 +38,7 @@ BuildRequires:	libnl3-devel, krb5-devel, libtasn1-devel, gperf, libtalloc-devel
- BuildRequires:	libev-devel, llhttp-devel, radcli-devel, lz4-devel, readline-devel
+@@ -49,7 +49,7 @@ BuildRequires:	uid_wrapper
+ %ifnarch aarch64 %{ix86} %{arm}
+ BuildRequires:	socket_wrapper
+ %endif
+-BuildRequires:	gnupg2
++BuildRequires: openpgpverify
+ BuildRequires:	libseccomp-devel
  
- BuildRequires:	libmaxminddb-devel
-+BuildRequires:	openpgpverify
- 
- %if %{use_systemd}
- BuildRequires:	systemd
-@@ -86,7 +87,7 @@ to provide the secure VPN service.
+ %endif
+@@ -86,7 +86,7 @@ to provide the secure VPN service.
  
  %prep
  %if %{have_gpgv2}

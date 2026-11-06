@@ -550,8 +550,12 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
     unchecked_drop = gnupg2_check and (prev or {}).get('gnupg2_override') == 'drop-unchecked'
     if unchecked_drop:
         gnupg2_check = False
+        # why the full build could not run: the sources, or the earlier check's reason
+        pc = (prev or {}).get('gnupg2_check') or {}
+        why = 'the sources are too large for the test machine' if too_big else \
+            pc.get('why') or pc.get('reason', '').replace('not checked: ', '')
         upd['gnupg2_check'] = dict(verdict='drop', unchecked=True, has_check=rec['has_check'],
-                                   reason='not checked; dropped on review')
+                                   reason='not checked; dropped on review', why=why)
     elif gnupg2_check and too_big:
         gnupg2_check = False
         upd['gnupg2_check'] = dict(verdict='keep', has_check=rec['has_check'],

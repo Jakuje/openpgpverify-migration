@@ -1,6 +1,6 @@
-From c4c3ca96e5c6e266dc971a9aa89e51bc434099b3 Mon Sep 17 00:00:00 2001
+From 1bb46389a50acc948bf10eb609b11a2a475f68ae Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 21:20:34 +0100
+Date: Fri, 6 Nov 2026 09:01:14 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- llvm20.spec | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ llvm20.spec | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/llvm20.spec b/llvm20.spec
-index 15fff89..f06df9d 100644
+index 15fff89..edd6247 100644
 --- a/llvm20.spec
 +++ b/llvm20.spec
-@@ -548,6 +548,7 @@ BuildRequires:	python%{python3_pkgversion}-rpm-macros
+@@ -547,7 +547,7 @@ BuildRequires:	python%{python3_pkgversion}-rpm-macros
+ %endif
  
  # For gpg source verification
- BuildRequires:	gnupg2
+-BuildRequires:	gnupg2
 +BuildRequires:	openpgpverify
  
  BuildRequires:	swig
  BuildRequires:	libxml2-devel
-@@ -1178,11 +1179,11 @@ Polly header files.
+@@ -1178,11 +1178,11 @@ Polly header files.
  %prep
  %if %{without snapshot_build}
  # llvm

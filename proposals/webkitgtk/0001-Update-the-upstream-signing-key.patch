@@ -1,6 +1,6 @@
-From 53c698db78dd5521bca0d0cb64b7d9990180d208 Mon Sep 17 00:00:00 2001
+From fd80e429a5740faeaece570ae63e22ab25988f36 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 21:20:35 +0100
+Date: Fri, 6 Nov 2026 09:01:14 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Refresh webkitgtk-keys.gpg from keyservers: same certificate(s), with

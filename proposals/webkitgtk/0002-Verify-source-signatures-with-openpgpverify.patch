@@ -1,6 +1,6 @@
-From aac3be302b30ebdd6a9223c22586d5e6cff7c284 Mon Sep 17 00:00:00 2001
+From 49d4f791b3c489e9e835ab71cfb2eb33e62d96ff Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 21:20:35 +0100
+Date: Fri, 6 Nov 2026 09:01:14 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- webkitgtk.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ webkitgtk.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/webkitgtk.spec b/webkitgtk.spec
-index 3e761aa..590ffb4 100644
+index 3e761aa..ef6ad14 100644
 --- a/webkitgtk.spec
 +++ b/webkitgtk.spec
-@@ -104,6 +104,7 @@ BuildRequires:  gettext
+@@ -103,7 +103,7 @@ BuildRequires:  flite-devel
+ BuildRequires:  gettext
  BuildRequires:  gi-docgen
  BuildRequires:  git
- BuildRequires:  gnupg2
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
  BuildRequires:  gperf
  BuildRequires:  hyphen-devel
  BuildRequires:  libatomic
-@@ -305,7 +306,7 @@ The javascriptcoregtk4.1-devel package contains libraries, build data, and heade
+@@ -305,7 +305,7 @@ The javascriptcoregtk4.1-devel package contains libraries, build data, and heade
  files for developing applications that use JavaScript engine from webkit2gtk-4.1.
  
  %prep

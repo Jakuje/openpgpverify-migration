@@ -1,6 +1,6 @@
-From 83b59f754edc823869513aad3dcf69f3dffc2360 Mon Sep 17 00:00:00 2001
+From d587ea1dcb1eed69089936f1a5a6e39af37b0017 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 21:20:34 +0100
+Date: Fri, 6 Nov 2026 09:01:14 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- libime.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ libime.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/libime.spec b/libime.spec
-index 7668ff0..7f1853d 100644
+index 7668ff0..8796bc1 100644
 --- a/libime.spec
 +++ b/libime.spec
-@@ -12,6 +12,7 @@ Source1:    https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}_dict
+@@ -11,7 +11,7 @@ Source1:    https://download.fcitx-im.org/fcitx5/%{name}/%{name}-%{version}_dict
+ #   sq --home=none network keyserver search 2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9 --output 0x8E8B898CBF2412F9 --overwrite
  Source2:    https://pgp.key-server.io/download/0x8E8B898CBF2412F9
  
- BuildRequires: gnupg2
+-BuildRequires: gnupg2
 +BuildRequires: openpgpverify
  BuildRequires: cmake
  BuildRequires: ninja-build
  BuildRequires: gcc-c++
-@@ -48,7 +49,7 @@ Requires:       boost-devel%{?_isa}
+@@ -48,7 +48,7 @@ Requires:       boost-devel%{?_isa}
  Development files for %{name}
  
  %prep

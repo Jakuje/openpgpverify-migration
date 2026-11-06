@@ -482,10 +482,10 @@ def render_pr(pkg, s, draft):
               '`%gpgverify` on that branch.' if s.get('rhel_conditional') else '.')]
     chk = s.get('gnupg2_check')
     if chk and chk['verdict'] == 'drop' and chk.get('unchecked'):
-        notes.append('- `BuildRequires: gnupg2` is dropped too, without a full build: the '
-                     'sources are too large for the test machine. Nothing in the spec uses gpg '
-                     'besides the signature check. If the build turns out to need it, it can '
-                     'come back.')
+        notes.append('- `BuildRequires: gnupg2` is dropped too, without a full build: %s. '
+                     'Nothing in the spec uses gpg besides the signature check. If the build '
+                     'turns out to need it, it can come back.'
+                     % (chk.get('why') or 'the sources are too large for the test machine'))
     elif chk and chk['verdict'] == 'drop' and chk.get('overridden'):
         notes.append('- `BuildRequires: gnupg2` is dropped too. The changed spec was built '
                      'completely (`rpmbuild -bb`%s) in a chroot with gnupg2 and gpgverify '

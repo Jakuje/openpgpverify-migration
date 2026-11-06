@@ -1,6 +1,6 @@
-From 1f7bdd24cab07d7cc35fc3dbb5670e5cea9e569c Mon Sep 17 00:00:00 2001
+From c4ea330e50078170249aeebfe49cc92243e8e2db Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 21:20:34 +0100
+Date: Fri, 6 Nov 2026 09:01:14 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- llvm14.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ llvm14.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/llvm14.spec b/llvm14.spec
-index 177e320..d2a44c1 100644
+index 177e320..92f97ca 100644
 --- a/llvm14.spec
 +++ b/llvm14.spec
 @@ -71,7 +71,7 @@
@@ -27,15 +27,16 @@ index 177e320..d2a44c1 100644
  Summary:	The Low Level Virtual Machine
  
  License:	NCSA
-@@ -124,6 +124,7 @@ BuildRequires:	python3-setuptools
+@@ -123,7 +123,7 @@ BuildRequires:	python3-devel
+ BuildRequires:	python3-setuptools
  
  # For origin certification
- BuildRequires:	gnupg2
+-BuildRequires:	gnupg2
 +BuildRequires:	openpgpverify
  
  
  Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
-@@ -208,7 +209,7 @@ LLVM's modified googletest sources.
+@@ -208,7 +208,7 @@ LLVM's modified googletest sources.
  %endif
  
  %prep
@@ -44,11 +45,11 @@ index 177e320..d2a44c1 100644
  %autosetup -n %{llvm_srcdir} -p2
  
  %py3_shebang_fix \
-@@ -566,6 +567,9 @@ fi
+@@ -566,6 +566,9 @@ fi
  %endif
  
  %changelog
-+* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 14.0.5-16
++* Fri Nov 06 2026 Jakub Jelen <jjelen@redhat.com> - 14.0.5-16
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 14.0.5-15

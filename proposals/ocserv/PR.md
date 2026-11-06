@@ -13,6 +13,7 @@ Why `sqv`:
 
 - the two `gpgv2` calls (one per upstream key, `||`) are replaced by one `%{openpgpverify} --keyrings` call that accepts a signature from either key
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
+- dropped `BuildRequires:	gnupg2`, only needed for the GnuPG verification
 - refreshed keyring `gpgkey-1F42418905D8206AA754CCDC29EE58B996865171.gpg` (see below)
 
 ### Testing
@@ -24,7 +25,7 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 | current (`gpgv2`) | 1 | pass |
 | this PR (`%openpgpverify`) | 1 | pass |
 
-Tested on 2026-11-05 at dist-git commit `241338735289` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
+Tested on 2026-11-06 at dist-git commit `241338735289` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
 ### Keyring refresh
 
@@ -96,7 +97,7 @@ The keyring change is the first of the two commits, so it can be reviewed or mer
 ### Notes
 
 - Rawhide only. Whether to merge it into other branches is up to you; openpgpverify is available in Fedora 43 and later, EPEL 9 and EPEL 10.
-- `BuildRequires: gnupg2` is kept: not checked: the signature check passes, but `rpmbuild -bp` fails later, with the unchanged spec too. If it was only there for the signature check, it can go too.
+- `BuildRequires: gnupg2` is dropped too, without a full build: the signature check passes, but `rpmbuild -bp` fails later, with the unchanged spec too. Nothing in the spec uses gpg besides the signature check. If the build turns out to need it, it can come back.
 - Nothing changes in the built packages, so this doesn't need a build right away; the new check runs with your next build.
 
 ### Questions
