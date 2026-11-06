@@ -1,6 +1,6 @@
-From 1ed031bd47a53c2ed1f6e7d764f79afea8507876 Mon Sep 17 00:00:00 2001
+From c336b54ae14225d898fe80acc79ffa30d5b65c2c Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 6 Nov 2026 10:31:03 +0100
+Date: Fri, 6 Nov 2026 12:15:42 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Convert upstream's KEYS file (https://archive.apache.org/dist/ant/KEYS)

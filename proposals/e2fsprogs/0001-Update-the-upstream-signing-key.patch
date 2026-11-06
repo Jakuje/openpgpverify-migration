@@ -1,6 +1,6 @@
-From 7ac2989017aea2a11e7da9cefa8fb6c70a96b557 Mon Sep 17 00:00:00 2001
+From c2bd8b4c17472aab2f55cdea1ca41928f280686c Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 6 Nov 2026 10:31:02 +0100
+Date: Fri, 6 Nov 2026 12:15:42 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Replace the content of tytso-key.asc with the keyserver copy of the key

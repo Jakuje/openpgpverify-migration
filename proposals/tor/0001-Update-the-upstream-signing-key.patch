@@ -1,6 +1,6 @@
-From b3d0f81eaf0ceac346e0c095c06bb3a9b5eeb3b4 Mon Sep 17 00:00:00 2001
+From 4dab56fa2132741e17039130b5c1efdef6729e6f Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 6 Nov 2026 10:31:02 +0100
+Date: Fri, 6 Nov 2026 12:15:42 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Refresh tor-keyring.pub from keyservers: same certificate(s), with

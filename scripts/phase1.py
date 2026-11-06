@@ -116,7 +116,7 @@ FULL_BUILD = ('rm -rf /builddir/full /builddir/top-full && cp -a /builddir/new.o
 FULL_BUILD_TIMEOUT = 2 * 3600
 # gpg named as a command in the build log (keyring file names like gpgkey-*.gpg
 # and the openpgpverify call itself do not count)
-LOG_GPG = re.compile(r'(?<![\w./-])(gpg2?|gpgv2?|gpgconf|gpgsm|gpg-agent)(?![\w.-])|GNUPGHOME|gnupg',
+LOG_GPG = re.compile(r'(?<![\w./-])(gpg2?|gpgv2?|gpgconf|gpgsm|gpg-agent)(?![\w.-])|GNUPGHOME|gnupg(?!_cv_)',
                      re.I)
 
 ENV_INFO = ('rpm -q rpm openpgpverify gpgverify sequoia-sqv gnupg2; '

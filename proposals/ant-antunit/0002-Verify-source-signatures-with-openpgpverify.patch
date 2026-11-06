@@ -1,6 +1,6 @@
-From f62370d258fcd073735f7e44e18902486bade7c8 Mon Sep 17 00:00:00 2001
+From 194a5f32c70df4a47c5273fcb29f27dd734bf1ca Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 6 Nov 2026 10:31:03 +0100
+Date: Fri, 6 Nov 2026 12:15:42 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- ant-antunit.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ ant-antunit.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/ant-antunit.spec b/ant-antunit.spec
-index b6fc478..af486ab 100644
+index b6fc478..894ea55 100644
 --- a/ant-antunit.spec
 +++ b/ant-antunit.spec
-@@ -20,6 +20,7 @@ BuildRequires:  maven-local-openjdk25
+@@ -15,7 +15,7 @@ Source1:        https://archive.apache.org/dist/ant/antlibs/antunit/source/apach
+ #   rm KEYS
+ Source2:        KEYS.pgp
+ 
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  maven-local-openjdk25
  BuildRequires:  mvn(junit:junit)
  BuildRequires:  mvn(org.apache.ant:ant)
- BuildRequires:  mvn(org.apache.ant:ant-testutil)
-+BuildRequires:  openpgpverify
- 
- %description
- This library contains tasks that enables Ant task developers to test their tasks
-@@ -30,7 +31,7 @@ JUnit task.
+@@ -30,7 +30,7 @@ JUnit task.
  %{?javadoc_package}
  
  %prep

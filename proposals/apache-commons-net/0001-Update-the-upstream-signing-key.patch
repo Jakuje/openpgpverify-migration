@@ -1,6 +1,6 @@
-From d99315710d4b873acca22808657ac547f62077b7 Mon Sep 17 00:00:00 2001
+From 8a88f1398e5771a0427fefcf587ddb81aba4f186 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 6 Nov 2026 10:31:03 +0100
+Date: Fri, 6 Nov 2026 12:15:42 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Convert upstream's KEYS file (https://downloads.apache.org/commons/KEYS)

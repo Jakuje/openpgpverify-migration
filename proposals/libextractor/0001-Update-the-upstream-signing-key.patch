@@ -1,6 +1,6 @@
-From c86abca52715139df3d78075d45268667b88df3b Mon Sep 17 00:00:00 2001
+From 57319e026639faa9c3896cfae74710f8ec740a44 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 6 Nov 2026 10:31:02 +0100
+Date: Fri, 6 Nov 2026 12:19:22 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Replace gnu-keyring.gpg with libextractor-keyring.pgp, the keyserver

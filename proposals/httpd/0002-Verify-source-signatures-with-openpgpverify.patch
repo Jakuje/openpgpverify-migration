@@ -1,6 +1,6 @@
-From 2f5e9db94fbbf7bda7a5cea296f8f4db04854e0f Mon Sep 17 00:00:00 2001
+From 38abd26d688f078f484713f80facfb17357a7c9e Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 6 Nov 2026 10:31:02 +0100
+Date: Fri, 6 Nov 2026 12:16:59 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/httpd.spec b/httpd.spec
-index a5e9199..29411ec 100644
+index a5e9199..49eadb2 100644
 --- a/httpd.spec
 +++ b/httpd.spec
 @@ -30,7 +30,7 @@
@@ -48,7 +48,7 @@ index a5e9199..29411ec 100644
  %{_rpmconfigdir}/macros.d/macros.httpd
  
  %changelog
-+* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 2.4.69-2
++* Fri Nov 06 2026 Jakub Jelen <jjelen@redhat.com> - 2.4.69-2
 +- Verify upstream source signatures with openpgpverify
 +
  * Thu Oct 01 2026 Joe Orton  <jorton@redhat.com> - 2.4.69-1

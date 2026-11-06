@@ -610,8 +610,10 @@ def render_pr(pkg, s, draft):
                         ('; the spec has no `%check`', 'the build log doesn\'t mention gpg')))
     elif chk:
         reason = ' '.join(chk['reason'].split())
-        notes.append('- `BuildRequires: gnupg2` is kept: %s.%s' % (
-            reason, ' If it was only there for the signature check, it can go too.'
+        notes.append('- `BuildRequires: gnupg2` is kept%s.%s' % (
+            '; whether it can go was not checked: ' + reason[len('not checked: '):]
+            if reason.startswith('not checked: ') else ': ' + reason,
+            ' If it was only there for the signature check, it can go too.'
             if reason.startswith('not checked') else
             ' It stays for what the build itself does with gpg; the source signature check '
             'no longer uses it.' if reason.startswith('the build fails without') else ''))

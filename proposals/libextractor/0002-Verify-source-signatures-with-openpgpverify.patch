@@ -1,6 +1,6 @@
-From 23ed1c7caeadb6f92c4d0f3a59ce8fbd45c4b584 Mon Sep 17 00:00:00 2001
+From c130a17db1d0e92f939b5051ced67bf89943235f Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 6 Nov 2026 10:31:02 +0100
+Date: Fri, 6 Nov 2026 12:19:22 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- libextractor.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ libextractor.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/libextractor.spec b/libextractor.spec
-index bab924d..dd4512c 100644
+index bab924d..b0e813e 100644
 --- a/libextractor.spec
 +++ b/libextractor.spec
-@@ -49,6 +49,7 @@ BuildRequires:  zzuf
- BuildRequires:  autoconf
- BuildRequires:  automake
- BuildRequires:  libtool
+@@ -40,7 +40,7 @@ BuildRequires:  gcc
+ ## exiv2 config check uses g++
+ BuildRequires:  gcc-c++
+ BuildRequires:  gettext-devel
+-BuildRequires:  gnupg2
 +BuildRequires:  openpgpverify
- 
- %description
- libextractor is a simple library for keyword extraction.  libextractor
-@@ -147,7 +148,7 @@ introduce additional dependencies.
+ BuildRequires:  libtool-ltdl-devel
+ BuildRequires:  make
+ BuildRequires:  pkgconfig(bzip2)
+@@ -147,7 +147,7 @@ introduce additional dependencies.
  #pluginpkg      gstreamer  -B gstreamer-devel,libgsf-gnome-devel,libgsf-devel,gtk
  
  %prep
