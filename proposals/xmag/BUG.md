@@ -8,7 +8,7 @@ Summary: xmag: source signature does not verify with openpgpverify (signing key 
 
 As part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify), `%gpgverify` (GnuPG) is being replaced by `%openpgpverify` (Sequoia `sqv`). For xmag, the switch can't be done in a simple PR: `%gpgverify` accepts the current upstream signature, but `%openpgpverify` rejects it.
 
-Failing check (dist-git commit `0d6382aca146`):
+Failing check (dist-git commit `fd2446fc1ac4`):
 
 ```
 %openpgpverify --keyring=gpgkey-4A193C06D35E7C670FA4EF0BA2FB9E081F2D130E.gpg --signature=xmag-1.0.8.tar.xz.sig --data=xmag-1.0.8.tar.xz
@@ -24,6 +24,8 @@ openpgpverify: Signature verification failed.
 ```
 
 ### Why
+
+The spec already says so (`# 1024-bit DSA keys are not supoprted by Sequoia`); this bug tracks it for the Change.
 
 The release is signed with a key whose algorithm the crypto policy rejects (DSA, or RSA shorter than 2048 bits). A new signature with the same key won't help.
 

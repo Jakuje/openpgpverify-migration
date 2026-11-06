@@ -8,7 +8,7 @@ Summary: bash: source signature does not verify with openpgpverify (SHA-1 data s
 
 As part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify), `%gpgverify` (GnuPG) is being replaced by `%openpgpverify` (Sequoia `sqv`). For bash, the switch can't be done in a simple PR: `%gpgverify` accepts the current upstream signature, but `%openpgpverify` rejects it.
 
-Failing check (dist-git commit `55f4c9ddc793`):
+Failing check (dist-git commit `089036c4d025`):
 
 ```
 %openpgpverify --keyring=chet-gpgkey.asc --signature=bash-5.3.tar.gz.sig --data=bash-5.3.tar.gz

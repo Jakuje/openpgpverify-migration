@@ -130,6 +130,19 @@ REASONS.update({
         "3072+), then switch the keyring to it.\n"
         "- Until then the package can keep `%gpgverify`."),
 })
+REASONS['v3-key-sha1-cert'] = (
+    'unreadable v3 key in keyring, SHA-1 self-signatures',
+    "Two things stand in the way. The keyring contains a version 3 certificate, which "
+    "Sequoia can't parse; GnuPG skips it silently, but sqv rejects the whole keyring. "
+    "With the keyring trimmed to the signing key (`gpg --import` into a temporary "
+    "keyring, then `gpg --export FPR`), sqv reads it, but the signing key's own "
+    "self-signatures are made with SHA-1, which the Fedora crypto policy rejects. No "
+    "newer copy of the key with modern self-signatures is published on "
+    "keys.openpgp.org, keyserver.ubuntu.com or WKD.",
+    REASONS['sha1-cert'][2].replace('Then refresh the keyring in dist-git.',
+                                    'Then put a keyring with only the keys that sign '
+                                    'releases into dist-git (exported with GnuPG as '
+                                    'above, so it has no v3 key).'))
 GENERIC = ('verification fails',
            "`%openpgpverify` rejects a signature that `%gpgverify` accepts; see the "
            "output above.",
@@ -665,10 +678,15 @@ def render_pr(pkg, s, draft):
 def render_bug(pkg, s):
     res = s['results'][0]
     bad = [c for c in res.get('new_calls', []) if c['rc'] != 0][0]
-    short, why, actions = REASONS.get(res.get('failure_reason')) or GENERIC
+    # bug_reason: set by hand where the first error hides a second one.
+    reason = s.get('bug_reason') or res.get('failure_reason')
+    short, why, actions = REASONS.get(reason) or GENERIC
+    if s.get('bug_spec_comment'):
+        why = ('The spec already says so (`%s`); this bug tracks it for the Change.\n\n'
+               % s['bug_spec_comment']) + why
     kr = s.get('keyring_refresh') or {}
-    if kr.get('status') in ('no-update', 'not-found') and res.get('failure_reason') not in (
-            'sha1-cert', 'expired', 'binding-after-signature'):
+    if kr.get('status') in ('no-update', 'not-found') and reason not in (
+            'sha1-cert', 'expired', 'binding-after-signature', 'v3-key-sha1-cert'):
         why += ' (A refreshed key from keyservers/WKD doesn\'t help either.)'
     if s.get('raw_rewritten'):
         tools = sorted({c['tool'] for c in res.get('old_calls', [])} - {'gpgverify'})

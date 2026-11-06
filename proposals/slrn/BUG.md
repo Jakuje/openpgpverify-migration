@@ -24,6 +24,8 @@ openpgpverify: Signature verification failed.
 
 ### Why
 
+The spec already says so (`# sequoia does not support version 3 signature packet`); this bug tracks it for the Change.
+
 The release signature uses the version 3 signature format, which OpenPGP implementations have rejected since 2021.
 
 ### What can be done

@@ -8,10 +8,10 @@ Summary: flashrom: source signature does not verify with openpgpverify (signing 
 
 As part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify), `%gpgverify` (GnuPG) is being replaced by `%openpgpverify` (Sequoia `sqv`). For flashrom, the switch can't be done in a simple PR: `%gpgverify` accepts the current upstream signature, but `%openpgpverify` rejects it.
 
-Failing check (dist-git commit `2d9a597af49d`):
+Failing check (dist-git commit `b92656c099e5`):
 
 ```
-%openpgpverify --keyring=6E6EF9A0BA478006E2776E4CC037BB413134D111.gpg --signature=flashrom-v1.6.0.tar.xz.asc --data=flashrom-v1.6.0.tar.xz
+%openpgpverify --keyring=6E6EF9A0BA478006E2776E4CC037BB413134D111.gpg --signature=flashrom-v1.8.0.tar.xz.asc --data=flashrom-v1.8.0.tar.xz
 ```
 
 ```

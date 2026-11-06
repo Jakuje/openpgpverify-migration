@@ -8,7 +8,7 @@ Summary: cyrus-imapd: source signature does not verify with openpgpverify (SHA-1
 
 As part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify), `%gpgverify` (GnuPG) is being replaced by `%openpgpverify` (Sequoia `sqv`). For cyrus-imapd, the switch can't be done in a simple PR: `%gpgverify` accepts the current upstream signature, but `%openpgpverify` rejects it.
 
-Failing check (dist-git commit `077cb56d34ac`):
+Failing check (dist-git commit `9d75a6e9d599`):
 
 ```
 %openpgpverify --keyring=elliefm-pub.key --signature=cyrus-imapd-3.12.4.tar.gz.sig --data=cyrus-imapd-3.12.4.tar.gz
