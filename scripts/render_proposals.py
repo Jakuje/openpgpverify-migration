@@ -651,6 +651,8 @@ def render_pr(pkg, s, draft):
                 sqv_version=s.get('sqv_version') or '?', rebased_note=rebased,
                 refresh_section=refresh,
                 notes_section='\n### Notes\n\n' + '\n'.join(notes) + '\n')
+    # No verification call ran (convert_untested): no sqv version to name.
+    text = text.replace(' with sequoia-sqv ? (Fedora DEFAULT crypto policy)', '')
     title = 'Verify source signatures with openpgpverify'
     if draft:
         text = ('> **DRAFT, not to be opened yet:** the keyring refresh below still needs '

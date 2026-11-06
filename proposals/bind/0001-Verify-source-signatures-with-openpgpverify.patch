@@ -1,0 +1,39 @@
+From 07c77b13aa15035000545390ba8d4046f5523459 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 6 Nov 2026 11:10:03 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ bind.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/bind.spec b/bind.spec
+index 3d7cff5..b3c7102 100644
+--- a/bind.spec
++++ b/bind.spec
+@@ -224,7 +224,7 @@ BuildRequires:  pkgconfig(libnghttp2)
+ BuildRequires:  pkgconfig(jemalloc)
+ %endif
+ %if 0%{?fedora}
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ %endif
+ BuildRequires:  pkgconfig(libuv)
+ %if %{with UNITTEST}
+@@ -420,7 +420,7 @@ in HTML and PDF format.
+ # no signatures for git snapshots
+ %if 0%{?fedora} && 0%{?!git_date:1}
+ # RHEL does not yet support this verification
+-%{gpgverify} --keyring='%{SOURCE4}' --signature='%{SOURCE2}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE4}' --signature='%{SOURCE2}' --data='%{SOURCE0}'
+ %endif
+ %autosetup -n %{upname}-%{git_commit} -p1
+ 
+-- 
+2.56.0
+
