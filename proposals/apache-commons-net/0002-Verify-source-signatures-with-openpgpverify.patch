@@ -1,0 +1,39 @@
+From ce164c2b6f3fe2fa7f1409073bcdd180cfc2beca Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 6 Nov 2026 10:31:03 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ apache-commons-net.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/apache-commons-net.spec b/apache-commons-net.spec
+index a1b6a8e..cac72fc 100644
+--- a/apache-commons-net.spec
++++ b/apache-commons-net.spec
+@@ -26,7 +26,7 @@ BuildRequires:  mvn(org.junit.jupiter:junit-jupiter-engine)
+ BuildRequires:  mvn(org.junit.jupiter:junit-jupiter-params)
+ BuildRequires:  mvn(org.junit.vintage:junit-vintage-engine)
+ # for signature verification
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ # TODO Remove in Fedora 46
+ Obsoletes:      %{name}-javadoc < 3.11.1-11
+ 
+@@ -39,7 +39,7 @@ fundamental protocol access, not higher-level abstractions.
+ 
+ %prep
+ %autosetup -p1 -C
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ %pom_remove_plugin :exec-maven-plugin
+ 
+-- 
+2.56.0
+

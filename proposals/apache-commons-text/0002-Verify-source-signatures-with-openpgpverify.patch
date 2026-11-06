@@ -1,0 +1,39 @@
+From 1cae72d56c81f488bead2689c60d0060cceff262 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 6 Nov 2026 10:31:03 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ apache-commons-text.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/apache-commons-text.spec b/apache-commons-text.spec
+index b4b6bef..58b7667 100644
+--- a/apache-commons-text.spec
++++ b/apache-commons-text.spec
+@@ -18,7 +18,7 @@ Source2:        KEYS.pgp
+ # disable url lookup in test
+ #Patch0:         0001-disable-url-lookup.patch
+ 
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  maven-local-openjdk25
+ BuildRequires:  mvn(org.apache.commons:commons-parent:pom:)
+ BuildRequires:  mvn(org.assertj:assertj-core)
+@@ -35,7 +35,7 @@ escaping of various types.
+ 
+ %prep
+ # verify signed sources
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ # -p1: strip one level directory in patch(es)
+ # -n: base directory name
+-- 
+2.56.0
+

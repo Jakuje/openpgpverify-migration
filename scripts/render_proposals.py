@@ -136,6 +136,47 @@ GENERIC = ('verification fails',
            "- Please have a look; I'm happy to help.")
 
 
+CONVERT_METHODS = ('keyserver-signers', 'gpg-export')
+
+
+def convert_why(f):
+    """Why sqv cannot use a keyring that propose-convert rebuilt."""
+    if f.get('skipped_v3'):
+        return ('it holds %d v3 (PGP 2) key%s, which Sequoia does not parse, so sqv rejects '
+                'the whole file (GnuPG skips such keys silently)'
+                % (f['skipped_v3'], '' if f['skipped_v3'] == 1 else 's'))
+    return 'its copy of the signing key is outdated'
+
+
+def dropped_text(f, md=False):
+    """The certificates a rebuilt keyring dropped: listed, or counted when many."""
+    d = f['dropped']
+    if len(d) > 5:
+        return '%d certificates of other people' % len(d)
+    return ', '.join(('`%s`' if md else '%s') % x for x in d)
+
+
+def convert_text(f):
+    """One sentence for the commit message about a rebuilt keyring."""
+    new = os.path.basename(f.get('new_file') or f['file'])
+    if f['method'] == 'gpg-export':
+        s = ('Convert upstream\'s KEYS file (%s) with GnuPG into %s, a plain OpenPGP '
+             'keyring with every key GnuPG reads from it (%d); sqv cannot read the KEYS '
+             'file itself: %s.' % (f['url'], new, len(f['fingerprints']), convert_why(f)))
+    else:
+        s = ('Replace %s the keyserver copy of the key that signs releases (%s), '
+             'because sqv cannot use the old keyring: %s.%s' % (
+                 'the content of %s with' % f['file'] if new == f['file'] else
+                 '%s with %s,' % (f['file'], new),
+                 ', '.join(f['fingerprints']), convert_why(f),
+                 ' The other certificates in it are dropped (%s).' % dropped_text(f)
+                 if f.get('dropped') else ''))
+    if f.get('new_file'):
+        s += (' Its Source line names the new file instead of %s, which is not what the '
+              'file holds any more.' % (f.get('old_source') or f['file']))
+    return s
+
+
 def sh(cmd, **kw):
     return subprocess.run(cmd, capture_output=True, text=True, **kw)
 
@@ -184,8 +225,13 @@ def spec_comment(text, pkg, files):
             text = convert.source_to_url(text, pkg, os.path.basename(f['file']),
                                          f['source_url'])[0]
         elif f.get('spec_commands'):
+            name = os.path.basename(f['file'])
+            if f.get('new_file'):
+                text = convert.source_to_file(text, pkg, name,
+                                              os.path.basename(f['new_file']))[0]
+                name = os.path.basename(f['new_file'])
             text = convert.refresh_comment(
-                text, pkg, os.path.basename(f['file']), f['spec_commands'],
+                text, pkg, name, f['spec_commands'],
                 *([f['spec_header']] if f.get('spec_header') else []))[0]
     return text
 
@@ -231,6 +277,10 @@ def make_commit(pkg, s, refresh_files):
                     sh(['git', '-C', pr, 'rm', '-q', f['file']])
                 shutil.copy(os.path.join(d, 'refresh', f['file']), os.path.join(pr, f['new_file']))
                 sh(['git', '-C', pr, 'add', '-f', f['new_file']])
+                if f.get('method') in CONVERT_METHODS:
+                    key += [convert_text(f), 'The commands are in the comment above its '
+                            'Source line.']
+                    continue
                 key.append('Replace %s with %s, the key upstream publishes at %s (byte for '
                            'byte); its Source line is now that URL.%s' % (
                                f['file'], os.path.basename(f['new_file']), f['url'],
@@ -254,7 +304,9 @@ def make_commit(pkg, s, refresh_files):
                         open(path, 'w').write(''.join(l + '\n' for l in keep))
                 sh(['git', '-C', pr, 'add', '-f', f['file']])
                 moved.append(f['file'])
-            if f.get('method', '').startswith('key-url'):
+            if f.get('method') in CONVERT_METHODS:
+                key.append(convert_text(f))
+            elif f.get('method', '').startswith('key-url'):
                 key.append('Rebuild %s from the key upstream publishes at %s%s%s (same '
                            'certificate(s)).' % (
                                f['file'], f['url'],
@@ -349,6 +401,18 @@ def render_pr(pkg, s, draft):
         changes.append('- dropped `%s`, only needed for %s' %
                        (br, 'the GnuPG verification' if raw else '`%gpgverify`'))
     for f in files:
+        if f.get('method') in CONVERT_METHODS:
+            new = os.path.basename(f.get('new_file') or f['file'])
+            changes.append('- %s keyring `%s`%s (see below); the comment above its `Source` '
+                           'line shows the commands' % (
+                               'converted upstream\'s KEYS file into the' if
+                               f['method'] == 'gpg-export' else 'replaced the keyring with the '
+                               'signing key from keyservers,', new,
+                               ', which the `Source` line now names' if f.get('new_file') else ''))
+            if re.search(r'(?m)^-SHA512 \(%s\) = ' % re.escape(f['file']), patch):
+                changes.append('- `%s` is no longer used; its line in `sources` is dropped'
+                               % f['file'])
+            continue
         if re.search(r'(?m)^-SHA512 \(%s\) = |^-[0-9a-f]{32,}  %s$'
                      % (re.escape(f['file']), re.escape(f['file'])), patch):
             changes.append('- `%s` was in the lookaside cache, which a PR cannot update, so '
@@ -405,7 +469,47 @@ def render_pr(pkg, s, draft):
         diffs = re.findall(r'```diff\n(.*?)```', review, re.S)
         reason = (REASONS.get(res.get('failure_reason')) or GENERIC)[0]
         keybox = any(f.get('keybox') for f in files)
-    if files and kr.get('method', '').startswith('key-url'):
+    if files and kr.get('method') in CONVERT_METHODS:
+        f = files[0]
+        new = os.path.basename(f.get('new_file') or f['file'])
+        if f['method'] == 'gpg-export':
+            refresh = ('\n### Keyring update\n\n`%%openpgpverify` cannot use upstream\'s '
+                       'KEYS file: %s. This PR converts it with GnuPG into `%s`, a plain '
+                       'OpenPGP keyring. It keeps every key GnuPG reads from the KEYS file '
+                       '(%d certificates), so releases by any of the release managers listed '
+                       'there keep verifying. Exactly these commands (also in the comment '
+                       'above the keyring\'s `Source` line, for the next update):\n\n```\n%s'
+                       '\n```\n\nThe current release is signed by:\n\n%s\n%s'
+                       % (convert_why(f), new, len(f['fingerprints']),
+                          '\n'.join(f['commands']),
+                          '\n'.join('- `%s`' % fp for fp in f.get('signers', [])),
+                          ''.join('\nCompared with the KEYS file in the lookaside cache, %s.\n'
+                                  % '; '.join(x for x in (
+                                      'upstream has added %s' % ', '.join(
+                                          '`%s`' % a for a in f['added']) if f.get('added')
+                                      else '',
+                                      'upstream has removed %s' % ', '.join(
+                                          '`%s`' % a for a in f['dropped'])
+                                      if f.get('dropped') else '') if x)
+                                  for _ in [0] if f.get('added') or f.get('dropped'))))
+        else:
+            refresh = ('\n### Keyring update\n\n`%%openpgpverify` cannot use the keyring in '
+                       'dist-git: %s. This PR replaces it with the keyserver copy of the key '
+                       'that signed the release, looked up by fingerprint (%s), with exactly '
+                       'this command (also in the comment above the keyring\'s `Source` line, '
+                       'for the next update):\n\n```\n%s\n```\n\nPlease check the '
+                       'fingerprint against upstream:\n\n%s\n\n%sWhat changed in the signing '
+                       'certificate (`sq inspect`):\n\n```diff\n%s```\n'
+                       % (convert_why(f), '; '.join(f.get('found_via') or ['-']),
+                          '\n'.join(f['commands']),
+                          '\n'.join('- `%s`' % fp for fp in f['fingerprints']),
+                          ('Dropped from the keyring (not used for the current release; add '
+                           'them back if releases may be signed with them):\n\n%s\n\n'
+                           % ('\n'.join('- `%s`' % d for d in f['dropped'])
+                              if len(f['dropped']) <= 5 else '- the other %d certificates '
+                              'of `%s`' % (len(f['dropped']), f['file'])))
+                          if f.get('dropped') else '', ''.join(diffs)))
+    elif files and kr.get('method', '').startswith('key-url'):
         ks = kr['method'].endswith('keyserver')
         refresh = ('\n### Keyring update\n\n`%%openpgpverify` rejected the signature with '
                    'the keyring in dist-git (%s), while %s ignores that. %s'
@@ -508,7 +612,9 @@ def render_pr(pkg, s, draft):
         reason = ' '.join(chk['reason'].split())
         notes.append('- `BuildRequires: gnupg2` is kept: %s.%s' % (
             reason, ' If it was only there for the signature check, it can go too.'
-            if reason.startswith('not checked') else ''))
+            if reason.startswith('not checked') else
+            ' It stays for what the build itself does with gpg; the source signature check '
+            'no longer uses it.' if reason.startswith('the build fails without') else ''))
     elif s.get('gnupg2_action') in ('review', 'keep'):
         notes.append('- `BuildRequires: gnupg2` is kept: the spec has a `%check` section '
                      'or uses gpg elsewhere, and tests may need it. If it was only there '
@@ -524,6 +630,12 @@ def render_pr(pkg, s, draft):
         ' The spec has changed since (`%s`); this PR '
         'applies the same change on top of that without re-running the test, so the '
         'CI build here is the check for the current spec.' % s['spec_commit'][:12])
+    if s.get('convert_untested'):
+        result_old = result_new = 'no call (the check is off, see below)'
+        rebased += ('\n\n**The signature check itself is not tested:** %s The conversion is '
+                    'the same as in the other PRs for the Change, so the check works when it '
+                    'runs again; the build above only shows that the spec still builds.'
+                    % s['convert_untested'])
     text = tmpl('pr-description.md',
                 changes='\n'.join(changes) + '\n', stage='rpmbuild %s' % s.get('stage', '-bp'),
                 chroots=', '.join(chroots), old_tool=old_tool,

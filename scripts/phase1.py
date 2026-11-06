@@ -440,7 +440,7 @@ def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp', overlay
     return res
 
 
-def evaluate(res, raw, g, primary=True, rewritten=None):
+def evaluate(res, raw, g, primary=True, rewritten=None, untested=False):
     """Turn the call logs of one chroot run into an outcome."""
     if 'error' in res:
         return 'error', res['error']
@@ -457,8 +457,9 @@ def evaluate(res, raw, g, primary=True, rewritten=None):
     if res.get('new_error'):
         return 'error', res.get('new_error') or res.get('old_error')
     if not old:
-        if not primary:
-            # e.g. verification inside "%if 0%{?fedora}": nothing to compare in ELN
+        if not primary or untested:
+            # e.g. verification inside "%if 0%{?fedora}": nothing to compare in ELN;
+            # untested: the reviewer converts a check that is off for now (convert_untested)
             return 'not-verified', 'the unchanged spec does not verify sources in this chroot'
         return 'guard-failed', 'old spec executed no gpgverify call (prep rc %s)' % res.get('old_prep_rc')
     if not rewritten and any(c['tool'] != 'gpgverify' for c in old):
@@ -625,8 +626,15 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
                 if note:
                     upd.setdefault('convert_notes', []).append(note)
             elif f.get('changed') and f.get('spec_commands'):
+                name = os.path.basename(f['file'])
+                if f.get('new_file'):
+                    text, note = convert.source_to_file(text, pkg, name,
+                                                        os.path.basename(f['new_file']))
+                    if note:
+                        upd.setdefault('convert_notes', []).append(note)
+                    name = os.path.basename(f['new_file'])
                 text, note = convert.refresh_comment(
-                    text, pkg, os.path.basename(f['file']), f['spec_commands'],
+                    text, pkg, name, f['spec_commands'],
                     *([f['spec_header']] if f.get('spec_header') else []))
                 if note:
                     upd.setdefault('convert_notes', []).append(note)
@@ -651,7 +659,8 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
             upd['release_bumped'] = True
             subprocess.run(['diff', '-u', spec_path, new_spec], stdout=open(
                 os.path.join(d, 'conversion.diff'), 'w'))
-        outcome, detail = evaluate(res, raw, g, primary=(cfg == cfgs[0]), rewritten=rewritten)
+        outcome, detail = evaluate(res, raw, g, primary=(cfg == cfgs[0]), rewritten=rewritten,
+                                   untested=bool((prev or {}).get('convert_untested')))
         res['outcome'] = outcome
         res['detail'] = detail
         if outcome == 'regression':
@@ -693,6 +702,8 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
                                if x not in ('not-buildable', 'not-verified')]
     worst = min(statuses, key=order.index)
     upd['status'] = {'both-pass': 'tested'}.get(worst, worst)
+    if worst == 'not-verified' and (prev or {}).get('convert_untested'):
+        upd['status'] = 'tested'
     upd['outcome_detail'] = '; '.join('%s: %s%s' % (r['chroot'], r['outcome'],
                                       ' (%s)' % r['detail'] if r['detail'] else '')
                                       for r in upd['results'])

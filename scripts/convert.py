@@ -204,6 +204,25 @@ def source_to_url(text, pkg, name, url):
     return text, 'no Source line for %s' % name
 
 
+def source_to_file(text, pkg, name, new):
+    """Point the Source line of keyring file NAME (often its upstream URL) at
+    the file NEW in dist-git, for a keyring that is no longer that download.
+    The refresh comment above it keeps the URL. Returns (text, note)."""
+    lines = text.split('\n')
+    macros = dict(re.findall(r'(?m)^%(?:global|define)\s+(\w+)\s+([^\s%]+)\s*$', text))
+    macros['name'] = pkg
+    for i, line in enumerate(lines):
+        m = SOURCE_TAG.match(line)
+        if not m:
+            continue
+        value = re.sub(r'%\{\??(\w+)\}|%(\w+)\b',
+                       lambda x: macros.get(x.group(1) or x.group(2), x.group(0)), m.group(2))
+        if value.rsplit('/', 1)[-1] == name:
+            lines[i] = line[:m.start(2)] + new.replace('%', '%%') + line[m.end(2):]
+            return '\n'.join(lines), None
+    return text, 'no Source line for %s' % name
+
+
 def br_key(line):
     """Sort key of a BuildRequires line: its first dependency, without macro
     wrapping ("%{py3_dist foo}" -> "foo")."""

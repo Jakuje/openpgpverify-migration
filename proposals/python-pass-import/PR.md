@@ -23,12 +23,12 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 | current (`%gpgverify`) | 1 | pass |
 | this PR (`%openpgpverify`) | 1 | pass |
 
-Tested on 2026-10-31 at dist-git commit `f92402d53b36` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
+Tested on 2026-11-06 at dist-git commit `f92402d53b36` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
 ### Notes
 
 - Rawhide only. Whether to merge it into other branches is up to you; openpgpverify is available in Fedora 43 and later, EPEL 9 and EPEL 10.
-- `BuildRequires: gnupg2` is kept: the build fails without gnupg2 and its log shows gpg use (E pass_import.errors.PMError: /usr/bin/pass: line 461: gpg: command not found).
+- `BuildRequires: gnupg2` is kept: the build fails without gnupg2 and its log shows gpg use (E pass_import.errors.PMError: /usr/bin/pass: line 461: gpg: command not found). It stays for what the build itself does with gpg; the source signature check no longer uses it.
 - Nothing changes in the built packages, so this doesn't need a build right away; the new check runs with your next build.
 
 ### Questions

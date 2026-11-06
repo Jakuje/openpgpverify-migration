@@ -1,0 +1,59 @@
+From 2f5e9db94fbbf7bda7a5cea296f8f4db04854e0f Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 6 Nov 2026 10:31:02 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ httpd.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/httpd.spec b/httpd.spec
+index a5e9199..29411ec 100644
+--- a/httpd.spec
++++ b/httpd.spec
+@@ -30,7 +30,7 @@
+ Summary: Apache HTTP Server
+ Name: httpd
+ Version: 2.4.69
+-Release: 1%{?dist}
++Release: 2%{?dist}
+ URL: https://httpd.apache.org/
+ Source0: https://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
+ Source1: https://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2.asc
+@@ -133,6 +133,7 @@ BuildRequires: pcre-devel > 5.0
+ BuildRequires: file-devel
+ %endif
+ BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ Requires: system-logos(httpd-logo-ng)
+ Provides: webserver
+ Requires: httpd-core = 0:%{version}-%{release}
+@@ -266,7 +267,7 @@ The mod_lua module allows the server to be extended with scripts
+ written in the Lua programming language.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1 -S gendiff
+ 
+ # Patch in the vendor string
+@@ -874,6 +875,9 @@ exit $rv
+ %{_rpmconfigdir}/macros.d/macros.httpd
+ 
+ %changelog
++* Mon Oct 12 2026 Jakub Jelen <jjelen@redhat.com> - 2.4.69-2
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Oct 01 2026 Joe Orton  <jorton@redhat.com> - 2.4.69-1
+ - update to 2.4.69
+ - add mod_mime_libmagic for F45+
+-- 
+2.56.0
+

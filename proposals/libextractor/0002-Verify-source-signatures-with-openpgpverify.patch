@@ -1,0 +1,38 @@
+From 23ed1c7caeadb6f92c4d0f3a59ce8fbd45c4b584 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 6 Nov 2026 10:31:02 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ libextractor.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/libextractor.spec b/libextractor.spec
+index bab924d..dd4512c 100644
+--- a/libextractor.spec
++++ b/libextractor.spec
+@@ -49,6 +49,7 @@ BuildRequires:  zzuf
+ BuildRequires:  autoconf
+ BuildRequires:  automake
+ BuildRequires:  libtool
++BuildRequires:  openpgpverify
+ 
+ %description
+ libextractor is a simple library for keyword extraction.  libextractor
+@@ -147,7 +148,7 @@ introduce additional dependencies.
+ #pluginpkg      gstreamer  -B gstreamer-devel,libgsf-gnome-devel,libgsf-devel,gtk
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ cp -aR %{SOURCE3} .
+ rm -rfv README.debian
+-- 
+2.56.0
+

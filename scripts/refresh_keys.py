@@ -37,6 +37,7 @@ import shutil
 import signal
 import subprocess
 import sys
+import tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import convert  # noqa: E402
@@ -480,6 +481,39 @@ def propose_upstream(pkg, rec, url=None, keyserver=None, replace=False, source_u
                 proposed=state.now())
 
 
+def host_verify(g, out, files, sig, data):
+    """Re-run sqv on the host with the new keyrings (data only, no spec code).
+    Returns (rc or None, review lines)."""
+    if not [f for f in files if f.get('changed')]:
+        return None, []
+    sig_h, data_h = phase1.host_path(sig or '', g), phase1.host_path(data or '', g)
+    rings = [os.path.join(out, f['file']) if f.get('changed') else os.path.join(g, f['file'])
+             for f in files if 'fingerprints' in f]
+    rings = ' '.join('--keyring=' + shlex.quote(r) for r in rings)
+    # Data on stdin: the spec decompresses the source file next to the signature.
+    if data == '-' and sig_h and os.path.isfile(sig_h):
+        base = sig_h.rsplit('.', 1)[0]
+        for ext, tool in (('.xz', 'xzcat'), ('.gz', 'zcat'), ('.bz2', 'bzcat'), ('.zst', 'zstdcat')):
+            if os.path.isfile(base + ext):
+                c = 'set -o pipefail; %s %s | sqv %s --signature-file %s -' % (
+                    tool, shlex.quote(base + ext), rings, shlex.quote(sig_h))
+                shown = '$ %s %s | sqv ... -' % (tool, os.path.basename(base + ext))
+                break
+        else:
+            c = None
+    elif sig_h and data_h and os.path.isfile(sig_h) and os.path.isfile(data_h):
+        c = 'sqv %s --signature-file %s %s' % (rings, shlex.quote(sig_h), shlex.quote(data_h))
+        shown = '$ sqv ... %s' % os.path.basename(data_h)
+    else:
+        c = None
+    if not c:
+        return None, ['Host verification skipped (data from stdin or a generated file); '
+                      'run phase1.py after approval.', '']
+    p = sh(['bash', '-c', c], timeout=900)
+    return p.returncode, ['## Verification with the refreshed keyring', '', '```', shown,
+                          (p.stdout + p.stderr).strip(), 'rc=%d' % p.returncode, '```', '']
+
+
 def propose(pkg, rec):
     res = (rec.get('results') or [{}])[0]
     bad = [c for c in res.get('new_calls', []) if c['rc'] != 0]
@@ -537,40 +571,8 @@ def propose(pkg, rec):
                        '```']
         review.append('')
     changed = [f for f in files if f.get('changed')]
-    # Re-run sqv on the host with the refreshed keyrings (data only, no spec code).
-    host_rc = None
-    sig_h, data_h = phase1.host_path(sig or '', g), phase1.host_path(data or '', g)
-    # Data on stdin: the spec decompresses the source file next to the signature.
-    unpack = None
-    if data == '-' and sig_h and os.path.isfile(sig_h):
-        base = sig_h.rsplit('.', 1)[0]
-        for ext, tool in (('.xz', 'xzcat'), ('.gz', 'zcat'), ('.bz2', 'bzcat'), ('.zst', 'zstdcat')):
-            if os.path.isfile(base + ext):
-                unpack, data_h = tool, base + ext
-                break
-    if changed and unpack:
-        rings = [os.path.join(out, f['file']) if f.get('changed') else os.path.join(g, f['file'])
-                 for f in files if 'fingerprints' in f]
-        c = 'set -o pipefail; %s %s | sqv %s --signature-file %s -' % (
-            unpack, shlex.quote(data_h), ' '.join('--keyring=' + shlex.quote(r) for r in rings),
-            shlex.quote(sig_h))
-        p = sh(['bash', '-c', c], timeout=900)
-        host_rc = p.returncode
-        review += ['## Verification with the refreshed keyring', '',
-                   '```', '$ %s %s | sqv ... -' % (unpack, os.path.basename(data_h)),
-                   (p.stdout + p.stderr).strip(), 'rc=%d' % host_rc, '```', '']
-    elif changed and sig_h and data_h and os.path.isfile(sig_h) and os.path.isfile(data_h):
-        rings = [os.path.join(out, f['file']) if f.get('changed') else os.path.join(g, f['file'])
-                 for f in files if 'fingerprints' in f]
-        cmd = ['sqv'] + ['--keyring=' + r for r in rings] + ['--signature-file', sig_h, data_h]
-        p = sh(cmd, timeout=600)
-        host_rc = p.returncode
-        review += ['## Verification with the refreshed keyring', '',
-                   '```', '$ sqv ... %s' % os.path.basename(data_h),
-                   (p.stdout + p.stderr).strip(), 'rc=%d' % host_rc, '```', '']
-    elif changed:
-        review += ['Host verification skipped (data from stdin or a generated file); '
-                   'run phase1.py after approval.', '']
+    host_rc, verify = host_verify(g, out, files, sig, data)
+    review += verify
     shutil.rmtree(tmp, ignore_errors=True)
     if not changed:
         status = 'not-found' if any(f.get('error') for f in files) else 'no-update'
@@ -591,10 +593,171 @@ def propose(pkg, rec):
                 proposed=state.now())
 
 
+GPG_TMP = 'GNUPGHOME="$(mktemp -d)" sh -c '
+
+
+def gpg_export(src, dst, tmp):
+    """Plain export of what GnuPG reads from keyring SRC (it skips PGP 2 / v3
+    keys, which sq and sqv refuse to parse). Returns the number skipped."""
+    h = tempfile.mkdtemp(dir=tmp)
+    p = sh(['gpg', '--homedir', h, '--batch', '--import', src])
+    sh(['gpg', '--homedir', h, '--batch', '--export', '--output', dst])
+    m = re.search(r'skipped PGP-2 keys: (\d+)', p.stderr)
+    return int(m.group(1)) if m else 0
+
+
+def signers(sig, keyring):
+    """Primary fingerprints of the certificates in KEYRING whose primary key
+    or subkey made a signature in SIG."""
+    issuers = set(re.findall(r'Issuer Fingerprint: ([0-9A-F]{40,64})',
+                             sh(['sq', 'packet', 'dump', sig]).stdout))
+    out = []
+    for cert in re.split(r'(?m)^(?=\s*Fingerprint: )', sh(['sq', 'inspect', keyring]).stdout):
+        keys = re.findall(r'(?:Fingerprint|Subkey): ([0-9A-F]{40,64})', cert)
+        if keys and issuers & set(keys):
+            out.append(keys[0])
+    return out
+
+
+def convert_recipe(mode, name, url, fprs):
+    """Commands that make keyring NAME: the signing key(s) from keyservers, or
+    upstream's KEYS file at URL converted by GnuPG (which drops the v3 keys
+    sqv cannot read)."""
+    if mode == 'signers':
+        return recipe(name, fprs)
+    dl = url.rsplit('/', 1)[-1]
+    return ['curl -fsSL -O %s' % url,
+            GPG_TMP + "'gpg --batch --import %s; gpg --batch --export --output %s'" % (dl, name),
+            'rm %s' % dl]
+
+
+def propose_convert(pkg, rec, mode, new_name=None, url=None):
+    """A keyring sqv cannot read (v3 keys) or that holds stale keys, rebuilt
+    with convert_recipe(). NEW_NAME renames the file (its Source line then
+    names it instead of the upstream URL whose content it no longer is)."""
+    res = (rec.get('results') or [{}])[0]
+    bad = [c for c in res.get('new_calls', []) if c['rc'] != 0]
+    if not bad:
+        return dict(status='not-applicable', note='no failing openpgpverify call')
+    d = os.path.join(phase1.WORK, pkg)
+    g = os.path.join(d, 'dist-git')
+    out = os.path.join(d, 'refresh')
+    tmp = os.path.join(out, '.tmp')
+    shutil.rmtree(out, ignore_errors=True)
+    os.makedirs(tmp)
+    keyrings, sig, data = call_files(bad[0])
+    for f in (sig, data):
+        h = phase1.host_path(f or '', g)
+        if h and not os.path.exists(h):
+            sh(['fedpkg', '--path', g, '--name', pkg, 'sources'], timeout=900)
+            break
+    if len(keyrings) != 1:
+        return dict(status='error', note='propose-convert handles one keyring per call')
+    src = phase1.host_path(keyrings[0], g)
+    rel = os.path.relpath(src, g)
+    # The converted KEYS must not overwrite the download it is made from.
+    name = new_name or os.path.basename(rel) + ('.pgp' if mode == 'gpg-export' else '')
+    spec = open(os.path.join(g, pkg + '.spec')).read()
+    if mode == 'gpg-export' and not url:
+        urls = key_urls(spec, pkg, os.path.basename(rel))
+        # The Source URL itself, not a page the comment above it links to.
+        url = ([u for u in urls if u.rsplit('/', 1)[-1] == os.path.basename(rel)] or
+               urls or [None])[0]
+        if not url:
+            return dict(status='error', note='no URL for %s in the spec; pass --url' % rel)
+    base = os.path.join(tmp, 'old.pgp')
+    skipped = gpg_export(src, base, tmp)
+    old = fingerprints(base)
+    sig_h = phase1.host_path(sig, g)
+    fprs = signers(sig_h, base) if mode == 'signers' else None
+    if mode == 'signers' and not fprs:
+        return dict(status='error', note='the signing key is not in %s' % rel)
+    cmds = convert_recipe(mode, name, url, fprs)
+    run = os.path.join(tmp, 'run')
+    os.makedirs(run)
+    info = dict(file=rel, method='keyserver-signers' if mode == 'signers' else 'gpg-export',
+                size_old=os.path.getsize(src), skipped_v3=skipped, commands=cmds,
+                spec_commands=cmds, found_via=[], url=url,
+                spec_header='# The key(s) that sign releases, from keyservers:'
+                if mode == 'signers' else
+                '# Upstream\'s KEYS file, converted by GnuPG (sqv cannot read the v3 keys in it):')
+    if name != os.path.basename(rel):
+        info['new_file'] = os.path.join(os.path.dirname(rel), name)
+        urls = key_urls(spec, pkg, os.path.basename(rel))
+        info['old_source'] = ([u for u in urls if u.rsplit('/', 1)[-1] ==
+                               os.path.basename(rel)] or [None])[0]
+    for c in cmds:
+        p = sh(['bash', '-o', 'pipefail', '-c', c], cwd=run, timeout=600)
+        info['found_via'] += sorted(set(re.findall(r'found via: (.*)', p.stdout + p.stderr)))
+        if p.returncode:
+            info['error'] = 'command failed: %s: %s' % (c, (p.stderr or '').strip()[-300:])
+            break
+    result = os.path.join(run, name)
+    new = fingerprints(result) if os.path.exists(result) else []
+    if not info.get('error') and mode == 'signers' and sorted(new) != sorted(fprs):
+        info['error'] = 'keyservers returned a different set of certificates'
+    if not info.get('error') and not new:
+        info['error'] = 'no certificates in the result'
+    files = [info]
+    if not info.get('error'):
+        dst = os.path.join(out, rel)
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        shutil.copy(result, dst)
+        info.update(changed=True, fingerprints=new, size_new=os.path.getsize(dst),
+                    sha256_new=hashlib.sha256(open(dst, 'rb').read()).hexdigest(),
+                    signers=signers(sig_h, dst),
+                    dropped=[f for f in old if f not in new],
+                    added=[f for f in new if f not in old])
+    review = ['# Keyring %s for %s' % ('signing key(s) from keyservers' if mode == 'signers'
+                                       else 'conversion of upstream KEYS', pkg), '',
+              'Failing call: `%s`' % bad[0]['args'], '',
+              'Phase 1 reason: `%s`' % res.get('failure_reason'), '',
+              '## %s%s' % (rel, ' → %s' % info['new_file'] if info.get('new_file') else ''), '',
+              '- v3 (PGP 2) keys in the old keyring, unreadable for sqv: %d' % skipped,
+              '- certificates GnuPG reads in the old keyring: %d' % len(old),
+              '- certificates in the new keyring: %s' % ', '.join(new),
+              '- dropped: %s' % (', '.join(info.get('dropped') or []) or '-'),
+              '- added: %s' % (', '.join(info.get('added') or []) or '-'),
+              '- found via: %s' % ('; '.join(info['found_via']) or '-'),
+              '- size: %s → %s bytes' % (info['size_old'], info.get('size_new', '-')),
+              '', 'Commands (run in a copy of dist-git):', '', '```', *cmds, '```']
+    if info.get('error'):
+        review.append('- **error: %s**' % info['error'])
+    else:
+        old_s, new_s = os.path.join(tmp, 'old.summary'), os.path.join(tmp, 'new.summary')
+        keep = set(new)
+        open(old_s, 'w').write('\n'.join(summary(base)) + '\n')
+        open(new_s, 'w').write('\n'.join(summary(os.path.join(out, rel))) + '\n')
+        p = sh(['diff', '-u', '--label', 'dist-git/' + rel + ' (as GnuPG reads it)',
+                '--label', 'new/' + name, old_s, new_s], timeout=60)
+        # Only the kept certificates matter for review; a KEYS diff is long.
+        review += ['', '```diff', p.stdout.rstrip()[:20000] or '(no change)', '```'] \
+            if mode == 'signers' or len(keep) <= 5 else []
+        if info['size_new'] > FLOOD_LIMIT:
+            info['warning'] = 'keyring is %d bytes' % info['size_new']
+            review.append('- **warning: %s**' % info['warning'])
+    review.append('')
+    host_rc, verify = host_verify(g, out, files, sig, data)
+    review += verify
+    shutil.rmtree(tmp, ignore_errors=True)
+    status = 'not-found' if info.get('error') else \
+        'still-fails' if host_rc not in (None, 0) else 'proposed'
+    review.insert(2, '**Status: %s**' % status)
+    review.insert(3, '')
+    text = '\n'.join(review) + '\n'
+    open(os.path.join(out, 'REVIEW.md'), 'w').write(text)
+    shared = os.path.join(state.ROOT, 'reports', 'keyring-refresh')
+    os.makedirs(shared, exist_ok=True)
+    open(os.path.join(shared, pkg + '.md'), 'w').write(text)
+    return dict(status=status, method=info['method'], files=files, host_verify_rc=host_rc,
+                review=os.path.relpath(os.path.join(out, 'REVIEW.md'), state.ROOT),
+                proposed=state.now())
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('action', choices=['propose', 'propose-upstream', 'propose-key', 'show',
-                                       'approve', 'reject'])
+    ap.add_argument('action', choices=['propose', 'propose-upstream', 'propose-key',
+                                       'propose-convert', 'show', 'approve', 'reject'])
     ap.add_argument('packages', nargs='*')
     ap.add_argument('--note', default=None)
     ap.add_argument('--url', default=None,
@@ -608,8 +771,36 @@ def main():
                     help='propose-upstream: the URL file may hold more keys; they are added')
     ap.add_argument('--keyserver', action='store_true',
                     help='propose-key: complete the key from keyservers/WKD')
+    ap.add_argument('--signers', action='store_true',
+                    help='propose-convert: only the key(s) that signed the release, '
+                         'from keyservers')
+    ap.add_argument('--gpg-export', action='store_true',
+                    help='propose-convert: upstream\'s KEYS file (--url or the spec\'s '
+                         'Source URL) converted by GnuPG')
+    ap.add_argument('--new-name', default=None,
+                    help='propose-convert: the file name of the new keyring')
+    ap.add_argument('--pr-note', default=None,
+                    help='propose-convert: a paragraph for the PR description')
     a = ap.parse_args()
     st = state.load()
+    if a.action == 'propose-convert':
+        if a.signers == a.gpg_export or not a.packages:
+            ap.error('propose-convert needs packages and one of --signers, --gpg-export')
+        for pkg in a.packages:
+            try:
+                kr = propose_convert(pkg, st[pkg], 'signers' if a.signers else 'gpg-export',
+                                     a.new_name, a.url)
+            except Exception as e:  # one broken package must not stop the run
+                kr = dict(status='error', note='refresh_keys: %r' % e, proposed=state.now())
+            if a.pr_note:
+                kr['pr_note'] = a.pr_note
+            with phase1.LOCK:
+                cur = state.load()
+                cur[pkg]['keyring_refresh'] = kr
+                cur[pkg]['updated'] = state.now()
+                state.save(cur)
+            print('%-28s %s %s' % (pkg, kr['status'], kr.get('note') or ''), flush=True)
+        return 0
     if a.action == 'propose':
         pkgs = a.packages or sorted(
             p for p, r in st.items() if r.get('status') == 'regression' and

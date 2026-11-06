@@ -1,0 +1,59 @@
+From 6733d17efd12b4d386a891878a3477abaabd40d5 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 6 Nov 2026 10:31:02 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ tor.spec | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/tor.spec b/tor.spec
+index e52bf18..001fd2b 100644
+--- a/tor.spec
++++ b/tor.spec
+@@ -14,7 +14,7 @@
+ 
+ Name:       tor
+ Version:    0.4.9.15
+-Release:    1%{?dist}
++Release:    2%{?dist}
+ License:    BSD-3-Clause
+ Summary:    Anonymizing overlay network for TCP
+ URL:        https://www.torproject.org
+@@ -48,6 +48,7 @@ BuildRequires: libcap-devel
+ BuildRequires: gnupg2
+ BuildRequires: systemd-devel
+ BuildRequires: systemd-rpm-macros
++BuildRequires: openpgpverify
+ %{?sysusers_requires_compat}
+ %if 0%{?fedora} >= 41 && 0%{?fedora} < 45
+ # https://gitlab.torproject.org/tpo/core/tor/-/issues/40166#note_3055852
+@@ -83,7 +84,7 @@ Tor network, or as a client to connect to the Tor network.
+ 
+ %prep
+ echo "$(cat %{SOURCE1} | cut -d ' ' -f 1) %{SOURCE0}" | sha256sum --check
+-%{gpgverify} --keyring='%{SOURCE5}' --signature='%{SOURCE2}' --data='%{SOURCE1}'
++%{openpgpverify} --keyring='%{SOURCE5}' --signature='%{SOURCE2}' --data='%{SOURCE1}'
+ %autosetup -p1
+ 
+ 
+@@ -169,6 +170,9 @@ rm -rf %{buildroot}%{_datadir}/doc
+ %{_sysusersdir}/tor.conf
+ 
+ %changelog
++* Fri Oct 30 2026 Jakub Jelen <jjelen@redhat.com> - 0.4.9.15-2
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Oct 29 2026 Marcel Härry <mh+fedora@scrit.ch> - 0.4.9.15-1
+ - Update to latest upstream release https://forum.torproject.org/t/security-release-0-4-9-15/22332 bz#2562928
+ 
+-- 
+2.56.0
+

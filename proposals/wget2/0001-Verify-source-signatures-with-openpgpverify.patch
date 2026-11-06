@@ -1,6 +1,6 @@
-From 42087e601c510063ecae48ff8b298d69d8482252 Mon Sep 17 00:00:00 2001
+From a1d060a0b5c7239d01495b55d0b84c2d777d67ea Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Sat, 31 Oct 2026 23:04:58 +0100
+Date: Fri, 6 Nov 2026 10:31:47 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,7 +15,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/wget2.spec b/wget2.spec
-index e9953a6..ad55634 100644
+index e9953a6..3174e2a 100644
 --- a/wget2.spec
 +++ b/wget2.spec
 @@ -8,7 +8,7 @@
@@ -48,7 +48,7 @@ index e9953a6..ad55634 100644
  
  
  %changelog
-+* Sat Oct 31 2026 Jakub Jelen <jjelen@redhat.com> - 2.3.0-4
++* Fri Nov 06 2026 Jakub Jelen <jjelen@redhat.com> - 2.3.0-4
 +- Verify upstream source signatures with openpgpverify
 +
  * Fri Oct 30 2026 Artur Frenszek-Iwicki <fedora@svgames.pl> - 2.3.0-3
