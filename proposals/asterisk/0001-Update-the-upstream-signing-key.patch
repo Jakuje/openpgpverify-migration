@@ -1,6 +1,6 @@
-From 7e5ef97a8de90ab2ae38afd857717ee99403ba8f Mon Sep 17 00:00:00 2001
+From 7cc997dd99c06759323deb4d983b28bc2d1bab6d Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 21:20:32 +0100
+Date: Fri, 6 Nov 2026 09:38:02 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Refresh asterisk-gpgkeys.gpg from keyservers: same certificate(s), with
@@ -1097,7 +1097,7 @@ zkSZO|{4+()-tL*ZAvpzCidot<!6g{BhCE3(2ven9tR^N=r0My$a}6LpWAk12vG{nl
 epvHfdqd#<P_%gInq;A`^@PYDA@)j=d<G%r2MQo}7
 
 diff --git a/asterisk.spec b/asterisk.spec
-index de7b5cd..896cb68 100644
+index 93ba385..33398fd 100644
 --- a/asterisk.spec
 +++ b/asterisk.spec
 @@ -54,16 +54,8 @@ Source5:          asterisk.service

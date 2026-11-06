@@ -1,6 +1,6 @@
-From dd4973995fd7d11d22b08408e978a3a851c6c67f Mon Sep 17 00:00:00 2001
+From c6d79c557761ffada7ec0212b9bc6126a672a885 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 21:20:32 +0100
+Date: Fri, 6 Nov 2026 09:38:02 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the direct GnuPG verification with %openpgpverify, which
@@ -15,15 +15,15 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/asterisk.spec b/asterisk.spec
-index 896cb68..abdb4a6 100644
+index 33398fd..fc7ad5b 100644
 --- a/asterisk.spec
 +++ b/asterisk.spec
 @@ -42,7 +42,7 @@
  Summary:          The Open Source PBX
  Name:             asterisk
- Version:          23.6.0
--Release:          %{?_rc||?_beta:0.}1%{?_rc:.rc%{_rc}}%{?_beta:.beta%{_beta}}%{?dist}
-+Release:          %{?_rc||?_beta:0.}1%{?_rc:.rc%{_rc}}%{?_beta:.beta%{_beta}}%{?dist}.1
+ Version:          24.0.0
+-Release:          %{?_rc||?_beta:0.}1%{?_rc:.rc%{_rc}}%{?_beta:.beta%{_beta}}%{?dist}.1
++Release:          %{?_rc||?_beta:0.}1%{?_rc:.rc%{_rc}}%{?_beta:.beta%{_beta}}%{?dist}.2
  # Automatically converted from old format: GPLv2 - review is highly recommended.
  License:          GPL-2.0-only
  URL:              http://www.asterisk.org/
@@ -48,11 +48,11 @@ index 896cb68..abdb4a6 100644
  %endif
  
  %changelog
-+* Thu Nov 05 2026 Jakub Jelen <jjelen@redhat.com> - 23.6.0-1.1
++* Fri Nov 06 2026 Jakub Jelen <jjelen@redhat.com> - 24.0.0-1.2
 +- Verify upstream source signatures with openpgpverify
 +
- * Thu Nov  5 2026 Peter Lemenkov <lemenkov@gmail.com> - 23.6.0-1
- - update to 23.6.0
+ * Thu Nov 05 2026 Michel Lind <salimma@fedoraproject.org> - 24.0.0-1.1
+ - Rebuild for libical 4.x
  
 -- 
 2.56.0

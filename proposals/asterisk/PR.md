@@ -14,7 +14,7 @@ Why `sqv`:
 - the direct `gpgv2` call is replaced by `%{openpgpverify}` with the same keyring, signature and data
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
 - refreshed keyring `asterisk-gpgkeys.gpg` (see below)
-- Release bumped (`%{?_rc||?_beta:0.}1%{?_rc:.rc%{_rc}}%{?_beta:.beta%{_beta}}%{?dist}` → `%{?_rc||?_beta:0.}1%{?_rc:.rc%{_rc}}%{?_beta:.beta%{_beta}}%{?dist}.1`) with a changelog entry
+- Release bumped (`%{?_rc||?_beta:0.}1%{?_rc:.rc%{_rc}}%{?_beta:.beta%{_beta}}%{?dist}.1` → `%{?_rc||?_beta:0.}1%{?_rc:.rc%{_rc}}%{?_beta:.beta%{_beta}}%{?dist}.2`) with a changelog entry
 
 ### Testing
 
@@ -25,7 +25,7 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 | current (`gpgv2`) | 1 | pass |
 | this PR (`%openpgpverify`) | 1 | pass |
 
-Tested on 2026-11-05 at dist-git commit `40030608bf82` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
+Tested on 2026-11-06 at dist-git commit `782ae5d08ab4` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
 ### Keyring refresh
 
