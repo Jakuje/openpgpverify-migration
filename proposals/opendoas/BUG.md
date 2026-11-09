@@ -1,7 +1,7 @@
 Product: Fedora
 Component: opendoas
 Version: rawhide
-Blocks: 2523619
+Blocks: 2569052
 Summary: opendoas: source signature does not verify with openpgpverify (key expired before signing)
 
 ---

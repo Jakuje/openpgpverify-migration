@@ -1,7 +1,7 @@
 Product: Fedora
 Component: cpio
 Version: rawhide
-Blocks: 2523619
+Blocks: 2569052
 Summary: cpio: source signature does not verify with openpgpverify (signing key algorithm rejected)
 
 ---

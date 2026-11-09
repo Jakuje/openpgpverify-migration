@@ -1,7 +1,7 @@
 Product: Fedora
 Component: glinf
 Version: rawhide
-Blocks: 2523619
+Blocks: 2569052
 Summary: glinf: source signature does not verify with openpgpverify (keyring lacks older self-signatures)
 
 ---

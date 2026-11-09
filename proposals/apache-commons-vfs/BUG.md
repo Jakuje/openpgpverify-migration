@@ -1,7 +1,7 @@
 Product: Fedora
 Component: apache-commons-vfs
 Version: rawhide
-Blocks: 2523619
+Blocks: 2569052
 Summary: apache-commons-vfs: source signature does not verify with openpgpverify (unreadable v3 key in keyring, SHA-1 self-signatures)
 
 ---

@@ -1,0 +1,27 @@
+Product: Fedora
+Component: distribution
+Version: rawhide
+Keywords: Tracking
+Alias: openpgpverify-migration
+Depends on: 2523619
+Summary: Tracker for packages using incompatible keys for tarball verification
+
+---
+
+This is a tracking bug for changes following up to the Fedora Change "Sequoia %openpgpverify":
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify (bug 2523619)
+
+The Change added %openpgpverify, which verifies upstream source signatures with Sequoia sqv instead of GnuPG. Packages that use %gpgverify or call gpg directly are being moved to it. For most of them a small spec change is enough, and those get pull requests in dist-git.
+
+The bugs blocking this tracker are for packages where that is not enough: GnuPG accepts the upstream signature, but sqv rejects it. The signing key or the signature uses cryptography that the system crypto policy no longer accepts, or the keyring in dist-git is outdated. GnuPG doesn't check most of this; sqv does. Fixing it needs upstream or the maintainer, so each package gets its own bug with the failing check, every problem found, and what can be done. Until it is fixed, the package keeps %gpgverify.
+
+We plan to open about 116 bugs (29 of them for packages in the ELN buildroot), in these groups:
+
+- Key algorithm rejected (DSA, or RSA shorter than 2048 bits): about 48 packages. Upstream needs a new key.
+- Key self-signatures use only SHA-1: about 48 packages. Upstream refreshes the key's self-signatures with SHA-256 and re-signs the current release, or the next release verifies.
+- Release signature made with SHA-1: about 9 packages, 8 of them with SHA-1 self-signatures as well. Upstream signs with SHA-256 (and refreshes the key).
+- Key expired before the release was signed: about 8 packages. Upstream publishes the extended key, or re-signs.
+- Other keyring problems: 3 packages (a version 3 key in the keyring, or a keyring without the older self-signatures).
+
+The bugs are filed in small batches, starting with a pilot of 6. The checks, the per-package details and the bug texts are at:
+https://github.com/Jakuje/openpgpverify-migration (see reports/bugs-2026-11-09.md)

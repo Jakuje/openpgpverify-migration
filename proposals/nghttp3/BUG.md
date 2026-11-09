@@ -1,7 +1,7 @@
 Product: Fedora
 Component: nghttp3
 Version: rawhide
-Blocks: 2523619
+Blocks: 2569052
 Summary: nghttp3: source signature does not verify with openpgpverify (signing key algorithm rejected)
 
 ---

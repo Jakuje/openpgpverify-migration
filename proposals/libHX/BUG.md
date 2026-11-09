@@ -1,7 +1,7 @@
 Product: Fedora
 Component: libHX
 Version: rawhide
-Blocks: 2523619
+Blocks: 2569052
 Summary: libHX: source signature does not verify with openpgpverify (SHA-1 data signature and key self-signatures)
 
 ---

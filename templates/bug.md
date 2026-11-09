@@ -1,7 +1,7 @@
 Product: Fedora
 Component: $package
 Version: rawhide
-Blocks: 2523619
+Blocks: 2569052
 Summary: $package: source signature does not verify with openpgpverify ($reason_short)
 
 ---

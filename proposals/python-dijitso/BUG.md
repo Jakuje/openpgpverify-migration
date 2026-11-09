@@ -1,7 +1,7 @@
 Product: Fedora
 Component: python-dijitso
 Version: rawhide
-Blocks: 2523619
+Blocks: 2569052
 Summary: python-dijitso: source signature does not verify with openpgpverify (SHA-1 key self-signatures)
 
 ---

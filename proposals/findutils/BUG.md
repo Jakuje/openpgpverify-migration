@@ -1,7 +1,7 @@
 Product: Fedora
 Component: findutils
 Version: rawhide
-Blocks: 2523619
+Blocks: 2569052
 Summary: findutils: source signature does not verify with openpgpverify (unreadable v3 key in keyring, SHA-1 self-signatures)
 
 ---

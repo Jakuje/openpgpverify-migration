@@ -1,7 +1,7 @@
 Product: Fedora
 Component: pari-seadata
 Version: rawhide
-Blocks: 2523619
+Blocks: 2569052
 Summary: pari-seadata: source signature does not verify with openpgpverify (signing key algorithm rejected)
 
 ---

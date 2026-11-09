@@ -1,7 +1,7 @@
 Product: Fedora
 Component: python-libusb1
 Version: rawhide
-Blocks: 2523619
+Blocks: 2569052
 Summary: python-libusb1: source signature does not verify with openpgpverify (SHA-1 key self-signatures)
 
 ---

@@ -1,7 +1,7 @@
 Product: Fedora
 Component: pari-nftables
 Version: rawhide
-Blocks: 2523619
+Blocks: 2569052
 Summary: pari-nftables: source signature does not verify with openpgpverify (signing key algorithm rejected)
 
 ---

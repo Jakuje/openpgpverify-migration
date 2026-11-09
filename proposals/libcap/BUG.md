@@ -1,7 +1,7 @@
 Product: Fedora
 Component: libcap
 Version: rawhide
-Blocks: 2523619
+Blocks: 2569052
 Summary: libcap: source signature does not verify with openpgpverify (SHA-1 key self-signatures)
 
 ---

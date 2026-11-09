@@ -1,7 +1,7 @@
 Product: Fedora
 Component: s-nail
 Version: rawhide
-Blocks: 2523619
+Blocks: 2569052
 Summary: s-nail: source signature does not verify with openpgpverify (SHA-1 key self-signatures)
 
 ---

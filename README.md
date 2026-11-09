@@ -5,7 +5,7 @@ signature verification (`%gpgverify`, raw `gpg`/`gpgv2`) to Sequoia-based
 `%openpgpverify`.
 
 - Change: https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
-- FESCo ticket: #3660, tracker bug: rhbz#2523619
+- FESCo ticket: #3660, tracker bug: rhbz#2523619 (closed); package bugs block rhbz#2569052 (`openpgpverify-migration`)
 
 ## Decisions
 

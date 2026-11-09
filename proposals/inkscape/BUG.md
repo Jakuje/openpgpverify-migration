@@ -1,7 +1,7 @@
 Product: Fedora
 Component: inkscape
 Version: rawhide
-Blocks: 2523619
+Blocks: 2569052
 Summary: inkscape: source signature does not verify with openpgpverify (signing key algorithm rejected)
 
 ---

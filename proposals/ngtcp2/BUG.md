@@ -1,7 +1,7 @@
 Product: Fedora
 Component: ngtcp2
 Version: rawhide
-Blocks: 2523619
+Blocks: 2569052
 Summary: ngtcp2: source signature does not verify with openpgpverify (signing key algorithm rejected)
 
 ---

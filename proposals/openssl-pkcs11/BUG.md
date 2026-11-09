@@ -1,7 +1,7 @@
 Product: Fedora
 Component: openssl-pkcs11
 Version: rawhide
-Blocks: 2523619
+Blocks: 2569052
 Summary: openssl-pkcs11: source signature does not verify with openpgpverify (SHA-1 key self-signatures)
 
 ---

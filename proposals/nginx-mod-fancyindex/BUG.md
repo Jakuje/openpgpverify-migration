@@ -1,7 +1,7 @@
 Product: Fedora
 Component: nginx-mod-fancyindex
 Version: rawhide
-Blocks: 2523619
+Blocks: 2569052
 Summary: nginx-mod-fancyindex: source signature does not verify with openpgpverify (signing key algorithm rejected)
 
 ---

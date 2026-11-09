@@ -1,7 +1,7 @@
 Product: Fedora
 Component: gsl
 Version: rawhide
-Blocks: 2523619
+Blocks: 2569052
 Summary: gsl: source signature does not verify with openpgpverify (SHA-1 data signature and key self-signatures)
 
 ---
