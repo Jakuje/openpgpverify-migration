@@ -26,9 +26,12 @@ openpgpverify: Signature verification failed.
 
 ### Why
 
-Checked in full, not only the first error sqv reports: the release signature (v4, SHA-512, made 2026-04-19) is by signing subkey 516B622918D15C478AB1EA3A5339A2BE82E07DEC (RSA 4096 bits) of key F4F3B91474D1EB29889BD0EF7E8403D5D673C366 (DSA 1024 bits). The key in dist-git: key algorithm rejected by the crypto policy (primary key DSA-1024); the key's self-signatures use only SHA-1. The copy on keyservers/WKD has the same problems.
+The release signature (SHA-512, made 2026-04-19) is by the subkey `516B622918D15C478AB1EA3A5339A2BE82E07DEC` (RSA 4096 bits) of the key `F4F3B91474D1EB29889BD0EF7E8403D5D673C366` (DSA 1024 bits). sqv reports only the first problem it hits (above). All the problems found:
 
-The release is signed with a key whose algorithm the crypto policy rejects (DSA, or RSA shorter than 2048 bits); for a signing subkey, its primary key counts too. Neither a new release signature nor new self-signatures with this key will help. (DSA-1024 can only use 160-bit hashes, which is also why such signatures are SHA-1.)
+- The primary key is DSA-1024. DSA keys and RSA keys shorter than 2048 bits are no longer considered secure, and the crypto policy rejects them. The release is signed by the subkey, but the primary key that binds the subkey counts too.
+- The self-signatures that bind the key's user IDs and subkeys to it use only SHA-1. SHA-1 is no longer considered secure: collisions have been practical since 2017 (SHAttered) and chosen-prefix collisions since 2020 (SHA-1 is a Shambles), and the crypto policy rejects it. GnuPG doesn't check self-signatures; Sequoia does, and without a valid one it doesn't use the key at all.
+
+The copy of the key on keys.openpgp.org, keyserver.ubuntu.com and WKD has the same problems.
 
 ### What can be done
 

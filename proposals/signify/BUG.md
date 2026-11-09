@@ -24,9 +24,12 @@ openpgpverify: Signature verification failed.
 
 ### Why
 
-Checked in full, not only the first error sqv reports: the release signature (v4, SHA-256, made 2026-05-11) is by key 5AA3BC334FD7E3369E7C77B291C559DBE4C9123B (DSA 1024 bits). The key in dist-git: key algorithm rejected by the crypto policy (DSA-1024); the key had expired when the release was signed (on 2021-06-11). The copy on keyservers/WKD still has: key algorithm rejected by the crypto policy (DSA-1024).
+The release signature (SHA-256, made 2026-05-11) is by the key `5AA3BC334FD7E3369E7C77B291C559DBE4C9123B` (DSA 1024 bits). sqv reports only the first problem it hits (above). All the problems found:
 
-The release is signed with a key whose algorithm the crypto policy rejects (DSA, or RSA shorter than 2048 bits); for a signing subkey, its primary key counts too. Neither a new release signature nor new self-signatures with this key will help. (DSA-1024 can only use 160-bit hashes, which is also why such signatures are SHA-1.)
+- The key is DSA-1024. DSA keys and RSA keys shorter than 2048 bits are no longer considered secure, and the crypto policy rejects them.
+- The key expired on 2021-06-11, before the release was signed on 2026-05-11, according to the keyring in dist-git. GnuPG ignores expiry; Sequoia checks that the key was valid when the signature was made.
+
+The copy of the key on keys.openpgp.org, keyserver.ubuntu.com and WKD is newer, but its problems remain: key algorithm rejected by the crypto policy.
 
 ### What can be done
 

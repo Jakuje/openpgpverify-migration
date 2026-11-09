@@ -24,14 +24,17 @@ openpgpverify: Signature verification failed.
 
 ### Why
 
-Checked in full, not only the first error sqv reports: the release signature (v4, SHA-512, made 2025-07-29) is by key F1111E4AAF984C9763795FFE4B25B5180522B8D9 (RSA 3072 bits). The key in dist-git: the key had expired when the release was signed (on 2023-03-24). The copy on keyservers/WKD has the same problems.
+The release signature (SHA-512, made 2025-07-29) is by the key `F1111E4AAF984C9763795FFE4B25B5180522B8D9` (RSA 3072 bits). sqv reports only the first problem it hits (above). All the problems found:
 
-According to the keyring in dist-git, the signing key had already expired when the release was signed. Usually upstream extended the expiry later and the copy in dist-git is outdated. No newer copy is published on keys.openpgp.org, keyserver.ubuntu.com or WKD. GnuPG ignores expiry; Sequoia checks that the key was valid when the signature was made. (Signatures made while the key was valid keep verifying after it expires.)
+- The key expired on 2023-03-24, before the release was signed on 2025-07-29, according to the keyring in dist-git. GnuPG ignores expiry; Sequoia checks that the key was valid when the signature was made.
+
+The copy of the key on keys.openpgp.org, keyserver.ubuntu.com and WKD has the same problems.
 
 ### What can be done
 
-- Ask upstream to publish their current key (keys.openpgp.org, WKD or the project website), then update the keyring in dist-git.
-- If the expiry was extended only after the release was signed, the new self-signatures have to be dated before the release signature; [Updating GPG keys for Fedora and RHEL](https://www.redhat.com/en/blog/updating-gpg-keys-for-fedora-and-rhel) describes how to backdate them.
+- Ask upstream to publish their current key (keys.openpgp.org, WKD or the project website), then update the keyring in dist-git. If the expiry was extended before the release was signed, that is all.
+- For the release already in Fedora, ask upstream to sign the same tarball again with the extended key and publish the new signature (the tarball doesn't change), or wait for the next release. Then update the keyring and the signature in dist-git.
+- Only if re-signing is not an option: the new self-signatures can be dated one second after the key (or its newest subkey) was created, so that the existing release signatures verify too. Backdating is unusual and easy to get wrong, so it is a last resort; [Updating GPG keys for Fedora and RHEL](https://www.redhat.com/en/blog/updating-gpg-keys-for-fedora-and-rhel) describes how (`gpg --faked-system-time "$((CT + 1))!" --cert-digest-algo SHA256 --quick-set-expire ...`, with `CT` that creation time).
 
 The rest of the conversion is mechanical. Once the signature or key is sorted out, the spec change is the same as for other packages: `%{gpgverify}` → `%{openpgpverify}` and `BuildRequires: openpgpverify`. I'm happy to send the PR.
 

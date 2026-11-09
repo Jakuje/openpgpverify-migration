@@ -36,6 +36,26 @@ PATCH_NAME = '0001-Verify-source-signatures-with-openpgpverify.patch'
 # How to re-create SHA-1 self-signatures so that old signatures stay valid (Clemens Lang).
 RESIGN_ARTICLE = ('[Updating GPG keys for Fedora and RHEL]'
                   '(https://www.redhat.com/en/blog/updating-gpg-keys-for-fedora-and-rhel)')
+# Re-signing first; backdated self-signatures only when re-signing is not an option.
+REFRESH_SHA256 = (
+    "- Ask upstream to refresh the key's self-signatures with SHA-256 and publish the "
+    "updated key (keys.openpgp.org, WKD or the project website):\n\n"
+    "      gpg --cert-digest-algo SHA256 --quick-set-expire FPR 2030-12-31\n"
+    "      gpg --cert-digest-algo SHA256 --quick-set-expire FPR 2030-12-31 '*'\n\n"
+    "  Use an absolute expiry date (or `0`). Releases signed after this verify.\n")
+RESIGN_RELEASE = (
+    "- For the release already in Fedora, ask upstream to sign the same tarball again with "
+    "the updated key and publish the new signature (the tarball doesn't change), or wait "
+    "for the next release. Then update the keyring and the signature in dist-git.\n")
+BACKDATE_LAST = (
+    "- Only if re-signing is not an option: the new self-signatures can be dated one "
+    "second after the key (or its newest subkey) was created, so that the existing "
+    "release signatures verify "
+    "too. Backdating is unusual and easy to get wrong, so it is a last resort; %s "
+    "describes how (`gpg --faked-system-time \"$((CT + 1))!\" --cert-digest-algo SHA256 "
+    "--quick-set-expire ...`, with `CT` that creation time)." % RESIGN_ARTICLE)
+
+
 REASONS = {
     'sha1-cert': (
         'SHA-1 key self-signatures',
@@ -44,23 +64,9 @@ REASONS = {
         "Sequoia applies the policy to key bindings too; GnuPG doesn't check them. No "
         "newer copy of the key with modern self-signatures is published on "
         "keys.openpgp.org, keyserver.ubuntu.com or WKD.",
-        "- Ask upstream to re-create the key's self-signatures with SHA-256, dated one "
-        "second after the key was created, and publish the updated key. "
-        "%s describes how. The date matters: Sequoia checks how the key was bound when "
-        "the release was signed, so self-signatures made today (a plain `gpg "
-        "--quick-set-expire`) only help future releases. With the backdated ones, the "
-        "existing release signatures verify again. In short (`CT` is the newest "
-        "creation time from `gpg --list-keys --with-colons --fixed-list-mode FPR`, "
-        "field 6 of the `pub`/`sub` lines):\n\n"
-        "      gpg --faked-system-time \"$((CT + 1))!\" --cert-digest-algo SHA256 "
-        "--quick-set-expire FPR 2030-12-31\n"
-        "      gpg --faked-system-time \"$((CT + 1))!\" --cert-digest-algo SHA256 "
-        "--quick-set-expire FPR 2030-12-31 '*'\n\n"
-        "  Use an absolute expiry date (or `0`): a relative one such as `4y` counts "
-        "from the faked time and may already be over. `sqv --keyring KEY.asc "
-        "RELEASE.sig RELEASE.tar.gz` on an existing release shows whether it worked. "
-        "Then refresh the keyring in dist-git.\n" % RESIGN_ARTICLE +
-        "- If upstream already signs with a newer key, switch the keyring to that key."),
+        REFRESH_SHA256 + RESIGN_RELEASE +
+        "- If upstream already signs with a newer key, switch the keyring to that key.\n" +
+        BACKDATE_LAST),
     'sha1-sig': (
         'SHA-1 data signature',
         "The release signature itself is made with SHA-1. SHA-1 is not accepted for "
@@ -86,10 +92,10 @@ REASONS = {
         "checks that the key was valid when the signature was made. (Signatures made "
         "while the key was valid keep verifying after it expires.)",
         "- Ask upstream to publish their current key (keys.openpgp.org, WKD or the "
-        "project website), then update the keyring in dist-git.\n"
-        "- If the expiry was extended only after the release was signed, the new "
-        "self-signatures have to be dated before the release signature; %s describes "
-        "how to backdate them." % RESIGN_ARTICLE),
+        "project website), then update the keyring in dist-git. If the expiry was "
+        "extended before the release was signed, that is all.\n" +
+        RESIGN_RELEASE.replace('with the updated key', 'with the extended key') +
+        BACKDATE_LAST),
     'binding-after-signature': (
         'keyring lacks older self-signatures',
         "The keyring in dist-git only has self-signatures that are newer than the "
@@ -142,10 +148,10 @@ REASONS['v3-key-sha1-cert'] = (
     "self-signatures are made with SHA-1, which the Fedora crypto policy rejects. No "
     "newer copy of the key with modern self-signatures is published on "
     "keys.openpgp.org, keyserver.ubuntu.com or WKD.",
-    REASONS['sha1-cert'][2].replace('Then refresh the keyring in dist-git.',
-                                    'Then put a keyring with only the keys that sign '
-                                    'releases into dist-git (exported with GnuPG as '
-                                    'above, so it has no v3 key).'))
+    REFRESH_SHA256 +
+    "- Use a keyring with only the keys that sign releases (`gpg --import KEYS` into a "
+    "temporary keyring, then `gpg --export FPR... > keyring.gpg`), so it has no v3 key.\n" +
+    RESIGN_RELEASE + BACKDATE_LAST)
 # sha1-sig wins in phase1, but sqv often reports the key binding first: say both.
 REASONS['sha1-sig-and-cert'] = (
     'SHA-1 data signature and key self-signatures',
@@ -153,18 +159,13 @@ REASONS['sha1-sig-and-cert'] = (
     "signature itself is made with SHA-1; SHA-1 is not accepted for signatures over "
     "data because of collision attacks, and this won't be relaxed. The signing key's "
     "own self-signatures (user ID certifications or subkey bindings) are SHA-1 too, "
-    "and that is what sqv reports first above; GnuPG doesn't check them. No newer "
-    "copy of the key with modern self-signatures is published on keys.openpgp.org, "
-    "keyserver.ubuntu.com or WKD.",
-    "- Ask upstream to do both: refresh the key's self-signatures with SHA-256 and "
-    "publish the updated key, then sign releases with SHA-256 (`gpg --digest-algo "
-    "SHA256`, or `personal-digest-preferences SHA256` in `gpg.conf`). A new SHA-256 "
-    "release signature alone still fails while the key is only bound with SHA-1. "
-    "Since the old release signatures can't be used anyway, the self-signatures don't "
-    "need backdating:\n\n"
-    "      gpg --cert-digest-algo SHA256 --quick-set-expire FPR 2030-12-31\n"
-    "      gpg --cert-digest-algo SHA256 --quick-set-expire FPR 2030-12-31 '*'\n\n"
-    "  Then update the keyring in dist-git along with the next release.\n"
+    "and that is what sqv reports first above; GnuPG doesn't check them.",
+    REFRESH_SHA256.replace('Releases signed after this verify.',
+                           'A new SHA-256 release signature alone still fails while the '
+                           'key is only bound with SHA-1.') +
+    "- Then ask upstream to sign releases with SHA-256 (`gpg --digest-algo SHA256`, or "
+    "`personal-digest-preferences SHA256` in `gpg.conf`): the current release again, or "
+    "the next one. Then update the keyring and the signature in dist-git.\n"
     "- If upstream already signs with a newer key, ask them to use SHA-256 with it and "
     "switch the keyring to that key.\n"
     "- Until then the package can keep `%gpgverify`, or verify the tarball "
@@ -714,7 +715,7 @@ def render_bug(pkg, s):
         reason = 'sha1-sig-and-cert'
     short, why, actions = REASONS.get(reason) or GENERIC
     if diag:
-        why = diag + '\n\n' + why
+        why = diag
     elif reason == 'sha1-sig' and 'No binding signature at time' in excerpt:
         why += (' The keyring in dist-git also has no self-signature from before the '
                 'release signature, which is what sqv reports first above; a new '

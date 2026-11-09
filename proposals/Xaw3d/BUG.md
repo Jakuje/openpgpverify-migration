@@ -25,9 +25,13 @@ openpgpverify: Signature verification failed.
 
 ### Why
 
-Checked in full, not only the first error sqv reports: the release signature (v4, SHA-512, made 2024-03-02) is by signing subkey 2F7DBCAD5B30E668BBD516C1CFDF148828C642A7 (RSA 4096 bits) of key 4A193C06D35E7C670FA4EF0BA2FB9E081F2D130E (DSA 1024 bits). The key in dist-git: key algorithm rejected by the crypto policy (primary key DSA-1024); the key had expired when the release was signed (on 2022-07-21); the key has no self-signature from before the release signature. The copy on keyservers/WKD still has: key algorithm rejected by the crypto policy (primary key DSA-1024).
+The release signature (SHA-512, made 2024-03-02) is by the subkey `2F7DBCAD5B30E668BBD516C1CFDF148828C642A7` (RSA 4096 bits) of the key `4A193C06D35E7C670FA4EF0BA2FB9E081F2D130E` (DSA 1024 bits). sqv reports only the first problem it hits (above). All the problems found:
 
-The release is signed with a key whose algorithm the crypto policy rejects (DSA, or RSA shorter than 2048 bits); for a signing subkey, its primary key counts too. Neither a new release signature nor new self-signatures with this key will help. (DSA-1024 can only use 160-bit hashes, which is also why such signatures are SHA-1.)
+- The primary key is DSA-1024. DSA keys and RSA keys shorter than 2048 bits are no longer considered secure, and the crypto policy rejects them. The release is signed by the subkey, but the primary key that binds the subkey counts too.
+- The key expired on 2022-07-21, before the release was signed on 2024-03-02, according to the keyring in dist-git. GnuPG ignores expiry; Sequoia checks that the key was valid when the signature was made.
+- The keyring in dist-git has no self-signature for the signing subkey from before 2024-03-02, when the release was signed, so for Sequoia the key wasn't valid yet at that time.
+
+The copy of the key on keys.openpgp.org, keyserver.ubuntu.com and WKD is newer, but its problems remain: key algorithm rejected by the crypto policy.
 
 ### What can be done
 

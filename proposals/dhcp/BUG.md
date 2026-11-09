@@ -24,9 +24,11 @@ openpgpverify: Signature verification failed.
 
 ### Why
 
-Checked in full, not only the first error sqv reports: the release signature (v4, SHA-1, made 2022-09-28) is by signing subkey AADBBA5074F1402F7B69D56BC5B4EE931A9F9DFD (RSA 4096 bits) of key 7E1C91AC8030A5A59D1EFAB9750F3C87723E4012 (RSA 4096 bits). The signature itself is rejected: it uses SHA-1. The key itself is fine.
+The release signature (SHA-1, made 2022-09-28) is by the subkey `AADBBA5074F1402F7B69D56BC5B4EE931A9F9DFD` (RSA 4096 bits) of the key `7E1C91AC8030A5A59D1EFAB9750F3C87723E4012` (RSA 4096 bits). sqv reports only the first problem it hits (above). All the problems found:
 
-The release signature itself is made with SHA-1. SHA-1 is not accepted for signatures over data because of collision attacks, and this won't be relaxed.
+- The release signature itself uses SHA-1. SHA-1 is no longer considered secure: collisions have been practical since 2017 (SHAttered) and chosen-prefix collisions since 2020 (SHA-1 is a Shambles), and the crypto policy rejects it; for signatures over data, this won't be relaxed.
+
+The key itself is fine.
 
 ### What can be done
 

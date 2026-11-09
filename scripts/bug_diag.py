@@ -281,38 +281,87 @@ def hash_name(h):
     return re.sub(r'^SHA(\d)', r'SHA-\1', h or '?')
 
 
-def findings(d, sig, dg, nw):
+SHA1_WHY = ('SHA-1 is no longer considered secure: collisions have been practical since '
+            '2017 (SHAttered) and chosen-prefix collisions since 2020 (SHA-1 is a Shambles), '
+            'and the crypto policy rejects it')
+NETWORK = 'keys.openpgp.org, keyserver.ubuntu.com and WKD'
+
+
+def findings(d, sig, dg, nw, v3_keyring=False):
+    """Markdown: what the signature is, then one item per problem with the reason."""
     s0 = d['sigs'][0]
     k0 = d['distgit']['per_sig'][0]
-    if k0.get('key') and k0['key'] != k0.get('primary'):
-        by = 'signing subkey %s (%s) of key %s (%s)' % (
+    made = s0['created'].split()[0]
+    sub = k0.get('key') and k0['key'] != k0.get('primary')
+    if sub:
+        by = 'the subkey `%s` (%s) of the key `%s` (%s)' % (
             k0['key'], k0['algo'], k0['primary'], k0['primary_algo'])
     else:
-        by = 'key %s (%s)' % (k0.get('primary') or s0['issuer'], k0.get('algo') or '?')
-    txt = ('Checked in full, not only the first error sqv reports: the release signature '
-           '(v%s, %s, made %s) is by %s.' % (
-               s0['version'], hash_name(s0['hash']), s0['created'].split()[0], by))
-    items = (['it is in the version 3 format'] if 'v3-sig' in sig else []) + \
-        (['it uses SHA-1'] if 'sha1-data' in sig else [])
-    keyp = describe(dict(sorted(dg.items(), key=lambda x: x[0] != 'weak-key')))
-    if items:
-        txt += ' The signature itself is rejected: %s.' % ' and '.join(items)
-    if not keyp:
-        txt += ' The key itself is fine.'
-        return txt
-    txt += ' The key in dist-git: %s.' % '; '.join(keyp)
-    if 'not-found' in nw:
-        txt += ' The key is not on keys.openpgp.org, keyserver.ubuntu.com or WKD.'
-    elif set(nw) == set(dg):
-        txt += ' The copy on keyservers/WKD has the same problems.'
-    elif nw:
-        txt += ' The copy on keyservers/WKD still has: %s.' % '; '.join(describe(nw))
+        by = 'the key `%s` (%s)' % (k0.get('primary') or s0['issuer'], k0.get('algo') or '?')
+    head = ('The release signature (%s, made %s) is by %s. sqv reports only the first '
+            'problem it hits (above). All the problems found:' % (hash_name(s0['hash']), made,
+                                                                 by))
+    items = []
+    for kind, ds in sorted(dg.items(), key=lambda x: x[0] != 'weak-key'):
+        if kind == 'weak-key':
+            for x in ds:
+                what = ('The signing subkey' if x.startswith('subkey ') else
+                        'The primary key' if x.startswith('primary key ') or sub else
+                        'The key')
+                alg = x.split()[-1]
+                items.append(
+                    '%s is %s. DSA keys and RSA keys shorter than 2048 bits are no longer '
+                    'considered secure, and the crypto policy rejects them.%s' % (
+                        what, alg,
+                        ' The release is signed by the subkey, but the primary key that '
+                        'binds the subkey counts too.'
+                        if x.startswith('primary key ') or (sub and what == 'The primary key')
+                        else ''))
+                if alg == 'DSA-1024' and 'sha1-data' in sig and not sub:
+                    items[-1] += (' DSA-1024 can only use 160-bit hashes, which is also why '
+                                  'its signatures are SHA-1.')
+        elif kind == 'sha1-binding':
+            items.append(
+                'The self-signatures that bind the key\'s user IDs%s to it use only SHA-1. '
+                '%s. GnuPG doesn\'t check self-signatures; Sequoia does, and without a valid '
+                'one it doesn\'t use the key at all.' % (
+                    ' and subkeys' if any(x == 'subkey' for x in ds) or sub else '',
+                    SHA1_WHY))
+        elif kind == 'expired':
+            dates = sorted({x.split()[-1] for x in ds})
+            items.append(
+                'The key expired on %s, before the release was signed on %s, according to '
+                'the keyring in dist-git. GnuPG ignores expiry; Sequoia checks that the key '
+                'was valid when the signature was made.' % (', '.join(dates), made))
+        elif kind == 'binding-after-signature':
+            items.append(
+                'The keyring in dist-git has no self-signature%s from before %s, when the '
+                'release was signed, so for Sequoia the key wasn\'t valid yet at that '
+                'time.' % (' for the signing subkey' if ds == ['subkey'] else '', made))
+    if 'v3-sig' in sig:
+        items.append('The release signature is in the version 3 (PGP 2) format, which '
+                     'current OpenPGP implementations no longer accept.')
+    if 'sha1-data' in sig:
+        items.append('The release signature itself uses SHA-1 too; for signatures over '
+                     'data, this won\'t be relaxed.' if 'sha1-binding' in dg else
+                     'The release signature itself uses SHA-1. %s; for signatures over '
+                     'data, this won\'t be relaxed.' % SHA1_WHY)
+    if v3_keyring:
+        items.append('The keyring also contains a version 3 key, which Sequoia can\'t '
+                     'parse. GnuPG skips it silently; sqv rejects the whole keyring.')
+    if dg:
+        if 'not-found' in nw:
+            net = 'The key is not published on %s.' % NETWORK
+        elif set(nw) == set(dg):
+            net = 'The copy of the key on %s has the same problems.' % NETWORK
+        elif nw:
+            net = ('The copy of the key on %s is newer, but its problems remain: %s.'
+                   % (NETWORK, ', '.join(sorted(LABEL[k].split(' (')[0] for k in nw))))
+        else:
+            net = 'The copy of the key on %s has none of these problems.' % NETWORK
     else:
-        txt += ' The copy on keyservers/WKD has none of these problems.'
-    if 'expired' in dg and 'sha1-binding' in dg and 'weak-key' not in dg:
-        txt += (' The backdated self-signatures below fix the expiry too, since they also '
-                'set a new one.')
-    return txt
+        net = 'The key itself is fine.'
+    return head + '\n\n' + '\n'.join('- ' + i for i in items) + '\n\n' + net
 
 
 def apply(path):
@@ -332,7 +381,7 @@ def apply(path):
             print('%-24s network key is clean: try refresh_keys.py propose' % d['package'])
             continue
         s['bug_reason'] = reason
-        s['bug_findings'] = findings(d, sig, dg, nw)
+        s['bug_findings'] = findings(d, sig, dg, nw, reason == 'v3-key-sha1-cert')
         s['bug_diag_commit'] = d['commit']
         print('%-24s %s' % (d['package'], reason))
     state.save(st)

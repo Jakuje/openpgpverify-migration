@@ -1,6 +1,6 @@
-From 4e70d2f2ba3fd80bc72c5906365a3e916bf139a2 Mon Sep 17 00:00:00 2001
+From e25adfadc80b32c1c28673fb0a5b11396db7c733 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 9 Nov 2026 10:26:26 +0100
+Date: Mon, 9 Nov 2026 11:18:31 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- nettle.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ nettle.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/nettle.spec b/nettle.spec
-index 49a6ce1..07960f7 100644
+index 49a6ce1..aa4ef75 100644
 --- a/nettle.spec
 +++ b/nettle.spec
-@@ -60,6 +60,7 @@ BuildRequires:	libtool, automake, autoconf, gettext-devel
+@@ -59,7 +59,7 @@ BuildRequires:	libtool, automake, autoconf, gettext-devel
+ %if %{with fipshmac}
  BuildRequires:  fipscheck
  %endif
- BuildRequires:  gnupg2
-+BuildRequires: openpgpverify
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
  
  %package devel
  Summary:        Development headers for a low-level cryptographic library
-@@ -83,7 +84,7 @@ applications with nettle.
+@@ -83,7 +83,7 @@ applications with nettle.
  %prep
  %autosetup -Tb 0 -p1
  

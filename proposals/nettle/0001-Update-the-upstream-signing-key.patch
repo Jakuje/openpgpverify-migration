@@ -1,6 +1,6 @@
-From 47048636a3dce12480621b41172835b60b1e82ee Mon Sep 17 00:00:00 2001
+From e688ce3e43fdc7a1fe133b2bb5c19a01f4525b00 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Mon, 9 Nov 2026 10:26:26 +0100
+Date: Mon, 9 Nov 2026 11:18:31 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Refresh nettle-release-keyring.gpg from keyservers: same certificate(s),

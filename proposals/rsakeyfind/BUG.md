@@ -24,9 +24,14 @@ openpgpverify: Signature verification failed.
 
 ### Why
 
-Checked in full, not only the first error sqv reports: the release signature (v3, SHA-1, made 2008-07-18) is by key 12E404FFD3C931F934052D06B8841A919D0FACE4 (DSA 1024 bits). The signature itself is rejected: it is in the version 3 format and it uses SHA-1. The key in dist-git: key algorithm rejected by the crypto policy (DSA-1024); the key has no self-signature from before the release signature. The copy on keyservers/WKD still has: key algorithm rejected by the crypto policy (DSA-1024); the key's self-signatures use only SHA-1.
+The release signature (SHA-1, made 2008-07-18) is by the key `12E404FFD3C931F934052D06B8841A919D0FACE4` (DSA 1024 bits). sqv reports only the first problem it hits (above). All the problems found:
 
-The release is signed with a key whose algorithm the crypto policy rejects (DSA, or RSA shorter than 2048 bits); for a signing subkey, its primary key counts too. Neither a new release signature nor new self-signatures with this key will help. (DSA-1024 can only use 160-bit hashes, which is also why such signatures are SHA-1.)
+- The key is DSA-1024. DSA keys and RSA keys shorter than 2048 bits are no longer considered secure, and the crypto policy rejects them. DSA-1024 can only use 160-bit hashes, which is also why its signatures are SHA-1.
+- The keyring in dist-git has no self-signature from before 2008-07-18, when the release was signed, so for Sequoia the key wasn't valid yet at that time.
+- The release signature is in the version 3 (PGP 2) format, which current OpenPGP implementations no longer accept.
+- The release signature itself uses SHA-1. SHA-1 is no longer considered secure: collisions have been practical since 2017 (SHAttered) and chosen-prefix collisions since 2020 (SHA-1 is a Shambles), and the crypto policy rejects it; for signatures over data, this won't be relaxed.
+
+The copy of the key on keys.openpgp.org, keyserver.ubuntu.com and WKD is newer, but its problems remain: key algorithm rejected by the crypto policy, the key's self-signatures use only SHA-1.
 
 ### What can be done
 

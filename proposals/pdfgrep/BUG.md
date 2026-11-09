@@ -24,9 +24,11 @@ openpgpverify: Signature verification failed.
 
 ### Why
 
-Checked in full, not only the first error sqv reports: the release signature (v4, SHA-256, made 2024-03-25) is by signing subkey CF01EA7E5A6D59E497266A8434F6B8D85234A348 (DSA 2048 bits) of key 432FC753112F26D9EB48DDC1A17CF2CA697BEAF2 (RSA 2048 bits). The key in dist-git: key algorithm rejected by the crypto policy (signing subkey DSA-2048). The copy on keyservers/WKD has the same problems.
+The release signature (SHA-256, made 2024-03-25) is by the subkey `CF01EA7E5A6D59E497266A8434F6B8D85234A348` (DSA 2048 bits) of the key `432FC753112F26D9EB48DDC1A17CF2CA697BEAF2` (RSA 2048 bits). sqv reports only the first problem it hits (above). All the problems found:
 
-The release is signed with a key whose algorithm the crypto policy rejects (DSA, or RSA shorter than 2048 bits); for a signing subkey, its primary key counts too. Neither a new release signature nor new self-signatures with this key will help. (DSA-1024 can only use 160-bit hashes, which is also why such signatures are SHA-1.)
+- The signing subkey is DSA-2048. DSA keys and RSA keys shorter than 2048 bits are no longer considered secure, and the crypto policy rejects them.
+
+The copy of the key on keys.openpgp.org, keyserver.ubuntu.com and WKD has the same problems.
 
 ### What can be done
 
