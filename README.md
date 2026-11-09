@@ -227,7 +227,9 @@ rpm stops depending on gpg.
      problem, so `scripts/bug_diag.py check` lists all of them (signature,
      key algorithm, self-signature hashes, expiry, network copy) and
      `bug_diag.py apply` picks the bug text from that (`bug_reason`,
-     `bug_findings` in the state).
+     `bug_findings` in the state). `scripts/bug_groups.py DIAG.jsonl`
+     groups the drafts by upstream signing key and by Fedora owner
+     (`reports/bug-groups-*.md`); `scripts/file_bugs.py` files them.
    - `proposals/README.md`: an index.
 
    Commit message: `templates/commit-message.txt`, with an `Assisted-by:`
