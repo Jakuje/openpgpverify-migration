@@ -24,6 +24,8 @@ openpgpverify: Signature verification failed.
 
 ### Why
 
+Checked in full, not only the first error sqv reports: the release signature (v4, SHA-256, made 2026-09-23) is by key 32A9EDDE3609931EB98CEAC315907E8E7BDD6BFE (RSA 4096 bits). The key in dist-git: the key had expired when the release was signed (on 2025-07-10). The copy on keyservers/WKD has the same problems.
+
 According to the keyring in dist-git, the signing key had already expired when the release was signed. Usually upstream extended the expiry later and the copy in dist-git is outdated. No newer copy is published on keys.openpgp.org, keyserver.ubuntu.com or WKD. GnuPG ignores expiry; Sequoia checks that the key was valid when the signature was made. (Signatures made while the key was valid keep verifying after it expires.)
 
 ### What can be done

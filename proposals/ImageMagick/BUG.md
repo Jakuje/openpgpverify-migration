@@ -8,7 +8,7 @@ Summary: ImageMagick: source signature does not verify with openpgpverify (SHA-1
 
 As part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify), `%gpgverify` (GnuPG) is being replaced by `%openpgpverify` (Sequoia `sqv`). For ImageMagick, the switch can't be done in a simple PR: `%gpgverify` accepts the current upstream signature, but `%openpgpverify` rejects it.
 
-Failing check (dist-git commit `1bd132aaecb5`):
+Failing check (dist-git commit `687972c2bbb4`):
 
 ```
 %openpgpverify --keyring=ImageMagick.keyring --signature=ImageMagick-7.1.2-35.tar.xz.asc --data=ImageMagick-7.1.2-35.tar.xz
@@ -24,6 +24,8 @@ openpgpverify: Signature verification failed.
 ```
 
 ### Why
+
+Checked in full, not only the first error sqv reports: the release signature (v4, SHA-512, made 2026-11-01) is by key D8272EF51DA223E4D05B466989AB63D48277377A (RSA 4096 bits). The key in dist-git: the key's self-signatures use only SHA-1. The copy on keyservers/WKD has the same problems.
 
 The signing key's own self-signatures (user ID certifications or subkey bindings) are made with SHA-1. The Fedora crypto policy rejects SHA-1, and Sequoia applies the policy to key bindings too; GnuPG doesn't check them. No newer copy of the key with modern self-signatures is published on keys.openpgp.org, keyserver.ubuntu.com or WKD.
 

@@ -24,6 +24,8 @@ openpgpverify: Signature verification failed.
 
 ### Why
 
+Checked in full, not only the first error sqv reports: the release signature (v4, SHA-512, made 2020-01-29) is by key 2F61B4828BBA779AECB3F32703A2A4AB1E32FD34 (RSA 2048 bits). The key in dist-git: the key has no self-signature from before the release signature. The copy on keyservers/WKD still has: the key had expired when the release was signed (on 2018-09-17).
+
 The keyring in dist-git only has self-signatures that are newer than the release signature, so for Sequoia the key wasn't bound yet when the release was signed. GnuPG doesn't check this. No copy with the older self-signatures is published.
 
 ### What can be done

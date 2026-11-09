@@ -63,9 +63,8 @@ REASONS = {
         "- If upstream already signs with a newer key, switch the keyring to that key."),
     'sha1-sig': (
         'SHA-1 data signature',
-        "The release signature itself is made with SHA-1 (or with a key algorithm such "
-        "as DSA-1024 that the policy rejects). SHA-1 is not accepted for signatures "
-        "over data because of collision attacks, and this won't be relaxed.",
+        "The release signature itself is made with SHA-1. SHA-1 is not accepted for "
+        "signatures over data because of collision attacks, and this won't be relaxed.",
         "- Ask upstream to sign releases with SHA-256 or better, ideally with a current "
         "key.\n"
         "- Until then the package can keep `%gpgverify`, or verify the tarball "
@@ -124,11 +123,15 @@ REASONS.update({
     'weak-key': (
         'signing key algorithm rejected',
         "The release is signed with a key whose algorithm the crypto policy rejects "
-        "(DSA, or RSA shorter than 2048 bits). A new signature with the same key won't "
-        "help.",
-        "- Ask upstream to sign releases with a current key (for example Ed25519 or RSA "
-        "3072+), then switch the keyring to it.\n"
-        "- Until then the package can keep `%gpgverify`."),
+        "(DSA, or RSA shorter than 2048 bits); for a signing subkey, its primary key "
+        "counts too. Neither a new release signature nor new self-signatures with this "
+        "key will help. (DSA-1024 can only use 160-bit hashes, which is also why such "
+        "signatures are SHA-1.)",
+        "- Ask upstream to create a new key (for example Ed25519 or RSA 3072+), publish "
+        "it, and sign releases with it using SHA-256 or better. Then switch the keyring "
+        "to it.\n"
+        "- Until then the package can keep `%gpgverify`, or verify the tarball "
+        "differently (for example against a checksum published over HTTPS)."),
 })
 REASONS['v3-key-sha1-cert'] = (
     'unreadable v3 key in keyring, SHA-1 self-signatures',
@@ -143,6 +146,29 @@ REASONS['v3-key-sha1-cert'] = (
                                     'Then put a keyring with only the keys that sign '
                                     'releases into dist-git (exported with GnuPG as '
                                     'above, so it has no v3 key).'))
+# sha1-sig wins in phase1, but sqv often reports the key binding first: say both.
+REASONS['sha1-sig-and-cert'] = (
+    'SHA-1 data signature and key self-signatures',
+    "Two things use SHA-1, which the Fedora crypto policy rejects. The release "
+    "signature itself is made with SHA-1; SHA-1 is not accepted for signatures over "
+    "data because of collision attacks, and this won't be relaxed. The signing key's "
+    "own self-signatures (user ID certifications or subkey bindings) are SHA-1 too, "
+    "and that is what sqv reports first above; GnuPG doesn't check them. No newer "
+    "copy of the key with modern self-signatures is published on keys.openpgp.org, "
+    "keyserver.ubuntu.com or WKD.",
+    "- Ask upstream to do both: refresh the key's self-signatures with SHA-256 and "
+    "publish the updated key, then sign releases with SHA-256 (`gpg --digest-algo "
+    "SHA256`, or `personal-digest-preferences SHA256` in `gpg.conf`). A new SHA-256 "
+    "release signature alone still fails while the key is only bound with SHA-1. "
+    "Since the old release signatures can't be used anyway, the self-signatures don't "
+    "need backdating:\n\n"
+    "      gpg --cert-digest-algo SHA256 --quick-set-expire FPR 2030-12-31\n"
+    "      gpg --cert-digest-algo SHA256 --quick-set-expire FPR 2030-12-31 '*'\n\n"
+    "  Then update the keyring in dist-git along with the next release.\n"
+    "- If upstream already signs with a newer key, ask them to use SHA-256 with it and "
+    "switch the keyring to that key.\n"
+    "- Until then the package can keep `%gpgverify`, or verify the tarball "
+    "differently (for example against a checksum published over HTTPS).")
 GENERIC = ('verification fails',
            "`%openpgpverify` rejects a signature that `%gpgverify` accepts; see the "
            "output above.",
@@ -679,14 +705,27 @@ def render_bug(pkg, s):
     res = s['results'][0]
     bad = [c for c in res.get('new_calls', []) if c['rc'] != 0][0]
     # bug_reason: set by hand where the first error hides a second one.
+    # bug_reason and bug_findings come from scripts/bug_diag.py (all problems).
     reason = s.get('bug_reason') or res.get('failure_reason')
+    excerpt = sqv_excerpt(res.get('log_tail', ''))
+    diag = s.get('bug_findings')
+    if not diag and reason == 'sha1-sig' and re.search(r'(Certification|Binding)\) requiring',
+                                                       excerpt):
+        reason = 'sha1-sig-and-cert'
     short, why, actions = REASONS.get(reason) or GENERIC
+    if diag:
+        why = diag + '\n\n' + why
+    elif reason == 'sha1-sig' and 'No binding signature at time' in excerpt:
+        why += (' The keyring in dist-git also has no self-signature from before the '
+                'release signature, which is what sqv reports first above; a new '
+                'signature with SHA-256 fixes both.')
     if s.get('bug_spec_comment'):
         why = ('The spec already says so (`%s`); this bug tracks it for the Change.\n\n'
                % s['bug_spec_comment']) + why
     kr = s.get('keyring_refresh') or {}
-    if kr.get('status') in ('no-update', 'not-found') and reason not in (
-            'sha1-cert', 'expired', 'binding-after-signature', 'v3-key-sha1-cert'):
+    if not diag and kr.get('status') in ('no-update', 'not-found') and reason not in (
+            'sha1-cert', 'expired', 'binding-after-signature', 'v3-key-sha1-cert',
+            'sha1-sig-and-cert'):
         why += ' (A refreshed key from keyservers/WKD doesn\'t help either.)'
     if s.get('raw_rewritten'):
         tools = sorted({c['tool'] for c in res.get('old_calls', [])} - {'gpgverify'})
@@ -705,7 +744,7 @@ def render_bug(pkg, s):
     return tmpl('bug.md', package=pkg, reason_short=short, commit=s['spec_commit'][:12],
                 old_check=old_check, spec_change=spec_change,
                 call='%%openpgpverify %s' % short_args(bad['args']),
-                log_excerpt=sqv_excerpt(res.get('log_tail', '')), reason_text=why,
+                log_excerpt=excerpt, reason_text=why,
                 actions=actions)
 
 

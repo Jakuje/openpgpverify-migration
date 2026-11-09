@@ -24,6 +24,8 @@ openpgpverify: Signature verification failed.
 
 ### Why
 
+Checked in full, not only the first error sqv reports: the release signature (v4, SHA-512, made 2026-07-11) is by key 0CF4E8D871593224842832B888DD9E08C5DDACB9 (RSA 4096 bits). The key in dist-git: the key's self-signatures use only SHA-1. The copy on keyservers/WKD has the same problems.
+
 Two things stand in the way. The keyring contains a version 3 certificate, which Sequoia can't parse; GnuPG skips it silently, but sqv rejects the whole keyring. With the keyring trimmed to the signing key (`gpg --import` into a temporary keyring, then `gpg --export FPR`), sqv reads it, but the signing key's own self-signatures are made with SHA-1, which the Fedora crypto policy rejects. No newer copy of the key with modern self-signatures is published on keys.openpgp.org, keyserver.ubuntu.com or WKD.
 
 ### What can be done

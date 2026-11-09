@@ -223,7 +223,11 @@ rpm stops depending on gpg.
      description from `templates/pr-description.md`).
    - **draft PR**: the same, with a keyring refresh that isn't approved yet.
    - **bug**: `BUG.md` (Bugzilla fields + text from `templates/bug.md`, with
-     the reason explained and the fix options).
+     the reason explained and the fix options). sqv reports only the first
+     problem, so `scripts/bug_diag.py check` lists all of them (signature,
+     key algorithm, self-signature hashes, expiry, network copy) and
+     `bug_diag.py apply` picks the bug text from that (`bug_reason`,
+     `bug_findings` in the state).
    - `proposals/README.md`: an index.
 
    Commit message: `templates/commit-message.txt`, with an `Assisted-by:`

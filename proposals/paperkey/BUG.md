@@ -26,6 +26,8 @@ openpgpverify: Signature verification failed.
 
 ### Why
 
+Checked in full, not only the first error sqv reports: the release signature (v4, SHA-256, made 2018-10-19) is by signing subkey A1543829812C9EA987F14526FEA78A7AA1BC4FA4 (RSA 2048 bits) of key 7D92FD313AB6F3734CC59CA1DB698D7199242560 (RSA 4096 bits). The key in dist-git: the key's self-signatures use only SHA-1; the key has no self-signature from before the release signature. The copy on keyservers/WKD still has: the key's self-signatures use only SHA-1.
+
 The signing key's own self-signatures (user ID certifications or subkey bindings) are made with SHA-1. The Fedora crypto policy rejects SHA-1, and Sequoia applies the policy to key bindings too; GnuPG doesn't check them. No newer copy of the key with modern self-signatures is published on keys.openpgp.org, keyserver.ubuntu.com or WKD.
 
 ### What can be done
