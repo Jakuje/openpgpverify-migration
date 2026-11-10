@@ -14,7 +14,7 @@ Guards, so nothing is filed twice or against a moved spec:
 - rawhide dist-git is still at the commit the draft names (--allow-moved to skip,
   e.g. for unrelated spec changes that were checked by hand).
 """
-import argparse, datetime, os, re, subprocess, sys
+import argparse, datetime, os, re, subprocess, sys, time
 
 import bugzilla
 
@@ -62,6 +62,8 @@ def main():
     ap.add_argument('--file', action='store_true', help='really create the bugs')
     ap.add_argument('--allow-moved', action='store_true',
                     help='file even if rawhide dist-git moved past the tested commit')
+    ap.add_argument('--delay', type=int, default=30,
+                    help='seconds to wait between created bugs (Bugzilla rate limits)')
     ap.add_argument('packages', nargs='+')
     a = ap.parse_args()
 
@@ -76,6 +78,7 @@ def main():
     print('tracker: %d %s' % (t.id, t.summary))
 
     st = state.load()
+    created = 0
     for pkg in a.packages:
         s = st.get(pkg) or {}
         path = os.path.join(state.ROOT, 'proposals', pkg, 'BUG.md')
@@ -110,10 +113,13 @@ def main():
             print('Summary: %s\n' % fields['Summary'])
             print(text)
             continue
+        if created:
+            time.sleep(a.delay)
         cb = bz.build_createbug(product=fields['Product'], component=fields['Component'],
                                 version=fields['Version'], summary=fields['Summary'],
                                 description=text, blocks=[a.tracker])
         b = bz.createbug(cb)
+        created += 1
         s['bug_id'] = b.id
         s['bug_filed'] = datetime.date.today().isoformat()
         state.save(st)          # after every bug, so a failure later loses nothing
