@@ -487,6 +487,9 @@ def host_verify(g, out, files, sig, data):
     if not [f for f in files if f.get('changed')]:
         return None, []
     sig_h, data_h = phase1.host_path(sig or '', g), phase1.host_path(data or '', g)
+    for f in files:
+        if f.get('kind') == 'signature' and f.get('changed'):
+            sig_h = os.path.join(out, f['file'])
     rings = [os.path.join(out, f['file']) if f.get('changed') else os.path.join(g, f['file'])
              for f in files if 'fingerprints' in f]
     rings = ' '.join('--keyring=' + shlex.quote(r) for r in rings)
@@ -514,7 +517,48 @@ def host_verify(g, out, files, sig, data):
                           (p.stdout + p.stderr).strip(), 'rc=%d' % p.returncode, '```', '']
 
 
-def propose(pkg, rec):
+def new_signature(sig, url, g, out):
+    """The release signature upstream re-made (after refreshing its key), from URL,
+    in place of SIG. Returns (file entry, review lines)."""
+    src = phase1.host_path(sig or '', g)
+    if not src:
+        return dict(file=sig, kind='signature', error='signature not in dist-git'), []
+    rel = os.path.relpath(src, g)
+    dst = os.path.join(out, rel)
+    os.makedirs(os.path.dirname(dst), exist_ok=True)
+    p = sh(['curl', '-fsSL', '-o', dst, url], timeout=300)
+    info = dict(file=rel, kind='signature', method='signature-url', url=url,
+                size_old=os.path.getsize(src) if os.path.exists(src) else None)
+    if p.returncode or not os.path.exists(dst):
+        info['error'] = 'download failed: %s' % (p.stderr.strip() or p.returncode)
+        return info, []
+    info['size_new'] = os.path.getsize(dst)
+    info['sha256_new'] = hashlib.sha256(open(dst, 'rb').read()).hexdigest()
+    info['changed'] = not os.path.exists(src) or open(src, 'rb').read() != open(dst, 'rb').read()
+    dump = sh(['sq', '--home=none', 'packet', 'dump', dst]).stdout
+    info['signatures'] = []
+    for block in re.split(r'\n(?=\S)', dump):
+        if not block.startswith('Signature Packet'):
+            continue
+        field = {k: re.search(r'(?m)^\s+%s: (.+)$' % k, block)
+                 for k in ('Hash algo', 'Signature creation time', 'Issuer Fingerprint', 'Issuer')}
+        if field['Hash algo'] and field['Signature creation time'] and \
+                (field['Issuer Fingerprint'] or field['Issuer']):
+            info['signatures'].append(dict(
+                hash=field['Hash algo'].group(1).strip(),
+                created=field['Signature creation time'].group(1).replace(' UTC', '').strip(),
+                issuer=(field['Issuer Fingerprint'] or field['Issuer']).group(1).strip()))
+    if not info['signatures']:
+        info['error'] = 'no signature with hash, creation time and issuer in the file'
+    lines = ['## %s (new release signature)' % rel, '', '- from: %s' % url,
+             '- size: %s → %s bytes' % (info['size_old'], info['size_new'])] + \
+        ['- %s, made %s, by `%s`' % (x['hash'], x['created'], x['issuer'])
+         for x in info.get('signatures', [])] + \
+        (['- **error: %s**' % info['error']] if info.get('error') else []) + ['']
+    return info, lines
+
+
+def propose(pkg, rec, sig_url=None):
     res = (rec.get('results') or [{}])[0]
     bad = [c for c in res.get('new_calls', []) if c['rc'] != 0]
     if not bad:
@@ -570,11 +614,17 @@ def propose(pkg, rec):
             review += ['', '```diff', p.stdout.rstrip() or '(no change in sq inspect summary)',
                        '```']
         review.append('')
+    if sig_url:
+        info, lines = new_signature(sig, sig_url, g, out)
+        files.append(info)
+        review += lines
     changed = [f for f in files if f.get('changed')]
     host_rc, verify = host_verify(g, out, files, sig, data)
     review += verify
     shutil.rmtree(tmp, ignore_errors=True)
-    if not changed:
+    if any(f.get('kind') == 'signature' and f.get('error') for f in files):
+        status = 'not-found'
+    elif not changed:
         status = 'not-found' if any(f.get('error') for f in files) else 'no-update'
     elif host_rc not in (None, 0):
         status = 'still-fails'
@@ -779,8 +829,11 @@ def main():
                          'Source URL) converted by GnuPG')
     ap.add_argument('--new-name', default=None,
                     help='propose-convert: the file name of the new keyring')
+    ap.add_argument('--signature-url', default=None,
+                    help='propose: also replace the release signature with the one upstream '
+                         're-made at this URL (after refreshing its key)')
     ap.add_argument('--pr-note', default=None,
-                    help='propose-convert: a paragraph for the PR description')
+                    help='propose, propose-convert: a paragraph for the PR description')
     a = ap.parse_args()
     st = state.load()
     if a.action == 'propose-convert':
@@ -801,13 +854,17 @@ def main():
                 state.save(cur)
             print('%-28s %s %s' % (pkg, kr['status'], kr.get('note') or ''), flush=True)
         return 0
+    if a.signature_url and (a.action != 'propose' or len(a.packages) != 1):
+        ap.error('--signature-url needs propose and exactly one package')
     if a.action == 'propose':
         pkgs = a.packages or sorted(
             p for p, r in st.items() if r.get('status') == 'regression' and
             (r.get('results') or [{}])[0].get('failure_reason') in REFRESHABLE)
         for pkg in pkgs:
             try:
-                kr = propose(pkg, st[pkg])
+                kr = propose(pkg, st[pkg], a.signature_url)
+                if a.pr_note:
+                    kr['pr_note'] = a.pr_note
             except Exception as e:  # one broken package must not stop the run
                 kr = dict(status='error', note='refresh_keys: %r' % e, proposed=state.now())
             with phase1.LOCK:

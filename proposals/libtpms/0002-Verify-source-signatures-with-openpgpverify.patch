@@ -1,0 +1,59 @@
+From 109411b32adaf1e269963c53973d8d185d6830ff Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Wed, 11 Nov 2026 11:45:29 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Release bumped with a changelog entry.
+
+Assisted-by: Claude Opus 5.5
+---
+ libtpms.spec | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/libtpms.spec b/libtpms.spec
+index fcf43e6..64db622 100644
+--- a/libtpms.spec
++++ b/libtpms.spec
+@@ -1,6 +1,6 @@
+ Name:           libtpms
+ Version:        0.10.2
+-Release:        5%{?dist}
++Release:        6%{?dist}
+ Summary:        Library providing Trusted Platform Module (TPM) functionality
+ License:        BSD-3-Clause AND LicenseRef-TCGL
+ 
+@@ -19,7 +19,7 @@ BuildRequires:  automake
+ BuildRequires:  coreutils
+ BuildRequires:  gawk
+ BuildRequires:  gcc-c++
+-BuildRequires:  gnupg2
++BuildRequires:  openpgpverify
+ BuildRequires:  libtool
+ BuildRequires:  make
+ BuildRequires:  openssl-devel
+@@ -38,7 +38,7 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
+ Libtpms header files and documentation.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ 
+ %build
+@@ -67,6 +67,9 @@ make check
+ %{_mandir}/man3/TPM*
+ 
+ %changelog
++* Wed Nov 11 2026 Jakub Jelen <jjelen@redhat.com> - 0.10.2-6
++- Verify upstream source signatures with openpgpverify
++
+ * Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 0.10.2-5
+ - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+ 
+-- 
+2.56.0
+

@@ -1,0 +1,133 @@
+From 579a63cb6511162609b5cfea870b126d7923d0d6 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Wed, 11 Nov 2026 11:45:29 +0100
+Subject: [PATCH 1/2] Update the upstream signing key and the release signature
+
+Refresh gpgkey-B818B9CADF9089C2D5CEC66B75AD65802A0B4211.asc from
+keyservers: same certificate(s), with self-signatures our copy was
+missing.
+The commands are in the comment above its Source line.
+Replace libtpms-0.10.2.tar.gz.asc with the release signature upstream
+made again with the updated key (SHA512, 2026-11-10), from
+https://github.com/stefanberger/libtpms/releases/download/v0.10.2/v0.10.2.tar.gz.asc.
+libtpms-0.10.2.tar.gz.asc was in the lookaside cache, which a pull
+request cannot update, so it moves into git (dropped from sources).
+
+The current key is needed to verify the release signature with
+openpgpverify (sqv), which checks that the key was valid when the
+release was signed.
+
+Assisted-by: Claude Opus 5.5
+---
+ ...18B9CADF9089C2D5CEC66B75AD65802A0B4211.asc | 51 +++++++++++++++----
+ libtpms-0.10.2.tar.gz.asc                     | 12 +++++
+ libtpms.spec                                  |  2 +
+ sources                                       |  1 -
+ 4 files changed, 54 insertions(+), 12 deletions(-)
+ create mode 100644 libtpms-0.10.2.tar.gz.asc
+
+diff --git a/gpgkey-B818B9CADF9089C2D5CEC66B75AD65802A0B4211.asc b/gpgkey-B818B9CADF9089C2D5CEC66B75AD65802A0B4211.asc
+index 2d460e5..e0adac8 100644
+--- a/gpgkey-B818B9CADF9089C2D5CEC66B75AD65802A0B4211.asc
++++ b/gpgkey-B818B9CADF9089C2D5CEC66B75AD65802A0B4211.asc
+@@ -1,18 +1,47 @@
+ -----BEGIN PGP PUBLIC KEY BLOCK-----
++Comment: B818 B9CA DF90 89C2 D5CE  C66B 75AD 6580 2A0B 4211
++Comment: Stefan Berger <stefanb@linux.ibm.com>
++Comment: Stefan Berger <stefanb@linux.vnet.ibm.com>
+ 
+-mQENBFnVA4YBCAD3fs+WUzvB6OPoj0HhvBlemEV6I8AcDwZHCNvA4UMc03sSVl/Q
++xsBNBFnVA4YBCAD3fs+WUzvB6OPoj0HhvBlemEV6I8AcDwZHCNvA4UMc03sSVl/Q
+ tDr4WuZd1v9utvi0xHjsTHbF1ndsgNkNzisvTIBHptcxw+Z3+VskOl3GTsfiKG22
+ OfZJsdXfhjYW/Oezl2IVy6/QqOV0JeEtV3J10gCHR/5PKhOy+pP/8jlw3EA8GYtY
+ ojM4znfEXHh6vx//hbf8FVMlVcKwUKHB1zHhM5jF9Kx4ZLU8rYHkMiXXbzdWBkCa
+ L6E2P2T01hQ1wPpowU9aL/zLt7ISiKMcYLvZJYcgX3quPVSXJRG+y3q3lXv1IOrV
+-HoGJLdkNu/0bLJoeNBFXiEGs7+tfk4XAjBTTABEBAAG0KlN0ZWZhbiBCZXJnZXIg
+-PHN0ZWZhbmJAbGludXgudm5ldC5pYm0uY29tPokBPgQTAQIAKAUCWdUDhgIbAwUJ
+-EswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQda1lgCoLQhENQQf/XmyD
+-zWL5VSAKbDKcpI5t0PjiC/Brrs1xNtKLht5le4UdhAH6e/y+3H6lhoJCNbHGBE7r
+-cAM/LVv8MT+4WXhLvRDUkn6Z5cSiMx0ANWDABCHGI3+z2imqI5XjB5fwFq2FIRdu
+-MUhWRhxSYHDd4E0BN2FvHNUhqm60QlLCrH9zjar8XcJQ1lnDgcSDP9EWENZizYW9
+-W5DKFiWR4vMXU0lvDpAYyDR1EU4pfnoMDc/19MoI3oR+wP0ELXI52CG0w4Lcs+Y5
+-8ywb0/El789qRTNQG6bPcZYx6KrRNq8KSrtNY20ID2tyM4boRQ412mD87x/kNWqU
+-CHklMi79wKcJ7OA73g==
+-=l1ZJ
++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
++3aCuzaRe+nPd1BOcutIIHQRGBpRYML1H25Ix
++=aGQr
+ -----END PGP PUBLIC KEY BLOCK-----
+diff --git a/libtpms-0.10.2.tar.gz.asc b/libtpms-0.10.2.tar.gz.asc
+new file mode 100644
+index 0000000..f68c302
+--- /dev/null
++++ b/libtpms-0.10.2.tar.gz.asc
+@@ -0,0 +1,12 @@
++-----BEGIN PGP SIGNATURE-----
++
++iQFPBAABCgA5FiEEuBi5yt+QicLVzsZrda1lgCoLQhEFAmrzc8EbHHN0ZWZhbmJA
++bGludXgudm5ldC5pYm0uY29tAAoJEHWtZYAqC0IRlswIAIvklox0FhEcLlCBffES
++HPPf6VRLG9qddLWCeSBmCUE1ZtMA2xp2b0XUzY5qz8FbrVLW/YT/XHV9PMs8za0y
+++LALXgZlL6CF3ZDunf+BtYPc6CwDEGfqOY/g7/+5PTo/ASHQOt5pSYZYOUWipkMX
++KsE45Qpr/3u8ApE0sT8qrYlaQsAvviESwPkyUVpK6hp5Ay+lNuaHSPGUHDly+thi
++Bd3IE3mGIOl5tVaP3LDjA7teZcaAMclorLNvpAsQpHx2kXkI7X50kTAh/CEcKKD4
++unzQoTZKZmezKA6Rk29eKimfATil2LYEQhN70CwLfpBpWYv5CYpDKWZqCmnRZA/b
++Qtk=
++=kk3X
++-----END PGP SIGNATURE-----
+diff --git a/libtpms.spec b/libtpms.spec
+index cb9eacf..fcf43e6 100644
+--- a/libtpms.spec
++++ b/libtpms.spec
+@@ -8,6 +8,8 @@ URL:            https://github.com/stefanberger/libtpms
+ Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
+ Source1:        %{url}/releases/download/v%{version}/v%{version}.tar.gz.asc#/%{name}-%{version}.tar.gz.asc
+ # https://github.com/stefanberger.gpg
++# Refreshed from keyservers (same keys, newer signatures):
++#   sq --home=none network keyserver search B818B9CADF9089C2D5CEC66B75AD65802A0B4211 --output gpgkey-B818B9CADF9089C2D5CEC66B75AD65802A0B4211.asc --overwrite
+ Source2:        gpgkey-B818B9CADF9089C2D5CEC66B75AD65802A0B4211.asc
+ 
+ Patch0001:      0001-Fix-a-compilation-error-in-TPMLIB_GetPlaintext.patch
+diff --git a/sources b/sources
+index 886f2a9..ac87226 100644
+--- a/sources
++++ b/sources
+@@ -1,2 +1 @@
+-SHA512 (libtpms-0.10.2.tar.gz.asc) = 977d8909d91fb98babb6470b78571b8f8f370324419a3c136e1f154293bb5c92b7446cb055dafa49d84853e6f4e6894dd3befa87692adc8da7a4831beb50a26a
+ SHA512 (libtpms-0.10.2.tar.gz) = e30297289a03d4fefb2cdf44654d6f77719a021deb9b721f08d4a23e20706b903ef5e979ba05ad333d052cf35681ba5e143fb883bed0dc37626eca2807d0c01f
+-- 
+2.56.0
+
+

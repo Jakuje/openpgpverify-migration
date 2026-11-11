@@ -344,7 +344,12 @@ def make_commit(pkg, s, refresh_files):
                         open(path, 'w').write(''.join(l + '\n' for l in keep))
                 sh(['git', '-C', pr, 'add', '-f', f['file']])
                 moved.append(f['file'])
-            if f.get('method') in CONVERT_METHODS:
+            if f.get('kind') == 'signature':
+                key.append('Replace %s with the release signature upstream made again with '
+                           'the updated key (%s), from %s.' % (
+                               f['file'], ', '.join('%s, %s' % (x['hash'], x['created'][:10])
+                                                    for x in f['signatures']), f['url']))
+            elif f.get('method') in CONVERT_METHODS:
                 key.append(convert_text(f))
             elif f.get('method', '').startswith('key-url'):
                 key.append('Rebuild %s from the key upstream publishes at %s%s%s (same '
@@ -377,11 +382,14 @@ def make_commit(pkg, s, refresh_files):
         # The current spec with only the keyring comment changed.
         text = spec_comment(open(spec).read(), pkg, refresh_files)
         open(spec, 'w').write(text)
-        n = len(refresh_files)
-        commit('Update the upstream signing key%s\n\n%s\n\nThe current key is needed to '
+        n = len([f for f in refresh_files if f.get('kind') != 'signature'])
+        resigned = any(f.get('kind') == 'signature' for f in refresh_files)
+        commit('Update the upstream signing key%s%s\n\n%s\n\nThe current key is needed to '
                'verify the release signature with\nopenpgpverify (sqv), which checks that '
                'the key was valid when the\nrelease was signed.\n\nAssisted-by: Claude '
-               'Opus 5.5\n' % ('' if n == 1 else 's', '\n'.join(wrap(key))))
+               'Opus 5.5\n' % ('' if n == 1 else 's',
+                                ' and the release signature' if resigned else '',
+                                '\n'.join(wrap(key))))
     # Exactly the spec Phase 1 tested (incl. the Release bump done in the chroot).
     shutil.copy(os.path.join(d, pkg + '.opv.spec'), spec)
     if refresh_files and not s.get('keyring_refresh_applied'):
@@ -418,6 +426,8 @@ def render_pr(pkg, s, draft):
     if not s.get('autochangelog') and not s.get('autorelease') and not s.get('release_bumped'):
         raise RuntimeError('spec needs a Release bump; re-run phase1.py')
     patch, diff = make_commit(pkg, s, files)
+    sigs = [f for f in files if f.get('kind') == 'signature']
+    files = [f for f in files if f.get('kind') != 'signature']
     res = s['results'][0]
     n_old = len(res.get('old_calls', []))
     raw = s.get('raw_rewritten')
@@ -484,6 +494,13 @@ def render_pr(pkg, s, draft):
         changes.append('- refreshed keyring `%s` (see below)%s' % (
             f['file'], '; the comment above its `Source` line now shows the commands for '
             'refreshing it' if commented else ''))
+    for f in sigs:
+        changes.append('- replaced the release signature `%s` with the one upstream made again '
+                       'with the updated key (see below)%s' % (
+                           f['file'], '; it was in the lookaside cache, which a PR cannot '
+                           'update, so it moves into git (its line in `sources` is dropped)'
+                           if re.search(r'(?m)^-SHA512 \(%s\) = |^-[0-9a-f]{32,}  %s$' % (
+                               re.escape(f['file']), re.escape(f['file'])), patch) else ''))
     rel = re.findall(r'(?m)^([-+])Release:\s*(.*)$', diff)
     if rel:
         changes.append('- Release bumped (`%s` → `%s`) with a changelog entry' %
@@ -507,7 +524,8 @@ def render_pr(pkg, s, draft):
     if files:
         review = open(os.path.join(state.ROOT, kr['review'])).read()
         diffs = re.findall(r'```diff\n(.*?)```', review, re.S)
-        reason = (REASONS.get(res.get('failure_reason')) or GENERIC)[0]
+        # A retest with the refresh passes; the bug diagnosis keeps the reason.
+        reason = (REASONS.get(res.get('failure_reason') or s.get('bug_reason')) or GENERIC)[0]
         keybox = any(f.get('keybox') for f in files)
     if files and kr.get('method') in CONVERT_METHODS:
         f = files[0]
@@ -618,6 +636,19 @@ def render_pr(pkg, s, draft):
                               '```\n\n' % '\n'.join(f['commands'])
                               for f in files if f.get('commands')),
                       ''.join(diffs)))
+    for f in sigs:
+        refresh += ('\n### New release signature\n\nThe updated self-signatures are newer than '
+                    'the original release signature, and sqv requires the key to have been '
+                    'validly bound when the signature was made, so the old signature still '
+                    'fails with the refreshed keyring. Upstream made the release signature '
+                    'again with the updated key, so `%s` is replaced with the new one from %s '
+                    '(%s). It verifies with the refreshed keyring; the tarball itself is '
+                    'unchanged.\n' % (f['file'], f['url'], '; '.join(
+                        '%s, made %s, by `%s`' % (x['hash'], x['created'], x['issuer'])
+                        for x in f['signatures'])))
+    if s.get('bug_id') and (files or sigs):
+        refresh += ('\nThis fixes [rhbz#%d](https://bugzilla.redhat.com/show_bug.cgi?id=%d), '
+                    'filed for the failing check.\n' % (s['bug_id'], s['bug_id']))
     if files and kr.get('pr_note'):
         refresh += '\n' + kr['pr_note'] + '\n'
     if files:
