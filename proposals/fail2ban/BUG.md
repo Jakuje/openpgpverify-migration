@@ -8,15 +8,15 @@ Summary: fail2ban: source signature does not verify with openpgpverify (SHA-1 ke
 
 As part of the Fedora 45 Change [Sequoia openpgpverify](https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify), `%gpgverify` (GnuPG) is being replaced by `%openpgpverify` (Sequoia `sqv`). For fail2ban, the switch can't be done in a simple PR: `%gpgverify` accepts the current upstream signature, but `%openpgpverify` rejects it.
 
-Failing check (dist-git commit `7c98d3fd3ffb`):
+Failing check (dist-git commit `3ab71cea6a75`):
 
 ```
-%openpgpverify --keyring=gpgkey-8738559E26F671DF9E2C6D9E683BF1BEBD0A882C.asc --signature=fail2ban-1.1.0.tar.gz.asc --data=fail2ban-1.1.0.tar.gz
+%openpgpverify --keyring=gpgkey-8738559E26F671DF9E2C6D9E683BF1BEBD0A882C.asc --signature=1.1.1.tar.gz.asc --data=fail2ban-1.1.1.tar.gz
 ```
 
 ```
 Signing key on 8738559E26F671DF9E2C6D9E683BF1BEBD0A882C is not bound:
-           No binding signature at time 2024-04-25T21:34:02Z
+           No binding signature at time 2026-08-15T12:46:57Z
   because: Policy rejected non-revocation signature (PositiveCertification) requiring second pre-image resistance
   because: SHA1 is not considered secure
 0 of 1 signatures are valid (threshold is: 1).
@@ -25,7 +25,7 @@ openpgpverify: Signature verification failed.
 
 ### Why
 
-The release signature (SHA-512, made 2024-04-25) is by the key `8738559E26F671DF9E2C6D9E683BF1BEBD0A882C` (RSA 2048 bits). sqv reports only the first problem it hits (above). All the problems found:
+The release signature (SHA-512, made 2026-08-15) is by the key `8738559E26F671DF9E2C6D9E683BF1BEBD0A882C` (RSA 2048 bits). sqv reports only the first problem it hits (above). All the problems found:
 
 - The self-signatures that bind the key's user IDs to it use only SHA-1. SHA-1 is no longer considered secure: collisions have been practical since 2017 (SHAttered) and chosen-prefix collisions since 2020 (SHA-1 is a Shambles), and the crypto policy rejects it. GnuPG doesn't check self-signatures; Sequoia does, and without a valid one it doesn't use the key at all.
 
