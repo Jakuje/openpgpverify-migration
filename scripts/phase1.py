@@ -168,7 +168,7 @@ def checkout(pkg, d, log):
         return None, 'git clone/fetch failed'
     if os.path.exists(os.path.join(g, 'dead.package')):
         return None, 'retired (dead.package)'
-    if run(['fedpkg', '--path', g, '--name', pkg, 'sources'], log, timeout=7200):
+    if run(['fedpkg', '--path', g, '--name', pkg, 'sources', '--force'], log, timeout=7200):
         return None, 'fedpkg sources failed'
     return g, None
 

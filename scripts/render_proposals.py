@@ -435,7 +435,8 @@ def render_pr(pkg, s, draft):
     files = [f for f in files if f.get('kind') != 'signature' and not f.get('extra')]
     res = s['results'][0]
     # Calls under a condition the test chroot doesn't meet (e.g. %if rhel) don't run there.
-    n_old = max(len(res.get('old_calls', [])), len(re.findall(r'(?m)^-.*%\{?gpgverify', diff)))
+    n_old = max([len(r.get('old_calls', [])) for r in s['results']] +
+                [len(re.findall(r'(?m)^-.*%\{?gpgverify', diff))])
     raw = s.get('raw_rewritten')
     if raw:
         tools = sorted({c['tool'] for c in res.get('old_calls', [])} - {'gpgverify'})
@@ -524,13 +525,16 @@ def render_pr(pkg, s, draft):
         elif r.get('outcome') == 'not-verified':
             c += ', where the spec does not verify the sources (conditional)'
         chroots.append(c)
-    calls_new = len(res.get('new_calls', []))
+    # The most calls any chroot ran (ELN runs the %if rhel ones too).
+    calls_new = max(len(r.get('new_calls', [])) for r in s['results'])
     if draft:
         result_old, result_new = 'pass', ('fails with the keyring in dist-git; **passes '
                                           'with the refreshed keyring** (sqv run directly)')
     else:
-        result_old = 'pass' if all(c['rc'] == 0 for c in res.get('old_calls', [])) else 'FAIL'
-        result_new = 'pass' if all(c['rc'] == 0 for c in res.get('new_calls', [])) else 'FAIL'
+        result_old = 'pass' if all(c['rc'] == 0 for r in s['results']
+                                   for c in r.get('old_calls', [])) else 'FAIL'
+        result_new = 'pass' if all(c['rc'] == 0 for r in s['results']
+                                   for c in r.get('new_calls', [])) else 'FAIL'
     refresh = ''
     if files:
         review = open(os.path.join(state.ROOT, kr['review'])).read()

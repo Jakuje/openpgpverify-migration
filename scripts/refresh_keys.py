@@ -419,7 +419,7 @@ def propose_upstream(pkg, rec, url=None, keyserver=None, replace=False, source_u
     for f in (sig, data):
         h = phase1.host_path(f or '', g)
         if h and not os.path.exists(h):
-            sh(['fedpkg', '--path', g, '--name', pkg, 'sources'], timeout=900)
+            sh(['fedpkg', '--path', g, '--name', pkg, 'sources', '--force'], timeout=900)
             break
     host_rc = None
     sig_h, data_h = phase1.host_path(sig or '', g), phase1.host_path(data or '', g)
@@ -574,7 +574,7 @@ def propose(pkg, rec, sig_url=None):
     for f in (sig, data):
         h = phase1.host_path(f or '', g)
         if h and not os.path.exists(h):
-            sh(['fedpkg', '--path', g, '--name', pkg, 'sources'], timeout=900)
+            sh(['fedpkg', '--path', g, '--name', pkg, 'sources', '--force'], timeout=900)
             break
     files = []
     review = ['# Keyring refresh for %s' % pkg, '',
@@ -699,7 +699,7 @@ def propose_convert(pkg, rec, mode, new_name=None, url=None):
     for f in (sig, data):
         h = phase1.host_path(f or '', g)
         if h and not os.path.exists(h):
-            sh(['fedpkg', '--path', g, '--name', pkg, 'sources'], timeout=900)
+            sh(['fedpkg', '--path', g, '--name', pkg, 'sources', '--force'], timeout=900)
             break
     if len(keyrings) != 1:
         return dict(status='error', note='propose-convert handles one keyring per call')

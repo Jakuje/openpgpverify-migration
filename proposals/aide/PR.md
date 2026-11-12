@@ -19,14 +19,14 @@ Why `sqv`:
 
 ### Testing
 
-The current and the changed spec were both run through `rpmbuild -bp` in a clean mock chroot without network access (fedora-rawhide-x86_64). Every call of the verification tool was logged:
+The current and the changed spec were both run through `rpmbuild -bp` in a clean mock chroot without network access (fedora-rawhide-x86_64, fedora-eln-x86_64). Every call of the verification tool was logged:
 
 | Spec | Verification calls | Result |
 |---|---|---|
 | current (`%gpgverify`) | 2 | pass |
-| this PR (`%openpgpverify`) | 1 | pass |
+| this PR (`%openpgpverify`) | 2 | pass |
 
-Tested on 2026-11-05 at dist-git commit `0f4a84ebbe7c` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
+Tested on 2026-11-12 at dist-git commit `0f4a84ebbe7c` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
 
 ### Keyring update
 
@@ -114,8 +114,6 @@ What changed in the certificate (`sq inspect`):
  third-party PersonaCertification: 1
  third-party PositiveCertification: 3
 ```
-
-The bundled nettle check runs only on RHEL/ELN. It was checked on the host with sqv: the old keyring fails with the expiry error from the review, the refreshed one verifies `nettle-4.0.tar.gz`. The mock test above is the earlier rawhide run.
 
 The keyring change is the first of the two commits, so it can be reviewed or merged on its own.
 
