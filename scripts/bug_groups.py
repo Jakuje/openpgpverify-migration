@@ -19,7 +19,10 @@ BZ = 'https://bugzilla.redhat.com/show_bug.cgi?id=%s'
 
 def uid_name(pkg, fpr, tmp):
     """Name in the first user ID of key fpr in the package's dist-git keyring."""
-    bug = open(os.path.join(state.ROOT, 'proposals', pkg, 'BUG.md')).read()
+    path = os.path.join(state.ROOT, 'proposals', pkg, 'BUG.md')
+    if not os.path.exists(path):    # the package became a PR (keyring refresh)
+        return None
+    bug = open(path).read()
     kname = re.search(r'--keyring=(\S+)', bug).group(1)
     d = os.path.join(tmp, pkg)
     os.makedirs(d, exist_ok=True)
@@ -51,14 +54,16 @@ def main():
             per = diag.get(p, {}).get('distgit', {}).get('per_sig', [])
             for k in {x.get('primary') or x.get('issuer') or '?' for x in per} or {'?'}:
                 bykey[k].add(p)
-                if k not in names and len(k) == 40:
+                if not names.get(k) and len(k) == 40:
                     names[k] = uid_name(p, k, tmp)
             for o in owners.get(p, ['?']):
                 byowner[o].add(p)
 
     def cell(p):
         s = st[p]
-        out = '[%s](../proposals/%s/BUG.md)' % (p, p)
+        draft = 'BUG.md' if os.path.exists(os.path.join(
+            state.ROOT, 'proposals', p, 'BUG.md')) else 'PR.md'
+        out = '[%s](../proposals/%s/%s)' % (p, p, draft)
         if p in eln:
             out += ' **ELN**'
         if s.get('bug_id'):
