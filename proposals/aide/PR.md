@@ -11,10 +11,11 @@ Why `sqv`:
 
 ### Changes
 
-- `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
+- `%gpgverify` → `%openpgpverify` (2 calls; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
 - dropped `BuildRequires:  gnupg2`, only needed for `%gpgverify`
 - replaced keyring `gpgkey-aide.gpg` with `gpgkey-aide.asc` from https://keys.openpgp.org/vks/v1/by-fingerprint/2BBBD30FAAB29B3253BCFBA6F6947DAB68E7B931#/gpgkey-aide.asc; its `Source` line is now that URL (see below)
+- refreshed keyring `nettle-release-keyring.gpg` too (see below); it was in the lookaside cache, which a PR cannot update, so it moves into git (its line in `sources` is dropped)
 
 ### Testing
 
@@ -22,7 +23,7 @@ The current and the changed spec were both run through `rpmbuild -bp` in a clean
 
 | Spec | Verification calls | Result |
 |---|---|---|
-| current (`%gpgverify`) | 1 | pass |
+| current (`%gpgverify`) | 2 | pass |
 | this PR (`%openpgpverify`) | 1 | pass |
 
 Tested on 2026-11-05 at dist-git commit `0f4a84ebbe7c` with sequoia-sqv 1.5.0-2.fc45.x86_64 (Fedora DEFAULT crypto policy).
@@ -73,7 +74,48 @@ What changed in the certificate (`sq inspect`):
 +self-signatures SubkeyBinding: 2011-06-28, 2013-05-09, 2015-06-25, 2017-07-01, 2019-01-12, 2021-02-14, 2023-06-04, 2025-04-28, 2026-06-07
 ```
 
-This copy is from keys.openpgp.org, looked up by fingerprint, so it is the same key the old file held. If the project publishes the key somewhere you prefer, that URL works as well, as long as the copy verifies this release.
+### Bundled nettle keyring
+
+The bundled nettle (built on RHEL/ELN, `%bcond bundled_nettle 0%{?rhel}`) is verified with `nettle-release-keyring.gpg`, the same file as in the nettle package. Its key had expired on 2025-01-15, so `%openpgpverify` rejected the nettle 4.0 signature in ELN. The file is replaced with the keyserver copy of the same key, byte for byte the keyring of [nettle#17](https://src.fedoraproject.org/rpms/nettle/pull-request/17), which extends the expiry to 2030. Exactly this command (also in the comment above its `Source` line):
+
+```
+sq --home=none network keyserver search 343C2FF0FBEE5EC2EDBEF399F3599FF828C67298 --output nettle-release-keyring.gpg --overwrite
+```
+
+Fingerprint (unchanged):
+
+- `343C2FF0FBEE5EC2EDBEF399F3599FF828C67298`
+
+What changed in the certificate (`sq inspect`):
+
+```diff
+--- dist-git/nettle-release-keyring.gpg
++++ refreshed/nettle-release-keyring.gpg
+@@ -1,16 +1,14 @@
+       Fingerprint: 343C2FF0FBEE5EC2EDBEF399F3599FF828C67298
+-                   Invalid: The primary key is not live: Expired on 2025-01-15T17:12:43Z
+-  Expiration time: 2025-01-15 17:12:43 UTC (creation time + 12years 7days 21h 46m 16s)
++  Expiration time: 2030-06-25 18:39:13 UTC (creation time + 17years 5months 16days 12h 24m 46s)
+         Key flags: certification, signing
+            Subkey: 48C9DE74746361F8617018347520153007F35B23
+-                   Invalid: The certificate is not live: The primary key is not live, because Expired on 2025-01-15T17:12:43Z
+-  Expiration time: 2025-01-15 17:21:19 UTC (creation time + 12years 7days 21h 54m 52s)
++  Expiration time: 2030-06-25 18:40:52 UTC (creation time + 17years 5months 16days 12h 26m 25s)
+         Key flags: transport encryption, data-at-rest encryption
+            UserID: Niels Möller <nisse@lysator.liu.se>
+-self-signatures PositiveCertification: 2013-01-07, 2020-01-17
+-self-signatures SubkeyBinding: 2013-01-07, 2020-01-17
++self-signatures PositiveCertification: 2013-01-07, 2020-01-17, 2025-06-26
++self-signatures SubkeyBinding: 2013-01-07, 2020-01-17, 2025-06-26
+ third-party CasualCertification: 7
+ third-party CertificationRevocation: 1
+-third-party GenericCertification: 16
++third-party GenericCertification: 18
+ third-party PersonaCertification: 1
+ third-party PositiveCertification: 3
+```
+
+The bundled nettle check runs only on RHEL/ELN. It was checked on the host with sqv: the old keyring fails with the expiry error from the review, the refreshed one verifies `nettle-4.0.tar.gz`. The mock test above is the earlier rawhide run.
 
 The keyring change is the first of the two commits, so it can be reviewed or merged on its own.
 

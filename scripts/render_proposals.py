@@ -434,7 +434,8 @@ def render_pr(pkg, s, draft):
     extra = [f for f in files if f.get('extra')]
     files = [f for f in files if f.get('kind') != 'signature' and not f.get('extra')]
     res = s['results'][0]
-    n_old = len(res.get('old_calls', []))
+    # Calls under a condition the test chroot doesn't meet (e.g. %if rhel) don't run there.
+    n_old = max(len(res.get('old_calls', [])), len(re.findall(r'(?m)^-.*%\{?gpgverify', diff)))
     raw = s.get('raw_rewritten')
     if raw:
         tools = sorted({c['tool'] for c in res.get('old_calls', [])} - {'gpgverify'})

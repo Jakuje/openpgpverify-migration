@@ -1,6 +1,6 @@
-From 800ed37f25fe3e9535f54af4231bc5a81b7ff78e Mon Sep 17 00:00:00 2001
+From ef06553b6980c5dea1bd83cce6504ab750cb5094 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 5 Nov 2026 13:58:44 +0100
+Date: Thu, 12 Nov 2026 10:32:19 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,10 +13,10 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/aide.spec b/aide.spec
-index 434c29a..e8f0b7c 100644
+index 2481fe9..4dcf91f 100644
 --- a/aide.spec
 +++ b/aide.spec
-@@ -44,7 +44,7 @@ BuildRequires:  audit-libs-devel
+@@ -46,7 +46,7 @@ BuildRequires:  audit-libs-devel
  BuildRequires:  autoconf automake libtool
  BuildRequires:  systemd-rpm-macros
  # For verifying signatures
@@ -25,7 +25,7 @@ index 434c29a..e8f0b7c 100644
  # For being able to run 'make check'
  BuildRequires:  check-devel
  
-@@ -56,12 +56,12 @@ AIDE (Advanced Intrusion Detection Environment) is a file integrity
+@@ -58,12 +58,12 @@ AIDE (Advanced Intrusion Detection Environment) is a file integrity
  checker and intrusion detection program.
  
  %prep
