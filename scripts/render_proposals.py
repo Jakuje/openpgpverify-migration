@@ -48,12 +48,14 @@ RESIGN_RELEASE = (
     "the updated key and publish the new signature (the tarball doesn't change), or wait "
     "for the next release. Then update the keyring and the signature in dist-git.\n")
 BACKDATE_LAST = (
-    "- Only if re-signing is not an option: the new self-signatures can be dated one "
-    "second after the key (or its newest subkey) was created, so that the existing "
-    "release signatures verify "
-    "too. Backdating is unusual and easy to get wrong, so it is a last resort; %s "
-    "describes how (`gpg --faked-system-time \"$((CT + 1))!\" --cert-digest-algo SHA256 "
-    "--quick-set-expire ...`, with `CT` that creation time)." % RESIGN_ARTICLE)
+    "- Only if re-signing is not an option, upstream (only the key owner can do this) "
+    "can date the new self-signatures one second after the key (or its newest subkey) "
+    "was created, so that the existing release signatures verify too. Backdating is "
+    "unusual and easy to get wrong, so it is a last resort; %s describes how "
+    "(`gpg --faked-system-time \"$((CT + 1))!\" --cert-digest-algo SHA256 "
+    "--quick-set-expire ...`, with `CT` that creation time).\n"
+    "- If upstream doesn't respond, the package can keep `%%gpgverify` for now; nothing "
+    "breaks until it is removed." % RESIGN_ARTICLE)
 
 
 REASONS = {
