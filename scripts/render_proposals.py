@@ -429,7 +429,10 @@ def render_pr(pkg, s, draft):
         raise RuntimeError('spec needs a Release bump; re-run phase1.py')
     patch, diff = make_commit(pkg, s, files)
     sigs = [f for f in files if f.get('kind') == 'signature']
-    files = [f for f in files if f.get('kind') != 'signature']
+    # A second keyring refreshed the same way as in another package's PR
+    # (a bundled library's key): its own paragraph, see refresh_keys.py.
+    extra = [f for f in files if f.get('extra')]
+    files = [f for f in files if f.get('kind') != 'signature' and not f.get('extra')]
     res = s['results'][0]
     n_old = len(res.get('old_calls', []))
     raw = s.get('raw_rewritten')
@@ -496,6 +499,11 @@ def render_pr(pkg, s, draft):
         changes.append('- refreshed keyring `%s` (see below)%s' % (
             f['file'], '; the comment above its `Source` line now shows the commands for '
             'refreshing it' if commented else ''))
+    for f in extra:
+        changes.append('- refreshed keyring `%s` too (see below)%s' % (
+            f['file'], '; it was in the lookaside cache, which a PR cannot update, so it '
+            'moves into git (its line in `sources` is dropped)'
+            if re.search(r'(?m)^-SHA512 \(%s\) = ' % re.escape(f['file']), patch) else ''))
     for f in sigs:
         changes.append('- replaced the release signature `%s` with the one upstream made again '
                        'with the updated key (see below)%s' % (
@@ -638,6 +646,12 @@ def render_pr(pkg, s, draft):
                               '```\n\n' % '\n'.join(f['commands'])
                               for f in files if f.get('commands')),
                       ''.join(diffs)))
+    for f in extra:
+        refresh += ('\n### %s\n\n%s Exactly this command (also in the comment above its '
+                    '`Source` line):\n\n```\n%s\n```\n\nFingerprint (unchanged):\n\n%s\n\n'
+                    'What changed in the certificate (`sq inspect`):\n\n```diff\n%s```\n'
+                    % (f.get('title') or 'Second keyring', f['note'], '\n'.join(f['commands']),
+                       '\n'.join('- `%s`' % fp for fp in f['fingerprints']), f['review_diff']))
     for f in sigs:
         refresh += ('\n### New release signature\n\nThe updated self-signatures are newer than '
                     'the original release signature, and sqv requires the key to have been '
@@ -648,12 +662,12 @@ def render_pr(pkg, s, draft):
                     'unchanged.\n' % (f['file'], f['url'], '; '.join(
                         '%s, made %s, by `%s`' % (x['hash'], x['created'], x['issuer'])
                         for x in f['signatures'])))
-    if s.get('bug_id') and (files or sigs):
+    if s.get('bug_id') and (files or sigs or extra):
         refresh += ('\nThis fixes [rhbz#%d](https://bugzilla.redhat.com/show_bug.cgi?id=%d), '
                     'filed for the failing check.\n' % (s['bug_id'], s['bug_id']))
     if files and kr.get('pr_note'):
         refresh += '\n' + kr['pr_note'] + '\n'
-    if files:
+    if files or extra:
         refresh += ('\nThe keyring change is the first of the two commits, so it can be '
                     'reviewed or merged on its own.\n')
     notes = ['- Rawhide only. Whether to merge it into other branches is up to you; '

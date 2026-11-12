@@ -737,7 +737,7 @@ def main():
                     help='delete downloaded sources of packages that passed (saves disk); '
                          'failing ones keep them for refresh_keys.py')
     ap.add_argument('--inventory', default=os.path.join(
-        state.ROOT, 'data/inventory/inventory-2026-10-06.jsonl'))
+        state.ROOT, 'data/inventory', sorted(os.listdir(os.path.join(state.ROOT, 'data/inventory')))[-1]))
     ap.add_argument('packages', nargs='+')
     a = ap.parse_args()
     KEEP = a.keep
