@@ -13,6 +13,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import state  # noqa: E402
 from bug_diag import fetch, packets  # noqa: E402
 from render_proposals import REASONS  # noqa: E402
+from bug_response import KINDS  # noqa: E402
 
 BZ = 'https://bugzilla.redhat.com/show_bug.cgi?id=%s'
 
@@ -108,6 +109,20 @@ def main():
     w('| Owner | Count | Packages |\n|---|---|---|\n')
     for o, ps in big:
         w('| %s | %d | %s |\n' % (o, len(ps), ', '.join(cell(p) for p in sorted(ps))))
+
+    resp = sorted((p for p in pkgs if st[p].get('bug_response')),
+                  key=lambda p: (st[p]['bug_response']['kind'], p))
+    w('\n## Responses on the bugs\n\n')
+    if resp:
+        w('Recorded with `scripts/bug_response.py`. %d so far.\n\n' % len(resp))
+        w('| Package | Response | Note | Date |\n|---|---|---|---|\n')
+        for p in resp:
+            r = st[p]['bug_response']
+            link = (BZ % st[p]['bug_id']) + ('#c%d' % r['comment'] if r.get('comment') else '')
+            w('| %s | %s | [%s](%s) | %s |\n' % (cell(p), KINDS[r['kind']], r['note'], link,
+                                               r['date']))
+    else:
+        w('None recorded yet.\n')
 
     w('\n## All packages\n\n| Package | Problem | Key | Owners |\n|---|---|---|---|\n')
     for p in pkgs:

@@ -53,6 +53,19 @@ If you want to take an upstream contact or a batch before the bugs are filed, sa
 | tdawson | 3 | [gsl](../proposals/gsl/BUG.md) ([filed](https://bugzilla.redhat.com/show_bug.cgi?id=2571571)), [kdsoap](../proposals/kdsoap/BUG.md) ([filed](https://bugzilla.redhat.com/show_bug.cgi?id=2571576)), [openconnect](../proposals/openconnect/BUG.md) ([filed](https://bugzilla.redhat.com/show_bug.cgi?id=2571586)) |
 | vpv | 3 | [libvoikko](../proposals/libvoikko/BUG.md) **ELN** ([filed](https://bugzilla.redhat.com/show_bug.cgi?id=2569339)), [tmispell-voikko](../proposals/tmispell-voikko/BUG.md) ([filed](https://bugzilla.redhat.com/show_bug.cgi?id=2572285)), [voikko-fi](../proposals/voikko-fi/BUG.md) **ELN** ([filed](https://bugzilla.redhat.com/show_bug.cgi?id=2569343)) |
 
+## Responses on the bugs
+
+Recorded with `scripts/bug_response.py`. 6 so far.
+
+| Package | Response | Note | Date |
+|---|---|---|---|
+| [ocaml-mysql](../proposals/ocaml-mysql/BUG.md) ([filed](https://bugzilla.redhat.com/show_bug.cgi?id=2571583)) | the maintainer raised it upstream | [upstream issue ygrek/ocaml-mysql#21](https://bugzilla.redhat.com/show_bug.cgi?id=2571583#c1) | 2026-11-12 |
+| [rust](../proposals/rust/BUG.md) **ELN** ([filed](https://bugzilla.redhat.com/show_bug.cgi?id=2569344)) | the maintainer raised it upstream | [raised upstream; would wait for the next rebase rather than re-sign](https://bugzilla.redhat.com/show_bug.cgi?id=2569344#c1) | 2026-11-12 |
+| [cvs](../proposals/cvs/BUG.md) ([filed](https://bugzilla.redhat.com/show_bug.cgi?id=2571542)) | upstream unmaintained | [upstream unmaintained for about 20 years; maintainer won't negotiate a new key](https://bugzilla.redhat.com/show_bug.cgi?id=2571542#c1) | 2026-11-12 |
+| [coreutils](../proposals/coreutils/PR.md) **ELN** ([filed](https://bugzilla.redhat.com/show_bug.cgi?id=2569053)) | upstream fixed the key or signature | [key refreshed (SHA-256) and 9.12 re-signed; asked to publish on ftp.gnu.org](https://bugzilla.redhat.com/show_bug.cgi?id=2569053#c1) | 2026-11-12 |
+| [libtpms](../proposals/libtpms/PR.md) **ELN** ([filed](https://bugzilla.redhat.com/show_bug.cgi?id=2569338)) | upstream fixed the key or signature | [key refreshed and 0.10.2 re-signed on GitHub; PR libtpms#5](https://bugzilla.redhat.com/show_bug.cgi?id=2569338#c1) | 2026-11-12 |
+| [BibTool](../proposals/BibTool/BUG.md) ([filed](https://bugzilla.redhat.com/show_bug.cgi?id=2571537)) | upstream does not answer | [no answer upstream in 3 weeks (ge-ne/bibtool#106); asks to drop the check](https://bugzilla.redhat.com/show_bug.cgi?id=2571537#c1) | 2026-11-12 |
+
 ## All packages
 
 | Package | Problem | Key | Owners |
