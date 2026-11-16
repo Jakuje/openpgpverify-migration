@@ -1,0 +1,39 @@
+From 24c7934e0ae6e880e1eec7df67ecdcc66d29a89f Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 16 Nov 2026 10:59:50 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ stunnel.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/stunnel.spec b/stunnel.spec
+index 9287a3e..4af9caf 100644
+--- a/stunnel.spec
++++ b/stunnel.spec
+@@ -45,7 +45,7 @@ Patch5:   stunnel-5.72-default-tls-version.patch
+ # util-linux is needed for rename
+ BuildRequires: make
+ BuildRequires: gcc
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ BuildRequires: openssl-devel, pkgconfig, util-linux
+ BuildRequires: autoconf automake libtool
+ %if %{with libwrap}
+@@ -67,7 +67,7 @@ to ordinary applications. For example, it can be used in
+ conjunction with imapd to create a TLS secure IMAP server.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE99}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE99}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -S gendiff -p1
+ 
+ %build
+-- 
+2.56.1
+
