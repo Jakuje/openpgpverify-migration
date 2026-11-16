@@ -225,7 +225,7 @@ def upstream_file(src, url, dst, tmp, replace=False, superset=False):
     """Download URL; keep it only if it holds exactly the certificates of SRC."""
     name = os.path.basename(src)
     info = dict(url=url, size_old=os.path.getsize(src), method='upstream-url',
-                commands=['curl -fsSL -o %s %s' % (name, url)])
+                commands=['curl -fsSL -o %s %s' % (name, shlex.quote(url))])
     dl = os.path.join(tmp, 'download')
     if os.path.exists(dl):
         os.remove(dl)
@@ -277,7 +277,7 @@ def key_recipe(name, url, fprs, keyserver, keep_old, armored):
     current key there; the older self-signatures and subkeys a release may need
     are on the keyservers), and merged into the old keyring when the URL holds
     only some of its certificates. key_file() runs exactly these."""
-    cmds = ['curl -fsSL -o key.asc %s' % url]
+    cmds = ['curl -fsSL -o key.asc %s' % shlex.quote(url)]
     parts = ['key.asc']
     if keyserver:
         cmds.append('sq --home=none network search --output - %s \\\n'
@@ -358,12 +358,12 @@ def key_file(src, url, dst, tmp, keyserver):
 
 
 def propose_upstream(pkg, rec, url=None, keyserver=None, replace=False, source_url=False,
-                     superset=False):
+                     superset=False, sig_url=None):
     """Like propose(), but take the keyring from the URL the spec names, or
     from URL (e.g. one upstream pointed us to); a URL not in the spec is
     added to the comment above the keyring's Source line."""
     res = (rec.get('results') or [{}])[0]
-    bad = [c for c in res.get('new_calls', []) if c['rc'] != 0]
+    bad = failing_calls(rec)
     if not bad:
         return dict(status='not-applicable', note='no failing openpgpverify call')
     d = os.path.join(phase1.WORK, pkg)
@@ -401,7 +401,7 @@ def propose_upstream(pkg, rec, url=None, keyserver=None, replace=False, source_u
                     if new != rel:
                         info['new_file'] = new
                     info['commands'] = ['curl -fsSL -o %s \'%s\'' % (base, u.split('#')[0])
-                                        if '#/' in u else 'curl -fsSL -O %s' % u]
+                                        if '#/' in u else 'curl -fsSL -O %s' % shlex.quote(u)]
             elif keyserver is None and url and u not in key_urls(spec, pkg, os.path.basename(rel)):
                 info['spec_header'] = '# Upstream signing key:'
                 info['spec_commands'] = info['commands']
@@ -423,6 +423,12 @@ def propose_upstream(pkg, rec, url=None, keyserver=None, replace=False, source_u
             break
     host_rc = None
     sig_h, data_h = phase1.host_path(sig or '', g), phase1.host_path(data or '', g)
+    sig_lines = []
+    if sig_url:
+        sinfo, sig_lines = new_signature(sig, sig_url, g, out)
+        files.append(sinfo)
+        if sinfo.get('changed'):
+            sig_h = os.path.join(out, sinfo['file'])
     review = ['# Keyring update from upstream for %s' % pkg, '',
               'Failing call: `%s`' % bad[0]['args'], '',
               'Phase 1 reason: `%s`' % res.get('failure_reason'), '']
@@ -440,6 +446,8 @@ def propose_upstream(pkg, rec, url=None, keyserver=None, replace=False, source_u
         verify = ['Host verification skipped (data from stdin or a generated file); '
                   'run phase1.py after approval.', '']
     for f in files:
+        if f.get('kind') == 'signature':
+            continue
         rel = f['file']
         base = os.path.join(tmp, 'kbx', os.path.basename(rel) + '.pgp') \
             if f.pop('old_summary_base') else os.path.join(g, rel)
@@ -466,9 +474,10 @@ def propose_upstream(pkg, rec, url=None, keyserver=None, replace=False, source_u
                    '- size: %s → %s bytes' % (f['size_old'], f['size_new']), '',
                    '```', *f['commands'], '```', '',
                    '```diff', p.stdout.rstrip() or '(no change in sq inspect summary)', '```', '']
-    review += verify
+    review += sig_lines + verify
     shutil.rmtree(tmp, ignore_errors=True)
-    status = 'still-fails' if host_rc not in (None, 0) else 'proposed'
+    status = 'not-found' if any(f.get('kind') == 'signature' and f.get('error') for f in files) \
+        else 'still-fails' if host_rc not in (None, 0) else 'proposed'
     review.insert(2, '**Status: %s**' % status)
     review.insert(3, '')
     text = '\n'.join(review) + '\n'
@@ -676,9 +685,19 @@ def convert_recipe(mode, name, url, fprs):
     if mode == 'signers':
         return recipe(name, fprs)
     dl = url.rsplit('/', 1)[-1]
-    return ['curl -fsSL -O %s' % url,
+    return ['curl -fsSL -O %s' % shlex.quote(url),
             GPG_TMP + "'gpg --batch --import %s; gpg --batch --export --output %s'" % (dl, name),
             'rm %s' % dl]
+
+
+def failing_calls(rec):
+    """The openpgpverify calls a new keyring is for: the failing ones, or, when a
+    retest passes only with an earlier refresh that this one replaces, those."""
+    calls = (rec.get('results') or [{}])[0].get('new_calls', [])
+    applied = rec.get('keyring_refresh_applied') or []
+    return [c for c in calls if c['rc'] != 0] or [
+        c for c in calls if any(re.search(r'/%s(\s|$)' % re.escape(k), c['args'])
+                                for k in applied)]
 
 
 def propose_convert(pkg, rec, mode, new_name=None, url=None):
@@ -686,12 +705,7 @@ def propose_convert(pkg, rec, mode, new_name=None, url=None):
     with convert_recipe(). NEW_NAME renames the file (its Source line then
     names it instead of the upstream URL whose content it no longer is)."""
     res = (rec.get('results') or [{}])[0]
-    bad = [c for c in res.get('new_calls', []) if c['rc'] != 0]
-    if not bad:
-        # passing only with an earlier refresh that this one replaces
-        applied = rec.get('keyring_refresh_applied') or []
-        bad = [c for c in res.get('new_calls', [])
-               if any(re.search(r'/%s(\s|$)' % re.escape(k), c['args']) for k in applied)]
+    bad = failing_calls(rec)
     if not bad:
         return dict(status='not-applicable', note='no failing openpgpverify call')
     d = os.path.join(phase1.WORK, pkg)
@@ -835,7 +849,7 @@ def main():
     ap.add_argument('--new-name', default=None,
                     help='propose-convert: the file name of the new keyring')
     ap.add_argument('--signature-url', default=None,
-                    help='propose: also replace the release signature with the one upstream '
+                    help='propose, propose-upstream: also replace the release signature with the one upstream '
                          're-made at this URL (after refreshing its key)')
     ap.add_argument('--pr-note', default=None,
                     help='propose, propose-convert: a paragraph for the PR description')
@@ -862,8 +876,9 @@ def main():
                 state.save(cur)
             print('%-28s %s %s' % (pkg, kr['status'], kr.get('note') or ''), flush=True)
         return 0
-    if a.signature_url and (a.action != 'propose' or len(a.packages) != 1):
-        ap.error('--signature-url needs propose and exactly one package')
+    if a.signature_url and (a.action not in ('propose', 'propose-upstream')
+                            or len(a.packages) != 1):
+        ap.error('--signature-url needs propose or propose-upstream and exactly one package')
     if a.action == 'propose':
         pkgs = a.packages or sorted(
             p for p, r in st.items() if r.get('status') == 'regression' and
@@ -893,7 +908,7 @@ def main():
             try:
                 up = propose_upstream(pkg, st[pkg], a.url,
                                       a.keyserver if a.action == 'propose-key' else None,
-                                      a.replace, a.source_url, a.superset)
+                                      a.replace, a.source_url, a.superset, a.signature_url)
             except Exception as e:  # one broken package must not stop the run
                 up = dict(status='error', method=a.action, note='%r' % e)
             d = os.path.join(phase1.WORK, pkg)
