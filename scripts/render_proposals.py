@@ -469,6 +469,8 @@ def render_pr(pkg, s, draft):
             if re.search(r'(?m)^-SHA512 \(%s\) = ' % re.escape(f['file']), patch):
                 changes.append('- `%s` is no longer used; its line in `sources` is dropped'
                                % f['file'])
+            elif re.search(r'(?m)^ %s\s+\| Bin \d+ -> 0 bytes' % re.escape(f['file']), patch):
+                changes.append('- `%s` is no longer used and removed from git' % f['file'])
             continue
         if re.search(r'(?m)^-SHA512 \(%s\) = |^-[0-9a-f]{32,}  %s$'
                      % (re.escape(f['file']), re.escape(f['file'])), patch):
@@ -540,7 +542,8 @@ def render_pr(pkg, s, draft):
         review = open(os.path.join(state.ROOT, kr['review'])).read()
         diffs = re.findall(r'```diff\n(.*?)```', review, re.S)
         # A retest with the refresh passes; the bug diagnosis keeps the reason.
-        reason = (REASONS.get(res.get('failure_reason') or s.get('bug_reason')) or GENERIC)[0]
+        reason = (REASONS.get(res.get('failure_reason') or s.get('bug_reason') or
+                              (s.get('keyring_refresh') or {}).get('reason')) or GENERIC)[0]
         keybox = any(f.get('keybox') for f in files)
     if files and kr.get('method') in CONVERT_METHODS:
         f = files[0]
@@ -730,6 +733,12 @@ def render_pr(pkg, s, draft):
                     'the same as in the other PRs for the Change, so the check works when it '
                     'runs again; the build above only shows that the spec still builds.'
                     % s['convert_untested'])
+    if any(r.get('verify_only') for r in s['results']):
+        rebased += ('\n\n**`%prep` stopped right after the signature check:** both specs got an '
+                    '`exit 0` after it, and only the verification tools were installed, not '
+                    'the build dependencies, because the full `%prep` of this package needs '
+                    'more disk than the test machine has. This PR does not change the rest of '
+                    '`%prep`.')
     text = tmpl('pr-description.md',
                 changes='\n'.join(changes) + '\n', stage='rpmbuild %s' % s.get('stage', '-bp'),
                 chroots=', '.join(chroots), old_tool=old_tool,

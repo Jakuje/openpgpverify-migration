@@ -1,0 +1,39 @@
+From 67ee1a8d0fbde770eedbd438928f3162962b7a27 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 16 Nov 2026 10:28:05 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ libredwg.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/libredwg.spec b/libredwg.spec
+index 1bb2368..7332b1f 100644
+--- a/libredwg.spec
++++ b/libredwg.spec
+@@ -53,7 +53,7 @@ BuildRequires:  perl-Module-CoreList-tools
+ BuildRequires:  python3-libxml2
+ %endif
+ # Verify signature
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ 
+ 
+ %description
+@@ -95,7 +95,7 @@ applications that use %{name}.
+ %endif
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p1
+ # Remove bundled jsmn and use the one in Fedora
+ rm jsmn/jsmn.h
+-- 
+2.56.1
+

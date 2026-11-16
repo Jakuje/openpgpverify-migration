@@ -1,6 +1,6 @@
-From b287cbdf792a8c814dc5515d9338caf9671ce39d Mon Sep 17 00:00:00 2001
+From a23ee843c4b693a0d4163085517d022409977e5b Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Thu, 29 Oct 2026 09:06:50 +0100
+Date: Mon, 16 Nov 2026 10:28:05 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -9,22 +9,23 @@ https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
 
 Assisted-by: Claude Opus 5.5
 ---
- guile-gnutls.spec | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ guile-gnutls.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/guile-gnutls.spec b/guile-gnutls.spec
-index f8213c1..5521823 100644
+index 6360216..08dda57 100644
 --- a/guile-gnutls.spec
 +++ b/guile-gnutls.spec
-@@ -20,6 +20,7 @@ BuildRequires: gcc make
- BuildRequires: gnupg2
+@@ -15,7 +15,7 @@ Source2: guile-gnutls-keyring.pgp
+ 
+ Requires:      guile30
+ BuildRequires: gcc make
+-BuildRequires: gnupg2
++BuildRequires: openpgpverify
  BuildRequires: gnutls-devel
  BuildRequires: guile30-devel
-+BuildRequires: openpgpverify
  
- Provides:  gnutls-guile = %{version}-%{release}
- Obsoletes: gnutls-guile <= 3.7.8-4
-@@ -35,7 +36,7 @@ This package contains Guile bindings for the library.
+@@ -33,7 +33,7 @@ This package contains Guile bindings for the library.
  
  
  %prep
@@ -34,5 +35,5 @@ index f8213c1..5521823 100644
  
  
 -- 
-2.56.0
+2.56.1
 

@@ -1,0 +1,38 @@
+From 904db8d924b9c7787a95dcaba8051029001eaf7d Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 16 Nov 2026 10:28:05 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the direct GnuPG verification with %openpgpverify, which
+uses Sequoia sqv, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ qemu.spec | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/qemu.spec b/qemu.spec
+index 1ce4b8e..542cd54 100644
+--- a/qemu.spec
++++ b/qemu.spec
+@@ -452,6 +452,7 @@ Patch: 0001-disable-busted-tests.patch
+ Patch: 0002-TEMPORARY-increase-test-timeout.patch
+ 
+ BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ BuildRequires: meson >= %{meson_version}
+ BuildRequires: bison
+ BuildRequires: flex
+@@ -1566,7 +1567,7 @@ This package provides the QEMU system emulator for Xtensa boards.
+ 
+ 
+ %prep
+-gpgv2 --keyring %{SOURCE2} %{SOURCE1} %{SOURCE0}
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ 
+ %autosetup -n qemu-%{version}%{?rcstr} -S git_am
+ 
+-- 
+2.56.1
+

@@ -1,0 +1,39 @@
+From b5036f006cadc0e6879da00dfeecb1278cb0114b Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 16 Nov 2026 10:28:05 +0100
+Subject: [PATCH 2/2] Verify source signatures with openpgpverify
+
+Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
+Sequoia sqv and takes the same options, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ openssl-pkcs11.spec | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/openssl-pkcs11.spec b/openssl-pkcs11.spec
+index 057410a..b91d078 100644
+--- a/openssl-pkcs11.spec
++++ b/openssl-pkcs11.spec
+@@ -22,7 +22,7 @@ BuildRequires:  pkgconfig(p11-kit-1)
+ # Needed for testsuite
+ BuildRequires:  softhsm opensc procps-ng
+ BuildRequires:  doxygen
+-BuildRequires:  gpgverify
++BuildRequires:  openpgpverify
+ 
+ Requires:       p11-kit-trust
+ Requires:       openssl-libs >= 3.0.0
+@@ -55,7 +55,7 @@ The libp11-devel package contains libraries and header files for
+ developing applications that use libp11.
+ 
+ %prep
+-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %autosetup -p 1 -n libp11-%{version}
+ 
+ %build
+-- 
+2.56.1
+

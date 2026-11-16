@@ -688,6 +688,11 @@ def propose_convert(pkg, rec, mode, new_name=None, url=None):
     res = (rec.get('results') or [{}])[0]
     bad = [c for c in res.get('new_calls', []) if c['rc'] != 0]
     if not bad:
+        # passing only with an earlier refresh that this one replaces
+        applied = rec.get('keyring_refresh_applied') or []
+        bad = [c for c in res.get('new_calls', [])
+               if any(re.search(r'/%s(\s|$)' % re.escape(k), c['args']) for k in applied)]
+    if not bad:
         return dict(status='not-applicable', note='no failing openpgpverify call')
     d = os.path.join(phase1.WORK, pkg)
     g = os.path.join(d, 'dist-git')
@@ -849,6 +854,9 @@ def main():
                 kr['pr_note'] = a.pr_note
             with phase1.LOCK:
                 cur = state.load()
+                # why the keyring needs it, for the PR once a retest with it passes
+                kr.setdefault('reason', (cur[pkg].get('results') or [{}])[0].get(
+                    'failure_reason') or (cur[pkg].get('keyring_refresh') or {}).get('reason'))
                 cur[pkg]['keyring_refresh'] = kr
                 cur[pkg]['updated'] = state.now()
                 state.save(cur)
@@ -869,6 +877,9 @@ def main():
                 kr = dict(status='error', note='refresh_keys: %r' % e, proposed=state.now())
             with phase1.LOCK:
                 cur = state.load()
+                # why the keyring needs it, for the PR once a retest with it passes
+                kr.setdefault('reason', (cur[pkg].get('results') or [{}])[0].get(
+                    'failure_reason') or (cur[pkg].get('keyring_refresh') or {}).get('reason'))
                 cur[pkg]['keyring_refresh'] = kr
                 cur[pkg]['updated'] = state.now()
                 state.save(cur)

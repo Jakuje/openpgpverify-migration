@@ -1,0 +1,153 @@
+From e48e6384842cad95a4ca900560680e637e6b9b13 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Mon, 16 Nov 2026 10:28:05 +0100
+Subject: [PATCH 1/2] Update the upstream signing key
+
+Replace gnu-keyring.gpg with libredwg-keyring.pgp, the keyserver copy of
+the key that signs releases (2895A881D34270FABFE8F747B4F63339E65D6414),
+because sqv cannot use the old keyring: its copy of the signing key is
+outdated. The other certificates in it are dropped (608 certificates of
+other people). Its Source line names the new file instead of
+https://ftp.gnu.org/gnu/gnu-keyring.gpg, which is not what the file
+holds any more.
+The commands are in the comment above its Source line.
+
+The current key is needed to verify the release signature with
+openpgpverify (sqv), which checks that the key was valid when the
+release was signed.
+
+Assisted-by: Claude Opus 5.5
+---
+ .gitignore           |  1 -
+ libredwg-keyring.pgp | 87 ++++++++++++++++++++++++++++++++++++++++++++
+ libredwg.spec        |  4 +-
+ sources              |  1 -
+ 4 files changed, 90 insertions(+), 3 deletions(-)
+ create mode 100644 libredwg-keyring.pgp
+
+diff --git a/.gitignore b/.gitignore
+index ba79e7f..1bfaa99 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,2 +1 @@
+-/gnu-keyring.gpg
+ /libredwg-0.13.3.tar.xz
+diff --git a/libredwg-keyring.pgp b/libredwg-keyring.pgp
+new file mode 100644
+index 0000000..c07abd9
+--- /dev/null
++++ b/libredwg-keyring.pgp
+@@ -0,0 +1,87 @@
++-----BEGIN PGP PUBLIC KEY BLOCK-----
++Comment: 2895 A881 D342 70FA BFE8  F747 B4F6 3339 E65D 6414
++Comment: Reini Urban <reini.urban@gmail.com>
++Comment: Reini Urban <rurban@cpan.org>
++
++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
++z2MrszvGRw==
++=KpM+
++-----END PGP PUBLIC KEY BLOCK-----
+diff --git a/libredwg.spec b/libredwg.spec
+index 60ed35d..1bb2368 100644
+--- a/libredwg.spec
++++ b/libredwg.spec
+@@ -11,7 +11,9 @@ License:        GPL-3.0-or-later AND GFDL-1.3-or-later
+ URL:            https://www.gnu.org/software/libredwg/
+ Source0:        https://ftp.gnu.org/gnu/libredwg/libredwg-%{version}.tar.xz
+ Source1:        https://ftp.gnu.org/gnu/libredwg/libredwg-%{version}.tar.xz.sig
+-Source2:        https://ftp.gnu.org/gnu/gnu-keyring.gpg
++# The key(s) that sign releases, from keyservers:
++#   sq --home=none network keyserver search 2895A881D34270FABFE8F747B4F63339E65D6414 --output libredwg-keyring.pgp --overwrite
++Source2:        libredwg-keyring.pgp
+ # POSIX_C_SOURCE is already defined
+ Patch:          fedora-posix-c-source.patch
+ # Json reader tests give errors, disable them
+diff --git a/sources b/sources
+index 75a53a5..59044a9 100644
+--- a/sources
++++ b/sources
+@@ -1,2 +1 @@
+-SHA512 (gnu-keyring.gpg) = bde442b3c93a2267861aec245f80afb29ef28751cc4d8ce2b55c2b8ecb1610208ca166cc8b2efda0057e7f0f6aafa0eac869f8bc3375d446451a65dda73a8135
+ SHA512 (libredwg-0.13.3.tar.xz) = 34486531efe79bbe1347af958564071e56792d90d2d5076aecd7dcda2fc70b1a09f17b9fd12e23728bbfb5f7d286828eaeb3479dfc3b2ad3920a73fefaed20da
+-- 
+2.56.1
+
+

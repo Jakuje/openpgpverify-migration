@@ -83,6 +83,18 @@ PREP = ('cd /builddir/%(v)s && rpmbuild %(stage)s --nodeps '
         '%(spec)s > /builddir/%(v)s.log 2>&1; echo "rpmbuild-rc: $?" >> /builddir/%(v)s.log; '
         'cp /tmp/opv-calls.log /builddir/%(v)s.calls; : > /tmp/opv-calls.log')
 
+# --verify-only, for packages whose %prep does not fit on the test machine (qemu):
+# install only the verification tools instead of the build dependencies, and end
+# %prep with "exit 0" right after its last signature check, in both variants.
+VERIFY_TOOLS = ['gnupg2', 'gpgverify', 'openpgpverify']
+VERIFY_RE = r'%\{?\??(gpg|openpgp)verify|(^|[ \t;|&(])(gpg|gpg2|gpgv|gpgv2)[ \t]'
+TRUNCATE = (r"""f=/builddir/%(v)s/%(spec)s; awk 'NR==FNR { """
+            r"""if ($0 ~ /^%%prep/) p = 1; else if ($0 ~ /^%%(build|conf|install|check|files|changelog|generate_buildrequires|package|description)/) p = 0; """
+            r"""if (c) { last = FNR; c = ($0 ~ /\\$/); next } """
+            r"""if (p && $0 ~ /""" + VERIFY_RE.replace("%", "%%") + r"""/) { last = FNR; c = ($0 ~ /\\$/) } next } """
+            r"""{ print } FNR == last { print "exit 0" } END { if (!last) exit 1 }' "$f" "$f" > "$f.tmp" """
+            r"""&& mv "$f.tmp" "$f" && echo truncated >> /builddir/%(v)s.trunc""")
+
 # gnupg2 check: when "BR: gnupg2" is dropped, prove the package does not need
 # gpg. gnupg2 is in every buildroot through rpm-sign-libs, so a normal build
 # proves nothing; remove it (and gpgverify) from the chroot, then build the
@@ -364,7 +376,11 @@ def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp', overlay
             # gnupg2 is removed before the new run, so the old one goes first
             variants.reverse()
         for v, spec in variants:
-            if m('--installdeps', spec, timeout=7200):
+            if VERIFY_ONLY:
+                if m('--install', *VERIFY_TOOLS):
+                    res['%s_error' % v] = 'installing the verification tools failed'
+                    continue
+            elif m('--installdeps', spec, timeout=7200):
                 if not installdeps_srpm(m, spec, g, out, v,
                                         overlay if v == 'new' else None) or not populate():
                     with open(log, errors='replace') as fh:
@@ -406,6 +422,11 @@ def test_in_chroot(cfg, pkg, d, g, old_spec, new_spec, raw, stage='-bp', overlay
                 m.chroot(GNUPG2_REMOVE)
                 m('--copyout', '/builddir/gpg-left.txt', out)
                 m('--copyout', '/builddir/gpg-removed.txt', out)
+            if VERIFY_ONLY:
+                if m.chroot(TRUNCATE % dict(v=v, spec='%s.spec' % pkg), unpriv=True):
+                    res['%s_error' % v] = 'no signature check found in %prep to stop after'
+                    continue
+                res['verify_only'] = True
             m.chroot(PREP % dict(v=v, spec='%s.spec' % pkg, stage=stage), unpriv=True)
             for f in ('%s.log' % v, '%s.calls' % v):
                 m('--copyout', '/builddir/' + f, out)
@@ -650,9 +671,9 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
         res = test_in_chroot(cfg, pkg, d, g, spec_path, new_spec, raw, stage, overlay,
                              bump=bool(new_spec) and not rec['autochangelog']
                              and not rec['autorelease'], slot=slot,
-                             gnupg2_check=gnupg2_check and cfg == cfgs[0],
+                             gnupg2_check=gnupg2_check and cfg == cfgs[0] and not VERIFY_ONLY,
                              has_check=rec['has_check'],
-                             dynamic_br='%generate_buildrequires' in text)
+                             dynamic_br='%generate_buildrequires' in text and not VERIFY_ONLY)
         bumped = os.path.join(d, 'out-' + cfg, 'bumped.spec')
         if cfg == cfgs[0] and os.path.exists(bumped):
             shutil.copy(bumped, new_spec)
@@ -716,7 +737,7 @@ def test_package(pkg, inv_rec, cfgs, prev=None, slot='opv-0'):
 
 
 def main():
-    global KEEP, GNUPG2_CHECK, FULL_BUILD_MAX_MB
+    global KEEP, GNUPG2_CHECK, FULL_BUILD_MAX_MB, VERIFY_ONLY
     ap = argparse.ArgumentParser()
     ap.add_argument('--chroot', default='fedora-rawhide-x86_64')
     ap.add_argument('--eln', action='store_true',
@@ -738,9 +759,13 @@ def main():
                          'failing ones keep them for refresh_keys.py')
     ap.add_argument('--inventory', default=os.path.join(
         state.ROOT, 'data/inventory', sorted(os.listdir(os.path.join(state.ROOT, 'data/inventory')))[-1]))
+    ap.add_argument('--verify-only', action='store_true',
+                    help='install only the verification tools and stop %%prep after the '
+                         'signature check (for packages too big for the test machine)')
     ap.add_argument('packages', nargs='+')
     a = ap.parse_args()
     KEEP = a.keep
+    VERIFY_ONLY = a.verify_only
     GNUPG2_CHECK = not a.no_gnupg2_check
     FULL_BUILD_MAX_MB = a.full_build_max_mb
     inv = state.load_inventory(a.inventory)
@@ -828,5 +853,6 @@ def main():
 
 
 KEEP = False
+VERIFY_ONLY = False
 if __name__ == '__main__':
     main()
