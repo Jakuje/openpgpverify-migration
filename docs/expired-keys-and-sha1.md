@@ -10,7 +10,7 @@ Phase 1 pilot regressions. Tested with sequoia-sqv 1.5.0 and sequoia-openpgp
 | Problem | Pilot packages | Fixable in openpgpverify (wrapper)? | Other fix |
 |---|---|---|---|
 | Key expired **after** the signature was made | (package test `expired`) | already works: sqv checks expiry at signature time | – |
-| Key in the keyring expired **before** the signature was made; upstream extended it later (stale keyring) | yubikey-manager-qt, cairomm1.16 (bug), getdns | **no**: needs an sqv/sequoia change | refresh the keyring (`scripts/refresh_keys.py`); works for yubikey-manager-qt; cairomm and getdns have no newer key published anywhere |
+| Key in the keyring expired **before** the signature was made; upstream extended it later (stale keyring) | yubikey-manager-qt, cairomm1.16 (bug), getdns | **no**: would need an sqv/sequoia change, which won't happen (see below) | refresh the keyring (`scripts/refresh_keys.py`); works for yubikey-manager-qt; cairomm and getdns have no newer key published anywhere |
 | SHA-1 in self-signatures / subkey bindings | openssl-pkcs11, mpdscribble, openresolv, getdns | **yes**: own crypto policy (prototype on branch `sha1-bindings-and-hints` in `~/devel/openpgpverify`) | refreshed key (openresolv) |
 | SHA-1 data signature, DSA-1024 key, v3 signature | dns-root-data, rsakeyfind | should stay rejected | upstream re-signs, or per-package decision |
 
@@ -142,7 +142,15 @@ Questions that were open for this part:
 
 ## Accepting expired keys needs an sqv (or sequoia-openpgp) change
 
-Possible designs, from most to least preferred:
+**Decision: not pursued.** Discussed with Sequoia upstream: they consider
+rejecting a signature made by an already expired key a security feature, and
+signing with an expired key is frowned upon. Usually the cause is just an
+outdated keyring, but if the failure were hidden, it could also hide a much
+larger problem, such as a leaked key being used after its owner let it
+expire. So the fix stays a keyring refresh with the upstream extension, or a
+bug when none is published.
+
+The designs considered, from most to least preferred:
 
 1. **Library option** (sequoia-openpgp): a `DetachedVerifierBuilder` /
    `VerifierBuilder` knob, e.g. `ignore_key_expiration(true)`. When the key or
@@ -166,13 +174,12 @@ Bug comment #0 suggests a middle ground: refuse only keys that expired before
 the archive's mtime. That doesn't work, because mtimes are as unprotected as
 the signature timestamp and are often normalized.
 
-Suggested policy if (1) lands: accept expired-before-signing keys with a loud
-warning in the build log. Keep the migration tooling proposing refreshed
-keyrings so that packages move to properly valid keys over time.
+(The suggested policy was to accept such keys with a loud warning in the build
+log; moot after the decision above.)
 
 ## Semi-automatic keyring refresh (implemented)
 
-`scripts/refresh_keys.py propose|show|approve|reject` (see the README):
+`scripts/refresh_keys.py propose|show|approve|reject` (see [process.md](process.md)):
 - looks up only the fingerprints already in the keyring;
 - keeps only exact matches;
 - merges into the existing certificates and checks the set is unchanged;

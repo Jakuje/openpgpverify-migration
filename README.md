@@ -67,6 +67,7 @@ with what changed since the previous report) and
 | Release | Specs without `%autochangelog` get a **Release bump** and a changelog entry. |
 | Delivery | **PRs first**. If maintainers don't respond, a provenpackager. |
 | openpgpverify itself | **No changes**; in particular SHA-1 key bindings stay rejected (2026-10-08). Keyrings sqv cannot read are fixed in the PRs, keys only upstream can fix get a bug. |
+| Keys expired before signing | **Stay rejected**. Sequoia upstream considers this a security feature: usually the keyring is just outdated, but hiding the failure could hide a leaked key. Fixed by a keyring refresh with the extended key, or a bug. |
 | Keyring updates | Preferably the file upstream publishes, byte for byte; otherwise a keyserver copy of the same key. Every update is reviewed by hand, and is its own commit in the PR. |
 | Policy | FESCo *Mass package changes* policy: announce on devel-announce and Discourse ahead, publish this repository. |
 | PR / commit texts | Technical and focused on Fedora's benefits. No emoji. AI disclosure only via the `Assisted-by:` commit trailer (Fedora AI contributions policy). |
