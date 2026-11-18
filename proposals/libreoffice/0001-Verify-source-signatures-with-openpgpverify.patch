@@ -1,0 +1,43 @@
+From a3654108be10009b85f162e9e35e3ea13d84440f Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Wed, 18 Nov 2026 10:07:02 +0100
+Subject: [PATCH] Verify source signatures with openpgpverify
+
+Replace the direct GnuPG verification with %openpgpverify, which
+uses Sequoia sqv, as part of the Fedora 45 Change
+https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+Assisted-by: Claude Opus 5.5
+---
+ libreoffice.spec | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/libreoffice.spec b/libreoffice.spec
+index d62448e..4eeee2d 100644
+--- a/libreoffice.spec
++++ b/libreoffice.spec
+@@ -142,6 +142,7 @@ BuildRequires: flex
+ BuildRequires: gcc-c++
+ BuildRequires: gettext
+ BuildRequires: gnupg2
++BuildRequires: openpgpverify
+ BuildRequires: gperf
+ BuildRequires: hunspell-en-US
+ BuildRequires: icu
+@@ -1132,10 +1133,9 @@ done \
+ 
+ %prep
+ # verify tarballs
+-gpg2 --dearmor < %{SOURCE6} > keyring.gpg
+-gpgv2 --keyring ./keyring.gpg %{SOURCE1} %{SOURCE0}
+-gpgv2 --keyring ./keyring.gpg %{SOURCE3} %{SOURCE2}
+-gpgv2 --keyring ./keyring.gpg %{SOURCE5} %{SOURCE4}
++%{openpgpverify} --keyring='%{SOURCE6}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%{openpgpverify} --keyring='%{SOURCE6}' --signature='%{SOURCE3}' --data='%{SOURCE2}'
++%{openpgpverify} --keyring='%{SOURCE6}' --signature='%{SOURCE5}' --data='%{SOURCE4}'
+ 
+ %setup -q -n %{name}-%{version} -b 2 -b 4
+ rm -rf git-hooks */git-hooks
+-- 
+2.56.1
+

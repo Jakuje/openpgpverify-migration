@@ -1,0 +1,1 @@
+- the GnuPG verification (`gpg2 --dearmor` of the armored key into a temporary keyring, then three `gpgv2` calls) is replaced by three `%{openpgpverify}` calls with the same key, signatures and data; sqv reads the armored key file directly
