@@ -154,8 +154,8 @@ Only the tarball of older snapshots is kept (the extracted specs take about
    trailer. The claims in the PR text were checked on Fedora 44 (sequoia-sqv
    1.5.0): sqv verifies a v6 (RFC 9580) signature made with an
    ML-DSA-65+Ed25519 key, and rpm links `librpm_sequoia`.
-3. **Rollout**: pilot on our own packages, announcement on devel /
-   devel-announce, then PRs in batches (`scripts/ready_list.py` lists the
+3. **Rollout**: pilot on our own packages, a heads-up mail to the
+   devel list, then PRs in batches (`scripts/ready_list.py` lists the
    ready ones and checks that dist-git is still at the tested commit;
    `scripts/open_prs.py` can open them from a fork, though PRs are now opened
    by hand). Bugs for regressions that need upstream action. After a fixed
@@ -231,7 +231,9 @@ from the status comments on the issue (drafts in `announce/`).
 
 ## Announcement
 
-`announce/devel-mail.txt` is the draft of the mail to devel / devel-announce, following
-the FESCo mass package change policy. `scripts/announce_lists.py` regenerates
-the two package lists the policy asks for (`announce/packages-by-name.txt`,
+The migration is part of the approved Change, so instead of the FESCo mass
+package change process there was a heads-up mail to the devel list.
+`announce/devel-mail.txt` was its draft (prepared for the mass change policy
+at first). `scripts/announce_lists.py` writes package lists by name and by
+maintainer (`announce/packages-by-name.txt`,
 `announce/packages-by-maintainer.txt`).
