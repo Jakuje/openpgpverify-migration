@@ -14,34 +14,34 @@ supports the current OpenPGP standard. ELN packages go first, so that
 Every change is scripted and tested in mock before a PR goes out; how is
 described in [docs/process.md](docs/process.md).
 
-## Status (2026-11-18)
+## Status (2026-11-19)
 
 On 2026-10-06, 594 packages verified sources with GnuPG.
 
 | | Packages | |
 |---|---|---|
-| Converted to `%openpgpverify` in rawhide | 317 | 53 % |
-| PR open | 140 | 24 % |
+| Converted to `%openpgpverify` in rawhide | 320 | 54 % |
+| PR open | 139 | 23 % |
 | Retired, or signature check dropped | 4 | |
-| Still to do | 133 | 22 % |
+| Still to do | 131 | 22 % |
 
-Of the 133 still to do, 110 are blocked on the upstream key (a bug is filed
+Of the 131 still to do, 109 are blocked on the upstream key (a bug is filed
 for each: mostly DSA keys and SHA-1 self-signatures, a few expired keys), and 20 have a
 tested PR that is not opened yet.
 
-ELN: 101 of 164 converted, 32 PRs open, 26 blocked on the upstream key, 3 PRs
+ELN: 102 of 164 converted, 31 PRs open, 26 blocked on the upstream key, 3 PRs
 prepared.
 
-Latest reports: [progress](reports/progress-2026-11-18.md) (all packages,
+Latest reports: [progress](reports/progress-2026-11-19.md) (all packages,
 with what changed since the previous report) and
-[ELN](reports/eln-2026-11-18.md) (per package). Patches and PR texts are in
+[ELN](reports/eln-2026-11-19.md) (per package). Patches and PR texts are in
 [proposals/](proposals/).
 
 ## Remaining work
 
-- **Open PRs** (140): from around 2026-11-23, ask a proven packager to merge
+- **Open PRs** (139): from around 2026-11-23, ask a proven packager to merge
   the ones without a response.
-- **Bugs** (110): follow up; when upstream publishes a fixed key, turn the bug
+- **Bugs** (109): follow up; when upstream publishes a fixed key, turn the bug
   into a PR (`scripts/refresh_keys.py propose-upstream`). Responses are
   recorded with `scripts/bug_response.py`.
 - **Prepared, not opened** (20): 8 keyring format updates (keyrings with old
@@ -51,9 +51,6 @@ with what changed since the previous report) and
 - **cgit**: its own key is fixed, but it also verifies the bundled git
   tarball, signed with the same key as git (SHA-1 self-signatures); needs a
   bug like git.
-- **libreoffice**: converted by hand without a mock test (the sources don't
-  fit the test machine); [PR #52](https://src.fedoraproject.org/rpms/libreoffice/pull-request/52)
-  waits for its CI build.
 - **Later**, as a separate campaign: the 211 packages that ship `.asc`/`.sig`
   files without verifying them, and leftover `BuildRequires: gnupg2`.
 
