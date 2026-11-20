@@ -51,6 +51,11 @@ with what changed since the previous report) and
 - **cgit**: its own key is fixed, but it also verifies the bundled git
   tarball, signed with the same key as git (SHA-1 self-signatures); needs a
   bug like git.
+- **crun**: the Packit sync of 1.31 (2026-11-12) replaced the spec with
+  upstream's and undid [PR #159](https://src.fedoraproject.org/rpms/crun/pull-request/159);
+  rawhide is back on `%gpgverify` although the reports count it as converted.
+  The fix belongs in upstream's `rpm/crun.spec`, with a `%gpgverify` fallback
+  for RHEL 10 and older: [proposals/crun-upstream/](proposals/crun-upstream/).
 - **Later**, as a separate campaign: the 211 packages that ship `.asc`/`.sig`
   files without verifying them, and leftover `BuildRequires: gnupg2`.
 

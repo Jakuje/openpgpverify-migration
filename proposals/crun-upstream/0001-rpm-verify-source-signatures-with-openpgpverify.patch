@@ -1,0 +1,69 @@
+From 9e56de4dbd2d48e4336c4a5ff7b70f6679c0a042 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Fri, 20 Nov 2026 13:25:20 +0100
+Subject: [PATCH] rpm: verify source signatures with openpgpverify
+
+Fedora is moving source signature checks from the GnuPG-based
+%gpgverify to %openpgpverify, which uses Sequoia sqv, follows the
+system crypto policy and supports the current OpenPGP standard (RFC
+9580). See https://fedoraproject.org/wiki/Changes/Sequoia_openpgpverify
+
+This was merged in Fedora dist-git, but the next Packit sync replaced
+it with this spec again, so it is done here.
+
+openpgpverify is available in Fedora and RHEL 11 (ELN); older RHEL
+releases keep %gpgverify and BuildRequires: gnupg2. COPR builds skip
+the check as before. sqv accepts crun.keyring for the 1.31 release.
+
+Signed-off-by: Jakub Jelen <jjelen@redhat.com>
+Assisted-by: Claude Opus 5.5
+---
+ rpm/crun.spec | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/rpm/crun.spec b/rpm/crun.spec
+index ff8ec84..078de76 100644
+--- a/rpm/crun.spec
++++ b/rpm/crun.spec
+@@ -6,6 +6,12 @@
+ %define copr_build 1
+ %endif
+ 
++# openpgpverify (Sequoia sqv) is in Fedora and RHEL 11+ (ELN); older RHEL
++# releases verify the sources with GnuPG.
++%if %{defined fedora} || 0%{?rhel} > 10
++%global use_openpgpverify 1
++%endif
++
+ # krun and wasm support only on aarch64 and x86_64
+ %ifarch aarch64 || x86_64
+ 
+@@ -53,8 +59,12 @@ BuildRequires: autoconf
+ BuildRequires: automake
+ BuildRequires: gcc
+ %if !%{defined copr_build}
++%if %{defined use_openpgpverify}
++BuildRequires: openpgpverify
++%else
+ BuildRequires: gnupg2
+ %endif
++%endif
+ BuildRequires: git-core
+ BuildRequires: gperf
+ BuildRequires: libcap-devel
+@@ -107,8 +117,12 @@ Recommends: wasmedge
+ 
+ %prep
+ %if !%{defined copr_build}
++%if %{defined use_openpgpverify}
++%{openpgpverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
++%else
+ %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
+ %endif
++%endif
+ %autosetup -Sgit -n %{name}-%{version}
+ 
+ %build
+-- 
+2.56.1
+
