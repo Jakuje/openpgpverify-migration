@@ -10,6 +10,7 @@ PRS        the PR list written by progress.py --prs
 Uses data/eln-in-scope.txt and data/state/packages.jsonl; nothing is fetched.
 """
 import collections
+import datetime
 import os
 import sys
 
@@ -52,6 +53,11 @@ def main():
             groups['retired'].append((p, ''))
         elif cat not in progress.IN_SCOPE:
             groups['dropped'].append((p, 'no signature check left in the spec'))
+        elif 'Merged' in by and progress.merged_before(
+                prs[p], datetime.date.fromisoformat(date)):
+            groups['other'].append((p, 'PR [#%s](%s) merged on %s, but the change is gone '
+                                    'from the spec' % (by['Merged']['id'], by['Merged']['url'],
+                                                       by['Merged']['updated'])))
         elif 'Merged' in by:
             groups['converted'].append((p, 'PR [#%s](%s), merged after the snapshot'
                                         % (by['Merged']['id'], by['Merged']['url'])))

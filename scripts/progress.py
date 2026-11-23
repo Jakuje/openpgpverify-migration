@@ -16,6 +16,7 @@ dist-git PRs whose title mentions openpgpverify or Sequoia, by anyone.
 import argparse
 import collections
 import concurrent.futures
+import datetime
 import json
 import os
 import re
@@ -70,6 +71,19 @@ def fetch_prs(pkgs):
     return rows
 
 
+def merged_before(prs, snap_date, slack=2):
+    """Merge date (ISO) of a merged PR that should already be in the snapshot
+    of snap_date, or None. The spec tarball lags a day or so behind dist-git,
+    so merges within `slack` days of the snapshot don't count. Used when the
+    snapshot spec doesn't have the change: such a PR was undone later."""
+    for r in prs:
+        if r['status'] == 'Merged' and r.get('updated'):
+            d = datetime.date.fromisoformat(r['updated'])
+            if (snap_date - d).days > slack:
+                return r['updated']
+    return None
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('baseline')
@@ -108,6 +122,12 @@ def main():
         return 'Merged' if 'Merged' in s else 'Open' if 'Open' in s else \
             'Closed' if s else None
 
+    snap_date = datetime.date.fromisoformat(
+        os.path.basename(a.today)[len('inventory-'):-len('.jsonl')])
+
+    def reverted(p):
+        return merged_before(prs.get(p, []), snap_date)
+
     status = {}
     for p in sorted(start | added):
         t = today.get(p)
@@ -122,6 +142,9 @@ def main():
             status[p] = ('retired', 'not in the spec snapshot any more')
         elif cat not in IN_SCOPE:
             status[p] = ('dropped', 'no signature verification left (%s)' % cat)
+        elif ps == 'Merged' and reverted(p):
+            status[p] = ('todo', 'PR merged on %s, but the change is gone from the spec'
+                         % reverted(p))
         elif ps == 'Merged':
             status[p] = ('merged', 'PR merged, not in the snapshot yet')
         elif ps == 'Open':
