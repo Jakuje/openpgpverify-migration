@@ -1,6 +1,6 @@
-From 210b10e6129a3cecb635bc0ab4e4ef5f92c4a730 Mon Sep 17 00:00:00 2001
+From 8ddd524140275dbcd0d3bc9244f400340ce71c9e Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 6 Nov 2026 12:15:42 +0100
+Date: Tue, 24 Nov 2026 13:18:46 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Convert upstream's KEYS file
@@ -16880,6 +16880,6 @@ index 8314852..b4b6bef 100644
  #Patch0:         0001-disable-url-lookup.patch
  
 -- 
-2.56.0
+2.56.1
 
 

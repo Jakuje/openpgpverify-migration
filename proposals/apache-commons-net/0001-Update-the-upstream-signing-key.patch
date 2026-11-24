@@ -1,6 +1,6 @@
-From 8a88f1398e5771a0427fefcf587ddb81aba4f186 Mon Sep 17 00:00:00 2001
+From 699c7e20776e6476d379dff954faea685e14cf14 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 6 Nov 2026 12:15:42 +0100
+Date: Tue, 24 Nov 2026 13:18:46 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Convert upstream's KEYS file (https://downloads.apache.org/commons/KEYS)
@@ -16879,6 +16879,6 @@ index a4c57ee..a1b6a8e 100644
  BuildRequires:  maven-local-openjdk25
  BuildRequires:  mvn(commons-io:commons-io)
 -- 
-2.56.0
+2.56.1
 
 

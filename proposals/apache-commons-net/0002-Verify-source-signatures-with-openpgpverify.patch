@@ -1,6 +1,6 @@
-From 72a049f0cc15a327560c1a37ca415f80ae9f6bd3 Mon Sep 17 00:00:00 2001
+From c48b14e5d3e359132390f7e655f8c4841324944a Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 6 Nov 2026 12:15:42 +0100
+Date: Tue, 24 Nov 2026 13:18:46 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -35,5 +35,5 @@ index a1b6a8e..cac72fc 100644
  %pom_remove_plugin :exec-maven-plugin
  
 -- 
-2.56.0
+2.56.1
 

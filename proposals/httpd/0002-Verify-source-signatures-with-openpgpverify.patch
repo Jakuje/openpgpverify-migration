@@ -1,6 +1,6 @@
-From 38abd26d688f078f484713f80facfb17357a7c9e Mon Sep 17 00:00:00 2001
+From a99d56e72bef377213cefe31bc34e615d4e91bd1 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 6 Nov 2026 12:16:59 +0100
+Date: Tue, 24 Nov 2026 13:18:47 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,13 +15,13 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/httpd.spec b/httpd.spec
-index a5e9199..49eadb2 100644
+index 9cf6845..484f10d 100644
 --- a/httpd.spec
 +++ b/httpd.spec
 @@ -30,7 +30,7 @@
  Summary: Apache HTTP Server
  Name: httpd
- Version: 2.4.69
+ Version: 2.4.71
 -Release: 1%{?dist}
 +Release: 2%{?dist}
  URL: https://httpd.apache.org/
@@ -48,12 +48,12 @@ index a5e9199..49eadb2 100644
  %{_rpmconfigdir}/macros.d/macros.httpd
  
  %changelog
-+* Fri Nov 06 2026 Jakub Jelen <jjelen@redhat.com> - 2.4.69-2
++* Tue Nov 24 2026 Jakub Jelen <jjelen@redhat.com> - 2.4.71-2
 +- Verify upstream source signatures with openpgpverify
 +
- * Thu Oct 01 2026 Joe Orton  <jorton@redhat.com> - 2.4.69-1
- - update to 2.4.69
- - add mod_mime_libmagic for F45+
+ * Wed Nov 11 2026 Luboš Uhliarik <luhliari@redhat.com> - 2.4.71-1
+ - new version 2.4.71
+ 
 -- 
-2.56.0
+2.56.1
 

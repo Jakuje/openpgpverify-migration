@@ -1,6 +1,6 @@
-From 6cc78274db909f63f3e32d60117fc418009f6ab5 Mon Sep 17 00:00:00 2001
+From d40ba2592f782a5969cfa7e738ea8a58a2e94fd6 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 6 Nov 2026 12:15:42 +0100
+Date: Tue, 24 Nov 2026 13:18:47 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -15,13 +15,13 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/tor.spec b/tor.spec
-index e52bf18..134e8f2 100644
+index cd1ad0f..71f9d79 100644
 --- a/tor.spec
 +++ b/tor.spec
 @@ -14,7 +14,7 @@
  
  Name:       tor
- Version:    0.4.9.15
+ Version:    0.4.9.16
 -Release:    1%{?dist}
 +Release:    2%{?dist}
  License:    BSD-3-Clause
@@ -49,12 +49,12 @@ index e52bf18..134e8f2 100644
  %{_sysusersdir}/tor.conf
  
  %changelog
-+* Fri Nov 06 2026 Jakub Jelen <jjelen@redhat.com> - 0.4.9.15-2
++* Tue Nov 24 2026 Jakub Jelen <jjelen@redhat.com> - 0.4.9.16-2
 +- Verify upstream source signatures with openpgpverify
 +
- * Thu Oct 29 2026 Marcel Härry <mh+fedora@scrit.ch> - 0.4.9.15-1
- - Update to latest upstream release https://forum.torproject.org/t/security-release-0-4-9-15/22332 bz#2562928
+ * Sun Nov 08 2026 Marcel Härry <mh+fedora@scrit.ch> - 0.4.9.16-1
+ - Update to latest upstream release https://forum.torproject.org/t/security-release-0-4-9-16/22372 bz#2567104
  
 -- 
-2.56.0
+2.56.1
 

@@ -48,13 +48,16 @@ with what changed since the previous report) and
 - **Bugs** (107): follow up; when upstream publishes a fixed key, turn the bug
   into a PR (`scripts/refresh_keys.py propose-upstream`). Responses are
   recorded with `scripts/bug_response.py`.
-- **Prepared, not opened** (20): 8 keyring format updates (keyrings with old
-  v3 keys, which sqv cannot read), 2 that wait for another
-  PR touching the same lines (fedrq, python-oslo-config), and 10 that fail to
-  build in rawhide even without the change.
+- **Prepared, not opened** (19): 8 keyring updates, re-tested on 2026-11-24
+  and ready to open (Apache `KEYS` converted by GnuPG, which drops the v3 keys
+  sqv cannot read; the signer's key from keyservers for e2fsprogs, gnucobol,
+  tor and libextractor, whose GNU keyring converts to 3.5 MB, too big for a PR),
+  python-oslo-config (waits for its PR #11), and 10 that fail to build in
+  rawhide even without the change.
 - **cgit**: its own key is fixed, but it also verifies the bundled git
-  tarball, signed with the same key as git (SHA-1 self-signatures); needs a
-  bug like git.
+  tarball, signed with the same key as git (SHA-1 self-signatures); bug
+  drafted in [proposals/cgit/BUG.md](proposals/cgit/BUG.md), like git's
+  rhbz#2569328.
 - **crun**: the Packit sync of 1.31 (2026-11-12) replaced the spec with
   upstream's and undid [PR #159](https://src.fedoraproject.org/rpms/crun/pull-request/159);
   rawhide is back on `%gpgverify`. The fix belongs in upstream's

@@ -13,7 +13,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
-- dropped `BuildRequires: gnupg2 xz`, only needed for `%gpgverify`
+- dropped `gnupg2` from `BuildRequires: gnupg2 xz` (xz stays), only needed for `%gpgverify`
 - replaced the keyring with the signing key from keyservers, keyring `tytso-key.asc` (see below); the comment above its `Source` line shows the commands
 - Release bumped (`2%{?dist}` → `3%{?dist}`) with a changelog entry
 

@@ -1,6 +1,6 @@
-From 511b385c5eacfff1a7f8d2f0892acc7e946df631 Mon Sep 17 00:00:00 2001
+From 688b21a376d69a9b254f5b580c089d4883e2728e Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 6 Nov 2026 12:16:59 +0100
+Date: Tue, 24 Nov 2026 13:18:47 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Convert upstream's KEYS file
@@ -27,7 +27,7 @@ Assisted-by: Claude Opus 5.5
  create mode 100644 KEYS.pgp
 
 diff --git a/.gitignore b/.gitignore
-index fdfbbf8..860a0b2 100644
+index 2500f10..9b12744 100644
 --- a/.gitignore
 +++ b/.gitignore
 @@ -36,7 +36,6 @@ x86_64
@@ -5178,7 +5178,7 @@ literal 0
 HcmV?d00001
 
 diff --git a/httpd.spec b/httpd.spec
-index df7378f..a5e9199 100644
+index 97c674c..9cf6845 100644
 --- a/httpd.spec
 +++ b/httpd.spec
 @@ -34,9 +34,12 @@ Release: 1%{?dist}
@@ -5197,14 +5197,14 @@ index df7378f..a5e9199 100644
  Source4: instance.conf
  Source5: httpd-ssl-pass-dialog
 diff --git a/sources b/sources
-index 4357673..e02020f 100644
+index 009e824..ae04001 100644
 --- a/sources
 +++ b/sources
 @@ -1,3 +1,2 @@
+ SHA512 (httpd-2.4.71.tar.bz2) = b0eca2692e7672226e9b80e21ad64d7eda48bd5f3a1b774e3719baaa8a38e618e0ba5a9ea4fd077db306699d6b77d4b122a1f5fdc330a105d29ce6fc96ed167e
+ SHA512 (httpd-2.4.71.tar.bz2.asc) = 423b00e2a35edff4bbc2e95b9e4d7320047a592eff11c14e142d70b8f525e0b18720fdc9bd514000c993b87171e101c7d5287687ccdd81fe4134de34a219be88
 -SHA512 (KEYS) = 88c848b7ab9e4915d6625dcad3e8328673b0448f2ce76f2c44eecc612cf6afbce3287a4ee7219a44c6fcc61d5ecb2a1a8545456a4a16b90400263d7249cbf192
- SHA512 (httpd-2.4.69.tar.bz2) = ca9c5808eef7a0d8d88148b0d2d6045b5a0151823f09afc786b283cef9990036a9c7bc53d043e2f67b6ec06db05f655aa961cb875fa7ad0911fa04fdd295bd93
- SHA512 (httpd-2.4.69.tar.bz2.asc) = 8599f307780091b9f44efbd1c50361f09039350b79ff0799925ff726ee830965766b8c8f2888d655b50aee36bd82415803f0f33b5a8db6d8dd48ef45f2ee44fc
 -- 
-2.56.0
+2.56.1
 
 

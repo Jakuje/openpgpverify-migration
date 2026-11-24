@@ -1,6 +1,6 @@
-From 4dab56fa2132741e17039130b5c1efdef6729e6f Mon Sep 17 00:00:00 2001
+From b96af02a98d8e2f920e6a632930b93868c0d9429 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 6 Nov 2026 12:15:42 +0100
+Date: Tue, 24 Nov 2026 13:18:47 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Refresh tor-keyring.pub from keyservers: same certificate(s), with
@@ -5047,7 +5047,7 @@ index 40005fe..d8793cb 100644
 +=Ixsu
  -----END PGP PUBLIC KEY BLOCK-----
 diff --git a/tor.spec b/tor.spec
-index 36007f9..e52bf18 100644
+index 945a1e6..cd1ad0f 100644
 --- a/tor.spec
 +++ b/tor.spec
 @@ -22,7 +22,8 @@ URL:        https://www.torproject.org
@@ -5061,6 +5061,6 @@ index 36007f9..e52bf18 100644
  Source6:    tor.logrotate
  Source7:    tor.defaults-torrc
 -- 
-2.56.0
+2.56.1
 
 

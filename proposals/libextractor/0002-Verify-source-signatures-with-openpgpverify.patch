@@ -1,6 +1,6 @@
-From c130a17db1d0e92f939b5051ced67bf89943235f Mon Sep 17 00:00:00 2001
+From 4fd7f607b9082e788cd1ac9ca52f1d11c3eb0c9d Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 6 Nov 2026 12:19:22 +0100
+Date: Tue, 24 Nov 2026 13:18:53 +0100
 Subject: [PATCH 2/2] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -13,7 +13,7 @@ Assisted-by: Claude Opus 5.5
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/libextractor.spec b/libextractor.spec
-index bab924d..b0e813e 100644
+index 09178ee..becd26a 100644
 --- a/libextractor.spec
 +++ b/libextractor.spec
 @@ -40,7 +40,7 @@ BuildRequires:  gcc
@@ -35,5 +35,5 @@ index bab924d..b0e813e 100644
  cp -aR %{SOURCE3} .
  rm -rfv README.debian
 -- 
-2.56.0
+2.56.1
 

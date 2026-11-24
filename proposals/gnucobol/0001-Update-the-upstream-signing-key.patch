@@ -1,6 +1,6 @@
-From 66cc4407d3d764e3e2d7b4bbd9c99cf703e1357c Mon Sep 17 00:00:00 2001
+From 2081152188d6ce2233b452ccddd62515b527acb2 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Fri, 6 Nov 2026 12:15:42 +0100
+Date: Tue, 24 Nov 2026 13:18:47 +0100
 Subject: [PATCH 1/2] Update the upstream signing key
 
 Replace gnu-keyring.gpg with gnucobol-keyring.pgp, the keyserver copy of
@@ -348,6 +348,6 @@ index d95db34..de8c387 100644
  SHA512 (newcob.val.Z) = eb784866d1a335834074fbe103b5c5f5da810d847ae14a64316ecbb2c0f95ef751d2f2ec609b8fa21ef0b775817dc61115a574608ec89750d779ae0afbb95379
  SHA512 (gnucobol-sql-3.0.tar.gz) = 40229a6f29719c79f7129c6eb502844802bb398dfc529563bcc34e74279c7554b6a9839d0216d5ffa92b087ce7bf38f12d733b6753bfca1575f7121c758862a4
 -- 
-2.56.0
+2.56.1
 
 
