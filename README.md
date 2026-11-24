@@ -55,9 +55,9 @@ with what changed since the previous report) and
   python-oslo-config (waits for its PR #11), and 10 that fail to build in
   rawhide even without the change.
 - **cgit**: its own key is fixed, but it also verifies the bundled git
-  tarball, signed with the same key as git (SHA-1 self-signatures); bug
-  drafted in [proposals/cgit/BUG.md](proposals/cgit/BUG.md), like git's
-  rhbz#2569328.
+  tarball, signed with the same key as git (SHA-1 self-signatures); filed as
+  [rhbz#2583259](https://bugzilla.redhat.com/show_bug.cgi?id=2583259), next to
+  git's rhbz#2569328.
 - **crun**: the Packit sync of 1.31 (2026-11-12) replaced the spec with
   upstream's and undid [PR #159](https://src.fedoraproject.org/rpms/crun/pull-request/159);
   rawhide is back on `%gpgverify`. The fix belongs in upstream's
