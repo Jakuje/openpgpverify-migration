@@ -48,12 +48,11 @@ with what changed since the previous report) and
 - **Bugs** (107): follow up; when upstream publishes a fixed key, turn the bug
   into a PR (`scripts/refresh_keys.py propose-upstream`). Responses are
   recorded with `scripts/bug_response.py`.
-- **Prepared, not opened** (19): 8 keyring updates, re-tested on 2026-11-24
-  and ready to open (Apache `KEYS` converted by GnuPG, which drops the v3 keys
-  sqv cannot read; the signer's key from keyservers for e2fsprogs, gnucobol,
-  tor and libextractor, whose GNU keyring converts to 3.5 MB, too big for a PR),
-  python-oslo-config (waits for its PR #11), and 10 that fail to build in
-  rawhide even without the change.
+- **Prepared, not opened** (11): python-oslo-config (waits for its PR #11),
+  and 10 that fail to build in rawhide even without the change. The 8 keyring
+  updates (Apache `KEYS` converted by GnuPG to drop the v3 keys sqv cannot
+  read; the signer's key from keyservers for e2fsprogs, gnucobol, libextractor
+  and tor) and fedrq went out as PRs on 2026-11-24.
 - **cgit**: its own key is fixed, but it also verifies the bundled git
   tarball, signed with the same key as git (SHA-1 self-signatures); filed as
   [rhbz#2583259](https://bugzilla.redhat.com/show_bug.cgi?id=2583259), next to
