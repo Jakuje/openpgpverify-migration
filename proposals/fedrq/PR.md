@@ -13,6 +13,7 @@ Why `sqv`:
 
 - `%gpgverify` → `%openpgpverify` (1 call; the macro keeps the same form and options)
 - added `BuildRequires: openpgpverify`; nothing pulls it into the buildroot implicitly (gpgverify comes in via redhat-rpm-config)
+- dropped `BuildRequires: gnupg2`, only needed for `%gpgverify`
 - Release bumped (`1%{?dist}` → `2%{?dist}`) with a changelog entry
 
 ### Testing
@@ -30,7 +31,7 @@ Tested on 2026-11-24 at dist-git commit `a4e3e8f890b4` with sequoia-sqv 1.5.0-2.
 
 - This replaces [#3](https://src.fedoraproject.org/rpms/fedrq/pull-request/3), which adds `BuildRequires: gpgverify` (made for 1.6.0); with `%openpgpverify` it is no longer needed, so #3 can be closed.
 - Rawhide only. Whether to merge it into other branches is up to you; openpgpverify is available in Fedora 43 and later, EPEL 9 and EPEL 10.
-- `BuildRequires: gnupg2` is kept: the build log or test files mention gpg; tests may skip without it.
+- `BuildRequires: gnupg2` is dropped too. The changed spec was built completely (`rpmbuild -bb`, including `%check`) in a chroot with gnupg2 and gpgverify removed, and the build passed. The only mention of gpg in the sources is the URL of a COPR repository key (`pubkey.gpg`) in `tests/integration/test_backends.py`, which doesn't need GnuPG.
 - Nothing changes in the built packages, so this doesn't need a build right away; the new check runs with your next build.
 
 ### Questions

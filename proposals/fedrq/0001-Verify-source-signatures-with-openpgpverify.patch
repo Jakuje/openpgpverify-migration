@@ -1,6 +1,6 @@
-From cce2daea84c26e20c368d8ae8942f95c97e5758a Mon Sep 17 00:00:00 2001
+From 2f5f4c8c9b5173bc4fc89efb3d45804d23e52040 Mon Sep 17 00:00:00 2001
 From: Jakub Jelen <jjelen@redhat.com>
-Date: Tue, 24 Nov 2026 11:53:07 +0100
+Date: Tue, 24 Nov 2026 12:54:23 +0100
 Subject: [PATCH] Verify source signatures with openpgpverify
 
 Replace the GnuPG-based %gpgverify with %openpgpverify, which uses
@@ -11,11 +11,11 @@ Release bumped with a changelog entry.
 
 Assisted-by: Claude Opus 5.5
 ---
- fedrq.spec | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ fedrq.spec | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/fedrq.spec b/fedrq.spec
-index 96b2e72..7a20cdb 100644
+index 96b2e72..7f84187 100644
 --- a/fedrq.spec
 +++ b/fedrq.spec
 @@ -9,7 +9,7 @@
@@ -27,15 +27,18 @@ index 96b2e72..7a20cdb 100644
  Summary:        A tool to query the Fedora and EPEL repositories
  
  # - code is GPL-2.0-or-later
-@@ -40,6 +40,7 @@ BuildRequires:  python3-libdnf5 >= %{min_libdnf5_version}
+@@ -38,8 +38,8 @@ BuildRequires:  python3-libdnf5 >= %{min_libdnf5_version}
+ %endif
+ # Manpage
  BuildRequires:  scdoc
- # gpgverify
- BuildRequires:  gnupg2
+-# gpgverify
+-BuildRequires:  gnupg2
++# openpgpverify
 +BuildRequires:  openpgpverify
  
  Requires:       (python3-dnf or python3-libdnf5)
  Suggests:       (python3-libdnf5 if dnf5)
-@@ -57,7 +58,7 @@ fedrq is a tool to query the Fedora and EPEL repositories.
+@@ -57,7 +57,7 @@ fedrq is a tool to query the Fedora and EPEL repositories.
  
  
  %prep
@@ -44,7 +47,7 @@ index 96b2e72..7a20cdb 100644
  %autosetup -p1
  
  
-@@ -120,6 +121,9 @@ FEDRQ_BACKEND=libdnf5 %{py3_test_envvars} \
+@@ -120,6 +120,9 @@ FEDRQ_BACKEND=libdnf5 %{py3_test_envvars} \
  
  
  %changelog
