@@ -1,0 +1,31 @@
+From 1033b8ad35fce24e5c48f343cc92033fa69b6e6d Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Tue, 24 Nov 2026 11:07:12 +0100
+Subject: [PATCH] Drop BuildRequires: gnupg2
+
+The source signature check was removed in 48e8933 (rhbz#2571543), and
+nothing else in the build uses GnuPG, so the package no longer needs it.
+This also removes dhcp from the packages that require GnuPG to build,
+which matters for ELN, where %gpgverify and GnuPG-based checks are
+being phased out.
+
+Assisted-by: Claude Opus 5.5
+---
+ dhcp.spec | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/dhcp.spec b/dhcp.spec
+index ece508f..c713e01 100644
+--- a/dhcp.spec
++++ b/dhcp.spec
+@@ -96,7 +96,6 @@ BuildRequires: libcap-ng-devel
+ BuildRequires: systemd systemd-devel
+ # dhcp-sd_notify.patch
+ BuildRequires: pkgconfig(libsystemd)
+-BuildRequires: gnupg2
+ %if ! 0%{?_module_build}
+ BuildRequires: doxygen
+ %endif
+-- 
+2.56.1
+
