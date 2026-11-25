@@ -71,6 +71,17 @@ def fetch_prs(pkgs):
     return rows
 
 
+def spec_in_snapshot(pkg, snap_date):
+    """True if PKG still has a spec in the snapshot of SNAP_DATE (it left the
+    inventory because no GnuPG use is left, not because it was retired). None
+    if that snapshot's specs are not unpacked any more."""
+    d = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                     'data', 'snapshots', snap_date.isoformat(), 'rpm-specs')
+    if not os.path.isdir(d):
+        return None
+    return os.path.exists(os.path.join(d, pkg + '.spec'))
+
+
 def merged_before(prs, snap_date, slack=2):
     """Merge date (ISO) of a merged PR that should already be in the snapshot
     of snap_date, or None. The spec tarball lags a day or so behind dist-git,
@@ -138,6 +149,8 @@ def main():
             how = ('our PR' if ps == 'Merged' and mine else
                    'PR by someone else' if ps == 'Merged' else 'maintainer, no PR')
             status[p] = ('converted', how)
+        elif t is None and spec_in_snapshot(p, snap_date):
+            status[p] = ('dropped', 'no GnuPG use left in the spec')
         elif t is None:
             status[p] = ('retired', 'not in the spec snapshot any more')
         elif cat not in IN_SCOPE:

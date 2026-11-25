@@ -49,6 +49,8 @@ def main():
         if cat == 'converted':
             groups['converted'].append((p, 'PR [#%s](%s)' % (by['Merged']['id'], by['Merged']['url'])
                                         if 'Merged' in by else 'by the maintainer'))
+        elif t is None and progress.spec_in_snapshot(p, datetime.date.fromisoformat(date)):
+            groups['dropped'].append((p, 'no GnuPG use left in the spec'))
         elif t is None:
             groups['retired'].append((p, ''))
         elif cat not in progress.IN_SCOPE:

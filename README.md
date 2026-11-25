@@ -14,27 +14,27 @@ supports the current OpenPGP standard. ELN packages go first, so that
 Every change is scripted and tested in mock before a PR goes out; how is
 described in [docs/process.md](docs/process.md).
 
-## Status (2026-11-24)
+## Status (2026-11-25)
 
 On 2026-10-06, 594 packages verified sources with GnuPG.
 
 | | Packages | |
 |---|---|---|
-| Converted to `%openpgpverify` in rawhide | 323 | 54 % |
-| PR open | 134 | 23 % |
+| Converted to `%openpgpverify` in rawhide | 327 | 55 % |
+| PR open | 139 | 23 % |
 | Retired, or signature check dropped | 6 | |
-| Still to do | 131 | 22 % |
+| Still to do | 122 | 21 % |
 
-Of the 131 still to do, 107 are blocked on the upstream key (a bug is filed
-for each: mostly DSA keys and SHA-1 self-signatures, a few expired keys), and 20 have a
+Of the 122 still to do, 107 are blocked on the upstream key (a bug is filed
+for each: mostly DSA keys and SHA-1 self-signatures, a few expired keys), and 12 have a
 tested PR that is not opened yet.
 
-ELN: 104 of 164 converted, 27 PRs open, 25 blocked on the upstream key, 3 PRs
-prepared; sssd's change was merged upstream and comes with the next rebase.
+ELN: 106 of 164 converted, 28 PRs open, 25 blocked on the upstream key;
+sssd's change was merged upstream and comes with the next rebase.
 
-Latest reports: [progress](reports/progress-2026-11-24.md) (all packages,
+Latest reports: [progress](reports/progress-2026-11-25.md) (all packages,
 with what changed since the previous report) and
-[ELN](reports/eln-2026-11-24.md) (per package). Patches and PR texts are in
+[ELN](reports/eln-2026-11-25.md) (per package). Patches and PR texts are in
 [proposals/](proposals/).
 
 ## Remaining work
@@ -44,7 +44,7 @@ with what changed since the previous report) and
   packager. They are listed for a proven packager in
   [announce/provenpackager-2026-11-23.md](announce/provenpackager-2026-11-23.md).
 - **ELN builds**: a change merged in rawhide reaches ELN only with a new
-  rawhide build; about 50 ELN packages were last built before their change.
+  rawhide build; 39 ELN packages were last built before their change (2026-11-25).
 - **Bugs** (107): follow up; when upstream publishes a fixed key, turn the bug
   into a PR (`scripts/refresh_keys.py propose-upstream`). Responses are
   recorded with `scripts/bug_response.py`.
