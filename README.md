@@ -45,6 +45,8 @@ with what changed since the previous report) and
   [announce/provenpackager-2026-11-23.md](announce/provenpackager-2026-11-23.md).
 - **ELN builds**: a change merged in rawhide reaches ELN only with a new
   rawhide build; 40 ELN packages were last built before their change (2026-11-26).
+  plautrba (SELinux packages) and asn (libssh, resolv_wrapper) plan rebuilds
+  in the week of 2026-11-23; waiting for those.
 - **Bugs** (107): follow up; when upstream publishes a fixed key, turn the bug
   into a PR (`scripts/refresh_keys.py propose-upstream`). Responses are
   recorded with `scripts/bug_response.py`.
