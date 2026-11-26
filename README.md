@@ -14,37 +14,37 @@ supports the current OpenPGP standard. ELN packages go first, so that
 Every change is scripted and tested in mock before a PR goes out; how is
 described in [docs/process.md](docs/process.md).
 
-## Status (2026-11-25)
+## Status (2026-11-26)
 
 On 2026-10-06, 594 packages verified sources with GnuPG.
 
 | | Packages | |
 |---|---|---|
-| Converted to `%openpgpverify` in rawhide | 327 | 55 % |
-| PR open | 139 | 23 % |
-| Retired, or signature check dropped | 6 | |
-| Still to do | 122 | 21 % |
+| Converted to `%openpgpverify` in rawhide | 330 | 56 % |
+| PR open | 136 | 23 % |
+| Retired, or signature check dropped | 7 | |
+| Still to do | 121 | 20 % |
 
-Of the 122 still to do, 107 are blocked on the upstream key (a bug is filed
+Of the 121 still to do, 107 are blocked on the upstream key (a bug is filed
 for each: mostly DSA keys and SHA-1 self-signatures, a few expired keys), and 12 have a
 tested PR that is not opened yet.
 
-ELN: 106 of 164 converted, 28 PRs open, 25 blocked on the upstream key;
+ELN: 108 of 164 converted, 26 PRs open, 25 blocked on the upstream key;
 sssd's change was merged upstream and comes with the next rebase.
 
-Latest reports: [progress](reports/progress-2026-11-25.md) (all packages,
+Latest reports: [progress](reports/progress-2026-11-26.md) (all packages,
 with what changed since the previous report) and
-[ELN](reports/eln-2026-11-25.md) (per package). Patches and PR texts are in
+[ELN](reports/eln-2026-11-26.md) (per package). Patches and PR texts are in
 [proposals/](proposals/).
 
 ## Remaining work
 
-- **Open PRs** (134): as of 2026-11-23, 125 had had no response for 2.5+ weeks and 2 are
+- **Open PRs** (136): as of 2026-11-23, 125 had had no response for 2.5+ weeks and 2 are
   approved but not merged; Yaakov Selkowitz is merging them as a proven
   packager. They are listed for a proven packager in
   [announce/provenpackager-2026-11-23.md](announce/provenpackager-2026-11-23.md).
 - **ELN builds**: a change merged in rawhide reaches ELN only with a new
-  rawhide build; 39 ELN packages were last built before their change (2026-11-25).
+  rawhide build; 40 ELN packages were last built before their change (2026-11-26).
 - **Bugs** (107): follow up; when upstream publishes a fixed key, turn the bug
   into a PR (`scripts/refresh_keys.py propose-upstream`). Responses are
   recorded with `scripts/bug_response.py`.
@@ -59,7 +59,8 @@ with what changed since the previous report) and
   git's rhbz#2569328.
 - **crun**: the Packit sync of 1.31 (2026-11-12) replaced the spec with
   upstream's and undid [PR #159](https://src.fedoraproject.org/rpms/crun/pull-request/159);
-  rawhide is back on `%gpgverify`. The fix belongs in upstream's
+  Yaakov Selkowitz re-applied it on 2026-11-24, but the next Packit sync
+  will undo it again. The fix belongs in upstream's
   `rpm/crun.spec`, with a `%gpgverify` fallback for RHEL 10 and older:
   [containers/crun#2486](https://github.com/containers/crun/pull/2486)
   ([proposals/crun-upstream/](proposals/crun-upstream/) has the first draft).
